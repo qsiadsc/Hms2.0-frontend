@@ -1,0 +1,753 @@
+<div class="section-heading">
+  <h2>{{'itransViewer.iTrans' | translate}} - 
+    <span>{{'itransViewer.viewer' | translate}}</span>
+  </h2>
+</div>
+<form [formGroup]="filterITransForm" (ngSubmit)="onSubmit(filterITransForm)">
+  <div class="grid-box">
+    <div class="grid-heading">
+      <h3>{{'itransViewer.transactionType' | translate}}</h3>
+    </div>
+    <div class="grid-inner">
+      <div class="form-row">
+        <div class="row min-ht-sf">
+          <div class="col-md-10 col-xs-12 min-ht-half">
+            <div class="select-options">
+              <span>
+                <label class="papComment">
+                  <span class="custom-check">
+                    <input formControlName="transTypeChkClaim" id="claim" type="checkbox" class="" value="1"
+                      (change)="transTypeChange($event)">{{'itransViewer.claim' | translate}}
+                    <span></span>
+                  </span>
+                </label>
+              </span>
+              <span>
+                <label>
+                  <span class="custom-check">
+                    <input formControlName="transTypeChkPredetermination" id="predetermination" type="checkbox" class=""
+                      value="3" (change)="transTypeChange($event)">{{'itransViewer.predetermination' | translate}}
+                    <span></span>
+                  </span>
+                </label>
+              </span>
+              <span>
+                <label>
+                  <span class="custom-check">
+                    <input formControlName="transTypeChkCOBClaim" id="cobClaim" type="checkbox" class="" value="7"
+                      (change)="transTypeChange($event)">{{'itransViewer.cOBClaim' | translate}}
+                    <span></span>
+                  </span>
+                </label>
+              </span>
+              <span>
+                <label>
+                  <span class="custom-check">
+                    <input formControlName="transTypeChkClaimReversal" id="claimReversal" type="checkbox" class=""
+                      value="2" (change)="transTypeChange($event)">{{'itransViewer.claimReversal' | translate}}
+                    <span></span>
+                  </span>
+                </label>
+              </span>
+              <span>
+                <label>
+                  <span class="custom-check">
+                    <input formControlName="transTypeChkEligibility" id="eligibility" type="checkbox" class="" value="8"
+                      (change)="transTypeChange($event)">{{'itransViewer.eligibility' | translate}}
+                    <span></span>
+                  </span>
+                </label>
+              </span>
+              <span>
+                <label>
+                  <span class="custom-check">
+                    <input formControlName="transTypeChkAttachment" id="attachment" type="checkbox" class="" value="9"
+                      (change)="transTypeChange($event)">{{'itransViewer.attachment' | translate}}
+                    <span></span>
+                  </span>
+                </label>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3 col-xs-12">
+      <div class="grid-box">
+        <div class="grid-heading">
+          <h3>{{'itransViewer.transactionStatus' | translate}}</h3>
+        </div>
+    <!-- issue no 702  Start Checkbox to radio -->
+
+        <div class="grid-inner checkpading">
+          <div class="select-options">
+            <span><label><span class="custom-check"><input type="radio" id="accepted"
+                    formControlName="tranStatusChkAccepted" value="A"
+                    (change)="tranStatusChange($event)">{{'itransViewer.accepted' | translate}}<span></span></span></label></span>
+          </div>
+          <div class="select-options">
+            <span><label><span class="custom-check"><input type="radio" id="held" formControlName="tranStatusChkAccepted"
+                    value="H" (change)="tranStatusChange($event)">{{'itransViewer.held' | translate}}<span></span></span></label></span>
+          </div>
+          <div class="select-options">
+            <span><label><span class="custom-check"><input type="radio" id="rejected"
+                    formControlName="tranStatusChkAccepted" value="R"
+                    (change)="tranStatusChange($event)">{{'itransViewer.rejected' | translate}}<span></span></span></label></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- issue no 702  Ends-->
+      <div class="col-md-9 col-xs-12" >
+      <div class="grid-box">
+        <div class="grid-heading">
+          <h3>{{'itransViewer.attachedClaimStatus' | translate}}</h3>
+        </div>
+        <div class="grid-inner checkpading">
+          <!--[Start Left]-->
+          <div class="col-md-4 col-xs-12">
+            <div class="select-options">
+              <span><label><span class="custom-check"><input type="radio" id="attachedClaimStatus"
+                      formControlName="attachedClaimStatus" value="T"
+                      (change)="attachedClaimStatusChange($event)">{{'itransViewer.released' | translate}}<span></span></span></label></span>
+            </div>
+            <div class="select-options">
+              <span><label><span class="custom-check"><input type="radio" id="isBankAccountRequired"
+                      formControlName="attachedClaimStatus" value="X"
+                      (change)="attachedClaimStatusChange($event)">{{'itransViewer.pending' | translate}}<span></span></span></label></span>
+            </div>
+            <div class="select-options">
+              <span><label><span class="custom-check"><input type="radio" id="attachedClaimStatus"
+                      formControlName="attachedClaimStatus" value="A"
+                      (change)="attachedClaimStatusChange($event)">{{'itransViewer.approved' | translate}}<span></span></span></label></span>
+            </div>
+            <div class="select-options">
+              <span><label><span class="custom-check"><input type="radio" id="attachedClaimStatus"
+                      formControlName="attachedClaimStatus" value="AX"
+                      (change)="attachedClaimStatusChange($event)">{{'itransViewer.pendingApproved' | translate}}<span></span></span></label></span>
+            </div>
+          </div>
+          <!--[End Left]-->
+          <!--[Start Right]-->
+          <div class="col-md-4 col-xs-12">
+            <div class="select-options">
+              <span><label><span class="custom-check"><input type="radio" id="attachedClaimStatus"
+                      formControlName="attachedClaimStatus" value="B" (change)="attachedClaimStatusChange($event)">{{'itransViewer.extraBenefitPendingFunds' | translate}}<span></span></span></label></span>
+            </div>
+            <div class="select-options">
+              <span><label><span class="custom-check"><input type="radio" id="attachedClaimStatus"
+                      formControlName="attachedClaimStatus" value="C" (change)="attachedClaimStatusChange($event)">{{'itransViewer.overCreditLimitPendingFunds' | translate}}<span></span></span></label></span>
+            </div>
+            <div class="select-options">
+              <span><label><span class="custom-check"><input type="radio" id="attachedClaimStatus"
+                      formControlName="attachedClaimStatus" value="AL"
+                      (change)="attachedClaimStatusChange($event)">{{'itransViewer.all' | translate}}<span></span></span></label></span>
+            </div>
+          </div>
+          <!--[End Right]-->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-box">
+    <div class="grid-heading">
+      <h3>{{'itransViewer.viewTransactionBy' | translate}}</h3>
+    </div>
+    <div class="grid-inner checkpading">
+      <div class="form-row">
+        <div class="row min-ht-sf">
+          <!--[Start Left]-->
+          <div class="col-md-3 col-xs-12">
+            <div class="select-options">
+              <span><label><span class="custom-check"><input type="radio" id="viewTransactionBy"
+                      formControlName="viewTransactionBy" value="viewTransactionByReference"
+                      (click)="setViewTransBy('viewTransactionByReference')">{{'itransViewer.reference' | translate}}<span></span></span></label></span>
+            </div>
+            <div class="select-options">
+              <span><label><span class="custom-check"><input type="radio" id="viewTransactionBy"
+                      formControlName="viewTransactionBy" value="viewTransactionByDate"
+                      (click)="setViewTransBy('viewTransactionByDate')">{{'itransViewer.date' | translate}}<span></span></span></label></span>
+            </div>
+            <div class="select-options">
+              <span><label><span class="custom-check"><input type="radio" id="viewTransactionBy"
+                      formControlName="viewTransactionBy" value="viewTransactionByDateRange"
+                      (click)="setViewTransBy('viewTransactionByDateRange')">{{'itransViewer.dateRange' | translate}}<span></span></span></label></span>
+            </div>
+            <div class="select-options">
+              <span><label><span class="custom-check"><input type="radio" id="viewTransactionBy"
+                      formControlName="viewTransactionBy" value="viewTransactionByNone"
+                      (click)="setViewTransBy('viewTransactionByNone')">{{'itransViewer.none' | translate}}<span></span></span></label></span>
+            </div>
+          </div>
+          <!--[End Left]-->
+          <!--[Start Right]-->
+          <div *ngIf="showReference" class=" col-md-9 col-xs-12">
+            <h1>{{'itransViewer.pleaseSpecifyReference' | translate}}</h1>
+            <div class="row min-ht-sf">
+              <div class="col-md-3 col-xs-12">
+                <input class="fm-txt form-control" type="text" formControlName="referenceNumber" id="referenceNumber"
+                  placeholder="">
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="showDate" class=" col-md-9 col-xs-12">
+            <h1>{{'itransViewer.pleaseSpecifyDate' | translate}}</h1>
+            <div class="row min-ht-sf">
+              <div class="col-md-3 col-xs-12">
+                <label>{{'itransViewer.from' | translate}}</label>
+                <div class="calender-field">
+                  <my-date-picker id="date" [options]="myDatePickerOptions" placeholder="Date" name="viewTransByDate"
+                    formControlName="viewTransByDate"
+                    (inputFocusBlur)="changeDateFormat($event, 'viewTransByDate' ,'filterITransForm')">
+                  </my-date-picker>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="showDateRange" class=" col-md-9 col-xs-12">
+            <h1>{{'itransViewer.pleaseSpecifyDateRange' | translate}}</h1>
+            <div class="row min-ht-sf">
+              <div class="col-md-3 col-xs-12">
+                <label>{{'itransViewer.from' | translate}}</label>
+                <div class="calender-field">
+                  <my-date-picker id="fromDate" [options]="myDatePickerOptions" placeholder="From Date"
+                    name="viewTransByFromDate" formControlName="viewTransByFromDate"
+                    (inputFocusBlur)="changeDateFormat($event, 'viewTransByFromDate' ,'filterITransForm')">
+                  </my-date-picker>
+                </div>
+              </div>
+              <div class="col-md-3 col-xs-12">
+                <label>{{'itransViewer.to' | translate}}</label>
+                <div class="calender-field">
+                  <my-date-picker id="toDate" [options]="myDatePickerOptions" placeholder="To Date"
+                    name="viewTransByToDate" formControlName="viewTransByToDate"
+                    (inputFocusBlur)="changeDateFormat($event, 'viewTransByToDate' ,'filterITransForm')">
+                  </my-date-picker>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--[End Right]-->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-box">
+    <div class="grid-heading">
+      <h3>{{'itransViewer.providerPatientInfo' | translate}}</h3>
+    </div>
+    <div class="grid-inner">
+      <div class="form-row">
+        <div class="row min-ht-sf">
+          <div class="col-md-3 col-xs-12">
+            <label>{{'itransViewer.providerLicense' | translate}}</label>
+            <input class="fm-txt form-control" type="text" formControlName="providerLicense" id="providerLicense"
+              placeholder="">
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{'itransViewer.officeNumber' | translate}}</label>
+            <input class="fm-txt form-control" type="text" formControlName="officeNumber" id="officeNumber"
+              placeholder="">
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{'itransViewer.card' | translate}}</label>
+            <input class="fm-txt form-control" type="text" formControlName="cardNumber" id="card" placeholder="">
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{'itransViewer.planType' | translate}}</label>
+            <select formControlName="planType" id="planType" class="fm-txt amount_right_grid form-control inputSearch"
+              name="planType">
+              <option *ngFor="let option of options" [ngValue]='option.value'>{{option.name}}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <button id="iTransSearchFilterSave" type="submit" class="btn green-btn" (keyup)="onKeyPressEvent($event)">
+          {{'itransViewer.search' | translate}}
+        </button>
+        <button id="iTransSearchFilterClear" type="button" class="btn grey-btn"
+          (click)="resetSearchForm()">{{'itransViewer.clear' | translate}}</button>
+      </div>
+    </div>
+  </div>
+</form>
+
+<!--[Start ITRANS Search Screen]-->
+<div [hidden]="!showITransSearchList">
+  <div class="grid-box">
+    <div class="grid-heading">
+      <h3>{{'itransViewer.iTransList' | translate}}</h3>
+    </div>
+    <div class="grid-inner">
+      <div class="form-row">
+        <div class="row">
+          <div class="col-md-12 col-xs-12 table-col">
+            <div class="table-responsive">
+              <table id="itrans-list" class="table table-bordered table-stripped">
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--[Start Download Dropdown]-->
+      <div class="form-row text-center showHideReportsPdfButton" id="iTransPdfButton">
+        <div class="row">
+          <div class="col-md-12 col-xs-12">
+            <div class="dropdown pull-right">
+              <button class="btn green-btn dropdown-toggle " type="button" data-toggle="dropdown">{{'itransViewer.export' | translate}}<span
+                  class="caret"></span></button>
+              <ul class="dropdown-menu">
+                <li><a href="javascript:void(0)" (click)="dowloadPDFReport()"> {{'itransViewer.PDF' | translate}}</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--[End Download Dropdown]-->
+      <div class="form-row">
+        <div class="row">
+          <div class="col-md-12 col-xs-12">
+            <div class="dropdown pull-left">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--[End ITRANS Search Screen]-->
+
+<!--[Start ITRANS Pop Up]-->
+<button class="green-btn-add btn" data-toggle="modal" id="printITransPopUpDiv" data-target="#printITransPopUp"
+  style="display:none"></button>
+<div id="printITransPopUp" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">
+          {{'itransViewer.STANDARDDENTALCLAIMFORM' | translate}}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="grid-box">
+          <div class="grid-inner">
+            <table id="preClaimDesc" cellpadding="0" cellspacing="0" width="750" align="center">             
+              <tr>
+                <td>
+                  <h3
+                    style="text-align:center; font-family:Helvetica; font-size:20px; margin:0; padding: 5px; font-weight: 600; text-transform: uppercase;">
+                    <span>{{'itransViewer.Standarddentalclaimform' | translate}} </span></h3>
+                </td>
+              </tr>
+              <tr>
+                <td style=" text-align: left; padding: 3px 0;">
+                  <p style="font-family:Helvetica; font-size:13px; margin:0; padding: 0;  margin-bottom: 10px; ">
+                    <strong>{{'itransViewer.claimReference' | translate}} </strong>{{popUpRefNum}}</p>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <table cellpadding="0" cellspacing="0" width="100%" align="center" style="border: 1px solid #000;">
+                    <tr>
+                      <td colspan="3" style="border-bottom: 1px solid #000;">
+                        <h4 style="margin: 0; padding: 2px 5px;">{{'itransViewer.partDentist' | translate}}</h4>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="border-right: 1px solid #000; padding: 5px 2px; vertical-align: top;">
+                        <p
+                          style="font-weight: 500; margin: 0; font-size: 13px; padding: 2px 5px; font-family:Helvetica; width: 50%;">
+                          {{printData.patientAddress}}</p>
+                      </td>
+                      <td style="border-right: 1px solid #000;  vertical-align: top;">
+                        <p
+                          style="font-weight: 600; margin: 0; padding: 2px 5px; margin-bottom: 5px; font-family:Helvetica;">
+                          {{'itransViewer.dentistAddress' | translate}}</p>
+                        <p
+                          style="font-weight: 500; font-size: 13px; margin: 0; padding: 2px 5px; font-family:Helvetica; width: 50%;">
+                          {{printData.dentistAddress}}</p>
+                      </td>
+                      <td style="    vertical-align: top; width: 20%;">
+                        <p
+                          style="font-weight: 600; margin: 0; padding: 2px 5px; margin-bottom: 5px; font-family:Helvetica;">
+                          {{'itransViewer.recievedDate' | translate}}</p>
+                        <p
+                          style="font-weight: 500; font-size: 13px; margin: 0; padding: 2px 5px; font-family:Helvetica; margin-bottom: 5px; ">
+                          {{printData.receivedOn}}</p>
+                        <p
+                          style="font-weight: 600; margin: 0; padding: 2px 5px; margin-bottom: 5px; font-family:Helvetica;">
+                          {{'itransViewer.payeeType' | translate}}</p>
+                        <p
+                          style="font-weight: 500; font-size: 13px; margin: 0; padding: 2px 5px; font-family:Helvetica; margin-bottom: 5px; ">
+                          {{printData.payeeType}}</p>
+                      </td>
+                    </tr>
+                    <tr *ngIf = "printData.errorMessage">
+                      <td colspan="3" style="border-top: 1px solid #000;">
+                        <h4 style="margin: 0; padding: 2px 5px; font-family:Helvetica;">{{'itransViewer.errorMessage' | translate}}</h4>
+                      </td>
+                    </tr>
+                    <tr *ngIf = "printData.errorMessage">
+                      <td colspan="3" style="border-top: 1px solid #000;">
+                        <p style="margin: 0; padding: 3px 5px; font-family:Helvetica; font-size: 13px;"><span
+                            style="margin-right: 10px;">Q1</span> {{printData.errorMessage}}
+                        </p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colspan="3" style="border-top: 1px solid #000;">
+                        <h4 style="margin: 0; padding: 2px 5px; font-family:Helvetica; text-transform: uppercase;">{{'itransViewer.claimDetails' | translate}}
+                        </h4>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colspan="3" style="border-top: 1px solid #000;">
+                        <p style="margin: 0; padding: 3px 5px; font-family:Helvetica; font-size: 13px;"><span
+                            style=" font-weight: 600; margin-left: 38px;">{{'itransViewer.dateofService' | translate}}</span></p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colspan="3">
+                        <table cellpadding="0" cellspacing="0" width="100%" align="center" style="padding: 0 0px;">
+                          <thead>
+                            <tr class="head">
+                              <th width="5%" style="padding: 0 4px">&nbsp;</th>
+                              <th width="15%" style="padding: 0 4px">
+                                <p
+                                  style="font-weight: 700; font-family:Helvetica; font-size: 14px; margin: 0; text-align: left;">
+                                  {{'itransViewer.dayMoYr' | translate}}.</p>
+                              </th>
+                              <th width="12%" style="padding: 0 4px">
+                                <p
+                                  style="font-weight: 700; font-family:Helvetica; font-size: 14px; margin: 0; text-align: left;">
+                                  {{'itransViewer.procCode' | translate}}</p>
+                              </th>
+                              <th width="5%" style="padding: 0 4px">
+                                <p
+                                  style="font-weight: 600; font-family:Helvetica; font-size: 14px; margin: 0;text-align: left;">
+                                  {{'itransViewer.tooth' | translate}}</p>
+                              </th>
+                              <th width="5%" style="padding: 0 4px">
+                                <p
+                                  style="font-weight: 600; font-family:Helvetica; font-size: 14px; margin: 0;text-align: left;">
+                                  {{'itransViewer.surf' | translate}}</p>
+                              </th>
+                              <th width="13%" style="padding: 0 4px">
+                                <p
+                                  style="font-weight: 600; font-family:Helvetica; font-size: 14px; margin: 0; text-align: right;">
+                                  {{'itransViewer.dentistFee' | translate}}</p>
+                              </th>
+                              <th width="10%" style="padding: 0 4px">
+                                <p
+                                  style="font-weight: 600; font-family:Helvetica; font-size: 14px; margin: 0; text-align: right;">
+                                  {{'itransViewer.labFee' | translate}}</p>
+                              </th>
+                              <th width="15%" style="padding: 0 4px">
+                                <p
+                                  style="font-weight: 600; font-family:Helvetica; font-size: 14px; margin: 0; text-align: right;">
+                                  {{'itransViewer.totalCharge' | translate}}</p>
+                              </th>
+                              <th width="10%" style="padding: 0 4px">
+                                <p
+                                  style="font-weight: 600; font-family:Helvetica; font-size: 14px; margin: 0; text-align: right;">
+                                  {{'itransViewer.totalPaid' | translate}}</p>
+                              </th>
+                              <th width="2%" style="padding: 0 4px">
+                                <p
+                                  style="font-weight: 600; font-family:Helvetica; font-size: 14px; margin: 0; text-align: right;">
+                                  &nbsp;</p>
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let dataRow of dentalClaimItemsListArr; let i = index" >
+                              <td style="padding: 0 4px">
+                                <p style=" font-family:Helvetica; font-size: 13px; margin: 0; margin-bottom: 2px;">
+                                  {{index}}</p>
+                              </td>
+                              <td style="padding: 0 4px">
+                                <p style=" font-family:Helvetica; font-size: 13px; margin: 0; margin-bottom: 2px;">
+                                  {{dataRow.itemServiceDt}}
+                                </p>
+                              </td>
+                              <td style="padding: 0 4px">
+                                <p style=" font-family:Helvetica; font-size: 13px; margin: 0; margin-bottom: 2px;">
+                                  {{dataRow.itemProcedureCd}}
+                                </p>
+                              </td>
+                              <td style="padding: 0 4px">
+                                <p style=" font-family:Helvetica; font-size: 13px; margin: 0; margin-bottom: 2px;">
+                                  {{dataRow.toothId}}</p>
+                              </td>
+                              <td style="padding: 0 4px">
+                                <p style=" font-family:Helvetica; font-size: 13px; margin: 0; margin-bottom: 2px;">
+                                   {{dataRow.itemToothSurfaceTxt}}</p>
+                              </td>
+                              <td style="padding: 0 4px" class="amount_right_grid">
+                                 <p
+                                  style=" font-family:Helvetica; font-size: 13px; margin: 0; margin-bottom: 2px; text-align: right;">
+                                  $ {{dataRow.itemFeeClaimAmt | number: '1.2'}}</p>
+                              </td>
+                              <td style="padding: 0 4px" class="amount_right_grid">
+                                 <p
+                                  style=" font-family:Helvetica; font-size: 13px; margin: 0; margin-bottom: 2px; text-align: right;">
+                                  $ {{dataRow.itemLabClaimAmt | number: '1.2'}}</p>
+                              </td>
+                              <td style="padding: 0 4px" class="amount_right_grid">
+                                 <p
+                                  style=" font-family:Helvetica; font-size: 13px; margin: 0; margin-bottom: 2px; text-align: right;">
+                                  $ {{dataRow.totalAllowAmount | number: '1.2'}}</p>
+                              </td>
+                              <td style="padding: 0 4px" class="amount_right_grid">
+                                <p
+                                  style=" font-family:Helvetica; font-size: 13px; margin: 0; margin-bottom: 2px; text-align: right;">
+                                 $ {{dataRow.totalPaidAmount | number: '1.2'}}</p>
+                              </td>
+                              <td style="padding: 0 4px">
+                                <p
+                                  style=" font-family:Helvetica; font-size: 13px; margin: 0; margin-bottom: 2px; text-align: right;">
+                                  &nbsp;</p>
+                              </td>
+                            </tr>
+                            <tr style="font-family:Helvetica;font-size: 17px;margin: 0;margin-bottom: 2px;text-align: right;font-weight: 700;background: transparent;">
+                              <td colspan="5"></td>
+                              <td colspan="2"> {{'itransViewer.totalFee' | translate}}:</td>
+                              <td>{{getSumAmount('totalAllowAmount')  | currency:'USD'}}</td>
+                              <td>{{getSumAmount('totalPaidAmount')  | currency:'USD'}}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                    
+                    <!-- added for log 896 -->
+                    <tr  >
+                      <td colspan="3">
+                        <table *ngIf = "mesasgeListArr && mesasgeListArr.length > 0"cellpadding="0" cellspacing="0" width="100%" align="center" style="padding: 0 0px;">
+                          <thead>
+                            <tr class="head">
+                              <th width="1%" style="padding: 0 4px">&nbsp;</th>
+                              <th width="3%" style="padding: 0 4px">
+                                <p
+                                  style="font-weight: 700; font-family:Helvetica; font-size: 14px; margin: 0; text-align: left;">
+                                  {{'itransViewer.msg' | translate}} #</p>
+                              </th>
+                              <th width="16%" style="padding: 0 4px">
+                                <p
+                                  style="font-weight: 700; font-family:Helvetica; font-size: 14px; margin: 0; text-align: left;">
+                                  {{'itransViewer.message' | translate}}</p>
+                              </th>
+                              <th width="1%" style="padding: 0 4px">
+                                <p
+                                  style="font-weight: 600; font-family:Helvetica; font-size: 14px; margin: 0; text-align: right;">
+                                  &nbsp;</p>
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let dataRow of mesasgeListArr; let i = index">
+                              <td style="padding: 0 4px">
+                                <p style=" font-family:Helvetica; font-size: 13px; margin: 0; margin-bottom: 2px;">
+                                  {{index}}</p>
+                              </td>
+                              <td style="padding: 0 4px">
+                                <p style=" font-family:Helvetica; font-size: 13px; margin: 0; margin-bottom: 2px;">
+                                  {{dataRow.msgRank}}
+                                </p>
+                              </td>
+                              <td style="padding: 0 4px">
+                                <p style=" font-family:Helvetica; font-size: 13px; margin: 0; margin-bottom: 2px;">
+                                  {{dataRow.messageCom}}
+                                </p>
+                              </td>
+                              <td style="padding: 0 4px">
+                                <p
+                                  style=" font-family:Helvetica; font-size: 13px; margin: 0; margin-bottom: 2px; text-align: right;">
+                                  &nbsp;</p>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td colspan="3" style="border-top: 1px solid #000;">
+                        <p
+                          style=" font-family:Helvetica; font-size: 14px; margin: 0; margin-bottom: 2px; padding: 5px 4px 2px; font-weight: 600; text-transform: uppercase;">
+                          {{'itransViewer.partEmployeePlanMemberSubscriber' | translate}}</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colspan="3" style="border-top: 1px solid #000;">
+                        <table>
+                          <tbody>
+                            <tr>
+                              <td style="text-align: left; padding: 10px 0 5px 5px;">
+                                <p
+                                  style="font-family:Helvetica; font-size:13px; margin:0; padding: 0; line-height: 18px;  display: inline-block;">
+                                  {{'itransViewer.groupPolicyPlanNo' | translate}}</p>
+                                <span
+                                  style="display: inline-block; width: 130px; border-bottom: 1px solid #000; font-weight: 600;">{{printData.planId}}</span>
+                                <p
+                                  style="font-family:Helvetica; font-size:13px; margin:0; padding: 0; line-height: 18px;  display: inline-block; padding: 0 0 0 10px;">
+                                  {{'itransViewer.divisonSectionNo' | translate}}</p><!--Change lable divsonSectionNo to divisonSectionNo by Arundeep Randev on 20 May,2023-->
+                              </td>
+                              <td style="text-align: left; padding: 10px 0 5px 15px;">
+                                <p
+                                  style="font-family:Helvetica; font-size:13px; margin:0; padding: 0; line-height: 18px;  display: inline-block;">
+                                  {{'itransViewer.2YourName' | translate}}</p>
+                                <span
+                                  style="display: inline-block; width: 90px; border-bottom: 1px solid #000; font-weight: 600;">{{printData.firstName}}</span>
+                                <span
+                                  style="display: inline-block; width: 90px; border-bottom: 1px solid #000; font-weight: 600;">{{printData.lastName}}</span>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td style="text-align: left; padding: 10px 0 5px 5px;">
+                                <p
+                                  style="font-family:Helvetica; font-size:13px; margin:0; padding: 0; line-height: 18px;  display: inline-block;">
+                                  {{'itransViewer.employer' | translate}}</p>
+                                <span
+                                  style="display: inline-block; width: 180px; border-bottom: 1px solid #000; font-weight: 600;">{{printData.employeeNumber}}</span>
+                              </td>
+                              <td style="text-align: left; padding: 10px 0 5px 15px;">
+                                <p
+                                  style="font-family:Helvetica; font-size:13px; margin:0; padding: 0; line-height: 18px;  display: inline-block;">
+                                  {{'itransViewer.yourCertNoorSin' | translate}}</p>
+                                <span
+                                  style="display: inline-block; width: 90px; border-bottom: 1px solid #000; font-weight: 600;">{{printData.certificateNumber || 700963620}}</span>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td style="text-align: left; padding: 10px 0 5px 5px;">
+                                <p
+                                  style="font-family:Helvetica; font-size:13px; margin:0; padding: 0; line-height: 18px;  display: inline-block;">
+                                  {{'itransViewer.nameofInsuringAgencyofPlan' | translate}}</p>
+                                <span
+                                  style="display: inline-block; width: 180px; border-bottom: 1px solid #000; font-weight: 600;">{{printData.bussinessType}}</span>
+                              </td>
+                              <td style="text-align: left; padding: 10px 0 5px 15px;">
+                                <table>
+                                  <tbody>
+                                    <tr>
+                                      <td>
+                                        <p
+                                          style="font-family:Helvetica; font-size:13px; width: 110px; margin:0; padding: 0; line-height: 18px;  display: inline-block;">
+                                          {{'itransViewer.yourDateOfBirth' | translate}}</p>
+                                        <span
+                                          style="display: inline-block; width: 90px; border-bottom: 1px solid #000; font-weight: 600;">{{printData.employeeDob}}</span>
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>
+                                        <p
+                                          style="font-family:Helvetica; font-size:13px; width: 110px; margin:0; padding: 0; line-height: 18px;  display: inline-block;">
+                                          &nbsp;</p>
+                                        <span
+                                          style="display: inline-block; width: 90px; font-size:13px;  font-weight: 500;">{{'itransViewer.dayMoYr' | translate}}</span>
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colspan="3" style="border-top: 1px solid #000;">
+                        <p
+                          style=" font-family:Helvetica; font-size: 14px; margin: 0; margin-bottom: 2px; padding: 5px 4px 2px; font-weight: 600; text-transform: uppercase;">
+                          {{'itransViewer.part3PatientInformatio' | translate}}</p>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td colspan="3" style="border-top: 1px solid #000;">
+                        <table>
+                          <tbody>
+                            <tr>
+                              <td style="text-align: left; padding: 10px 0 5px 5px;">
+                                <p
+                                  style="font-family:Helvetica; font-size:13px; margin:0; padding: 0; line-height: 18px;  display: inline-block;">
+                                  {{'itransViewer.patientRelationshipEmployee' | translate}}</p>
+                                <span
+                                  style="display: inline-block; width: 130px; border-bottom: 1px solid #000; font-weight: 600;">{{'itransViewer.self' | translate}}</span>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td style="text-align: left; padding: 10px 0 5px 0px;">
+                                <table>
+                                  <tbody>
+                                    <tr>
+                                      <td>
+                                        <p
+                                          style="font-family:Helvetica; font-size:13px; width: 110px; margin:0; padding: 0; line-height: 18px;  display: inline-block;">
+                                          {{'itransViewer.yourDateOfBirth' | translate}}</p>
+                                        <span
+                                          style="display: inline-block; width: 90px; border-bottom: 1px solid #000; font-weight: 600;">{{printData.patientDob}}</span>
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>
+                                        <p
+                                          style="font-family:Helvetica; font-size:13px; width: 110px; margin:0; padding: 0; line-height: 18px;  display: inline-block;">
+                                          &nbsp;</p>
+                                        <span
+                                          style="display: inline-block; width: 90px; font-size:13px;  font-weight: 500;">{{'itransViewer.dayMoYr' | translate}}</span>
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td style="text-align: left; padding: 10px 0 5px 5px;">
+                                <p
+                                  style="font-family:Helvetica; font-size:13px; margin:0; padding: 0; line-height: 18px;  display: inline-block;">
+                                  {{'itransViewer.patientIDNo' | translate}}</p>
+                                <span
+                                  style="display: inline-block; width: 180px; border-bottom: 1px solid #000; font-weight: 600;">{{printData.patientId}}</span>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="ITransResetFooterButton" type="button" class="btn grey-btn" data-dismiss="modal">{{'itransViewer.close' | translate}}</button>
+        <button id="ITransPrintFooterButton" type="button" (click)="printPlanDetails('preClaimDesc')" class="btn green-btn" >{{'itransViewer.print' | translate}}</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--[End ITRANS Pop Up]-->
+
+<div [hidden]="!showPageLoader" class="loader-outer">
+  <div class="cube-wrapper">
+    <div class="cube-folding">
+      <span class="leaf1"></span>
+      <span class="leaf2"></span>
+      <span class="leaf3"></span>
+      <span class="leaf4"></span>
+    </div>
+    <span class="loading" data-name="Loading">{{'itransViewer.pleaseWait' | translate}}</span>
+  </div>
+</div>

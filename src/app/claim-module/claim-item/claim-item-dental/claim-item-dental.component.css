@@ -1,0 +1,12 @@
+#claim-item-dental tfoot {
+    position: unset;
+}
+.checkBold input[type=checkbox]{
+    width: 20px;
+    height: 16px;
+}
+
+.checkCss input[type=checkbox]{
+    width: 20px;
+    height: 14px;
+}

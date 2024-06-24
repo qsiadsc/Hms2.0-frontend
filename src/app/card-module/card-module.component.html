@@ -1,0 +1,662 @@
+<nav class="breadcrumb">
+  <a *ngIf="userAuthCheck[0].searchCardHolder == 'F'">{{breadCrumbMain}} ></a>
+  <a *ngIf="userAuthCheck[0].searchCardHolder == 'T'" [routerLink]="['/card/searchCard']">{{breadCrumbMain}} > </a>
+  <a *ngIf="addMode" class="active serviceProviderActive" href="javascript:void(0)">{{breadCrumbText}}</a>
+  <a class="active serviceProviderActive" *ngIf="!addMode" href="javascript:void(0)">{{breadCrumbText}}</a>
+</nav>
+
+<div class="section-heading">
+  <h2>{{'card.card' | translate}} - <span>{{cardHeading}}</span>
+    <span class="comment-fm" *ngIf="cardCommentImportance"><i class="fa fa-flag" data-toggle="modal"
+        data-target="#BindCommentData" aria-hidden="true" (click)="getCardCommentListReload()"
+        style="cursor:pointer"></i>
+      <div class="comment-top" (click)="getCardCommentListReload()">
+        <p>{{commentText}}</p>
+      </div>
+    </span>
+    <div class="web-reg">
+      <button id="btnEditCardForm" *ngIf="viewMode  && userAuthCheck[0].editCard == 'T'" title="Card - Edit Details"
+        class="btn green-btn-add" type="button" (click)="enableEditMode()">{{'button.edit' | translate}}</button>
+      <button id="btnUpdateCardForm" *ngIf="editMode  && userAuthCheck[0].editCard == 'T'" title="Card - Update Details"
+        class="btn green-btn-add" type="button" (click)="updateCardData(FormGroup)">{{'button.update' |
+        translate}}</button>
+      <button class="btn green-btn-add" *ngIf="!expandBtn" (click)="expandAll()">Expand All</button>
+      <button class="btn green-btn-add" *ngIf="expandBtn" (click)="collapseAll()">Collapse All</button>
+    </div>
+  </h2>
+</div>
+<!-- general-information-form -->
+<general-information-form [CardGeneralInformationFormGroup]="FormGroup.controls.CardGeneralInformationFormGroup"
+  [userAuthCheck]="userAuthCheck" [grnlInfoViewMode]="viewMode" [grnlInfoEditMode]="editMode"
+  [grnlInfoAddMode]="addMode" [companyCovKey]='companyCovKey'></general-information-form>
+
+<!-- card-eligibility-form -->
+<card-eligibility-form (coIdEvent)="getPlans($event)" [expCheck]="expCheck" (emitOnSave)="updateView($event)"
+  [userAuthCheck]="userAuthCheck" [CardEligibilityFormGroup]='FormGroup.controls.CardEligibilityFormGroup'
+  [cardElgbViewMode]="viewMode" [cardElgbEditMode]="editMode"></card-eligibility-form>
+
+<!-- card-holder-form -->
+<card-holder [cardViewMode]="viewMode" [cardHolderAddModeFormGroup]='FormGroup.controls.cardHolderAddModeFormGroup'
+  [cardAddMode]="addMode" [currentUser]="currentUser" (cholderkeys)="getAllComments($event)"
+  [cardActiveTerminatedStatus]="cardActiveTerminatedStatus" (emitOnSave)="updateView($event)"
+  [userAuthCheck]="userAuthCheck" (cardholderDetails)="clickOverrideMaximun($event)"></card-holder>
+
+<!-- comment-module-starts -->
+<div class="grid-box">
+  <div class="accordion" id="accordionCardComment">
+    <div class="accordion-group">
+      <div class="grid-heading collapse-heading" [attr.aria-expanded]="alberta" data-toggle="collapse"
+        data-target="#CardCommentAccording">
+        <h3 [attr.aria-expanded]="alberta" data-toggle="collapse" data-target="#CardCommentAccording">
+          {{'common.allComments' | translate}}
+          <!-- Log #1008: As per client new feedback for comments flag -->
+          <span class="comment-fm" *ngIf="showFlag && (isCommentTypeExistRed || showRedFlag)">
+            <i class="fa fa-flag colorRed colorChange" *ngIf="isCommentTypeExistRed || showRedFlag"
+              aria-hidden="true"></i>
+            <div class="comment-top">
+              <p>{{comenttext}}</p>
+            </div>
+          </span>
+          <span class="comment-fm" *ngIf="showFlag && (!isCommentTypeExistRed && !showRedFlag)">
+            <i class="fa fa-flag colorGreen" *ngIf="!isCommentTypeExistRed" aria-hidden="true"></i>
+            <div class="comment-top">
+              <p>{{comenttext}}</p>
+            </div>
+          </span>
+        </h3>
+      </div>
+      <div class="cardViewHistoryButtons" *ngIf="!addMode">
+        <button title="All Comments History" (click)="getAllCommentsHistory()" href='#'
+          class="history-ico allCommentsHistoryIcon" alt="History" data-toggle="modal"
+          data-target="#allCommentsHistoryData">
+          <i class="fa fa-history" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  <!--#1199 Below div created to show All Comments History table-->
+  <div id="allCommentsHistoryData" class="modal fade">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button id="closeAllCommentsHistory" type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">{{'common.allCommentsHistory' | translate}}</h4>
+        </div>
+        <div class="modal-body">
+          <div class="table-responsive">
+            <table id="allCommentsHistory" class="inlinePopupTable table table-bordered table-stripped">
+              <thead>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="closeAllCommentsHistoryTable" type="button" class="btn grey-btn"
+            data-dismiss="modal">{{'button.close' | translate}}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="CardCommentAccording" [ngClass]="(alberta == true) ? 'collapse in' : 'collapse'">
+    <ul class="nav company-tabs nav-pills">
+      <li class="active">
+        <a data-toggle="pill" href="#claim-comments">{{'common.cardcomments' | translate}}</a>
+      </li>
+    </ul>
+    <div class="form-row">
+      <div class="tab-content">
+        <!-- card comments -->
+        <div id="claim-comments" class="tab-pane fade in active">
+          <app-comment-model-cardholder *ngIf="addMode" id="claim-comments"
+            [commentFormEditMode]=true></app-comment-model-cardholder>
+          <!---log 1116 New Section-->
+          <div *ngIf="!addMode" class="grid-inner">
+            <form [formGroup]="commentFormCombined">
+              <div class="form-row">
+                <label>{{'common.addcomment' | translate}}<span class="required"> *</span></label>
+                <div class="add-comments">
+                  <div class="row">
+                    <div class="col-sm-4">
+                      <textarea id="card_commentTxt" class="notInCaps fm-txt form-control comment-textarea"
+                        formControlName="commentTxt"></textarea>
+                      <show-errors [control]="commentFormCombined.controls.commentTxt"></show-errors>
+                    </div>
+                    <div class="col-sm-2">
+                      <label class="check-lb">
+                        <input id="card_importance" type="checkbox" formControlName="isImportant" />
+                        <span class="check-flag">
+                          <i class="fa fa-flag" aria- hidden="true"></i>
+                        </span>{{'common.importance' | translate}}</label>
+                    </div>
+                    <div *ngIf="!addMode && showCommentBussnsType" class="col-sm-2">
+                      <label>Department <span class="required"> *</span></label>
+                      <ng2-completer formControlName="cardCommentGroupKey" [ngClass]="{'disableInput':disableBsnsType}"
+                        [datasource]="userGroupData" [minSearchLength]="0" [openOnFocus]="true"
+                        [fillHighlighted]="false" [placeholder]="'Search Department'" [textSearching]="'Please wait...'"
+                        [inputClass]="'form-control'" [clearUnselected]="true" (selected)="onSelect($event)"> >
+                      </ng2-completer>
+                      <show-errors [control]="commentFormCombined.controls.cardCommentGroupKey"></show-errors>
+                    </div>
+                    <div class="col-sm-2">
+                      <label>{{'card.card-eligibility.expirydate' | translate}}</label>
+                      <div class="calender-field">
+                        <my-date-picker id="c_expiryDate" placeholder="{{'common.date-placeholder' | translate}}"
+                          [options]="myDatePickerOldOptions" name="expiry_date"
+                          [ngClass]="expired  ? 'expired' : 'notExpired'" formControlName="expiry_date"
+                          (inputFocusBlur)="changeDateFormat($event, 'expiry_date' ,'commentFormCombined')">
+                        </my-date-picker>
+                        <show-errors [control]="commentFormCombined.controls.expiry_date"></show-errors>
+                      </div>
+
+                    </div>
+
+                    <div class="col-sm-1 text-right" *ngIf="!showAddUpdateBtn">
+                      <button id="card_updateComment" *ngIf="addMode" class="green-btn-add btn"
+                        (click)="addCommentCombined(commentFormCombined,'addMode')">
+                        <i class="fa fa-plus"></i> {{'button.add' | translate}} </button>
+                      <button id="card_updateComment" class="green-btn-add btn"
+                        (click)="addCommentCombined(commentFormCombined,'editCommentmode')">
+                        <i class="fa fa-plus"></i> {{'button.add' | translate}} </button>
+                    </div>
+                  </div>
+                  <!--Below div created to show File Upload field-->
+                  <div class="col-md-3 col-xs-12 cardholderFileFieldAlign">
+                    <label>{{'common.documentName' | translate}}</label>
+                    <input style="display: none" type="file" (click)="cardCommentsFileInput.value = null"
+                      (change)="cardCommentsFileUpload($event)" #cardCommentsFileInput>
+                    <input formControlName="cardholderCommentsDocumentName" class="fm-txt form-control datepicker"
+                      type="text" disabled>
+                    <ul *ngIf="error.isError==true" class="validation-errors">
+                      <li style="color: red">{{error.errorMessage}}</li>
+                    </ul>
+                    <ul *ngIf="error1.isError==true" class="validation-errors">
+                      <li style="color: red">{{error1.errorMessage}}</li>
+                    </ul>
+                  </div>
+                  <!--Below div is for add and remove functionality-->
+                  <div class="col-md-3 col-xs-12">
+                    <button class="btn green-btn" (click)="cardCommentsFileInput.click()">{{'common.selectFile' |
+                      translate}}</button>
+                    <button *ngIf="showRemoveBtn" (click)="removeCardCommentsFile()"
+                      class="btn red-btn ">{{'common.remove' | translate}}</button>
+                  </div>
+                  <div>
+                    <div class="col-sm-1 text-right" *ngIf="showAddUpdateBtn">
+                      <button id="btnUpdateClaimCommentEditMode" *ngIf="!addMode" class="green-btn-add btn"
+                        (click)="UpdateCardCommentCombined(commentFormCombined,'editCommentmode')">
+                        {{'button.update'|translate}}</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+            <div class="form-row">
+              <div class="row">
+                <div class="col-md-12 col-xs-12 table-col">
+                  <div class="table-responsive" [ngClass]="[alberta  ? 'alberta' : 'qc' ]">
+                    <table id="cardCommentsCombined" class="display table table-bordered table-stripped">
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="company-comment" class="tab-pane fade in">
+          <div class="grid-inner">
+            <div class="form-row">
+              <div class="row">
+
+                <div class="col-md-12 col-xs-12 table-col ">
+                  <div class="table-responsive">
+                    <table id="companyComments" class="display table table-bordered table-stripped">
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+            </div><!-- Form Row ENds -->
+          </div><!-- Grid Inner Ends -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- comment-module-ends -->
+
+<!-- card-address-form -->
+<card-address [cardaddress]='FormGroup.controls.cardaddress' [currentUser]="currentUser"
+  (emitOnSave)="updateView($event)" [adrsViewMode]="viewMode" [userAuthCheck]="userAuthCheck" [adrsEditMode]="editMode">
+</card-address>
+
+<!-- card-bank-account-form -->
+<card-bank-acc [cardbankacc]='FormGroup.controls.cardbankacc' (emitOnSave)="updateView($event)"
+  [userAuthCheck]="userAuthCheck" [expCheck]="expCheck" [bnkAddMode]="addMode" [bnkAccViewMode]="viewMode"
+  [bnkAccEditMode]="editMode">
+</card-bank-acc>
+
+<!-- Main form for Card Sections -->
+<form [formGroup]="FormGroup">
+  <!-- Buttons for card section-->
+  <div class="form-row text-center">
+    <button id="btnSaveCardForm" *ngIf="addMode && userAuthCheck[0].addCard == 'T'" title="SAVE"
+      class="btn green-btn btn-lg" type="submit" [disabled]="disableUntilSave"
+      (click)="submitCardForm(FormGroup,false,true)">{{'button.save' | translate}}</button>
+    <button id="btnSaveCardFormaa" *ngIf="addMode && userAuthCheck[0].addCard == 'T'" title="PREVIEW"
+      class="btn green-btn btn-lg" type="button" [disabled]="disableUntilSave"
+      (click)="submitCardForm(FormGroup,false,false)">{{'button.preview' | translate}}</button>
+    <button id="btnEditCardForm" *ngIf="viewMode  && userAuthCheck[0].editCard == 'T'" title="Card - Edit Details"
+      class="btn green-btn btn-lg" type="button" (click)="enableEditMode()">{{'button.edit' | translate}}</button>
+    <button id="btnUpdateCardForm" *ngIf="editMode  && userAuthCheck[0].editCard == 'T'" title="Card - Update Details"
+      class="btn green-btn btn-lg" type="button" (click)="updateCardData(FormGroup)">{{'button.update' |
+      translate}}</button>
+    <button id="btnTrusteeInfoForm" *ngIf="alberta && userAuthCheck[0].addViewTrustee == 'T'"
+      title="Card - Trustee Information" class="btn green-btn btn-lg" type="button"
+      (click)="TrusteeInfo()">{{'button.trustee' | translate}} </button>
+    <button id="btnDltCardForm" *ngIf="!addMode" title="Delete Card" class="btn red-btn btn-lg" type="button"
+      (click)="deleteCard()">Delete</button>
+  </div>
+</form>
+<div *ngIf="showLoader" class="loader-outer">
+  <div class="cube-wrapper">
+    <div class="cube-folding">
+      <span class="leaf1"></span>
+      <span class="leaf2"></span>
+      <span class="leaf3"></span>
+      <span class="leaf4"></span>
+    </div>
+    <span class="loading" data-name="Loading">{{loaderPlaceHolder}}</span>
+  </div>
+</div>
+<app-trustee-information [cardKey]="savedCardkey"></app-trustee-information>
+<div id="BindCommentData" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="closeSearchCompany" type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">{{'card.card' | translate}} {{'common.comments' | translate}} <span class="comment-fm">
+            <i class="fa fa-flag" style="color:red;" aria-hidden="true"></i></span>
+        </h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12 col-xs-12 table-col">
+
+            <div class="table-responsive">
+              <table id="card-holder" class="table table-bordered table-stripped">
+                <thead>
+                </thead>
+                <tfoot>
+                </tfoot>
+                <tfoot></tfoot>
+              </table>
+            </div>
+            <!-- Table Ends -->
+          </div>
+        </div>
+      </div>
+      <!-- Modal Body Ends -->
+      <div class="modal-footer">
+        <button id="closeSearchCompanyModal" type="button" class="btn grey-btn" data-dismiss="modal">{{'button.close' |
+          translate}}</button>
+      </div>
+    </div>
+    <!-- Modal Content Ends -->
+  </div>
+</div>
+
+<!--[Start  card holder preview 9 April2020]-->
+<button class="green-btn-add btn" data-toggle="modal" id="cardHolderPrevie" data-target="#cardHolderPreview"
+  style="display:none"></button>
+
+<div id="cardHolderPreview" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static"
+  *ngIf="hasPrevieData">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">{{'cardHolderComments.previewCardholder' | translate}}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="grid-box">
+          <!-- Grid Heading Ends -->
+          <div class="grid-inner">
+            <!----section starts---->
+            <div class="grid-box">
+              <div
+                style="min-width: 1060px; width: 100%; font-weight: bold; background: #c6c9d0; padding: 5px 10px; min-height: 0; float: left">
+                <h3 style="margin: 5px;">General Information Section</h3>
+              </div>
+              <div class="grid-inner">
+                <div class="form-row">
+                  <div class="row min-ht-st">
+                    <div class="col-md-3 col-xs-12" style="width: 33%; float:left; margin-top: 5px;">
+                      <strong>
+                        <label>Company Name & No. </label>
+                      </strong>
+                      <p>{{coNameId}}</p>
+                    </div>
+                    <div class="col-md-3 col-xs-12" style="width: 33%; float:left; margin-top: 5px;">
+                      <strong>
+                        <label>Card ID</label>
+                      </strong>
+                      <p>{{previewData.cardNum}}</p>
+                    </div>
+                    <div class="col-md-3 col-xs-12" style="width: 33%; float:left; margin-top: 5px;">
+                      <strong>
+                        <label>Employment Date</label>
+                      </strong>
+                      <p>{{previewData.cardEmploymentDate}}</p>
+                    </div>
+                    <div class="col-md-3 col-xs-12" style="width: 33%; float:left; margin-top: 5px;">
+                      <strong>
+                        <label>Preferred Language</label>
+                      </strong>
+                      <p>{{getlang(previewData.languageKey)}}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div><!-----section ends---->
+
+            <!--------Card Eligibility section starts----->
+            <div class="grid-box">
+              <div
+                style="min-width: 1060px; width: 100%; font-weight: bold; background: #c6c9d0; padding: 5px 10px; min-height: 0; float: left">
+                <h3 style="margin: 5px;">Card Eligibility Section</h3>
+              </div>
+              <div class="grid-inner">
+                <div class="form-row">
+                  <div class="row min-ht-st">
+                    <div class="col-md-3 col-xs-12" style="width: 33%; float:left; margin-top: 5px;">
+                      <strong>
+                        <label>Plan#/Div#/Unit#/Unit Name</label>
+                      </strong>
+                      <p>{{coPlanSelected}}</p>
+                    </div>
+                    <div class="col-md-3 col-xs-12" style="width: 33%; float:left; margin-top: 5px;">
+                      <strong>
+                        <label>Effective Date</label>
+                      </strong>
+                      <p>{{previewData.cardEligibility.effectiveOn}}</p>
+                    </div>
+                    <div class="col-md-3 col-xs-12" style="width: 33%; float:left; margin-top: 5px;">
+                      <strong>
+                        <label>Expiry Date</label>
+                      </strong>
+                      <p>{{previewData.cardEligibility.expireOn}}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-----Card Eligibility sction ends----->
+            <div class="grid-box">
+              <div
+                style="min-width: 1060px; width: 100%; font-weight: bold; background: #c6c9d0; padding: 5px 10px; min-height: 0; float: left">
+                <h3 style="margin: 5px;">Comments Section</h3>
+              </div>
+              <div class="grid-inner">
+                <div class="form-row">
+
+                  <div class="table-responsive">
+                    <table id="comments" class="table table-bordered table-stripped">
+                      <thead>
+                        <tr>
+                          <th>Date</th>
+                          <th class="amount_right_grid">User Name</th>
+                          <th class="amount_right_grid">Department</th>
+                          <th class="amount_right_grid">Comments</th>
+                          <th class="amount_right_grid">Importance</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let comment of previewData.cardCommentsDtoList">
+                          <td>{{ commentsCurrentDate }}</td>
+                          <td class="amount_right_grid">{{ username}}</td>
+                          <td class="amount_right_grid">{{ department}}</td>
+                          <td class="amount_right_grid">{{ comment.cardCoTxt }}</td>
+                          <td class="amount_right_grid" *ngIf="comment.commentImportance == 'Y'"><span class="flag"><i
+                                class="fa fa-flag colorRed" aria-hidden="true"></i></span></td>
+                          <td class="amount_right_grid" *ngIf="comment.commentImportance == 'N'"></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!------- {{addCardHolderData | json}}------------Cardholder starts -->
+            <div class="grid-box">
+              <div
+                style="min-width: 1060px; width: 100%; font-weight: bold; background: #c6c9d0; padding: 5px 10px; min-height: 0; float: left">
+                <h3 style="margin: 5px;">Cardholder Section</h3>
+              </div>
+              <div class="grid-inner">
+                <div class="form-row">
+                  <div class="row">
+                    <div class="col-md-12 col-xs-12 table-col">
+                      <div class="table-responsive">
+                        <span id="cardhoderList" style="display:none">{{addCardHolderData.length}}</span>
+                        <table id='cardholder-list-table' class="table table-bordered table-stripped dataTable">
+                          <thead>
+                            <tr>
+                              <th width="20%">{{'common.last-name' | translate}}</th>
+                              <th class="amount_right" width="10%">{{'common.first-name'| translate}}
+                              </th>
+                              <th class="amount_right" width="10%">{{'user.userRoles.role' | translate}}
+                              </th>
+                              <th class="amount_right" width="20%">Effective Date
+                              </th>
+                              <th class="amount_right" width="20%">Expiry Date
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr class="tableRow" *ngFor="let dataRow of addCardHolderData; let i = index"
+                              id="{{'row_'+i}}">
+                              <td>
+                                {{dataRow.personLastName}}
+
+                              </td>
+                              <td class="alignDpRight amount_right">
+                                {{dataRow.personFirstName}}
+                              </td>
+                              <td class="alignDpRight amount_right">
+
+                                {{custData(dataRow.chRoleKey)}}
+                              </td>
+                              <td class="alignDpRight amount_right">
+
+                                {{custDate(dataRow.roleEffectiveOn)}}
+                              </td>
+                              <td class="alignDpRight amount_right">
+
+                                {{custDate(dataRow.roleExpiryOn)}}
+                              </td>
+                            </tr>
+                            <tr *ngIf="addCardHolderData.length == 0" class="odd">
+                              <td valign="top" colspan="4" class="dataTables_empty">
+                                {{'card.card-holder.data-tables.datamsg' | translate}}
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!---------Cardholder sction ends------>
+            <div class="grid-box">
+              <div
+                style="min-width: 1060px; width: 100%; font-weight: bold; background: #c6c9d0; padding: 5px 10px; min-height: 0; float: left">
+                <h3 style="margin: 5px;">Card Contact Address Section</h3>
+              </div>
+              <div class="grid-inner">
+                <div class="form-row">
+                  <div class="row min-ht-st">
+                    <div class="col-md-3 col-xs-12" style="width: 33%; float:left; margin-top: 5px;">
+                      <strong>
+                        <label>Address Line 1 </label>
+                      </strong>
+                      <p>{{previewData.cardContact.cardContactLine1MailAdd}}</p>
+                    </div>
+                    <div class="col-md-3 col-xs-12" style="width: 33%; float:left; margin-top: 5px;">
+                      <strong>
+                        <label>Phone No.</label>
+                      </strong>
+                      <p>{{previewData.cardContact.cardContactPhoneNum}}</p>
+                    </div>
+                    <div class="col-md-3 col-xs-12" style="width: 33%; float:left; margin-top: 5px;">
+                      <strong>
+                        <label>Fax No.</label>
+                      </strong>
+                      <p>{{previewData.cardContact.cardContactFaxNum}}</p>
+                    </div>
+                  </div>
+
+                  <div class="row min-ht-st">
+                    <div class="col-md-3 col-xs-12" style="width: 33%; float:left; margin-top: 5px;">
+                      <strong>
+                        <label>Address Line 2 </label>
+                      </strong>
+                      <p>{{previewData.cardContact.cardContactLine2MailAdd}}</p>
+                    </div>
+                    <div class="col-md-3 col-xs-12" style="width: 33%; float:left; margin-top: 5px;">
+                      <strong>
+                        <label>Postal Code</label>
+                      </strong>
+                      <p>{{previewData.cardContact.postalCD}}</p>
+                    </div>
+                    <div class="col-md-3 col-xs-12" style="width: 33%; float:left; margin-top: 5px;">
+                      <strong>
+                        <label>City</label>
+                      </strong>
+                      <p>{{previewData.cardContact.cityName}}</p>
+                    </div>
+                  </div>
+
+                  <div class="row min-ht-st">
+                    <div class="col-md-3 col-xs-12" style="width: 33%; float:left; margin-top: 5px;">
+                      <strong>
+                        <label>Province </label>
+                      </strong>
+                      <p>{{previewData.cardContact.provinceName}}</p>
+                    </div>
+                    <div class="col-md-3 col-xs-12" style="width: 33%; float:left; margin-top: 5px;">
+                      <strong>
+                        <label>Country</label>
+                      </strong>
+                      <p>{{previewData.cardContact.countryName}}</p>
+                    </div>
+                    <div class="col-md-3 col-xs-12" style="width: 33%; float:left; margin-top: 5px;">
+                      <strong>
+                        <label>Extension</label>
+                      </strong>
+                      <p>{{previewData.cardContact.cardContactExtension}}</p>
+                    </div>
+                  </div>
+                  <div class="row min-ht-st">
+                    <div class="col-md-3 col-xs-12" style="width: 33%; float:left; margin-top: 5px;">
+                      <strong>
+                        <label>Email Address</label>
+                      </strong>
+                      <p>{{previewData.cardContact.cardContactEmailAdd}}</p>
+                    </div>
+                    <div class="col-md-3 col-xs-12" style="width: 33%; float:left; margin-top: 5px;">
+                      <strong>
+                        <label>Effective Date </label>
+                      </strong>
+                      <p>{{previewData.cardContact.effectiveOn}}</p>
+                    </div>
+                    <div class="col-md-3 col-xs-12" style="width: 33%; float:left; margin-top: 5px;">
+                      <strong>
+                        <label>Expiry Date</label>
+                      </strong>
+                      <p>{{previewData.cardContact.expiredOn}}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!----------------SECTION 2 --------------->
+            <div class="grid-box">
+              <div
+                style="min-width: 1060px; width: 100%; font-weight: bold; background: #c6c9d0; padding: 5px 10px; min-height: 0; float: left">
+                <h3 style="margin: 5px;">Bank Account Section</h3>
+              </div>
+              <div class="grid-inner">
+                <div class="form-row">
+                  <div class="row min-ht-st">
+                    <div class="col-md-3 col-xs-12" style="width: 33%; float:left; margin-top: 5px;">
+                      <strong>
+                        <label>Bank No. </label>
+                      </strong>
+                      <p *ngIf='previewData.cardBankAccount'>{{previewData.cardBankAccount.cardBankNum}}</p>
+                      <p *ngIf='!previewData.cardBankAccount'>-</p>
+
+                    </div>
+                    <div class="col-md-3 col-xs-12" style="width: 33%; float:left; margin-top: 5px;">
+                      <strong>
+                        <label>Branch No.</label>
+                      </strong>
+                      <p *ngIf='previewData.cardBankAccount'>{{previewData.cardBankAccount.cardBankBranchNum}}</p>
+                      <p *ngIf='!previewData.cardBankAccount'>-</p>
+                    </div>
+                    <div class="col-md-3 col-xs-12" style="width: 33%; float:left; margin-top: 5px;">
+                      <strong>
+                        <label>Bank Name</label>
+                      </strong>
+                      <p *ngIf='previewData.cardBankAccount'>{{previewData.cardBankAccount.cardBaClientName}}</p>
+                      <p *ngIf='!previewData.cardBankAccount'>-</p>
+                    </div>
+                  </div>
+
+                  <div class="row min-ht-st">
+                    <div class="col-md-3 col-xs-12" style="width: 33%; float:left; margin-top: 5px;">
+                      <strong>
+                        <label>Account No. </label>
+                      </strong>
+                      <p *ngIf='previewData.cardBankAccount'>{{previewData.cardBankAccount.cardBankAccountNum}}</p>
+                      <p *ngIf='!previewData.cardBankAccount'>-</p>
+                    </div>
+                    <div class="col-md-3 col-xs-12" style="width: 33%; float:left; margin-top: 5px;">
+                      <strong>
+                        <label>Effective Date</label>
+                      </strong>
+                      <p *ngIf='previewData.cardBankAccount'>{{previewData.cardBankAccount.cardBaEffectiveOn}}</p>
+                      <p *ngIf='!previewData.cardBankAccount'>-</p>
+                    </div>
+                    <div class="col-md-3 col-xs-12" style="width: 33%; float:left; margin-top: 5px;">
+                      <strong>
+                        <label>Expiry Date</label>
+                      </strong>
+                      <p *ngIf='previewData.cardBankAccount'>{{previewData.cardBankAccount.cardExpiredOn}}</p>
+                      <p *ngIf='!previewData.cardBankAccount'>-</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--------------------sECTION 2 ENDS -------------------------- -->
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button id="ReportResetFooterButton" type="button" class="btn grey-btn" data-dismiss="modal"
+            (click)="resetGovCdaNetForm()">{{ 'button.close' | translate }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

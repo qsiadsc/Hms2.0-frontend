@@ -1,0 +1,521 @@
+<!-- Section Heading Starts -->
+<div class="section-heading">
+  <h2>HEALTH SERVICES -
+    <span>{{'button.search'|translate}}</span>
+  </h2>
+</div>
+<!-- Section Heading Ends -->
+<div class="grid-box">
+  <div class="grid-heading">
+    <h3>Search Health Service</h3>
+    <div class="web-reg">
+      <button id="fghs_addNewProcCode" *ngIf="healthServiceCheck[0].addHealthService == 'T'" data-toggle="modal"
+        data-target="#AddNewHealthService" class="green-btn-add btn" (click)="enableAddMode()">
+        <i class="fa fa-plus"></i>Add New Health Service</button>
+    </div>
+  </div>
+  <!-- Grid Heading Ends -->
+  <div class="grid-inner">
+    <form [formGroup]="healthServiceSearchForm">
+      <div class="form-row">
+        <div class="row min-ht-sf">
+          <div class="col-md-3 col-xs-12">
+            <label>Service ID</label>
+            <input type="text" id="fghs_searchId" formControlName="searchId" class="form-control"
+              placeholder="Service ID" />
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>Effective Date</label>
+            <div class="calender-field">
+              <my-date-picker id="fghs_effectiveDate" [options]="myDatePickerOptions" name="searchEffectiveOn"
+                formControlName="searchEffectiveOn"
+                (inputFocusBlur)="changeDateFormat($event, 'searchEffectiveOn','healthServiceSearchForm')"
+                placeholder="{{'common.date-placeholder' | translate}}">
+              </my-date-picker>
+              <show-errors [control]="healthServiceSearchForm.controls.searchEffectiveOn"></show-errors>
+            </div>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>&nbsp;</label>
+            <button id="fghs_searchFilter" *ngIf="healthServiceCheck[0].searchHealthService == 'T'" type="submit"
+              class="btn green-btn" (click)="searchProcedureCode()" title="{{'common.search' | translate}}">
+              {{ 'button.search' | translate }}</button>
+            <button id="fghs_Clear" type="button" class="btn grey-btn" (click)="resetSearchForm()"
+              title="{{'common.clear' | translate}}">{{ 'button.clear' | translate }}</button>
+          </div>
+        </div>
+      </div>
+      <!-- Form Row ENds -->
+    </form>
+  </div>
+  <!-- Grid Inner Ends -->
+</div>
+<div [hidden]="!showSearchTable">
+  <div class="grid-box">
+    <div class="grid-heading">
+      <h3>Health Service List</h3>
+    </div>
+    <div class="grid-inner">
+      <div [ngClass]="{'tableLoader': showtableLoader}">
+        <div class="form-group">
+          <div class="table-responsive">
+            <table id="healthServiceList" class="table table-bordered table-tree-str alignRightText">
+              <thead>
+                <tr>
+                  <th>Service ID</th>
+                  <th>Coverage Category</th>
+                  <th>Parent ID - Description</th>
+                  <th>Effective On</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody *ngIf="ServiceList.length != 0 && !showtableLoader">
+                <ng-container *ngFor="let service of ServiceList">
+                  <tr>
+                    <td (click)="service.firstChild.length != 0 ? changeIcon(service) : false">
+                      <span style="width:25% !important"
+                        *ngIf="service.firstChild.length == 0">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                      <span style="width:25% !important" *ngIf="service.firstChild.length != 0"><i class="fa fa-fw"
+                          [ngClass]="{'fa-caret-down': !showRightArrow , 'fa-caret-right': serviceKey!= service.serviceKey }"
+                          aria-hidden="true"></i></span>
+                      <span style="width:75% !important">{{service.serviceId}}</span>
+                    </td>
+                    <td>{{service.coverageCategory}}</td>
+                    <td>{{service.parentDescription}}</td>
+                    <td>{{service.effectiveOn | dateFormate }}</td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td colspan="5" [hidden]="serviceKey!= service.serviceKey">
+                      <table class="table table-bordered alignRightText">
+                        <tbody *ngIf="service.firstChild.length != 0 && !showtableLoader">
+                          <ng-container *ngFor="let service1 of service.firstChild">
+                            <tr class="treeChildRow">
+                              <td (click)="service1.secondChild.length != 0 ? changeIconSecondChild(service1) : false">
+                                <span style="width:25% !important"
+                                  *ngIf="service1.secondChild.length == 0">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                <span style="width:25% !important" *ngIf="service1.secondChild.length != 0"><i
+                                    class="fa fa-fw"
+                                    [ngClass]="{'fa-caret-down': !showRightChildArrow , 'fa-caret-right': childServiceKey!= service1.serviceKey }"
+                                    aria-hidden="true"></i></span>
+                                <span style="width:75% !important">{{service1.serviceId}}</span>
+                              </td>
+                              <td>{{service1.coverageCategory}}</td>
+                              <td>{{service1.parentDescription}}</td>
+                              <td>{{service1.effectiveOn | dateFormate }}</td>
+                              <td>
+                                <a class="green-btn btn" *ngIf="healthServiceCheck[0].viewHealthService == 'T'"
+                                  data-toggle="modal" title="{{'common.view' | translate}}"
+                                  data-target="#AddNewHealthService" (click)="viewHealthServiceByKey(service1)">
+                                  <i class="fa fa-eye"></i>
+                                </a>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td colspan="5" [hidden]="childServiceKey!= service1.serviceKey">
+                                <table class="table table-bordered alignRightText">
+                                  <tbody *ngIf="service1.secondChild.length != 0">
+                                    <ng-container *ngFor="let service2 of service1.secondChild">
+                                      <tr class="treeChildRow">
+                                        <td
+                                          (click)="service2.thirdChild.length != 0 ? changeIconThirdChild(service2) : false">
+                                          <span style="width:25% !important"
+                                            *ngIf="service2.thirdChild.length == 0">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                          <span style="width:25% !important" *ngIf="service2.thirdChild.length != 0"><i
+                                              class="fa fa-fw"
+                                              [ngClass]="{'fa-caret-down': !showRightThirdChildArrow , 'fa-caret-right': thirdChildServiceKey!= service2.serviceKey }"
+                                              aria-hidden="true"></i></span>
+                                          <span style="width:75% !important">{{service2.serviceId}}</span>
+                                        </td>
+                                        <td>{{service2.coverageCategory}}</td>
+                                        <td>{{service2.parentDescription}}</td>
+                                        <td>{{service2.effectiveOn | dateFormate }}</td>
+                                        <td>
+                                          <a class="green-btn btn"
+                                            *ngIf="healthServiceCheck[0].viewHealthService == 'T'" data-toggle="modal"
+                                            title="{{'common.view' | translate}}" data-target="#AddNewHealthService"
+                                            (click)="viewHealthServiceByKey(service2)">
+                                            <i class="fa fa-eye"></i>
+                                          </a>
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                        <td colspan="5" [hidden]="thirdChildServiceKey!= service2.serviceKey">
+                                          <table class="table table-bordered alignRightText">
+                                            <tbody *ngIf="service2.thirdChild.length != 0 && !showtableLoader">
+                                              <ng-container *ngFor="let service3 of service2.thirdChild">
+                                                <tr class="treeChildRow">
+                                                  <td
+                                                    (click)="service3.fourthChild.length != 0 ? changeIconFourthChild(service3) : false">
+                                                    <span style="width:25% !important"
+                                                      *ngIf="service3.fourthChild.length == 0">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                                    <span style="width:25% !important"
+                                                      *ngIf="service3.fourthChild.length != 0"><i class="fa fa-fw"
+                                                        [ngClass]="{'fa-caret-down': !showRightFourthChildArrow , 'fa-caret-right': fourthChildServiceKey!= service3.serviceKey }"
+                                                        aria-hidden="true"></i></span>
+                                                    <span style="width:75% !important">{{service3.serviceId}}</span>
+                                                  </td>
+                                                  <td>{{service3.coverageCategory}}</td>
+                                                  <td>{{service3.parentDescription}}</td>
+                                                  <td>{{service3.effectiveOn | dateFormate }}</td>
+                                                  <td>
+                                                    <a class="green-btn btn"
+                                                      *ngIf="healthServiceCheck[0].viewHealthService == 'T'"
+                                                      data-toggle="modal" title="{{'common.view' | translate}}"
+                                                      data-target="#AddNewHealthService"
+                                                      (click)="viewHealthServiceByKey(service3)">
+                                                      <i class="fa fa-eye"></i>
+                                                    </a>
+                                                  </td>
+                                                </tr>
+                                                <tr>
+                                                  <td colspan="5"
+                                                    [hidden]="fourthChildServiceKey != service3.serviceKey">
+                                                    <table class="table table-bordered alignRightText">
+                                                      <tbody *ngIf="service3.fourthChild.length != 0">
+                                                        <ng-container *ngFor="let service4 of service3.fourthChild">
+                                                          <tr class="treeChildLastRow">
+                                                            <td>{{service4.serviceId}}</td>
+                                                            <td>{{service4.coverageCategory}}</td>
+                                                            <td>{{service4.parentDescription}}</td>
+                                                            <td>{{service4.effectiveOn | dateFormate }}</td>
+                                                            <td>
+                                                              <a class="green-btn btn"
+                                                                *ngIf="healthServiceCheck[0].viewHealthService == 'T'"
+                                                                data-toggle="modal"
+                                                                title="{{'common.view' | translate}}"
+                                                                data-target="#AddNewHealthService"
+                                                                (click)="viewHealthServiceByKey(service4)">
+                                                                <i class="fa fa-eye"></i>
+                                                              </a>
+                                                            </td>
+                                                          </tr>
+                                                        </ng-container>
+                                                      </tbody>
+                                                    </table>
+                                                  </td>
+                                                </tr>
+                                              </ng-container>
+                                            </tbody>
+                                          </table>
+                                        </td>
+                                      </tr>
+                                    </ng-container>
+                                  </tbody>
+                                </table>
+                              </td>
+                            </tr>
+                          </ng-container>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </ng-container>
+              </tbody>
+              <tbody *ngIf="ServiceList">
+                <tr *ngIf="ServiceList.length == 0 && !showtableLoader" class="odd">
+                  <td valign="top" colspan="5" style="text-align: center" class="dataTables_empty">
+                    {{'card.card-holder.data-tables.datamsg' | translate}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div *ngIf="!showtableLoader" class="has-text-centered" style="text-align: -webkit-right;margin-top: 10px;">
+            <pagination-controls (pageChange)="page = $event"></pagination-controls>
+          </div>
+        </div>
+        <span *ngIf="showtableLoader" class="loading" data-name="Loading">Processing....</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add New Health Service Modal-->
+<div id="AddNewHealthService" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="resetHealthServiceForm" type="button" class="close" data-dismiss="modal"
+          (click)="clearAddHealthServiceForm()">&times;</button>
+        <h4 *ngIf="addMode" class="modal-title">Add Health Service</h4>
+        <h4 *ngIf="viewMode" class="modal-title">Health Service Details</h4>
+        <h4 *ngIf="editMode" class="modal-title">Edit Health Service</h4>
+      </div>
+
+      <div class="modal-body">
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{'feeGuide.dentalService.service' | translate}}</h3>
+          </div>
+          <!-- Grid Heading Ends -->
+          <div class="grid-inner">
+            <form [formGroup]="addHealthServiceForm">
+              <div class="form-row">
+                <div class="row min-ht-sf">
+                  <div class="col-md-4 col-xs-12">
+                    <label>{{'feeGuide.dentalService.coverageCategory' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <ng2-completer [(ngModel)]="coverageCategory" [inputId]="'healthCoverageCategory'"
+                      formControlName="coverageCategory" [datasource]="coverageCategoryDataRemote" [minSearchLength]="1"
+                      [clearUnselected]="true" [placeholder]="'Search Coverage Category'"
+                      [textSearching]="'Please wait...'" [inputClass]="'form-control'" [fillHighlighted]="false"
+                      [autoHighlight]="true" [selectOnFocus]="true" (selected)="onSelect($event, 'coverageCategory')">
+                    </ng2-completer>
+                    <show-errors [control]="addHealthServiceForm.controls.coverageCategory"></show-errors>
+                  </div>
+
+                  <div class="col-md-4 col-xs-12">
+                    <label>{{'feeGuide.dentalService.patientServiceId' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <ng2-completer [(ngModel)]="parentServiceId" [inputId]="'healthPatientServiceId'"
+                      id="healthPatientServiceId" formControlName="parentServiceId"
+                      [datasource]="parentServiceDataRemote" [minSearchLength]="1" [clearUnselected]="true"
+                      [placeholder]="'Search Parent Service ID'" [textSearching]="'Please wait...'"
+                      [inputClass]="'form-control'" [fillHighlighted]="false" [autoHighlight]="true"
+                      [selectOnFocus]="true" (selected)="onSelect($event, 'parentServiceId')">
+                    </ng2-completer>
+                    <show-errors [control]="addHealthServiceForm.controls.parentServiceId"></show-errors>
+                  </div>
+
+                  <div class="col-md-4 col-xs-12">
+                    <label>{{'feeGuide.dentalService.serviceId' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <input id="healthServiceId" type="text" class="form-control" name="serviceId"
+                      formControlName="serviceId" maxlength="5"
+                      placeholder="{{'feeGuide.dentalService.serviceId' | translate}}" />
+                    <show-errors [control]="addHealthServiceForm.controls.serviceId"></show-errors>
+                  </div>
+
+                  <div class="col-md-4 col-xs-12 txtarea-height">
+                    <label>{{'feeGuide.dentalService.descriptionShort' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <textarea id="healthDescriptionShort" class="form-control" name="descriptionShort"
+                      formControlName="descriptionShort"
+                      placeholder="{{'feeGuide.dentalService.descriptionShort' | translate}}"></textarea>
+                    <show-errors [control]="addHealthServiceForm.controls.descriptionShort"></show-errors>
+                  </div>
+
+                  <div class="col-md-8 col-xs-12 txtarea-height">
+                    <label>{{'feeGuide.dentalService.descriptionLong' | translate}}</label>
+                    <textarea id="healthDescriptionLong" class="form-control" name="descriptionLong"
+                      formControlName="descriptionLong"
+                      placeholder="{{'feeGuide.dentalService.descriptionLong' | translate}}"></textarea>
+                  </div>
+
+                  <div class="col-md-4 col-xs-12 txtarea-height">
+                    <label>{{'feeGuide.dentalService.effectiveDate' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <div class="calender-field">
+                      <my-date-picker id="healthEffectiveDate" [options]="myDatePickerOptions" name="effectiveOn"
+                        formControlName="effectiveOn"
+                        (inputFocusBlur)="changeDateFormat($event, 'effectiveOn','addHealthServiceForm', true)"
+                        placeholder="{{'common.date-placeholder' | translate}}">
+                      </my-date-picker>
+                      <show-errors [control]="addHealthServiceForm.controls.effectiveOn"></show-errors>
+                    </div>
+                  </div>
+
+                  <div class="col-md-4 col-xs-12 txtarea-height">
+                    <label>{{'feeGuide.dentalService.expiryDate' | translate}}</label>
+                    <div class="calender-field">
+                      <my-date-picker id="healthExpiryDate" [options]="myDatePickerOptions" name="expiredOn"
+                        formControlName="expiredOn" [ngClass]="expired  ? 'expired' : 'notExpired'"
+                        (inputFocusBlur)="changeDateFormat($event, 'expiredOn','addHealthServiceForm')"
+                        placeholder="{{'common.date-placeholder' | translate}}">
+                      </my-date-picker>
+                      <show-errors [control]="addHealthServiceForm.controls.expiredOn"></show-errors>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- INLINE HEALTH PROC TABLE START  -->
+              <div class="form-row">
+                <label>&nbsp;</label>
+                <div class="pull-right">
+                  <button id="maskAddNew" class="green-btn-add btn" [disabled]="viewMode" (click)="enableAddProc()">
+                    <i class="fa fa-plus"></i>Add Procedure</button>
+                </div>
+                <div class="row">
+                  <div class="col-md-12 col-xs-12 table-col">
+                    <div class="table-responsive search-table">
+                      <div style="color: red" class="alert alert-danger"
+                        *ngIf="(newProcId.invalid && (newProcId.dirty || newProcId.touched))">
+                        <div *ngIf="newProcId.invalid && (newProcId.dirty || newProcId.touched)">
+                          <div *ngIf="newProcId.errors.required">
+                            Procedure ID is required
+                          </div>
+                          <div *ngIf="!newProcId.errors.required && newProcId.errors.maxlength">
+                            {{ 'rules.errors.max5Numbers' | translate }}
+                          </div>
+                          <div *ngIf="!newProcId.errors.required && newProcId.errors.minlength">
+                            {{ 'rules.errors.min3Numbers' | translate }}
+                          </div>
+                          <div *ngIf="!newProcId.errors.required && newProcId.errors.alreadyExist">
+                            {{ 'feeGuide.toaster.procCodeAlreadyExists' | translate }}
+                          </div>
+                        </div>
+                      </div>
+                      <table class="table table-bordered table-stripped" id="dentalProcTable">
+                        <thead>
+                          <tr>
+                            <th width="">{{'feeGuide.procedureCode.proc-code-listing.proc-id'|translate}}</th>
+                            <th width="" class="text-right">Procedure Description</th>
+                            <th width="" class="text-right">Procedure Long Description</th>
+                            <th width="" class="text-right">{{'rules.addEditViewRule.action' | translate}}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngIf="addProcMode">
+                            <td>
+                              <input [formControl]="newProcId" class="fm-txt form-control" type="input"
+                                OnlyNumber="true" (blur)="validateProcId($event)" placeholder="Procedure ID"
+                                (keydown)="isNumberKey($event)">
+                            </td>
+                            <td>
+                              <input [formControl]="procShortDesc" class="fm-txt form-control text-right notInCaps"
+                                type="input" placeholder="Procedure Description">
+                            </td>
+                            <td>
+                              <input [formControl]="procLongDesc" class="fm-txt form-control text-right notInCaps"
+                                type="input" placeholder="Procedure Long Description">
+                            </td>
+                            <td class="text-right">
+                              <button type="button" (click)="addNewProc(newProc)" class="table-action-btn save-ico "
+                                title="{{'common.save' | translate}}">
+                                <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                              </button>
+                              <button id="planInfoDelete" type="button" (click)="resetNewProcRow()"
+                                title="{{'common.cancel' | translate}}" class="table-action-btn cancel-ico">
+                                <i class="fa fa-times" aria-hidden="true"></i>
+                              </button>
+                            </td>
+                          </tr>
+                          <div *ngIf="procList.length > 0 || addProcMode; then procRecordFound else procRecordNotFound">
+                          </div>
+                          <ng-template #procRecordNotFound>
+                            <tr>
+                              <td colspan="4" class="text-center">{{'rules.addEditViewRule.noData' | translate}}</td>
+                            </tr>
+                          </ng-template>
+                          <ng-template #procRecordFound>
+                            <tr *ngFor="let proc of procList; let rowIndex = index">
+                              <td>
+                                <span *ngIf="rowIndex != selectedProc.rowIndex">{{proc.healthProcedureId}}</span>
+                                <input class="fm-txt form-control" type="text" [formControl]="newProcId"
+                                  *ngIf="editProcMode && rowIndex == selectedProc.rowIndex"
+                                  [(ngModel)]="selectedProc.healthProcedureId">
+                              </td>
+                              <td class="text-right">
+                                <span *ngIf="rowIndex != selectedProc.rowIndex">{{proc.healthProcedureDesc}}</span>
+                                <input [formControl]="procShortDesc" class="fm-txt form-control text-right notInCaps"
+                                  type="input" placeholder="Proc Short Desc"
+                                  *ngIf="editProcMode && rowIndex == selectedProc.rowIndex"
+                                  [(ngModel)]="selectedProc.healthProcedureDesc">
+                              </td>
+                              <td class="text-right">
+                                <span *ngIf="rowIndex != selectedProc.rowIndex">{{proc.healthProcedureLongDesc}}</span>
+                                <input [formControl]="procLongDesc" class="fm-txt form-control text-right notInCaps"
+                                  type="input" placeholder="Proc Long Desc"
+                                  *ngIf="editProcMode && rowIndex == selectedProc.rowIndex"
+                                  [(ngModel)]="selectedProc.healthProcedureLongDesc">
+                              </td>
+                              <td class="text-right">
+                                <button id="procEdit" *ngIf="rowIndex != selectedProc.rowIndex" [disabled]="viewMode"
+                                  title="{{'common.edit' | translate}}" type="button" class="table-action-btn edit-ico"
+                                  (click)="enableEditProc(proc, rowIndex)">
+                                  <i class="fa fa-pencil"></i>
+                                </button>
+
+                                <button id="procDelete" *ngIf="rowIndex != selectedProc.rowIndex" [disabled]="viewMode"
+                                  title="{{'common.delete' | translate}}" type="button" class="table-action-btn del-ico"
+                                  (click)="deleteProd(rowIndex)">
+                                  <i class="fa fa-trash"></i>
+                                </button>
+
+                                <button id="procUpdate" *ngIf="editProcMode && rowIndex == selectedProc.rowIndex"
+                                  type="button" class="table-action-btn save-ico" title="{{'common.save' | translate}}"
+                                  (click)="updateProc(rowIndex)">
+                                  <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                </button>
+                                <button id="procEdit1" *ngIf="editProcMode && rowIndex == selectedProc.rowIndex"
+                                  type="button" class="table-action-btn cancel-ico "
+                                  title="{{'common.cancel' | translate}}" (click)="resetProcInfo()">
+                                  <i class="fa fa-times" aria-hidden="true"></i>
+                                </button>
+                              </td>
+                            </tr>
+                          </ng-template>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- INLINE HEALTH PROC TABLE END -->
+            </form>
+            <!-- Form Row ENds -->
+          </div>
+        </div>
+        <!-- Grid Box Ends -->
+
+        <div *ngIf="viewMode" class="grid-box">
+          <div class="grid-heading">
+            <h3>{{'feeGuide.dentalService.attachedProcedureCode' | translate}}</h3>
+          </div>
+          <!-- Grid Heading Ends -->
+          <div class="grid-inner">
+            <div class="form-row">
+              <div class="row">
+                <div class="col-md-12 col-xs-12 table-col">
+                  <div class="table-responsive">
+                    <table id="healthProcedureCodeList" class="table table-bordered table-stripped">
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Form Row ENds -->
+          </div>
+        </div>
+        <!-- Grid Box Ends -->
+      </div>
+      <div class="modal-footer">
+        <label>&nbsp;</label>
+        <button id="healthSaveBtn" *ngIf="addMode" title="Save" class="green-btn btn" type="submit"
+          (keyup.arrowLeft)="focusNextEle($event,'closeHealthServiceForm')"
+          (keyup.arrowRight)="focusNextEle($event,'closeHealthServiceForm')"
+          (click)="submitHealthServiceForm(addHealthServiceForm)">
+          {{'button.save' | translate}}</button>
+        <button id="closeHealthServiceForm" *ngIf="addMode" type="button" title="Close" class="btn grey-btn"
+          data-dismiss="modal" (keyup.arrowLeft)="focusNextEle($event,'healthSaveBtn')"
+          (keyup.arrowRight)="focusNextEle($event,'healthSaveBtn')"
+          (click)="clearAddHealthServiceForm()">{{'button.close' | translate}}</button>
+        <button id="healthEditBtn" *ngIf="viewMode" class="green-btn btn" title="Edit"
+          (keyup.arrowLeft)="focusNextEle($event,'closeHealthServiceForm')"
+          (keyup.arrowRight)="focusNextEle($event,'closeHealthServiceForm')" (click)="enableEditMode()">
+          {{'button.edit' | translate}}</button>
+        <button id="closeHealthServiceForm" *ngIf="viewMode" type="button" title="Close" class="btn grey-btn"
+          data-dismiss="modal" (keyup.arrowLeft)="focusNextEle($event,'healthEditBtn')"
+          (keyup.arrowRight)="focusNextEle($event,'healthEditBtn')"
+          (click)="clearAddHealthServiceForm()">{{'button.close' | translate}}</button>
+        <button id="healthUpdateBtn" *ngIf="editMode" title="Update" class="green-btn btn" type="submit"
+          (keyup.arrowLeft)="focusNextEle($event,'closeHealthServiceForm')"
+          (keyup.arrowRight)="focusNextEle($event,'closeHealthServiceForm')"
+          (click)="submitHealthServiceForm(addHealthServiceForm)">
+          {{'button.update' | translate}}</button>
+        <button id="closeHealthServiceForm" *ngIf="editMode" type="button" title="Close" class="btn grey-btn"
+          data-dismiss="modal" (keyup.arrowLeft)="focusNextEle($event,'healthUpdateBtn')"
+          (keyup.arrowRight)="focusNextEle($event,'healthUpdateBtn')"
+          (click)="clearAddHealthServiceForm()">{{'button.close' | translate}}</button>
+      </div>
+      <!-- Modal  Footer Ends -->
+    </div>
+  </div>
+</div>
+<!-- Add New Fee Guide Modal-->

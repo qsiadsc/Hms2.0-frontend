@@ -1,0 +1,13 @@
+<div class="form-row">
+  <div class="row">
+    <div class="fd-tabs">
+      <div class="col-md-12">
+        <a  *ngIf="(bothAccess || isQuikcard) && dashBoardCheck[0].quikcardDashboard == 'T'" class="btn" [ngClass]="(quikcardTab == true) ? 'green-btn': 'grey-btn'"(click) = "addActiveTab('q')" [routerLink]="['/claimDashboard']" >{{'header.quikcardDashboard' | translate }}</a>
+        <a  class="btn" *ngIf="dashBoardCheck[0].financeDashboard == 'T' && uftTabsCheck" [ngClass]="(financeTab == true) ? 'green-btn': 'grey-btn'" (click) = "addActiveTab('f')" [routerLink]="['/unitFinancialTransaction/dashboard']" >{{'header.financeDashboard' | translate }}</a>
+        <a *ngIf="dashBoardCheck[0].dataManagementDashboard == 'T'" class="btn" [ngClass]="(dataManagementTab == true) ? 'green-btn': 'grey-btn'" (click) = "addActiveTab('dm')" [routerLink]="['/dataManagement']" >{{'header.dataManagementDashboard' | translate }}</a>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Form Row Ends -->
+

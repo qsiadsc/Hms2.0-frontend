@@ -1,0 +1,56 @@
+﻿
+
+.dialog-icon-info
+{
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+    background:url("Images/dialog-icons.png") no-repeat -5px 0px; 
+}
+.dialog-icon-warning
+{
+    width: 30px;
+    height: 27px;
+    margin-right: 10px;
+    background:url("Images/dialog-icons.png") no-repeat -37px 0px;   
+}
+.dialog-icon-error
+{
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+    background:url("Images/dialog-icons.png") no-repeat -5px -31px;   
+}
+.dialog-icon-question
+{
+    width: 32px;
+    height: 32px;
+    margin-right: 10px;
+    background:url("Images/question-icon.png") no-repeat;   
+}
+
+.border-to-dialog {
+  border: #c5c5c5 1px solid;
+  border-radius: 5px;
+}
+
+.my-dialog-header {
+    background-color: #e1f0f0;
+    border-bottom: 1px solid #c5c5c5;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+.my-dialog-body {
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+.my-dialog-footer {
+    background-color: #e1f0f0;
+    border-top: 1px solid #c5c5c5;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+.dialog-body tr td{ vertical-align: middle; background-color: none !important; }
+.dialog-body tr:hover td {background-color: none !important;}
+.dialog-body tr { background: #efefef !important;}
+.dialog-body tr td p{ font-size: 14px;} 

@@ -1,0 +1,16 @@
+<div *ngIf="!isLoading">File Loading....</div>
+<div style="text-align:center">
+<button class="btn green-btn" (click)="done()" style="float:left;left:0;">Done</button>
+<button class="btn green-btn" (click)="setPage(-1)">prev</button>
+<button class="btn green-btn" (click)="setPage(1)">next</button>
+</div>
+<pdf-viewer
+[(page)]="page"
+[show-all]="false"
+[stick-to-page]="stickToPage"
+[render-text]="false"
+(after-load-complete)="onAfterLoad($event)"
+(on-progress)="onProgress($event)"
+src="/assets/images/gre_research_validity_data.pdf"
+style="display: block;">
+</pdf-viewer>

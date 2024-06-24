@@ -1,0 +1,161 @@
+<div class="section-heading">
+  <h2>Reports </h2>
+</div>
+<div class="grid-box">
+  <div class="grid-heading">
+    <h3>{{'report.reportList' | translate}} </h3>
+  </div>
+  <!-- Grid Heading Ends -->
+  <div class="grid-inner">
+    <div class="form-row">
+      <div class="table-responsive hms-loading-table">
+          <div class="table-responsive alignDpRight">
+            <div class="table-responsive dashboard">
+              <generic-table [gtClasses]="'table-sm'" #myReportTable [gtSettings]="configObjectReport.settings"
+                [gtFields]="configObjectReport.fields" [(gtData)]="configObjectReport.data"
+                (gtEvent)="onClickReportRow($event)" [gtOptions]="{numberOfRows:20}"></generic-table>
+              <div class="text-center">
+                <small>
+                  <gt-table-info class="form-text text-muted mb-2" [genericTable]="myReportTable"></gt-table-info>
+                </small>
+                <gt-pagination [gtClasses]="'pagination-sm justify-content-center'" [genericTable]="myReportTable">
+                </gt-pagination>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+    <!-- Form Row ENds -->
+  </div>
+  <!-- Grid Inner Ends -->
+</div>
+<!-- Grid Box Ends -->
+
+<button class="green-btn-add btn" data-toggle="modal" id="reportListPopUp" data-target="#openReportPopUp" style="display:none"></button>
+<!--Report List Modal-->
+<div id="openReportPopUp" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" (click)="resetReportForm()">&times;</button>
+        <h4 class="modal-title">{{reportPopUpTitle}}</h4>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="showHideFilter" class="grid-box">
+          <!-- Grid Heading Ends -->
+          <div class="grid-inner">
+             <form [formGroup]="dataEntryReportFormGroup" (ngSubmit)="onSubmitDataEntryReport(dataEntryReportFormGroup)">
+                <div class="form-row">
+                    <div class="row">
+                        <div class="col-md-3 col-xs-12" *ngIf="showFilterFields[0].startDate" >
+                            <label>{{'report.startDate' | translate}}<span class="required">*</span></label>    
+                            <div class="calender-field">
+                                <my-date-picker id="startDate" placeholder="Start Date" [options]="myDatePickerOptions" name="startDate" (inputFocusBlur)="changeDateFormat($event, 'startDate' ,'dataEntryReportFormGroup')" formControlName="startDate"> </my-date-picker> 
+                                <show-errors [control]="dataEntryReportFormGroup.controls.startDate"></show-errors>		 
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-xs-12" *ngIf="showFilterFields[1].endDate">
+                            <label>{{'report.endDate' | translate}}<span class="required">*</span></label>    
+                            <div class="calender-field">
+                                <my-date-picker id="endDate" placeholder="End Date" [options]="myDatePickerOptions" name="endDate" (inputFocusBlur)="changeDateFormat($event, 'endDate' ,'dataEntryReportFormGroup')" formControlName="endDate"> </my-date-picker> 
+                                <show-errors [control]="dataEntryReportFormGroup.controls.endDate"></show-errors>			 
+                            </div><!-- Calendar Field Ends -->
+                        </div>
+                        <div *ngIf="tableId == 'productionReport'" class="col-md-3 col-xs-12">
+                          <label>Operator</label>
+                          <div class="drop-rel" id="operator" >
+                            <select id="" class="fm-txt form-control" placeholder="Operator" name="operator" formControlName="operator" [value]='0' [ngClass]="{'disableMultiselect': viewMode}">
+                              <option value="" selected>Select Operator</option>
+                              <option *ngFor="let user of userList" [value]="user.username">{{user.username}}</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div *ngIf="tableId == 'productionReport'" class="col-md-3 col-xs-12">
+                          <label>&nbsp;</label>
+                          <div class="select-options">
+                              <span>
+                                  <label>
+                                      <span class="custom-check">
+                                      <input id="autoGenerateMail" type="checkbox" [(ngModel)]="checkboxValue"
+                                        name="mailCheck" formControlName="mailCheck"> Auto-Generate
+                                      <span></span>
+                                      </span>
+                                  </label>
+                                </span>
+                          </div>
+                      </div>
+                      <div *ngIf="tableId == 'productionReport'" class="col-md-3 col-xs-12">
+                        <label>Email Report To</label>
+                        <input id="emailReportTo" type="text" class="fm-txt form-control" formControlName="emailReportTo" name="emailReportTo" placeholder="Email Report To">
+                        <show-errors [control]="dataEntryReportFormGroup.controls.emailReportTo"></show-errors>
+                      </div>
+
+                        <!-- Calendar Field Ends -->
+                        <div class="col-md-3 col-xs-12">
+                            <label>&nbsp;</label>
+                            <button id="financeReport" class="btn green-btn">{{'button.search' | translate}}</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+          </div>
+        </div>
+        <div *ngIf="showHideNoDataFound" class="grid-box">
+          <div class="grid-heading">
+            <h3>{{'report.noDataFound' | translate}}</h3>
+          </div>
+        </div>  
+        <div [hidden]="!showReportList">
+          <div class="grid-box">
+            <div class="grid-heading">
+              <h3>{{'report.reportGrid' | translate}}</h3>
+            </div>
+            <!-- Grid Heading Ends -->
+            <div class="grid-inner">
+              <div class="form-row">
+                <div class="row">
+                  <div class="col-md-12 col-xs-12 table-col">
+
+                    <div *ngIf="tableId == 'productionReport'" class="table-responsive">
+                        <table id="productionReport" class="display table table-bordered table-stripped">
+                        </table>
+                    </div>
+
+                    <div *ngIf="tableId == 'submissionStatsReport'" class="table-responsive">
+                        <table id="submissionStatsReport" class="display table table-bordered table-stripped">
+                        </table>
+                    </div>
+
+                    <!--[Start Download Dropdown]-->
+                    <div class="form-row text-center disable-export-button" id="{{tableId}}_reportsPdfButton">
+                        <div class="row">
+                          <div class="col-md-12 col-xs-12">
+                            <div class="dropdown pull-right">
+                              <button class="btn green-btn" type="button" (click)="dowloadPDFReport()">Generate PDF</button>
+                            </div>
+                          </div>
+  
+                        </div>
+                      </div>
+                      <!--[End Download Dropdown]-->
+                    <!-- Table Ends -->
+                  </div>
+                </div>
+              </div>
+              <!-- Form Row ENds -->
+            </div>
+            <!-- Grid Inner Ends -->
+          </div>
+        </div>  
+        <!-- Grid Box Ends -->
+      </div><!-- Modal Body End-->
+        <div class="modal-footer">
+				<button id="ReportResetFooterButton" type="button" class="btn grey-btn" data-dismiss="modal" (click)="resetReportForm()">{{ 'button.close' | translate }}</button>
+			</div>  
+    </div>
+  </div>
+
+</div>
+<!--Report List Modal-->

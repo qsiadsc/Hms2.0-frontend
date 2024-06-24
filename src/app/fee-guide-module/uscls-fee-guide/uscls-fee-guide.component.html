@@ -1,0 +1,463 @@
+<div class="section-heading">
+  <h2>{{'feeGuide.USCLSFeeGuide.headings.uscls'|translate}}
+    <span>{{'feeGuide.USCLSFeeGuide.headings.fee-guide'|translate}}</span>
+  </h2>
+</div>
+<!-- Section Heading Ends -->
+
+<div class="grid-box">
+  <div class="grid-heading">
+    <h3>{{'feeGuide.USCLSFeeGuide.headings.search-fee-guide'|translate}}</h3>
+    <div class="web-reg">
+      <button id="fguscls_search_createNewFeeGuide" *ngIf="UsclsFeeGuideList[0].createUsclsFeeGuide == 'T'"
+        class="green-btn-add btn" (click)="addFeeGuide()" data-toggle="modal" data-target="#FeeGuideNew">
+        <i class="fa fa-plus"></i>{{'feeGuide.USCLSFeeGuide.headings.create-new-fee-guide' | translate }}</button>
+    </div>
+  </div>
+  <!-- Grid Heading Ends -->
+  <form [formGroup]="searchFeeGuideForm">
+    <div class="grid-inner">
+      <div class="form-row">
+        <div class="col-md-3 col-xs-12">
+          <label>{{'feeGuide.USCLSFeeGuide.search-fee-guide.year'|translate}}
+            <span class="required">*</span>
+          </label><!-- Task 386 focus added in below field to get latest entry in list of year -->
+          <ng2-completer formControlName="year" [inputId]="'yeatID'" [datasource]="yearList" [minSearchLength]="0"
+            [openOnFocus]="true" [autoHighlight]="true" [selectOnFocus]="true" [placeholder]="'SearchYear'"
+            [fillHighlighted]="false" [inputClass]="'form-control'" (selected)="onYearSelected($event)"
+            [clearUnselected]="true" (focus)="searchFeeGuideYearOnFocus()">
+          </ng2-completer>
+          <show-errors [control]="searchFeeGuideForm.controls.year"></show-errors>
+        </div>
+        <div class="col-md-3 col-xs-12">
+          <label>{{'feeGuide.USCLSFeeGuide.search-fee-guide.effective-date'|translate}}
+            <span class="required">*</span>
+          </label>
+          <select class="fm-txt form-control" formControlName="effectiveDate" name="effectiveDate"
+            id="fguscls_search_effectiveDate">
+            <option value="" disabled hidden>
+              {{'claims.claims-edit.service-provider.service-provider.general-information.select' | translate}}</option>
+            <option *ngFor="let date of effectiveDate" [ngValue]="date.effectiveOn">
+              {{ date.effectiveOn | dateFormate }}
+            </option>
+          </select>
+          <show-errors [control]="searchFeeGuideForm.controls.effectiveDate"></show-errors>
+        </div>
+        <div class="col-md-3 col-xs-12">
+          <label>&nbsp;</label>
+          <button title="{{'common.search' | translate}}" *ngIf="UsclsFeeGuideList[0].searchUsclsFeeGuide == 'T'"
+            id="fguscls_search_searchButton" (click)="getFeeGuideList()"
+            class="btn green-btn">{{'serviceProvider.serviceProvider-search.search' | translate }}</button>
+          <a title="{{'common.clear' | translate}}" id="fguscls_search_reset" (click)="resetSearchForm()"
+            class="btn grey-btn">{{'button.clear' | translate }}</a>
+        </div>
+      </div>
+    </div>
+    <!-- Form Row ENds -->
+  </form>
+</div>
+<!-- Container Ends -->
+
+<div [hidden]="showSearchTable">
+  <div class="grid-box">
+    <div class="grid-heading">
+      <h3>{{'feeGuide.USCLSFeeGuide.headings.fee-guide-proc-code' | translate }}</h3>
+    </div>
+    <!-- Form Row Ends -->
+    <div class="grid-inner">
+      <div class="form-row">
+        <div class="row">
+          <div class="col-md-12 col-xs-12 table-col">
+            <div class="table-responsive">
+              <form>
+                <table id="searchUSclsFeeGuideTable" class="display table table-bordered table-stripped">
+                  <thead></thead>
+                  <tfoot>
+                    <tr>
+                      <td width="20%">
+                        <input type="text" placeholder="{{'feeGuide.USCLSFeeGuide.procedureCode' | translate}}"
+                          class="fm-txt form-control inputSearch" id="fguscls_procCode" name="procedureCode" />
+                      </td>
+                      <td width="20%" class="amount_right_grid">
+                        <input type="text" placeholder="{{'feeGuide.USCLSFeeGuide.amount$' | translate}}"
+                          class="fm-txt form-control inputSearch amount_right_grid" id="fguscls_amount" name="feeAmount"
+                          (keydown)="isNumberKey($event)" />
+                      </td>
+                      <td width="20%">
+                        <select class="fm-txt form-control inputSearch" dir="rtl" id="fguscls_search_labInc"
+                          name="labInd" data-type="select"
+                          (keydown)="keyDownFunction($event,'searchUSclsFeeGuideTable')">
+                          <option [ngValue]="null" disabled hidden selected>{{'claims.claims-search.claims-plan.select'
+                            | translate}}
+                          </option>
+                          <option value="F">{{'company.plan.no' | translate}}</option>
+                          <option value="T">{{'company.plan.yes' | translate}}</option>
+                        </select>
+                      </td>
+                      <td width="20%">
+                        <div class="form-row">
+                          <button id="usclsfeeguide_searchbtn" type="submit" title="{{'common.search' | translate}}"
+                            class="btn green-btn searchreset"
+                            (click)="getUsclsFeeGuideByGridFilteration('searchUSclsFeeGuideTable')">
+                            <span class="glyphicon glyphicon-search"></span>
+                          </button>
+                          <button id="usclsfeeguide_resetbtn" title="{{'common.reset' | translate}}"
+                            class="btn grey-btn searchreset" (click)="resetTableSearch()">
+                            <span class="glyphicon glyphicon-repeat"></span>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </form>
+            </div>
+            <!-- Table Ends -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Grid Inner Ends -->
+    <div class="form-row text-center">
+      <div class="row">
+        <div class="col-md-12 col-xs-12">
+          <button id="fguscls_search_addProcCode" *ngIf="UsclsFeeGuideList[0].procCodeUsclsFeeGuide == 'T'"
+            class="btn green-btn" data-toggle="modal" data-target="#addProc"
+            (click)="resetProcCode()">{{'feeGuide.USCLSFeeGuide.buttons.add-proc-code' | translate }}</button>
+          <button id="fguscls_search_updateFeeGuide" *ngIf="UsclsFeeGuideList[0].updateUsclsFeeGuide == 'T'"
+            class="btn green-btn" data-toggle="modal" (click)="updateFeeGuideReset()"
+            data-target="#UpdateFee">{{'feeGuide.USCLSFeeGuide.headings.update-fee-guide' | translate }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Create New Fee Guide Modal-->
+<div id="FeeGuideNew" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" (click)="resetNewFeeGuideForm()">&times;</button>
+        <h4 class="modal-title">{{'feeGuide.USCLSFeeGuide.headings.create-new-fee-guide' | translate }}</h4>
+      </div>
+
+      <div class="modal-body">
+        <div class="grid-box">
+          <div class="grid-inner">
+            <div class="form-row">
+              <form [formGroup]="newFeeGuide">
+                <div class="row">
+                  <div class="col-md-4 col-xs-12">
+                    <div class="select-options">
+                      <span>
+                        <label>
+                          <input id="fguscls_createNewFeeGuide_copyPreFeeGuide" type="radio"
+                            formControlName="createFeeGuideRadioButton" value="copyPreviousFeeGuide"
+                            name="createFeeGuideRadioButton" (change)="selectCategory()">
+                          {{'feeGuide.USCLSFeeGuide.add-new-fee-guide.copy-prev-fee-guide' | translate }}
+                        </label>
+                      </span>
+
+                      <select class="fm-txt form-control" formControlName="year" (change)="selectedYearList1($event)"
+                        name="year" id="fguscls_createNewFeeGuide_year">
+                        <option value="" disabled hidden>
+                          {{'claims.claims-edit.service-provider.service-provider.general-information.select' |
+                          translate}}</option>
+                        <option *ngFor="let yearValue of yearList1" value={{yearValue.year}}>
+                          {{ yearValue.year }}
+                        </option>
+                      </select>
+
+                      <show-errors [control]="newFeeGuide.controls.year"></show-errors>
+                    </div>
+                  </div>
+                  <div class="col-md-4 col-xs-12">
+                    <label>{{'feeGuide.USCLSFeeGuide.search-fee-guide.effective-date' | translate }}
+                      <span class="required">*</span>
+                    </label>
+                    <select class="fm-txt form-control" formControlName="copyEffectiveDate" name="copyEffectiveDate"
+                      id="fguscls_createNewFeeGuide_effectiveDate">
+                      <option value="" disabled hidden>
+                        {{'claims.claims-edit.service-provider.service-provider.general-information.select' |
+                        translate}}</option>
+                      <option *ngFor="let date of effectiveDate" value={{date.dentFeeGuideKey}}>
+                        {{ date.effectiveOn | dateFormate }}
+                      </option>
+                    </select>
+                    <show-errors [control]="newFeeGuide.controls.copyEffectiveDate"></show-errors>
+                  </div>
+
+                  <div class="col-md-4 col-xs-12">
+                    <label>{{'feeGuide.USCLSFeeGuide.newEffectiveDate' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <div class="calender-field">
+                      <my-date-picker id="fguscls_createNewFeeGuide_neweffectiveDate" [options]="myDatePickerOptions"
+                        placeholder="{{'common.date-placeholder' | translate}}" name="neweffectiveDate"
+                        formControlName="neweffectiveDate"
+                        (inputFocusBlur)="changeDateFormat($event, 'neweffectiveDate' ,'newFeeGuide',true)">
+                      </my-date-picker>
+                    </div>
+                    <show-errors [control]="newFeeGuide.controls.neweffectiveDate"></show-errors>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <!-- Form Row ENds -->
+          </div>
+        </div>
+      </div>
+      <!-- Modal Body End-->
+      <div class="modal-footer">
+        <button title="{{'common.save' | translate}}" id="fguscls_createNewFeeGuide_save" class="green-btn btn"
+          (keyup.arrowLeft)="focusNextEle($event,'fguscls_createNewFeeGuide_close')"
+          (keyup.arrowRight)="focusNextEle($event,'fguscls_createNewFeeGuide_close')"
+          (click)="addFeeGuideDetails()">{{'button.save'|translate}}</button>
+        <button title="{{'common.close' | translate}}" id="fguscls_createNewFeeGuide_close"
+          (keyup.arrowLeft)="focusNextEle($event,'fguscls_createNewFeeGuide_save')"
+          (keyup.arrowRight)="focusNextEle($event,'fguscls_createNewFeeGuide_save')" class="btn grey-btn"
+          data-dismiss="modal" (click)="resetNewFeeGuideForm()">{{'button.close'|translate}}</button>
+      </div>
+      <!-- Modal  Footer Ends -->
+    </div>
+  </div>
+
+</div>
+<!-- Create New Fee Guide Modal-->
+
+<!-- Update Fee Guide Modal-->
+<div id="UpdateFee" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">{{'feeGuide.USCLSFeeGuide.headings.update-fee-guide' | translate }}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="grid-box">
+          <div class="grid-inner">
+            <div class="form-row">
+              <form [formGroup]="updateFeeGuide">
+                <div class="row min-ht-sf">
+
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'feeGuide.USCLSFeeGuide.search-fee-guide.year'|translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <ng2-completer formControlName="yearUpdate" [datasource]="yearList" [minSearchLength]="0"
+                      [fillHighlighted]="true" [autoHighlight]="true" [selectOnFocus]="true"
+                      [placeholder]="'Search Year'" [textSearching]="'Please wait...'" [inputClass]="'form-control'"
+                      (selected)="onYearSelected($event)" [clearUnselected]="true">
+                    </ng2-completer>
+                    <show-errors [control]="updateFeeGuide.controls.yearUpdate"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'feeGuide.USCLSFeeGuide.search-fee-guide.effective-date'|translate}}</label>
+                    <select class="fm-txt form-control" formControlName="effectiveDateUpdate" name="effectiveDate"
+                      id="fguscls_search_effectiveDate" (change)="getEffectiveDate($event.target.value)">
+                      <option value="" disabled hidden>
+                        {{'claims.claims-edit.service-provider.service-provider.general-information.select' |
+                        translate}}</option>
+                      <option *ngFor="let date of effectiveDate" value={{date.dentFeeGuideKey}}>
+                        {{ date.effectiveOn | dateFormate }}
+                      </option>
+                    </select>
+                  </div>
+                  <div class="col-md-4 col-xs-12">
+                    <label>{{'feeGuide.USCLSFeeGuide.update-fee-guide.proc-code' | translate }}
+                      <span class="required">*</span>
+                    </label>
+                    <div>
+                      <angular2-multiselect tabindex="0" id="fguscls_updateFeeGuide_proCode"
+                        [data]="updateColumnProcedures" [(ngModel)]="procCode" [ngModelOptions]="{standalone: true}"
+                        (onSelect)="onSelect($event,'procCode')" (onDeSelect)="onDeselect($event,'procCode')"
+                        (onSelectAll)="onSelectAll($event,'procCode')"
+                        (onDeSelectAll)="onDeSelectAll($event,'procCode')" [settings]="multiSelectDropdownSettings">
+                      </angular2-multiselect>
+                    </div>
+                    <show-errors [control]="updateFeeGuide.controls.procCode"></show-errors>
+                  </div>
+                  <div class="col-md-4 col-xs-12">
+                    <label>{{'feeGuide.USCLSFeeGuide.update-fee-guide.fee' | translate }}
+                      <span class="required">*</span>
+                    </label>
+                    <div class="row">
+                      <div class="col-sm-3 col-xs-12">
+                        <label>
+                          <input type="radio" id="fguscls_updateFeeGuide_feeFlat" value="feeFlat" name="fee"
+                            formControlName="fee"> {{'feeGuide.USCLSFeeGuide.update-fee-guide.flat' | translate
+                          }}</label>
+                      </div>
+                      <div class="col-sm-3">
+                        <input type="radio" id="fguscls_updateFeeGuide_feePerc" value="feePerc" name="fee"
+                          formControlName="fee"> {{'feeGuide.USCLSFeeGuide.update-fee-guide.perc' | translate }}
+                      </div>
+                      <div class="col-sm-6 col-xs-12">
+                        <div class="row">
+                          <div class="col-sm-9">
+                            <input type="number" OnlyNumber="true"
+                              placeholder="{{'feeGuide.USCLSFeeGuide.feeAmount' | translate}}"
+                              id="fguscls_updateFeeGuide_feeAmount" class="form-control half-txt"
+                              formControlName="feeAmount" (blur)="onFeeRadioButtonsChange()" />
+                            <show-errors [control]="updateFeeGuide.controls.feeAmount"></show-errors>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-4 col-xs-12">
+                    <label>{{'feeGuide.USCLSFeeGuide.update-fee-guide.lab' | translate }}
+                      <span class="required">*</span>
+                    </label>
+                    <div class="row">
+                      <div class="col-sm-3 col-xs-12">
+                        <span>
+                          <label>
+                            <input type="radio" formControlName="lab" value="labFlat"
+                              id="fguscls_updateFeeGuide_labFlat" name="lab">
+                            {{'feeGuide.USCLSFeeGuide.update-fee-guide.flat' | translate }}</label>
+                        </span>
+                      </div>
+                      <div class="col-sm-3">
+                        <input type="radio" formControlName="lab" value="labPert" id="fguscls_updateFeeGuide_labPerc"
+                          name="lab"> {{'feeGuide.USCLSFeeGuide.update-fee-guide.perc' | translate }}
+                      </div>
+                      <div class="col-sm-6 col-xs-12">
+                        <div class="row">
+                          <div class="col-sm-9">
+                            <input type="number" OnlyNumber="true" id="fguscls_updateFeeGuide_labAmount"
+                              class="form-control half-txt"
+                              placeholder="{{'feeGuide.USCLSFeeGuide.labAmount' | translate}}"
+                              formControlName="labAmount" (blur)="onRadioButtonsChange()" />
+                            <show-errors [control]="updateFeeGuide.controls.labAmount"></show-errors>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <!-- Form Row ENds -->
+          </div>
+        </div>
+      </div>
+      <!-- Modal Body End-->
+      <div class="modal-footer">
+        <button id="fguscls_updateFeeGuide_update" title="{{'common.update' | translate}}" class="green-btn btn"
+          (click)="updateFeeGuideDetails()">{{'button.update'|translate}}</button>
+        <button id="fguscls_updateFeeGuide_close" title="{{'common.close' | translate}}" class="btn grey-btn"
+          data-dismiss="modal" (click)="resetUpdateForm()">{{'button.close'|translate}}</button>
+      </div>
+      <!-- Modal  Footer Ends -->
+    </div>
+  </div>
+
+</div>
+<!-- Update Fee Guide Modal-->
+
+<!-- Add Proc. Modal-->
+<div id="addProc" class="modal fade custom-modal-hms" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" (click)="closeForm()">&times;</button>
+        <h4 class="modal-title">{{addProcMode}}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="grid-box">
+          <div class="grid-inner">
+            <div class="form-row">
+              <form [formGroup]="addProcCode">
+                <div class="row">
+                  <div class="col-md-2 col-xs-12">
+                    <label>{{'feeGuide.USCLSFeeGuide.search-fee-guide.year' | translate }}
+                      <span class="required">*</span>
+                    </label>
+                    <ng2-completer formControlName="year" [datasource]="yearList" [minSearchLength]="0"
+                      [fillHighlighted]="true" [autoHighlight]="true" [selectOnFocus]="true"
+                      [placeholder]="'SearchYear'" [textSearching]="'Please wait...'" [inputClass]="'form-control'"
+                      (selected)="onYearSelected($event)" [clearUnselected]="true">
+                    </ng2-completer>
+                    <show-errors [control]="addProcCode.controls.year"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'feeGuide.USCLSFeeGuide.search-fee-guide.effective-date'|translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <select class="fm-txt form-control" formControlName="addProcCodeEffectiveDate"
+                      name="addProcCodeEffectiveDate" (change)="getEffectiveDate($event.target.value)"
+                      id="fguscls_addProCode_addProcCodeEffectiveDate">
+                      <option value="" disabled hidden>
+                        {{'claims.claims-edit.service-provider.service-provider.general-information.select' |
+                        translate}}</option>
+                      <option *ngFor="let date of effectiveDate" value={{date.dentFeeGuideKey}}>
+                        {{ date.effectiveOn | dateFormate }}
+                      </option>
+                    </select>
+                    <show-errors [control]="addProcCode.controls.addProcCodeEffectiveDate"></show-errors>
+                  </div>
+
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'feeGuide.USCLSFeeGuide.update-fee-guide.proc-code' | translate }}
+                      <span class="required">*</span>
+                    </label>
+
+                    <div id="loadServicesOnScroll" [ngClass]="{'disableMultiselect': USCLSAddprocedureCodeViewMode}">
+                      <angular2-multiselect tabindex="0" [data]="columnProcedures" [(ngModel)]="procedureCode"
+                        [ngModelOptions]="{standalone: true}" (onSelectAll)="onSelectAll($event,'procedureCode')"
+                        (onSelect)="onSelect($event, 'procedureCode')" (onDeSelect)="onDeselect($event,'procedureCode')"
+                        [settings]="dropdownSettings">
+                      </angular2-multiselect>
+                    </div>
+                    <show-errors [control]="addProcCode.controls.procedureCode"></show-errors>
+                  </div>
+
+                  <div class="col-md-2 col-xs-12">
+                    <label>{{'feeGuide.USCLSFeeGuide.update-fee-guide.amount' | translate }}</label>
+                    <div class="calender-field d-amount">
+                      <input type="text" placeholder="Amount $" OnlyNumber="true" class="form-control amount_right_grid"
+                        id="fguscls_addProCode_amount" formControlName="amount" (blur)="addDecimal($event,'amount')" />
+                    </div>
+                    <show-errors [control]="addProcCode.controls.amount"></show-errors>
+                  </div>
+
+                  <div class="col-md-2 col-xs-12">
+                    <label>{{'feeGuide.USCLSFeeGuide.update-fee-guide.lab-inc' | translate }}
+                    </label>
+                    <select class="fm-txt form-control" id="fguscls_addProCode_labInc" formControlName="labInc">
+                      <option value="" disabled hidden selected>{{'common.select' | translate}}</option>
+                      <option value="n">{{'company.plan.no' | translate}}</option>
+                      <option value="y">{{'company.plan.yes' | translate}}</option>
+                    </select>
+                    <show-errors [control]="addProcCode.controls.labInc"></show-errors>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <!-- Form Row ENds -->
+          </div>
+        </div>
+      </div>
+      <!-- Modal Body End-->
+
+      <div class="modal-footer">
+        <button title="{{'common.save' | translate}}" *ngIf="usclsAddMode" id="fguscls_addProCode_save"
+          class="green-btn btn" (click)="addUpdateProcCodeDetails()">{{'button.save'|translate}}</button>
+        <button title="{{'common.update' | translate}}" *ngIf="!usclsAddMode && usclsEditMode"
+          id="fguscls_addProCode_save" class="green-btn btn"
+          (click)="addUpdateProcCodeDetails()">{{'button.update'|translate}}</button>
+        <button title="{{'common.close' | translate}}" id="fguscls_addProCode_close" class="btn grey-btn"
+          (click)="resetProcCodeForm()" data-dismiss="modal">{{'button.close'|translate}}</button>
+      </div>
+      <!-- Modal  Footer Ends -->
+    </div>
+  </div>
+</div>
+<!-- Add Proc. Modal-->

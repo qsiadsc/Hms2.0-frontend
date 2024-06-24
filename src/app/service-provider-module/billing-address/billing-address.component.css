@@ -1,0 +1,39 @@
+/* For processing by designer. (30-03-2023) */
+.loader-wrapper {
+     position: relative !important;
+ }
+ .loading.loader-box {
+    background: #00000080;
+        text-align: center;
+        color: #ffffff;
+        height: 80px;
+        width: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        position: absolute;
+        left: 0;
+        right: 0;
+     top: 50%;
+ }
+
+ @media (max-width: 1435px) {
+     .loading.loader-box {
+         top: 46%;
+     }
+ }
+ @media (max-width: 1280px) {
+    .loading.loader-box {
+        top: 50%;
+    }
+ }
+ @media (max-width:767px) {
+     .loading.loader-box {
+         top: 39%;
+     }
+ }
+ /* For width of extension field */
+ .size{
+    width: 90%;
+ }

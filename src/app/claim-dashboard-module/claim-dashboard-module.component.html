@@ -1,0 +1,844 @@
+<div class="section-heading">
+  <app-dashboard-tab></app-dashboard-tab>
+  <h2 class="inline-heading">{{'header.dashboard' | translate }} - <span> {{dashboardHeading}} </span></h2>
+  <div class="web-reg">
+    <button *ngIf="claimDashBoardCheck[0].addUpdateBulletin == 'T'" id="AddBulletin" href="javascript:void();" class="green-btn-add btn"
+      data-toggle="modal" data-target="#Bulletin" (click)="getBulletin(businessTypeCd)">
+      <i class="fa fa-plus"></i>{{'dashboard.addBulletin' | translate}}</button>
+    <button id="deleteBulletin" *ngIf="claimDashBoardCheck[0].deleteBulletin == 'T'" class="green-btn-add btn" (click)="deleteBulletin(businessTypeCd)">{{'dashboard.deleteBulletin' | translate }}</button>
+  </div>
+</div>
+<div class="b-marquee">
+  <span class="m-heading">{{'dashboard.updates' | translate }}</span>
+  <marquee scrollamount="8">{{bulletinTxt}} </marquee>
+</div>
+<!--[Start New HTML]-->
+<div class="form-group claim-dashboard">
+  <div class="row">
+    <div class="col-md-6 col-xs-12" *ngIf="claimDashBoardCheck[0].CountByDiscipline == 'T'">
+      <div class="db-box cl1">
+        <h2>{{'dashboard.countByDiscipline' | translate }}
+          <span>({{currentMonth}})</span>
+        </h2>
+        <div class="table-responsive">
+          <table class="table table-bordered">
+            <tbody>
+              <tr *ngIf="businessTypeCd == 'Q'">
+                <td width="15.66%" *ngFor="let discipline of disciplineArray; let i = index">
+                  <div class="fig-facts">
+                    <a (click)="getClaimByDiscipline(discipline.heading)" href="javascript:;">{{discipline.count}}</a>
+                    <span class="cd-title">
+                      <a (click)="getClaimByDiscipline(discipline.heading)" href="javascript:;">{{discipline.heading}}</a>
+                    </span>
+                  </div>
+                </td>
+              </tr>
+              <tr *ngIf="businessTypeCd == 'S' ">
+                <td width="15.66%" *ngFor="let discipline of disciplineArray;" colspan="6">
+                  <div class="fig-facts" *ngIf="discipline.heading == 'Dental' ">
+                    <a (click)="getClaimByDiscipline(discipline.heading)" href="javascript:;">{{discipline.count}}</a>
+                    <span class="cd-title">
+                      <a (click)="getClaimByDiscipline(discipline.heading)" href="javascript:;">{{discipline.heading}}</a>
+                    </span>
+                  </div>
+                </td>
+              </tr>
+              <tr *ngIf="showLoader">
+                <td width="15.66%" colspan="6">
+                  <div class="fig-facts">
+                    <span>{{'common.loading' | translate }}</span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 col-xs-12" *ngIf="claimDashBoardCheck[0].claimsAddedMonth == 'T'">
+      <div class="db-box cl3">
+        <h2>{{'dashboard.claimsAddedPerMonth' | translate }}</h2>
+        <table class="table table-bordered">
+          <tbody>
+            <tr>
+              <td *ngIf="showLoader" colspan="4" width="20%">
+                <div class="fig-facts">
+                  <span>{{'common.loading' | translate }}</span>
+                </div>
+              </td>
+              <td width="20%" *ngFor="let m of monthsArray; let i = index">
+                <div class="fig-facts">
+                  <a (click)="getClaimByClaimMonth(m.monthNum)" href="javascript:void(0);">{{m.count}}</a>
+                  <span>
+                    <a (click)="getClaimByClaimMonth(m.monthNum)" href="javascript:void(0);">{{m.month}}</a>
+                  </span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="col-md-6 col-xs-12" *ngIf="claimDashBoardCheck[0].countByClaimStatus == 'T'">
+      <div class="db-box cl2">
+        <h2>{{'dashboard.countByClaimStatus' | translate }}
+          <span>({{currentMonth}})</span>
+        </h2>
+        <!-- #1266 Below commented and written further to correct size of Adjudicated or approved claims on dashboards of quikcard and ADSC." -->
+        <table id="countByClaimStatusTileColumns" class="table table-bordered">
+          <tbody>
+            <tr>
+              <td width="20%" *ngFor="let claimstatus of claimStatusArray; let i = index">
+                <div class="fig-facts">
+                  <a *ngIf="claimstatus.heading == 'New'" (click)="getClaimByClaimStatus(claimstatus.heading)" href="javascript:void(0);">{{claimStatusNewCount}}</a>
+                  <a *ngIf="claimstatus.heading != 'New'" (click)="getClaimByClaimStatus(claimstatus.heading)" href="javascript:void(0);">{{claimstatus.count}}</a>
+                  <span>
+                    <!-- Below one is added by designer to fix the design issue as per discussed with Arun sir in Count by claim status tile-->
+                    <a class="countByClaimStatusBlock" (click)="getClaimByClaimStatus(claimstatus.heading)" href="javascript:void(0);">{{claimstatus.heading}}</a>
+                  </span>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="showLoader">
+              <td width="15.66%" colspan="4">
+                <div class="fig-facts">
+                  <span>{{'common.loading' | translate }}</span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="col-md-6 col-xs-12" *ngIf="claimDashBoardCheck[0].miscellaneous == 'T'">
+      <div class="db-box cl4">
+        <h2>{{'dashboard.miscellaneous' | translate }}
+          <span>({{lastMonth}}-{{currentMonth}})</span>
+        </h2>
+        <div class="table-responsive">
+          <table class="table table-bordered">
+            <tbody>
+              <tr>
+                <td *ngFor="let misc of miscellaneousArray; let i = index">
+                  <div class="fig-facts">
+                    <a (click)="getClaimByClaimType(misc.status)" href="javascript:;">{{misc.count}}</a>
+                    <span>
+                      <!-- Below one is added by designer to fix the design issue as per discussed with Arun sir in Count by claim status tile -->
+                      <a class="countByClaimStatusBlock" (click)="getClaimByClaimType(misc.status)" href="javascript:;">{{misc.heading}}</a>
+                    </span>
+                  </div>
+                </td>
+              </tr>
+              <tr *ngIf="showLoader">
+                <td colspan="3">
+                  <div class="fig-facts">
+                    <span>{{'common.loading' | translate }}</span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="grid-box">
+  <ul class="nav company-tabs nav-pills">
+    <li id="dashboard-tab" class="active">
+      <a id="enterdClaimTab" data-toggle="pill" href="#enteredClaim">{{'dashboard.claimsToBeEntered' | translate }}</a>
+    </li>
+    <li>
+      <a data-toggle="pill" href="#referdClaim" (click)="getReferClaimList()">{{'dashboard.referredClaims' | translate }}
+        <i *ngIf="referedClaimCount != 0" class="badge badge-notify" title="Referred claims count ">{{referedClaimCount}}</i>
+      </a>
+    </li>
+    <li>
+      <a data-toggle="pill" href="#reports" (click)="reportsData()">{{'dashboard.reports' | translate }}</a>
+    </li>
+    <!-- commented as per arun randev this section is not required -->
+    <li>
+      <a data-toggle="pill" href="#adjustmentRequest" (click)="getAdjustmentRequestData()" >{{'dashboard.adjustmentRequest' | translate }}</a>
+    </li>
+    <!-- #1266 below tab added to show Adjudicated or approved(not added in req param still) but not released.-->
+  </ul>
+ 
+  <div class="form-row ds-table">
+    <!--[Start Melissa Claims]-->
+    <div class="grid-inner">
+      <div class="tab-content">
+        <div id="enteredClaim" class="tab-pane fade in active">
+          <div class="table-responsive dashboard" *ngIf="ShowGrid &&  claimDashBoardCheck[0].quikcard == 'T' && currentTab=='melissaTab';then genericTable">
+          </div>
+         
+          <ng-template #genericTable>
+            <generic-table [gtClasses]="'table-sm'" [gtOptions]="{numberOfRows:25}" #myTable [gtSettings]="configObject.settings" [gtFields]="configObject.fields" [gtTexts]="customTexts" [(gtData)]="configObject.data" (gtEvent)="getCurrentPagination($event)"></generic-table>
+            <div class="text-center">
+              <small>
+                <gt-table-info class="form-text text-muted mb-2" [genericTable]="myTable"></gt-table-info>
+              </small>
+              <gt-pagination [gtClasses]="'pagination-sm justify-content-center'" [genericTable]="myTable">
+              </gt-pagination>
+            </div>
+          </ng-template>
+          <div *ngIf="claimDashBoardCheck[0].quikcard == 'F' && currentTab=='melissaTab';then noAccess">
+          </div>
+          <ng-template #noAccess>
+            <div class="noAccess">{{'dashboard.youHavenoAccess' | translate }}</div>
+          </ng-template>
+          <!--[End Melissa Claims]-->
+          <!-- Changes made below for task 352 to align no data available.-->
+          <div class="table-responsive dashboard"  style="text-align: center;" *ngIf="ShowTraceyGrid">
+            <generic-table [gtClasses]="'table-sm'" [gtOptions]="{numberOfRows:25}" #myTable [gtSettings]="configObject2.settings" [gtFields]="configObject2.fields" [gtTexts]="customTexts"
+              [(gtData)]="configObject2.data" (gtEvent)="getCurrentPagination($event)"></generic-table>
+            <div class="text-center">
+              <small>
+                <gt-table-info class="form-text text-muted mb-2" [genericTable]="myTable"></gt-table-info>
+              </small>
+              <gt-pagination [gtClasses]="'pagination-sm justify-content-center'" [genericTable]="myTable">
+              </gt-pagination>
+          </div>
+            <!--[End Tracey Claims]-->
+          </div>
+        </div>
+
+       
+   
+        <div id="referdClaim" class="tab-pane fade">
+          <div class="form-row text-right search-top">
+            <button type="button" id="btnExportExcel" title="{{'dashboard.exportExcel' | translate }}" class="btn green-btn searchreset" (click)="exportExcel()">
+              <i class="fa fa-file-excel-o fa-1x" aria-hidden="true"></i>
+            </button>
+            <button type="submit" id="btnSearchRfrClaim" title="{{'dashboard.searchReferClaim' | translate }}" class="btn green-btn searchreset" (click)="getReferClaimListByGridFilteration('referClaimTable')">
+              <span class="glyphicon glyphicon-search"></span>
+            </button>
+            <button type="button" id="btnResetRfrClaim" title="{{'dashboard.resetSearch' | translate }}" class="btn grey-btn searchreset" (click)="resetTableSearch()">
+              <span class="glyphicon glyphicon-repeat"></span>
+            </button>
+          </div>
+          <div class="table-responsive alignDpRight">
+            <table id="referClaimTable" class="display table table-bordered table-stripped">
+              <thead>
+              </thead>
+              <tfoot>
+                <tr>
+                  <td width="9%">
+                    <input type="text" placeholder="{{'dashboard.referenceNo' | translate }}" class="fm-txt form-control inputSearch " name="claimReferenceNumber" />
+                  </td>
+                  <td width="6%">
+                    <div class="calender-field">
+                      <my-date-picker id="ref_entryDate" placeholder="{{ 'common.date-placeholder' | translate }}" class="inputSearch" name="entryDate"
+                        data-type="date" [options]="myDatePickerOptions" [selDate]="dateNameArray['entryDate']" (inputFocusBlur)="ChangeSearchDateFormat($event, 'entryDate','')">
+                      </my-date-picker>
+                    </div>
+                  </td>
+                  <td width="12%">
+                    <select id="csc_claimType" class="fm-txt form-control inputSearch" name="claimTypeDesc" data-type="select">
+                      <option [ngValue]=null disabled hidden selected>{{'claims.claims-search.claims-claim-date.select' | translate}}</option>
+                      <option *ngFor="let claim of arrClaimType" [value]="claim.claimTypeDesc">
+                        {{claim.claimTypeDesc}}
+                      </option>
+                    </select>
+                  </td>
+                  <td width="9%">
+                    <input id="ref_cardNo" type="text" placeholder="{{'common.card-id' | translate }}" class="fm-txt form-control inputSearch amount_right_grid" name="cardNumber"
+                    />
+                  </td>
+                  <td width="9%">
+                    <input id="ref_Lastname" type="text" placeholder="{{'common.last-name' | translate }}" class="fm-txt form-control inputSearch amount_right_grid" name="lastName"
+                    />
+                  </td>
+                  <td width="9%">
+                    <input id="ref_Firstname" type="text" placeholder="{{'common.first-name' | translate }}" class="fm-txt form-control inputSearch amount_right_grid"
+                      name="firstName" />
+                  </td>
+                  <td width="9%">
+                    <input id="ref_claimReferralName" type="text" placeholder="{{'dashboard.referredBy' | translate }}" class="fm-txt form-control inputSearch amount_right_grid"
+                      name="claimReferralName" />
+                  </td>
+                  <td width="9%">
+                    <input id="ref_referToName" type="text" placeholder="{{'dashboard.referredTo' | translate }}" class="fm-txt form-control inputSearch amount_right_grid"
+                      name="referToName" />
+                  </td>
+                  <td width="9%">
+                    <input id="ref_Supervisor" type="text" placeholder="{{'dashboard.supervisor' | translate }}" class="fm-txt form-control inputSearch amount_right_grid"
+                      name="supervisorName" />
+                  </td>
+                  <td width="7%">
+                    <div class="calender-field">
+                      <my-date-picker id="ref_referedDate" placeholder="{{ 'common.date-placeholder' | translate }}" class="inputSearch" name="referedDate"
+                        data-type="date" [options]="myDatePickerOptions" [selDate]="dateNameArray['referedDate']" (inputFocusBlur)="ChangeSearchDateFormat($event, 'referedDate','')">
+                      </my-date-picker>
+                    </div>
+                  </td>
+                  <td width="11%"> </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+        <div [hidden]="!showHideReportGrid" id="reports">
+          <div class="table-responsive alignDpRight">
+            <div class="table-responsive dashboard">
+              <generic-table [gtClasses]="'table-sm claimReports'" #myTable [gtSettings]="configObjectReport.settings" [gtFields]="configObjectReport.fields"
+                [(gtData)]="configObjectReport.data" (gtEvent)="eventListener($event)"></generic-table>
+              <div class="text-center">
+                <small>
+                  <gt-table-info class="form-text text-muted mb-2" [genericTable]="myTable"></gt-table-info>
+                </small>
+                <gt-pagination [gtClasses]="'pagination-sm justify-content-center'" [genericTable]="myTable">
+                </gt-pagination>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="mpc" [hidden]="!showHideReportGrid">
+          <div class="table-responsive dashboard" *ngIf="ShowGrid &&  claimDashBoardCheck[0].quikcard == 'T' && currentTab=='melissaTab';then genericTable2">
+          </div>
+          <ng-template #genericTable2>
+            <generic-table [gtClasses]="'table-sm'" #myTable2 [gtSettings]="configObjectMpc.settings" [gtFields]="configObjectMpc.fields" [gtTexts]="customTexts" [(gtData)]="configObjectMpc.data"></generic-table>
+            <div class="text-center">
+              <small>
+                <gt-table-info class="form-text text-muted mb-2" [genericTable]="myTable2"></gt-table-info>
+              </small>
+              <gt-pagination [gtClasses]="'pagination-sm justify-content-center'" [genericTable]="myTable2">
+              </gt-pagination>
+            </div>
+          </ng-template>
+          <div *ngIf="claimDashBoardCheck[0].quikcard == 'F' && currentTab=='melissaTab';then noAccess">
+          </div>  
+          <ng-template #noAccess>
+            <div class="noAccess">{{'dashboard.youHavenoAccess' | translate }}</div>
+          </ng-template>
+        
+        </div>
+
+        <div id="adjustmentRequest" class="tab-pane fade">
+          <div class="form-row text-right search-top">
+            <button type="submit" id="btnSearchAdjReqClaim" title="{{'dashboard.searchAdjRequest' | translate }}" class="btn green-btn searchreset" (click)="getAdjRequestByGridFilteration('adjustmentReqTable')">
+              <span class="glyphicon glyphicon-search"></span>
+            </button>
+            <button type="button" id="btnResetAdjReqClaim" title="{{'dashboard.resetSearch' | translate }}" class="btn grey-btn searchreset" (click)="resetAdjReqTableSearch()">
+              <span class="glyphicon glyphicon-repeat"></span>
+            </button>
+          </div>
+          <div class="table-responsive alignDpRight">
+            <table id="adjustmentReqTable" class="display table table-bordered table-stripped">
+              <thead>
+              </thead>
+              <tfoot>
+                <tr>
+                  <td width="20%">
+                    <input id="claimNo" type="text" placeholder="{{'dashboard.claimNo' | translate }}" class="fm-txt form-control inputSearch " name="claimNumber" />
+                  </td>
+                  <td width="30%">
+                    <input id="name" type="text" placeholder="{{'dashboard.payeeName' | translate }}" class="fm-txt form-control inputSearch amount_right_grid" name="payeeName"
+                    />
+                  </td>
+                  <td width="20%">
+                    <select dir="rtl" class="fm-txt form-control inputSearch amount_right_grid" name="payeeType" id="payee"
+                      (keydown)="filterSearchOnEnter($event,'adjustmentReqTable')" data-type="select">
+                      <option value="null" disabled hidden selected>{{'common.select' | translate}}</option>
+                      <option *ngFor="let payee of payeeData" [value]="payee.payeeTypeDesc">{{payee.payeeTypeDesc}}</option>
+                    </select>
+                  </td>
+                  <td width="23%">
+                    <input id="amount" type="text" placeholder="Amount" class="fm-txt form-control inputSearch amount_right_grid"
+                    name="totalPaid" />
+                  </td>
+                  <td width="10%"></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+          <div class="dropdown pull-right">
+            <button id="dashboardAdjReqExport" class="btn green-btn dropdown-toggle" type="button" data-toggle="dropdown"> {{ 'button.export' | translate }}
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+              <li>
+                <a href="javascript:void(0)" (click)="downloadAdjustmentRequestPDFReport()">{{ 'common.pdf' | translate }}</a>
+              </li>
+              <li>
+                <a href="javascript:void(0)" (click)="exportAdjustmentRequestList()">{{ 'common.excel' | translate }}</a>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+
+        <!-- below div added to show Adjudicated or approved but not released. -->
+      </div>
+    </div>
+  </div>
+
+  <div id="Bulletin" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" (click)="resetBulletinForm()">&times;</button>
+          <h4 class="modal-title">{{'dashboard.addBulletin' | translate }}</h4>
+        </div>
+        <div class="modal-body">
+          <div class="grid-box">
+            <div class="grid-heading">
+              <h3>{{'dashboard.bulletinBoard' | translate }}</h3>
+            </div>
+            <div class="grid-inner">
+              <form [formGroup]="bulletinForm">
+                <div class="form-row">
+                  <div class="add-comments">
+                    <div class="row">
+                      <div class="col-sm-8">
+                        <label>&nbsp;</label>
+                        <textarea #focusAddBulatineEl class="fm-txt form-control notInCaps" formControlName="bulletinTxt"></textarea>
+                        <show-errors [control]="bulletinForm.controls.bulletinTxt"></show-errors>
+                      </div>
+                      <div class="col-sm-2">
+                        <label>&nbsp;</label>
+                        <button class="green-btn-add btn" (click)="addBulatine()">
+                          {{'dashboard.publish' | translate }} </button>
+                        <!-- Please don't remove following button -->
+                        <button id="btnResetBulatine" class="green-btn-add btn" (click)="resetBulatine(bulletinForm)" style="display:none">
+                          <i class="fa fa-plus"></i> {{'button.cancel' | translate }} </button>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Add Comments Ends -->
+                </div>
+              </form>
+            </div>
+            <!-- Grid Inner Ends -->
+          </div>
+          <!-- Grid Box Ends -->
+        </div>
+        <!-- Modal Body End-->
+        <div class="modal-footer">
+          <button type="button" class="btn grey-btn" data-dismiss="modal" (click)="resetBulletinForm()">{{'button.close' | translate }}</button>
+        </div>
+        <!-- Modal  Footer Ends -->
+      </div>
+    </div>
+  </div>
+  <div [hidden]="!showPageLoader" class="loader-outer">
+    <div class="cube-wrapper">
+      <div class="cube-folding">
+        <span class="leaf1"></span>
+        <span class="leaf2"></span>
+        <span class="leaf3"></span>
+        <span class="leaf4"></span>
+      </div>
+      <span class="loading" data-name="Loading">{{'company.plan.benefits.pleaseWait'|translate}}</span>
+    </div>
+  </div>
+
+  <div id="viewReferClaimComment" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">{{'dashboard.referClaimComment' | translate }}</h4>
+        </div>
+        <div class="modal-body">
+          <div class="text-center">
+            <h3 class="success-msg" [innerHTML]="referClaimMessage"> </h3>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="btnCloseReferClaimComment" data-dismiss="modal" class="btn grey-btn" autofocus>{{'button.ok'|translate}}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="referredScannedClaim" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" (click)="resetBulletinForm()">&times;</button>
+          <h4 class="modal-title">{{'dashboard.referredClaim' | translate }}</h4>
+        </div>
+        <div class="modal-body">
+          <div class="grid-inner">
+            <form [formGroup]="referClaim">
+              <div class="form-row">
+                <div class="row min-ht-sf">
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'claims.claims-view.refer-claim-button.refer-claim.select-user' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <select id="rfrClmUser" name="rfrClmUser" formControlName="rfrClmUser" class="fm-txt form-control">
+                      <option hidden value="">{{'claims.claims-view.refer-claim-button.refer-claim.select' | translate}}
+                      </option>
+
+                    </select>
+                    <show-errors [control]="referClaim.controls.rfrClmUser"></show-errors>
+                  </div>
+                </div>
+              </div>
+              <!-- Form Row ENds -->
+              <div class="form-row">
+                <label>{{'common.addcomment'|translate}}
+                  <span class="required">*</span>
+                </label>
+                <div class="add-comments">
+                  <div class="row">
+                    <div class="col-sm-8">
+                      <textarea class="notInCaps fm-txt form-control" id="rfrClaimCommentTxt" name="rfrClaimCommentTxt" formControlName="rfrClaimCommentTxt"></textarea>
+                      <show-errors [control]="referClaim.controls.rfrClaimCommentTxt"></show-errors>
+                    </div>
+                  </div>
+                </div>
+                <!-- Add Comments Ends -->
+              </div>
+            </form>
+            <!-- Form Ends -->
+          </div>
+          <!-- Grid Box Ends -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <div [attr.hidden]="true">
+    <button id="viewReferClaim" class="green-btn-add btn" data-toggle="modal" data-target="#viewReferClaimComment"></button>
+  </div>
+  <!-- [Start Reports Module Tab] -->
+  <button class="green-btn-add btn" data-toggle="modal" id="claim_D_ReportsListPopUp" data-target="#financeReportPopUp" style="display:none"></button>
+  <!--Report List Modal-->
+  <div id="financeReportPopUp" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" (click)="resetReportForm()">&times;</button>
+          <h4 class="modal-title">{{this.reportPopUpTitle}}</h4>
+        </div>
+        <div class="modal-body">
+          <div class="grid-box">
+            <div class="grid-inner">
+              <form [formGroup]="claimDashboardReport" (ngSubmit)="onSubmitReport(claimDashboardReport)">
+                <div class="form-row">
+                  <div class="row">
+                    <div class="col-md-3 col-xs-12" *ngIf="showClaimDashboardFields[0].startDate">
+                      <label>{{'dashboard.startDate' | translate }}
+                        <span class="required">*</span>
+                      </label>
+                      <div class="calender-field">
+                        <my-date-picker id="startDate" placeholder="{{'common.date-placeholder' | translate }}" [options]="myDatePickerOptions" name="startDate" (inputFocusBlur)="changeDateFormat($event, 'startDate' ,'claimDashboardReport')"
+                          formControlName="startDate"> </my-date-picker>
+                        <show-errors [control]="claimDashboardReport.controls.startDate"></show-errors>
+                      </div>
+                    </div>
+                    <div class="col-md-3 col-xs-12" *ngIf="showClaimDashboardFields[1].endDate">
+                      <label>{{'dashboard.endDate' | translate }}
+                        <span class="required">*</span>
+                      </label>
+                      <div class="calender-field">
+                        <my-date-picker id="endDate" placeholder="{{'common.date-placeholder' | translate }}" [options]="myDatePickerOptions" name="endDate" (inputFocusBlur)="changeDateFormat($event, 'endDate' ,'claimDashboardReport')"
+                          formControlName="endDate"> </my-date-picker>
+                        <show-errors [control]="claimDashboardReport.controls.endDate"></show-errors>
+                      </div>
+                    </div>
+                    <div class="col-md-3 col-xs-12" *ngIf="showClaimDashboardFields[2].dropDown">
+                      <label>{{'dashboard.filterBy' | translate}}
+                        <span class="required">*</span>
+                      </label>
+                      <select formControlName="dropDown" class="fm-txt form-control inputSearch">
+                        <option value="all">ALL</option>
+                        <option value="101">101</option>
+                        <option value="lihb">LIHB</option>
+                      </select>
+                      <show-errors [control]="claimDashboardReport.controls.dropDown"></show-errors>
+                    </div>
+                    <div class="col-md-3 col-xs-12" *ngIf="tableId =='claimpaymentbycardholder'">
+                      <label>{{'dashboard.cardNumber' | translate }}
+                        <span class="required">*</span>
+                      </label>
+                      <input type="text" name="cardNumber" id="cardNumber" formControlName="cardNumber" class="fm-txt form-control" (focusout)="getOverrideReason()"
+                        placeholder="{{'uft.dashboard.financeReports.cardNumber' | translate}}" />
+                      <show-errors [control]="claimDashboardReport.controls.cardNumber"></show-errors>
+                    </div>
+
+                    <div class="col-md-3 col-xs-12" *ngIf="tableId =='claimpaymentbycardholder'">
+                      <label>{{'dashboard.cardholderNameOrNumber' | translate }}</label>
+                      <angular2-multiselect [data]="overrideReasonList" [(ngModel)]="overrideReason" [ngModelOptions]="{standalone: true}" (onSelect)="onSelectMultiDropDown($event,'overrideReason')"
+                        (onDeSelect)="onDeSelectMultiDropDown($event,'overrideReason')" (onSelectAll)="onSelectAllMultiDropDown($event,'overrideReason')"
+                        (onDeSelectAll)="onDeSelectAllMultiDropDown($event,'overrideReason')" [settings]="dropdownSettings">
+                      </angular2-multiselect>
+                    </div>
+                    <!-- Log #999: Pending from backend -->
+                    <div class="col-md-3 col-xs-12" *ngIf="tableId =='dailyClaimProcessing'">
+                      <label>{{'dashboard.referenceNo' | translate }}
+                      </label>
+                      <input type="text" name="reference" id="reference" formControlName="reference" class="fm-txt form-control" placeholder="{{'dashboard.referenceNo' | translate }}"
+                      />
+                    </div>
+                    <div class="col-md-3 col-xs-12" *ngIf="tableId =='dailyClaimProcessing'">
+                      <label>{{'dashboard.processor' | translate }} </label>
+                      <ng2-completer formControlName="processor" [datasource]="operatorData" [minSearchLength]="0" [openOnFocus]="true" [autoHighlight]="true"
+                        [selectOnFocus]="true" (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Search Processor'"
+                        [textSearching]="'Please wait...'" [inputClass]="'form-control'" (selected)="onOperatorSelected($event)">
+                      </ng2-completer>
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                      <label>&nbsp;</label>
+                      <button id="{{reportID}}-dataManagementReport" class="btn green-btn">{{'button.search' | translate }}</button>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+          <!--[Start Report Filter Search Grid]-->
+          <div [hidden]="!showReportList">
+            <div class="grid-box">
+              <div class="grid-heading">
+                <h3>{{this.reportPopUpTitle}}</h3>
+              </div>
+              <!-- Grid Heading Ends -->
+              <div class="grid-inner">
+                <div class="form-row">
+                  <div class="table-responsive hms-loading-table">
+                    <div *ngIf="tableId == 'dailyClaimProcessing'" class="table-responsive">
+                      <table id="dailyClaimProcessing" class="display table table-bordered table-stripped">
+                      </table>
+                    </div>
+                    <div *ngIf="tableId == 'govtClaimsVolumeReport'" class="table-responsive">
+                      <table id="govtClaimsVolumeReport" class="display table table-bordered table-stripped">
+                      </table>
+                    </div>
+                    <div *ngIf="tableId == 'quikCardClaimsVolumeReport'" class="table-responsive">
+                      <table id="quikCardClaimsVolumeReport" class="display table table-bordered table-stripped">
+                      </table>
+                    </div>
+                    <div *ngIf="tableId == 'dobMismatchReport'" class="table-responsive">
+                      <table id="dobMismatchReport" class="display table table-bordered table-stripped">
+                      </table>
+                    </div>
+                    <div *ngIf="tableId == 'claimpaymentbycardholder'" class="table-responsive">
+                      <!--[Start Grid Column Filters Buttons]-->
+                      <div class="form-row text-right search-top">
+                        <button type="submit" id="companySearchFilterSearch" class="btn green-btn searchreset" (click)="filterGridColumnSearch('claimpaymentbycardholder')"
+                          title="{{'button.search' | translate }}">
+                          <span class="glyphicon glyphicon-search"></span>
+                        </button>
+                        <button id="gridColumnSearchFilterReset" class="btn grey-btn searchreset" (click)="resetGridColumnSearchFilter('claimpaymentbycardholder')">
+                          <span class="glyphicon glyphicon-repeat" title="{{'common.clear' | translate }}"></span>
+                        </button>
+                      </div>
+                      <table id="claimpaymentbycardholder" class="display table table-bordered table-stripped">
+                        <!--[Start Grid Column Filters]-->
+                        <tfoot>
+                          <tr>
+                            <td>
+                              <input id="GridFilter26_cardNumber" class="fm-txt form-control tFootInput inputSearch" type="text" placeholder="{{'dashboard.cardNumber' | translate }}"
+                                name="GridFilter26_cardNumber" [(ngModel)]="GridFilter26_cardNumber" />
+                            </td>
+                            <td>
+                              <input id="GridFilter26_confirmationNumber" class="fm-txt form-control tFootInput inputSearch" type="text" placeholder="{{'dashboard.confNumber' | translate }}"
+                                name="GridFilter26_confirmationNumber" [(ngModel)]="GridFilter26_confirmationNumber" />
+                            </td>
+                            <td>
+                              <input id="GridFilter26_cardholderName" class="fm-txt form-control tFootInput inputSearch" type="text" placeholder="{{'dashboard.clientName' | translate }}"
+                                name="GridFilter26_cardholderName" [(ngModel)]="GridFilter26_cardholderName" />
+                            </td>
+                            <td>
+                              <my-date-picker id="filterServiceDate" class="inputSearch" name="serviceDate" data-type="date" [options]="myDatePickerOptions"
+                                [selDate]="dateNameArray['serviceDate']" (inputFocusBlur)="ChangeSearchDateFormat($event, 'serviceDate','')"
+                                placeholder="{{'common.date-placeholder' | translate }}" [(ngModel)]="GridFilter26_serviceDate">
+                              </my-date-picker>
+                            </td>
+                            <td>
+                              <input id="GridFilter26_procCd" class="fm-txt form-control tFootInput inputSearch" type="text" placeholder="{{'dashboard.procCode' | translate }}" name="GridFilter26_procCd"
+                                [(ngModel)]="GridFilter26_procCd" />
+                            </td>
+                            <td>
+                              <input id="GridFilter26_procDesc" class="fm-txt form-control tFootInput inputSearch" type="text" placeholder="{{'dashboard.procCodeDescription' | translate }}"
+                                name="GridFilter26_procDesc" [(ngModel)]="GridFilter26_procDesc" />
+                            </td>
+                            <td>
+                              <input id="GridFilter26_amountSubmitted" class="fm-txt form-control tFootInput inputSearch" type="text" placeholder="{{'dashboard.amountSubmitted' | translate }}"
+                                name="GridFilter26_amountSubmitted" [(ngModel)]="GridFilter26_amountSubmitted" />
+                            </td>
+                            <td>
+                              <input id="GridFilter26_amountPaid" class="fm-txt form-control tFootInput inputSearch" type="text" placeholder="{{'dashboard.amountPaid' | translate }}"
+                                name="GridFilter26_amountPaid" [(ngModel)]="GridFilter26_amountPaid" />
+                            </td>
+                            <td>
+                              <input id="GridFilter26_amountNotPaid" class="fm-txt form-control tFootInput inputSearch" type="text" placeholder="{{'dashboard.amountNotPaid' | translate }}"
+                                name="GridFilter26_amountNotPaid" [(ngModel)]="GridFilter26_amountNotPaid" />
+                            </td>
+
+                          </tr>
+                        </tfoot>
+                        <!--[End Grid Column Filters]-->
+                      </table>
+                    </div>
+                    <!--[Start Download Dropdown]-->
+                    <div class="form-row text-center disable-export-button" id="{{tableId}}_reportsPdfButton">
+                      <div class="row">
+                        <div class="col-md-12 col-xs-12">
+                          <div class="dropdown pull-right">
+                            <button class="btn green-btn dropdown-toggle" type="button" data-toggle="dropdown">{{'common.export' | translate }}
+                              <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                              <li>
+                                <a href="javascript:void(0)" (click)="dowloadPDFReport()">{{ 'common.pdf' | translate }}</a>
+                              </li>
+                              <li>
+                                <a href="javascript:void(0)" (click)="downloadEXCELReport()">{{ 'common.excel' | translate }}</a>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!--[End Download Dropdown]-->
+                  </div>
+                </div>
+                <!-- Form Row ENds -->
+              </div>
+              <!-- Grid Inner Ends -->
+            </div>
+          </div>
+          <!--[End Report Filter Search Grid]-->
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- [End Reports Module Tab] -->
+
+  <!-- Log #1299: Comment Icon functionality -->
+  <div [attr.hidden]="true">
+      <button id="viewCpmmentsPopup" class="green-btn-add btn" data-toggle="modal" data-target="#viewComments"></button>
+  </div>
+  <div id="viewComments" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Comments</h4>
+          </div>
+          <div class="modal-body">
+            <div class="text-center">
+              <h3 class="success-msg" [innerHTML]="commentText"> </h3>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button id="commentBtn" data-dismiss="modal" class="btn grey-btn" autofocus>{{'button.ok'|translate}}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  <!-- Log #1299: Comment Icon functionality-->
+  <button class="green-btn-add btn" data-toggle="modal" id="dashboardCommentModal" data-target="#dashboardCommentPopup" style="display:none"></button>
+  <div id="dashboardCommentPopup" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button id="closeCommentPopup" type="button" class="close" data-dismiss="modal" (click)="resetCommentForm()">&times;</button>
+          <h4 class="modal-title">{{'common.comment' | translate}}</h4>
+        </div>
+        <div class="modal-body">
+          <div class="grid-box">
+            <div class="grid-inner">
+              <form [formGroup]="commentForm">
+                <div class="form-row">
+                  <label>{{'common.addcomment' | translate}}</label>
+                  <div class="add-comments">
+                    <div class="row">
+                      <div class="col-sm-4">
+                        <textarea id="dshCommentTxt" class="notInCaps fm-txt form-control"
+                          formControlName="commentTxt"></textarea>
+                        <show-errors [control]="commentForm.controls.commentTxt"></show-errors>
+                      </div>
+                      <div class="col-sm-2 text-right">
+                        <button *ngIf="dashboardCommentText == '' " id="addCommentBtn" style="float: left" class="green-btn-add btn"
+                        (click)="addDashboardCommment(commentForm,'save')">{{'common.save' | translate }} </button>
+                        <button *ngIf="dashboardCommentText != '' " id="updateCommentBtn" style="float: left" class="green-btn-add btn"
+                        (click)="addDashboardCommment(commentForm,'update')">{{'common.update' | translate }} </button>
+                        <!-- <button id="closeCommentBtn" style="float: left" class="grey-btn btn" data-dismiss="modal"
+                        (click)="resetCommentForm()">{{'button.close' | translate}} </button> -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="grid-box">
+            <div class="grid-heading">
+              <h3>Comments</h3>
+              <!-- Web Reg Ends -->
+            </div>
+            <div class="grid-inner">
+              <div class="form-row">
+                <div class="row">
+                  <div class="col-md-12 col-xs-12 table-col">
+                    <div class="table-responsive">
+                      <table id='commentList' class="inlinePopupTable table table-bordered table-stripped">
+                        <thead>
+                          <tr>
+                            <th>{{'common.comment' | translate}}</th>
+                            <th class="amount_right_grid">{{'common.action' | translate}}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngIf="dashboardCommentText != '' " class="tableRow">
+                            <td>
+                              {{dashboardCommentText}}
+                            </td>
+                            <td class="amount_right">
+                              <button id="editComment" (click)="ediCommentForm(dashboardCommentText)" title="Edit"
+                                class='form_edit_row table-action-btn edit-ico'><i class='fa fa-pencil'></i></button>
+                              <button id="viewComment" (click)="viewCommentForm()" title="View"
+                              class='form_edit_row table-action-btn view-ico'><i class='fa fa-eye'></i></button>
+                            </td>
+                          </tr>
+                          <tr *ngIf="dashboardCommentText == '' ">
+                            <td colspan="2" class="dataTables_empty" style="text-align: center;">No Record Found!
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button id="closeCommentBtn" class="grey-btn btn" data-dismiss="modal"
+        (click)="resetCommentForm()">{{'button.close' | translate}} </button>
+      </div>
+    </div>
+  </div>
+  </div>
+  <div [attr.hidden]="true">
+    <button id="viewDbCommentsPopup" class="green-btn-add btn" data-toggle="modal" data-target="#viewDbComments"></button>
+  </div>
+  <div id="viewDbComments" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button id="closeCommentViewPopup" type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Comments</h4>
+        </div>
+        <div class="modal-body">
+          <div class="text-center">
+            <h3 class="success-msg" [innerHTML]="dashboardCommentText"> </h3>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="dshCommentBtn" data-dismiss="modal" class="btn grey-btn" autofocus>{{'button.close'|translate}}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- #1426 - Comment Button functionality Ends -->
+  <button id = 'getQuikCardClaim' style="display: none;" (click)='getQuikCardClaim()'>getQuikCardClaim</button>
+  <button id = 'getGovClaim' style="display: none;" (click)='getGovClaim()'>getGovClaim</button>

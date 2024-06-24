@@ -1,0 +1,2745 @@
+<div class="form-row">
+  <div class="row plan-benefits">
+    <div class="col-md-12 col-xs-12 min-ht-half">
+      <label>Select the Benefits:</label>
+      <div class="select-options">
+        <ng-container *ngFor="let benefit of benefitsList" >
+        <span  *ngIf="benefit.disciplineDesc !='Drug'" >
+          <div >
+            <div *ngIf="enableCovCatForCopyDivision; then enableBenefits else disabledBenefits ">
+            </div>
+            <ng-template #enableBenefits>
+              <label><span class="custom-check">
+                  <input class="txt-top" type="checkbox" name="{{benefit.disciplineDesc}}"
+                    (change)="selectCategory(benefit.disciplineKey, $event.target.checked, benefit.disciplineDesc)"
+                    [checked]="benefit.checked"> {{benefit.disciplineDesc}} <span></span></span></label>
+            </ng-template>
+            <ng-template #disabledBenefits>
+              <label [ngClass]="{disableInput: benefit.checked }"><span class="custom-check">
+                  <input class="txt-top" type="checkbox" name="{{benefit.disciplineDesc}}"
+                    (change)="selectCategory(benefit.disciplineKey, $event.target.checked, benefit.disciplineDesc)"
+                    [checked]="benefit.checked"> {{benefit.disciplineDesc}} <span></span></span> </label>
+            </ng-template>
+          </div>
+        </span>
+      </ng-container>
+      </div>
+    </div>
+  </div>
+  <ul class="nav sub-tabs nav-pills">
+    <li *ngFor="let benefit of selectedBenefitsList" [ngClass]="{ active: currentBenefitId==benefit.id }"
+      id="trigger-{{benefit.id}}"><a (click)="showHideTabs(benefit.id)" data-toggle="pill" href="#plan-{{benefit.id}}">
+        {{benefit.name}}</a></li>
+  </ul>
+  <div class="tab-content">
+    <div *ngFor="let benefit of selectedBenefitsList; let first = first;" id="plan-{{benefit.id}}"
+      class="tab-pane fade in" [ngClass]="{ active: first }">
+      <div id="plan-inner-{{benefit.id}}">
+        <div class="row">
+          <form [formGroup]="FormGroup">
+            <div *ngIf="currentBenefitId == 1 && dentalCarryForwardFlag"
+              class="col-md-12 col-xs-12 table-col subtab-grid">
+              <div class="tab-hdr-inner">
+                <h3>{{'company.plan.plan-view.dental-coverage-CarryForward' | translate}}</h3>
+              </div>
+              <div class="form-row">
+                <div class="row min-ht-sf">
+                  <div class="col-md-4 col-xs-12">
+                    <label>{{'company.plan.plan-view.dental-coverage-carryforward-year' | translate}}</label>
+                    <input class="fm-txt form-control" type="number" placeholder="Carry Forward Year"
+                      formControlName="dentalcarryForwardYear" (keyup)="onKeyPress($event,'dentalcarryForwardYear')">
+                    <input class="fm-txt form-control" type="hidden" placeholder="Carry Forward Year"
+                      formControlName="benefitKey">
+                    <show-errors [control]="FormGroup.controls.dentalcarryForwardYear"></show-errors>
+                    <ul *ngIf="dentalShowcarryerror==true">
+                      <li style="color: red">{{ 'company.plan.division-max.enterValues1or2' | translate }}</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-4 col-xs-12" *ngIf="editPlanMode">
+                    <label>{{'company.plan.plan-view.dental-coverage-carryforward-effective-on' | translate}}</label>
+                    <div class="calender-field">
+                      <my-date-picker id="feeGuideDate" name="free_guide_date" [options]="myDatePickerOptions"
+                        [placeholder]="myDatePickerPlaceholder" formControlName="dentaleffectiveOn"
+                        (inputFocusBlur)="changeDateFormat($event, 'feeGuideDt', 'FormGroup','currentDate')">
+                      </my-date-picker>
+                    </div>
+                  </div>
+                  <div class="col-md-4 col-xs-12" *ngIf="editPlanMode">
+                    <label>{{'company.plan.plan-view.dental-coverage-carryforward-expire-on' | translate}}</label>
+                    <div class="calender-field">
+                      <my-date-picker id="feeGuideDate" name="free_guide_date" [options]="myDatePickerOptions"
+                        [placeholder]="myDatePickerPlaceholder" formControlName="dentalexpiredOn"
+                        (inputFocusBlur)="changeDateFormat($event, 'feeGuideDt', 'FormGroup','currentDate')">
+                      </my-date-picker>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+            <!-- issue number 731 for dental tab carry forward form end -->
+
+            <!-- issue number 731 for vision tab carry forward form start -->
+            <div *ngIf="currentBenefitId == 2 && visionCarryForwardFlag"
+              class="col-md-12 col-xs-12 table-col subtab-grid">
+              <div class="tab-hdr-inner">
+                <h3>{{'company.plan.plan-view.vision-coverage-forward-carry-forward' | translate}}</h3>
+              </div>
+              <div class="form-row">
+                <div class="row min-ht-sf">
+                  <div class="col-md-4 col-xs-12">
+                    <label>{{'company.plan.plan-view.dental-coverage-carryforward-year' | translate}}</label>
+                    <input class="fm-txt form-control" type="number" placeholder="Carry Forward Year"
+                      formControlName="visioncarryForwardYear" (keyup)="onKeyPress($event,'visioncarryForwardYear')">
+
+                    <input class="fm-txt form-control" type="hidden" placeholder="Carry Forward Year"
+                      formControlName="visionbenefitKey">
+
+                    <show-errors [control]="FormGroup.controls.visioncarryForwardYear"></show-errors>
+                    <ul *ngIf="visionShowcarryerror==true">
+                      <li style="color: red">{{ 'company.plan.division-max.enterValues1or2' | translate }}</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-4 col-xs-12" *ngIf="editPlanMode">
+                    <label>{{'company.plan.plan-view.dental-coverage-carryforward-effective-on' | translate}}</label>
+                    <div class="calender-field">
+                      <my-date-picker id="feeGuideDate" name="free_guide_date" [options]="myDatePickerOptions"
+                        [placeholder]="myDatePickerPlaceholder" formControlName="visioneffectiveOn"
+                        (inputFocusBlur)="changeDateFormat($event, 'feeGuideDt', 'FormGroup','currentDate')">
+                      </my-date-picker>
+                    </div>
+                  </div>
+                  <div class="col-md-4 col-xs-12" *ngIf="editPlanMode">
+                    <label>{{'company.plan.plan-view.dental-coverage-carryforward-expire-on' | translate}}</label>
+                    <div class="calender-field">
+                      <my-date-picker id="feeGuideDate" name="free_guide_date" [options]="myDatePickerOptions"
+                        [placeholder]="myDatePickerPlaceholder" formControlName="visionexpiredOn"
+                        (inputFocusBlur)="changeDateFormat($event, 'feeGuideDt', 'FormGroup','currentDate')">
+                      </my-date-picker>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+            <!-- issue number 731 for vision tab carry forward form end -->
+
+            <!-- issue number 731 for health tab carry forward form start -->
+            <div *ngIf="currentBenefitId == 3 && healthCarryForwardFlag"
+              class="col-md-12 col-xs-12 table-col subtab-grid">
+              <div class="tab-hdr-inner">
+                <h3>{{'company.plan.plan-view.health-coverage-carryforward' | translate}}</h3>
+              </div>
+              <div class="form-row">
+                <div class="row min-ht-sf">
+                  <div class="col-md-4 col-xs-12">
+                    <label>{{'company.plan.plan-view.dental-coverage-carryforward-year' | translate}}</label>
+                    <input class="fm-txt form-control" type="number" placeholder="Carry Forward Year"
+                      formControlName="healthcarryForwardYear" (keyup)="onKeyPress($event,'healthcarryForwardYear')">
+
+                    <input class="fm-txt form-control" type="hidden" placeholder="Carry Forward Year"
+                      formControlName="healthbenefitKey">
+
+                    <show-errors [control]="FormGroup.controls.healthcarryForwardYear"></show-errors>
+                    <ul *ngIf="healthShowcarryerror==true">
+                      <li style="color: red">{{ 'company.plan.division-max.enterValues1or2' | translate }}</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-4 col-xs-12" *ngIf="editPlanMode">
+                    <label>{{'company.plan.plan-view.dental-coverage-carryforward-effective-on' | translate}}</label>
+                    <div class="calender-field">
+                      <my-date-picker id="feeGuideDate" name="free_guide_date" [options]="myDatePickerOptions"
+                        [placeholder]="myDatePickerPlaceholder" formControlName="healtheffectiveOn"
+                        (inputFocusBlur)="changeDateFormat($event, 'feeGuideDt', 'FormGroup','currentDate')">
+                      </my-date-picker>
+                    </div>
+                  </div>
+                  <div class="col-md-4 col-xs-12" *ngIf="editPlanMode">
+                    <label>{{'company.plan.plan-view.dental-coverage-carryforward-expire-on' | translate}}</label>
+                    <div class="calender-field">
+                      <my-date-picker id="feeGuideDate" name="free_guide_date" [options]="myDatePickerOptions"
+                        [placeholder]="myDatePickerPlaceholder" formControlName="healthexpiredOn"
+                        (inputFocusBlur)="changeDateFormat($event, 'feeGuideDt', 'FormGroup','currentDate')">
+                      </my-date-picker>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            <!-- issue number 731 for health tab carry forward form -->
+          </form>
+        </div>
+        <div *ngIf="currentBenefitId == 1" class="form-row combineMax">
+          <div class="row">
+            <div class="col-md-12 col-xs-12 table-col subtab-grid">
+              <div class="table-hdr">
+                <h3>Combine Maximum</h3>
+                <a *ngIf="showCombineMaxHistoryIcon" title="Combine Maximum History" (click)="combineMaximumHistory()"
+                  href="javascript:;" class="history-ico" alt="History" data-toggle="modal"
+                  data-target="#CombineMaximumHistory">
+                  <i class="fa fa-history" aria-hidden="true"></i>
+                </a>
+                <div class="web-reg">
+                  <button class="green-btn-add btn" (click)="enableAddDentalCombineMax()"><i class="fa fa-plus"></i> Add
+                    New</button>
+                </div>
+              </div>
+              <div class="table-responsive clear">
+                <!-- Validation Errors Messages for new row -->
+                <div style="color: red" class="alert alert-danger" *ngIf="(dental_new_combine_maximum_amount.invalid && (dental_new_combine_maximum_amount.dirty || dental_new_combine_maximum_amount.touched))
+                  || (dental_new_combine_maximum_type.invalid && (dental_new_combine_maximum_type.dirty || dental_new_combine_maximum_type.touched))
+                  || (dental_new_combine_maximum_period_type.invalid && (dental_new_combine_maximum_period_type.dirty || dental_new_combine_maximum_period_type.touched))
+                  || (dental_new_combine_combine_maximum_type.invalid && (dental_new_combine_combine_maximum_type.dirty || dental_new_combine_combine_maximum_type.touched)) ||
+                  (dental_new_combine_maximum_effective_date.invalid && (dental_new_combine_maximum_effective_date.dirty || dental_new_combine_maximum_effective_date.touched)) 
+                  || (dental_new_combine_maximum_expiry_date.invalid && (dental_new_combine_maximum_expiry_date.dirty || dental_new_combine_maximum_expiry_date.touched))
+                  ">
+                  <!-- Validatoin for new record unit id -->
+                  <div
+                    *ngIf="dental_new_combine_maximum_amount.invalid && (dental_new_combine_maximum_amount.dirty || dental_new_combine_maximum_amount.touched)">
+                    <div *ngIf="dental_new_combine_maximum_amount.errors.required">
+                      Combine Maximum Amount is Required.
+                    </div>
+                    <div
+                      *ngIf="!dental_new_combine_maximum_amount.errors.required && dental_new_combine_maximum_amount.errors.number">
+                      Please Enter Numbers Only
+                    </div>
+                    <div *ngIf="dental_new_combine_maximum_amount.errors.maxlength">
+                      Please Enter Maximum 9 Numbers.
+                    </div>
+                  </div>
+
+                  <div
+                    *ngIf="dental_new_combine_maximum_type.invalid && (dental_new_combine_maximum_type.dirty || dental_new_combine_maximum_type.touched)">
+                    <div *ngIf="dental_new_combine_maximum_type.errors.required">
+                      Combine Maximum Type is Required.
+                    </div>
+                  </div>
+
+                  <!-- Validatoin for new record unit id -->
+                  <div
+                    *ngIf="dental_new_combine_maximum_period_type.invalid && (dental_new_combine_maximum_period_type.dirty || dental_new_combine_maximum_period_type.touched)">
+                    <div *ngIf="dental_new_combine_maximum_period_type.errors.required">
+                      Combine Maximum Period Type is Required.
+                    </div>
+                  </div>
+
+                  <!-- Validatoin for new record unit id -->
+                  <div
+                    *ngIf="dental_new_combine_combine_maximum_type.invalid && (dental_new_combine_combine_maximum_type.dirty || dental_new_combine_combine_maximum_type.touched)">
+                    <div *ngIf="dental_new_combine_combine_maximum_type.errors.required">
+                      Combine Combine-Maximum Type is Required.
+                    </div>
+                  </div>
+
+                  <div
+                    *ngIf="editPlanMode == true 
+                  && (dental_new_combine_maximum_effective_date.invalid && (dental_new_combine_maximum_effective_date.dirty || dental_new_combine_maximum_effective_date.touched)) 
+                  || (dental_new_combine_maximum_expiry_date.invalid && (dental_new_combine_maximum_expiry_date.dirty || dental_new_combine_maximum_expiry_date.touched))">
+                    <div
+                      *ngIf="dental_new_combine_maximum_effective_date.invalid && (dental_new_combine_maximum_effective_date.dirty || dental_new_combine_maximum_effective_date.touched)">
+                      <div *ngIf="dental_new_combine_maximum_effective_date.errors.required">
+                        {{ 'company.plan.fee-guide.effectiveDateReq' | translate }}
+                      </div>
+
+                      <div
+                        *ngIf="!dental_new_combine_maximum_effective_date.errors.required && dental_new_combine_maximum_effective_date.errors.dateNotValid">
+                        {{ 'company.plan.fee-guide.enterValidDate' | translate }}
+                      </div>
+
+                      <div
+                        *ngIf="!dental_new_combine_maximum_effective_date.errors.required && dental_new_combine_maximum_effective_date.errors.EffectiveDateNotValid">
+                        {{ 'company.plan.fee-guide.effectiveDateCantbeLess' | translate }}
+                      </div>
+                    </div>
+
+                    <!-- Validatoin for new record expiry date -->
+                    <div
+                      *ngIf="dental_new_combine_maximum_expiry_date.invalid && (dental_new_combine_maximum_expiry_date.dirty || dental_new_combine_maximum_expiry_date.touched)">
+                      <div *ngIf="dental_new_combine_maximum_expiry_date.errors.dateNotValid">
+                        {{ 'company.plan.fee-guide.enterValidDate' | translate }}
+                      </div>
+
+                      <div *ngIf="dental_new_combine_maximum_expiry_date.errors.ExpiryDateNotValid">
+
+                        {{ 'company.plan.fee-guide.expiryDateShouldBeGreater' | translate }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Validation Errors Messages for Update row -->
+                <div style="color: red" class="alert alert-danger" *ngIf="(dental_old_combine_maximum_amount.invalid && (dental_old_combine_maximum_amount.dirty || dental_old_combine_maximum_amount.touched))
+                  || (dental_old_combine_maximum_type.invalid && (dental_old_combine_maximum_type.dirty || dental_old_combine_maximum_type.touched))
+                  || (dental_old_combine_maximum_period_type.invalid && (dental_old_combine_maximum_period_type.dirty || dental_old_combine_maximum_period_type.touched))
+                  || (dental_old_combine_combine_maximum_type.invalid && (dental_old_combine_combine_maximum_type.dirty || dental_old_combine_combine_maximum_type.touched))|| (dental_old_combine_maximum_effective_date.invalid && (dental_old_combine_maximum_effective_date.dirty || dental_old_combine_maximum_effective_date.touched)) 
+                  || (dental_old_combine_maximum_expiry_date.invalid && (dental_old_combine_maximum_expiry_date.dirty || dental_old_combine_maximum_expiry_date.touched))
+                  ">
+                  <!-- Validatoin for old record unit id -->
+                  <div
+                    *ngIf="dental_old_combine_maximum_amount.invalid && (dental_old_combine_maximum_amount.dirty || dental_old_combine_maximum_amount.touched)">
+                    <div *ngIf="dental_old_combine_maximum_amount.errors.required">
+                      Combine Maximum Amount is Required.
+                    </div>
+                    <div
+                      *ngIf="!dental_old_combine_maximum_amount.errors.required && dental_old_combine_maximum_amount.errors.number">
+                      Please Enter Numbers Only
+                    </div>
+                    <div *ngIf="dental_old_combine_maximum_amount.errors.maxlength">
+                      <!-- Task 556, validation text corrected -->
+                      Please Enter Maximum 9 Numbers.
+                      <!-- Please Enter Numbers Only -->
+                    </div>
+                  </div>
+
+                  <!-- Validatoin for new record unit id -->
+                  <div
+                    *ngIf="dental_old_combine_maximum_type.invalid && (dental_old_combine_maximum_type.dirty || dental_old_combine_maximum_type.touched)">
+                    <div *ngIf="dental_old_combine_maximum_type.errors.required">
+                      Combine Maximum Type is Required.
+                    </div>
+                  </div>
+
+                  <!-- Validatoin for new record unit id -->
+                  <div
+                    *ngIf="dental_old_combine_maximum_period_type.invalid && (dental_old_combine_maximum_period_type.dirty || dental_old_combine_maximum_period_type.touched)">
+                    <div *ngIf="dental_old_combine_maximum_period_type.errors.required">
+                      Combine Maximum Period Type is Required.
+                    </div>
+                  </div>
+
+                  <div
+                    *ngIf="dental_old_combine_combine_maximum_type.invalid && (dental_old_combine_combine_maximum_type.dirty || dental_old_combine_combine_maximum_type.touched)">
+                    <div *ngIf="dental_old_combine_combine_maximum_type.errors.required">
+                      Combine Combine-Maximum Type is Required.
+                    </div>
+                  </div>
+
+                  <!-- Validatoin for old record description -->
+                  <div
+                    *ngIf="dental_old_combine_maximum_effective_date.invalid && (dental_old_combine_maximum_effective_date.dirty || dental_old_combine_maximum_effective_date.touched)">
+                    <div *ngIf="dental_old_combine_maximum_effective_date.errors.required">
+                      {{ 'company.plan.fee-guide.effectiveDateReq' | translate }}
+                    </div>
+
+                    <div
+                      *ngIf="!dental_old_combine_maximum_effective_date.errors.required && dental_old_combine_maximum_effective_date.errors.dateNotValid">
+                      {{ 'company.plan.fee-guide.enterValidDate' | translate }}
+                    </div>
+
+                    <div
+                      *ngIf="!dental_old_combine_maximum_effective_date.required && dental_old_combine_maximum_effective_date.errors.EffectiveDateNotValid">
+                      {{ 'company.plan.fee-guide.effectiveDateCantbeLess' | translate }}
+                    </div>
+                  </div>
+                  <!-- Validatoin for old record effective date -->
+                  <div
+                    *ngIf="dental_old_combine_maximum_expiry_date.invalid && (dental_old_combine_maximum_expiry_date.dirty || dental_old_combine_maximum_expiry_date.touched)">
+                    <div *ngIf="dental_old_combine_maximum_expiry_date.errors.dateNotValid">
+                      {{ 'company.plan.fee-guide.enterValidDate' | translate }}
+                    </div>
+                    <div *ngIf="dental_old_combine_maximum_expiry_date.errors.ExpiryDateNotValid">
+                      {{ 'company.plan.fee-guide.expiryDateShouldBeGreater' | translate }}
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Validation Error  -->
+                <table class="table table-bordered table-stripped" id="planBenefitTabCombineMaximum">
+                  <thead>
+                    <tr>
+                      <th width="15%">Maximum Amount</th>
+                      <th class="amount_right" width="15%">Maximum Type</th>
+                      <th class="amount_right" width="15%">Maximum Period Type</th>
+                      <th class="amount_right" width="15%">Combine Maximum Type</th>
+                      <th class="amount_right" *ngIf="editPlanMode == true" width="15%">Effective Date</th>
+                      <th class="amount_right" *ngIf="editPlanMode == true" width="15%">Expiry Date</th>
+                      <th class="amount_right" width="10%">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Adding New Row Data Here-->
+                    <tr *ngIf="DentalCombineMaxAddMode">
+                      <td>
+                        <input #focusAddCombineMaxEl class="fm-txt form-control" type="text"
+                          [formControl]="dental_new_combine_maximum_amount">
+                      </td>
+                      <td class="amount_right">
+                        <ng2-completer [formControl]="dental_new_combine_maximum_type" [datasource]="maximumTypeData"
+                          [minSearchLength]="0" [openOnFocus]="true" (opened)="onOpened($event)"
+                          [fillHighlighted]="false" [placeholder]="'Search Maximum Type'"
+                          [textSearching]="'Please wait...'" [inputClass]="'form-control amount_right'"
+                          (selected)="onMaximumTypeSelected($event)">
+                        </ng2-completer>
+                      </td>
+                      <td class="amount_right">
+                        <ng2-completer [formControl]="dental_new_combine_maximum_period_type"
+                          [datasource]="maximumPeriodTypeData" [minSearchLength]="0" [openOnFocus]="true"
+                          (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Search Maximum Type'"
+                          [textSearching]="'Please wait...'" [inputClass]="'form-control amount_right'"
+                          (selected)="onMaximumPeriodTypeSelected($event)">
+                        </ng2-completer>
+                      </td>
+                      <td class="amount_right">
+                        <ng2-completer [formControl]="dental_new_combine_combine_maximum_type"
+                          [datasource]="dentalCombineMaxTypeData" [minSearchLength]="0" [openOnFocus]="true"
+                          (opened)="onOpened($event)" [fillHighlighted]="false"
+                          [placeholder]="'Search Combine Maximum Type'" [textSearching]="'Please wait...'"
+                          [inputClass]="'form-control amount_right'"
+                          (selected)="onDentalCombineMaxTypeSelected($event)">
+                        </ng2-completer>
+                      </td>
+                      <td *ngIf="editPlanMode == true" class="alignDpRight amount_right">
+
+                        <div class="calender-field">
+                          <my-date-picker id="NewCombineMaximumEffectiveDate"
+                            [formControl]="dental_new_combine_maximum_effective_date" [options]="myDatePickerOptions"
+                            [placeholder]="myDatePickerPlaceholder"
+                            [selDate]="dateNameArray['NewCombineMaximumEffectiveDate']"
+                            (inputFocusBlur)="changeFilterDateFormat($event, 'dental_new_combine_maximum_effective_date', 'NewCombineMaximumEffectiveDate', true)">
+                          </my-date-picker>
+                        </div>
+                      </td>
+                      <td *ngIf="editPlanMode == true" class="alignDpRight1 amount_right expiryDate">
+
+                        <div class="calender-field">
+                          <my-date-picker id="NewCombineMaximumExpiryDate"
+                            [formControl]="dental_new_combine_maximum_expiry_date" [options]="myDatePickerOptions"
+                            [placeholder]="myDatePickerPlaceholder" [ngClass]="expired  ? 'expired' : 'notExpired'"
+                            [selDate]="dateNameArray['NewCombineMaximumExpiryDate']"
+                            (inputFocusBlur)="changeFilterDateFormat($event, 'dental_new_combine_maximum_expiry_date', 'NewCombineMaximumExpiryDate')">
+                          </my-date-picker>
+                        </div>
+                      </td>
+                      <td class="amount_right">
+                        <button type="button" (click)="addNewDentalCombineMax()" class="table-action-btn save-ico"
+                          title="Save" id="save1"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+                        <button type="button" (click)="resetNewCombineMaxRow()" class="table-action-btn cancel-ico"
+                          title="Cancel"><i class="fa fa-times" aria-hidden="true"></i></button>
+                      </td>
+                    </tr>
+                    <!-- Updating Row Data-->
+                    <div
+                      *ngIf="DentalCombineMaxList.length > 0 || DentalCombineMaxAddMode; then recordFound else recordNotFound ">
+                    </div>
+                    <ng-template #recordNotFound>
+                      <tr>
+                        <td colspan="7" class="text-center">No data available in table.</td>
+                      </tr>
+                    </ng-template>
+                    <ng-template #recordFound>
+                      <tr *ngFor="let row of DentalCombineMaxList; let rowIndex = index">
+                        <td class="amount_right_grid">
+                          <div *ngIf="rowIndex != selectedCombineMax.rowIndex">
+                            <span>$</span> {{row.maximumAmt | number: '1.2'}}
+                          </div>
+
+                          <input type="hidden" [formControl]="dental_old_combine_maximum_benDentCovCatMaxKey"
+                            *ngIf="DentalCombineMaxEditMode && rowIndex == selectedCombineMax.rowIndex"
+                            [(ngModel)]="selectedCombineMax.benDentCovCatMaxKey">
+
+                          <input #focusEditCombineMaxEl class="fm-txt form-control" type="text"
+                            [formControl]="dental_old_combine_maximum_amount"
+                            *ngIf="DentalCombineMaxEditMode && rowIndex == selectedCombineMax.rowIndex"
+                            [(ngModel)]="selectedCombineMax.maximumAmt">
+                        </td>
+                        <td class="amount_right">
+                          <div *ngIf="rowIndex != selectedCombineMax.rowIndex">
+                            <div class="amount_right" *ngFor="let maximumtype of MaximumTypeList">
+                              <span *ngIf="maximumtype.maxTypeKey == row.maximumTypeKey">
+                                {{maximumtype.maxTypeDesc}}
+                              </span>
+                            </div>
+                          </div>
+                          <ng2-completer *ngIf="DentalCombineMaxEditMode && rowIndex == selectedCombineMax.rowIndex"
+                            [formControl]="dental_old_combine_maximum_type" [datasource]="maximumTypeData"
+                            [minSearchLength]="0" [openOnFocus]="true" (opened)="onOpened($event)"
+                            [fillHighlighted]="false" [placeholder]="'Search Maximum Type'"
+                            [textSearching]="'Please wait...'" [inputClass]="'form-control amount_right'"
+                            (selected)="onMaximumTypeSelected($event)">
+                          </ng2-completer>
+                        </td>
+                        <td class="amount_right">
+                          <div *ngIf="rowIndex != selectedCombineMax.rowIndex">
+                            <div *ngFor="let periodtype of MaximumPeriodTypeList">
+                              <span *ngIf="periodtype.maxPeriodTypeKey == row.maximumPeroidKey">
+                                {{periodtype.maxPeriodTypeCd}}
+                              </span>
+                            </div>
+                          </div>
+                          <ng2-completer *ngIf="DentalCombineMaxEditMode && rowIndex == selectedCombineMax.rowIndex"
+                            [formControl]="dental_old_combine_maximum_period_type" [datasource]="maximumPeriodTypeData"
+                            [minSearchLength]="0" [openOnFocus]="true" (opened)="onOpened($event)"
+                            [fillHighlighted]="false" [placeholder]="'Search Maximum Type'"
+                            [textSearching]="'Please wait...'" [inputClass]="'form-control amount_right'"
+                            (selected)="onMaximumPeriodTypeSelected($event)">
+                          </ng2-completer>
+                        </td>
+                        <td class="amount_right">
+                          <div *ngIf="rowIndex != selectedCombineMax.rowIndex">
+                            <div *ngFor="let CombineMaximumType of CombineMaximumTypeList">
+                              <span *ngIf="CombineMaximumType.key == row.combineMaximunTypeKey">
+                                <!-- log 787 issue -->
+                                {{CombineMaximumType.desc}}
+                              </span>
+                            </div>
+                          </div>
+                          <ng2-completer *ngIf="DentalCombineMaxEditMode && rowIndex == selectedCombineMax.rowIndex"
+                            [formControl]="dental_old_combine_combine_maximum_type"
+                            [datasource]="dentalCombineMaxTypeData" [minSearchLength]="0" [openOnFocus]="true"
+                            (opened)="onOpened($event)" [fillHighlighted]="false"
+                            [placeholder]="'Search Combine Maximum Type'" [textSearching]="'Please wait...'"
+                            [inputClass]="'form-control amount_right'"
+                            (selected)="onDentalCombineMaxTypeSelected($event)">
+                          </ng2-completer>
+                        </td>
+                        <td *ngIf="editPlanMode == true" class="alignDpRight amount_right">
+                          <span *ngIf="rowIndex != selectedCombineMax.rowIndex">{{row.effectiveOn | dateFormate}}</span>
+                          <div *ngIf="DentalCombineMaxEditMode && rowIndex == selectedCombineMax.rowIndex"
+                            class="calender-field">
+                            <my-date-picker id="OldCombineMaximumEffectiveDate"
+                              [formControl]="dental_old_combine_maximum_effective_date"
+                              [(ngModel)]="selectedCombineMax.effectiveOn" [options]="myDatePickerOptions"
+                              [placeholder]="myDatePickerPlaceholder"
+                              [selDate]="dateNameArray['OldCombineMaximumEffectiveDate']"
+                              (inputFocusBlur)="changeFilterDateFormat($event, 'dental_old_combine_maximum_effective_date', 'OldCombineMaximumEffectiveDate', true)">
+                            </my-date-picker>
+                          </div>
+                        </td>
+                        <td *ngIf="editPlanMode == true" class="amount_right alignDpRight expiryDate">
+
+                          <span *ngIf="rowIndex != selectedCombineMax.rowIndex">{{row.expiredOn | dateFormate}}</span>
+                          <div *ngIf="DentalCombineMaxEditMode && rowIndex == selectedCombineMax.rowIndex"
+                            class="calender-field">
+                            <my-date-picker id="OldCombineMaximumExpiryDate"
+                              [formControl]="dental_old_combine_maximum_expiry_date"
+                              [(ngModel)]="selectedCombineMax.expiredOn" [options]="myDatePickerOptions"
+                              [placeholder]="myDatePickerPlaceholder" [ngClass]="expired  ? 'expired' : 'notExpired'"
+                              [selDate]="dateNameArray['OldCombineMaximumExpiryDate']"
+                              (inputFocusBlur)="changeFilterDateFormat($event, 'dental_old_combine_maximum_expiry_date', 'OldCombineMaximumExpiryDate')">
+                            </my-date-picker>
+                          </div>
+                        </td>
+                        <td class="amount_right">
+                          <!-- Display button in View Mode -->
+                          <button *ngIf="rowIndex != selectedCombineMax.rowIndex" type="button"
+                            class="table-action-btn edit-ico" (click)="enableEditDentalCombineMax(row, rowIndex)"
+                            title="Edit"><i class="fa fa-pencil"></i></button>
+                          <button *ngIf="rowIndex != selectedCombineMax.rowIndex" type="button"
+                            class="table-action-btn del-ico" (click)="deleteDentalCombineMax(rowIndex)"
+                            title="Delete"><i class="fa fa-trash"></i></button>
+                          <!-- Display button in Edit Mode -->
+                          <button *ngIf="DentalCombineMaxEditMode && rowIndex == selectedCombineMax.rowIndex"
+                            type="button" class="table-action-btn save-ico" (click)="updateDentalCombineMax(rowIndex)"
+                            title="Save" id="save2"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+                          <button *ngIf="DentalCombineMaxEditMode && rowIndex == selectedCombineMax.rowIndex"
+                            type="button" class="table-action-btn cancel-ico" (click)="resetDentalCombineMaxInfo()"
+                            title="Cancel"><i class="fa fa-times" aria-hidden="true"></i></button>
+                        </td>
+                      </tr>
+                    </ng-template>
+                  </tbody>
+                </table>
+              </div>
+              <!-- Table Ends -->
+            </div>
+          </div>
+        </div>
+
+        <div style="display: none;" *ngIf="currentBenefitId == 6" class="form-row combineMax">
+          <div class="row">
+            <div class="col-md-12 col-xs-12 table-col subtab-grid">
+              <div class="table-hdr">
+                <h3>Combine Maximum</h3>
+                <a *ngIf="showCombineMaxWellnessHistoryIcon" title="Combine Maximum History"
+                  (click)="combineMaximumHistoryWellness()" href="javascript:;" class="history-ico" alt="History"
+                  data-toggle="modal" data-target="#CombineMaximumHistory">
+                  <i class="fa fa-history" aria-hidden="true"></i>
+                </a>
+                <div class="web-reg">
+                  <button class="green-btn-add btn" (click)="enableAddWellnessCombineMax()"><i class="fa fa-plus"></i>
+                    Add New</button>
+                </div>
+              </div>
+              <div class="table-responsive clear">
+                <!-- Validation Errors Messages for new row -->
+                <div style="color: red" class="alert alert-danger" *ngIf="(wellness_new_combine_maximum_amount.invalid && (wellness_new_combine_maximum_amount.dirty || wellness_new_combine_maximum_amount.touched))
+                  || (wellness_new_combine_maximum_type.invalid && (wellness_new_combine_maximum_type.dirty || wellness_new_combine_maximum_type.touched))
+                  || (wellness_new_combine_maximum_period_type.invalid && (wellness_new_combine_maximum_period_type.dirty || wellness_new_combine_maximum_period_type.touched))
+                  || (wellness_new_combine_combine_maximum_type.invalid && (wellness_new_combine_combine_maximum_type.dirty || wellness_new_combine_combine_maximum_type.touched)) ||
+                  (wellness_new_combine_maximum_effective_date.invalid && (wellness_new_combine_maximum_effective_date.dirty || wellness_new_combine_maximum_effective_date.touched)) 
+                  || (wellness_new_combine_maximum_expiry_date.invalid && (wellness_new_combine_maximum_expiry_date.dirty || wellness_new_combine_maximum_expiry_date.touched))
+                  ">
+                  <!-- Validatoin for new record unit id -->
+                  <div
+                    *ngIf="wellness_new_combine_maximum_amount.invalid && (wellness_new_combine_maximum_amount.dirty || wellness_new_combine_maximum_amount.touched)">
+                    <div *ngIf="wellness_new_combine_maximum_amount.errors.required">
+                      Combine Maximum Amount is Required.
+                    </div>
+                    <div
+                      *ngIf="!wellness_new_combine_maximum_amount.errors.required && wellness_new_combine_maximum_amount.errors.number">
+                      Please Enter Numbers Only
+                    </div>
+                    <div *ngIf="wellness_new_combine_maximum_amount.errors.maxlength">
+                      Please Enter Maximum 9 Numbers.
+                    </div>
+                  </div>
+
+                  <div
+                    *ngIf="wellness_new_combine_maximum_type.invalid && (wellness_new_combine_maximum_type.dirty || wellness_new_combine_maximum_type.touched)">
+                    <div *ngIf="wellness_new_combine_maximum_type.errors.required">
+                      Combine Maximum Type is Required.
+                    </div>
+                  </div>
+
+                  <!-- Validatoin for new record unit id -->
+                  <div
+                    *ngIf="wellness_new_combine_maximum_period_type.invalid && (wellness_new_combine_maximum_period_type.dirty || wellness_new_combine_maximum_period_type.touched)">
+                    <div *ngIf="wellness_new_combine_maximum_period_type.errors.required">
+                      Combine Maximum Period Type is Required.
+                    </div>
+                  </div>
+
+                  <!-- Validatoin for new record unit id -->
+                  <div
+                    *ngIf="wellness_new_combine_combine_maximum_type.invalid && (wellness_new_combine_combine_maximum_type.dirty || wellness_new_combine_combine_maximum_type.touched)">
+                  </div>
+
+                  <div
+                    *ngIf="editPlanMode == true 
+                  && (wellness_new_combine_maximum_effective_date.invalid && (wellness_new_combine_maximum_effective_date.dirty || wellness_new_combine_maximum_effective_date.touched)) 
+                  || (wellness_new_combine_maximum_expiry_date.invalid && (wellness_new_combine_maximum_expiry_date.dirty || wellness_new_combine_maximum_expiry_date.touched))">
+                    <div
+                      *ngIf="wellness_new_combine_maximum_effective_date.invalid && (wellness_new_combine_maximum_effective_date.dirty || wellness_new_combine_maximum_effective_date.touched)">
+                      <div *ngIf="wellness_new_combine_maximum_effective_date.errors.required">
+                        {{ 'company.plan.fee-guide.effectiveDateReq' | translate }}
+                      </div>
+
+                      <div
+                        *ngIf="!wellness_new_combine_maximum_effective_date.errors.required && wellness_new_combine_maximum_effective_date.errors.dateNotValid">
+                        {{ 'company.plan.fee-guide.enterValidDate' | translate }}
+                      </div>
+
+                      <div
+                        *ngIf="!wellness_new_combine_maximum_effective_date.errors.required && wellness_new_combine_maximum_effective_date.errors.EffectiveDateNotValid">
+                        {{ 'company.plan.fee-guide.effectiveDateCantbeLess' | translate }}
+                      </div>
+                    </div>
+
+                    <!-- Validatoin for new record expiry date -->
+                    <div
+                      *ngIf="wellness_new_combine_maximum_expiry_date.invalid && (wellness_new_combine_maximum_expiry_date.dirty || wellness_new_combine_maximum_expiry_date.touched)">
+                      <div *ngIf="wellness_new_combine_maximum_expiry_date.errors.dateNotValid">
+                        {{ 'company.plan.fee-guide.enterValidDate' | translate }}
+                      </div>
+
+                      <div *ngIf="wellness_new_combine_maximum_expiry_date.errors.ExpiryDateNotValid">
+                        {{ 'company.plan.fee-guide.expiryDateShouldBeGreater' | translate }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Validation Errors Messages for Update row -->
+                <div style="color: red" class="alert alert-danger" *ngIf="(wellness_old_combine_maximum_amount.invalid && (wellness_old_combine_maximum_amount.dirty || wellness_old_combine_maximum_amount.touched))
+                  || (wellness_old_combine_maximum_type.invalid && (wellness_old_combine_maximum_type.dirty || wellness_old_combine_maximum_type.touched))
+                  || (wellness_old_combine_maximum_period_type.invalid && (wellness_old_combine_maximum_period_type.dirty || wellness_old_combine_maximum_period_type.touched))
+                  || (wellness_old_combine_combine_maximum_type.invalid && (wellness_old_combine_combine_maximum_type.dirty || wellness_old_combine_combine_maximum_type.touched))|| (wellness_old_combine_maximum_effective_date.invalid && (wellness_old_combine_maximum_effective_date.dirty || wellness_old_combine_maximum_effective_date.touched)) 
+                  || (wellness_old_combine_maximum_expiry_date.invalid && (wellness_old_combine_maximum_expiry_date.dirty || wellness_old_combine_maximum_expiry_date.touched))
+                  ">
+                  <!-- Validatoin for old record unit id -->
+                  <div
+                    *ngIf="wellness_old_combine_maximum_amount.invalid && (wellness_old_combine_maximum_amount.dirty || wellness_old_combine_maximum_amount.touched)">
+                    <div *ngIf="wellness_old_combine_maximum_amount.errors.required">
+                      Combine Maximum Amount is Required.
+                    </div>
+                    <div
+                      *ngIf="!wellness_old_combine_maximum_amount.errors.required && wellness_old_combine_maximum_amount.errors.number">
+                      Please Enter Numbers Only
+                    </div>
+                    <div *ngIf="wellness_old_combine_maximum_amount.errors.maxlength">
+                      Please Enter Numbers Only
+                    </div>
+                  </div>
+
+                  <!-- Validatoin for new record unit id -->
+                  <div
+                    *ngIf="wellness_old_combine_maximum_type.invalid && (wellness_old_combine_maximum_type.dirty || wellness_old_combine_maximum_type.touched)">
+                    <div *ngIf="wellness_old_combine_maximum_type.errors.required">
+                      Combine Maximum Type is Required.
+                    </div>
+                  </div>
+
+                  <!-- Validatoin for new record unit id -->
+                  <div
+                    *ngIf="wellness_old_combine_maximum_period_type.invalid && (wellness_old_combine_maximum_period_type.dirty || wellness_old_combine_maximum_period_type.touched)">
+                    <div *ngIf="wellness_old_combine_maximum_period_type.errors.required">
+                      Combine Maximum Period Type is Required.
+                    </div>
+                  </div>
+
+                  <div
+                    *ngIf="wellness_old_combine_combine_maximum_type.invalid && (wellness_old_combine_combine_maximum_type.dirty || wellness_old_combine_combine_maximum_type.touched)">
+                    <div *ngIf="wellness_old_combine_combine_maximum_type.errors.required">
+                      Combine Combine-Maximum Type is Required.
+                    </div>
+                  </div>
+
+                  <!-- Validatoin for old record description -->
+                  <div
+                    *ngIf="wellness_old_combine_maximum_effective_date.invalid && (wellness_old_combine_maximum_effective_date.dirty || wellness_old_combine_maximum_effective_date.touched)">
+                    <div *ngIf="wellness_old_combine_maximum_effective_date.errors.required">
+                      {{ 'company.plan.fee-guide.effectiveDateReq' | translate }}
+                    </div>
+
+                    <div
+                      *ngIf="!wellness_old_combine_maximum_effective_date.errors.required && wellness_old_combine_maximum_effective_date.errors.dateNotValid">
+                      {{ 'company.plan.fee-guide.enterValidDate' | translate }}
+                    </div>
+
+                    <div
+                      *ngIf="!wellness_old_combine_maximum_effective_date.required && wellness_old_combine_maximum_effective_date.errors.EffectiveDateNotValid">
+                      {{ 'company.plan.fee-guide.effectiveDateCantbeLess' | translate }}
+                    </div>
+                  </div>
+                  <!-- Validatoin for old record effective date -->
+                  <div
+                    *ngIf="wellness_old_combine_maximum_expiry_date.invalid && (wellness_old_combine_maximum_expiry_date.dirty || wellness_old_combine_maximum_expiry_date.touched)">
+                    <div *ngIf="wellness_old_combine_maximum_expiry_date.errors.dateNotValid">
+                      {{ 'company.plan.fee-guide.enterValidDate' | translate }}
+                    </div>
+                    <div *ngIf="wellness_old_combine_maximum_expiry_date.errors.ExpiryDateNotValid">
+
+                      {{ 'company.plan.fee-guide.expiryDateShouldBeGreater' | translate }}
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Validation Error  -->
+                <table class="table table-bordered table-stripped">
+                  <thead>
+                    <tr>
+                      <th width="15%">Maximum Amount</th>
+                      <th class="amount_right" width="15%">Maximum Type</th>
+                      <th class="amount_right" width="15%">Maximum Period Type</th>
+                      <th class="amount_right" *ngIf="editPlanMode == true" width="15%">Effective Date</th>
+                      <th class="amount_right" *ngIf="editPlanMode == true" width="15%">Expiry Date</th>
+                      <th class="amount_right" width="10%">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Adding New Row Data Here-->
+                    <tr *ngIf="WellnessCombineMaxAddMode">
+                      <td>
+                        <input #focusAddCombineMaxEl class="fm-txt form-control" type="text"
+                          [formControl]="wellness_new_combine_maximum_amount">
+                      </td>
+                      <td class="amount_right">
+                        <ng2-completer [formControl]="wellness_new_combine_maximum_type" [datasource]="maximumTypeData"
+                          [minSearchLength]="0" [openOnFocus]="true" (opened)="onOpened($event)"
+                          [fillHighlighted]="false" [placeholder]="'Search Maximum Type'"
+                          [textSearching]="'Please wait...'" [inputClass]="'form-control amount_right'"
+                          (selected)="onMaximumTypeSelected($event)">
+                        </ng2-completer>
+                      </td>
+                      <td class="amount_right">
+                        <ng2-completer [formControl]="wellness_new_combine_maximum_period_type"
+                          [datasource]="maximumPeriodTypeData" [minSearchLength]="0" [openOnFocus]="true"
+                          (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Search Maximum Type'"
+                          [textSearching]="'Please wait...'" [inputClass]="'form-control amount_right'"
+                          (selected)="onMaximumPeriodTypeSelected($event)">
+                        </ng2-completer>
+                      </td>
+                      <td *ngIf="editPlanMode == true" class="alignDpRight amount_right">
+                        <div class="calender-field">
+                          <my-date-picker id="NewCombineMaximumEffectiveDate"
+                            [formControl]="wellness_new_combine_maximum_effective_date" [options]="myDatePickerOptions"
+                            [placeholder]="myDatePickerPlaceholder"
+                            [selDate]="dateNameArray['NewCombineMaximumEffectiveDate']"
+                            (inputFocusBlur)="changeFilterDateFormat($event, 'wellness_new_combine_maximum_effective_date', 'NewCombineMaximumEffectiveDate', true)">
+                          </my-date-picker>
+                        </div>
+                      </td>
+                      <td *ngIf="editPlanMode == true" class="alignDpRight amount_right expiryDate">
+
+                        <div class="calender-field">
+                          <my-date-picker id="NewCombineMaximumExpiryDate"
+                            [formControl]="wellness_new_combine_maximum_expiry_date" [options]="myDatePickerOptions"
+                            [placeholder]="myDatePickerPlaceholder"
+                            [selDate]="dateNameArray['NewCombineMaximumExpiryDate']"
+                            (inputFocusBlur)="changeFilterDateFormat($event, 'wellness_new_combine_maximum_expiry_date', 'NewCombineMaximumExpiryDate')">
+                          </my-date-picker>
+                        </div>
+                      </td>
+                      <td class="amount_right">
+                        <button type="button" (click)="addNewWellnessCombineMax()" class="table-action-btn save-ico"
+                          title="Save" id="save3"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+                        <button type="button" (click)="resetNewCombineMaxWellnessRow()"
+                          class="table-action-btn cancel-ico" title="Cancel"><i class="fa fa-times"
+                            aria-hidden="true"></i></button>
+                      </td>
+                    </tr>
+                    <!-- Updating Row Data-->
+                    <div
+                      *ngIf="WellnessCombineMaxList.length > 0 || WellnessCombineMaxAddMode; then recordFound else recordNotFound ">
+                    </div>
+                    <ng-template #recordNotFound>
+                      <tr>
+                        <td colspan="7" class="text-center">No data available in table.</td>
+                      </tr>
+                    </ng-template>
+                    <ng-template #recordFound>
+                      <tr *ngFor="let row of WellnessCombineMaxList; let rowIndex = index">
+                        <td class="amount_right_grid">
+                          <div *ngIf="rowIndex != selectedCombineMax.rowIndex">
+                            <span>$</span> {{row.maximumAmt}}
+                          </div>
+
+                          <input type="hidden" [formControl]="wellness_old_combine_maximum_benWellnessCovCatMaxKey"
+                            *ngIf="WellnessCombineMaxEditMode && rowIndex == selectedCombineMax.rowIndex"
+                            [(ngModel)]="selectedCombineMax.benDentCovCatMaxKey">
+
+                          <input #focusEditCombineMaxEl class="fm-txt form-control" type="text"
+                            [formControl]="wellness_old_combine_maximum_amount"
+                            *ngIf="WellnessCombineMaxEditMode && rowIndex == selectedCombineMax.rowIndex"
+                            [(ngModel)]="selectedCombineMax.maximumAmt">
+                        </td>
+                        <td class="amount_right">
+                          <div *ngIf="rowIndex != selectedCombineMax.rowIndex">
+                            <div class="amount_right" *ngFor="let maximumtype of MaximumTypeList">
+                              <span *ngIf="maximumtype.maxTypeKey == row.maximumTypeKey">
+                                {{maximumtype.maxTypeDesc}}
+                              </span>
+                            </div>
+                          </div>
+                          <ng2-completer *ngIf="WellnessCombineMaxEditMode && rowIndex == selectedCombineMax.rowIndex"
+                            [formControl]="wellness_old_combine_maximum_type" [datasource]="maximumTypeData"
+                            [minSearchLength]="0" [openOnFocus]="true" (opened)="onOpened($event)"
+                            [fillHighlighted]="false" [placeholder]="'Search Maximum Type'"
+                            [textSearching]="'Please wait...'" [inputClass]="'form-control amount_right'"
+                            (selected)="onMaximumTypeSelected($event)">
+                          </ng2-completer>
+                        </td>
+                        <td class="amount_right">
+                          <div *ngIf="rowIndex != selectedCombineMax.rowIndex">
+                            <div *ngFor="let periodtype of MaximumPeriodTypeList">
+                              <span *ngIf="periodtype.maxPeriodTypeKey == row.maximumPeroidKey">
+                                {{periodtype.maxPeriodTypeCd}}
+                              </span>
+                            </div>
+                          </div>
+                          <ng2-completer *ngIf="WellnessCombineMaxEditMode && rowIndex == selectedCombineMax.rowIndex"
+                            [formControl]="wellness_old_combine_maximum_period_type"
+                            [datasource]="maximumPeriodTypeData" [minSearchLength]="0" [openOnFocus]="true"
+                            (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Search Maximum Type'"
+                            [textSearching]="'Please wait...'" [inputClass]="'form-control amount_right'"
+                            (selected)="onMaximumPeriodTypeSelected($event)">
+                          </ng2-completer>
+                        </td>
+                        <td *ngIf="editPlanMode == true" class="alignDpRight amount_right">
+
+                          <span *ngIf="rowIndex != selectedCombineMax.rowIndex">{{row.effectiveOn | dateFormate}}</span>
+                          <div *ngIf="WellnessCombineMaxEditMode && rowIndex == selectedCombineMax.rowIndex"
+                            class="calender-field">
+                            <my-date-picker id="OldCombineMaximumEffectiveDate"
+                              [formControl]="wellness_old_combine_maximum_effective_date"
+                              [(ngModel)]="selectedCombineMax.effectiveOn" [options]="myDatePickerOptions"
+                              [placeholder]="myDatePickerPlaceholder"
+                              [selDate]="dateNameArray['OldCombineMaximumEffectiveDate']"
+                              (inputFocusBlur)="changeFilterDateFormat($event, 'wellness_old_combine_maximum_effective_date', 'OldCombineMaximumEffectiveDate', true)">
+                            </my-date-picker>
+                          </div>
+                        </td>
+                        <td *ngIf="editPlanMode == true" class="amount_right alignDpRight expiryDate">
+
+                          <span *ngIf="rowIndex != selectedCombineMax.rowIndex">{{row.expiredOn | dateFormate}}</span>
+                          <div *ngIf="WellnessCombineMaxEditMode && rowIndex == selectedCombineMax.rowIndex"
+                            class="calender-field">
+                            <my-date-picker id="OldCombineMaximumExpiryDate"
+                              [formControl]="wellness_old_combine_maximum_expiry_date"
+                              [(ngModel)]="selectedCombineMax.expiredOn" [options]="myDatePickerOptions"
+                              [placeholder]="myDatePickerPlaceholder"
+                              [selDate]="dateNameArray['OldCombineMaximumExpiryDate']"
+                              (inputFocusBlur)="changeFilterDateFormat($event, 'wellness_old_combine_maximum_expiry_date', 'OldCombineMaximumExpiryDate')">
+                            </my-date-picker>
+                          </div>
+                        </td>
+                        <td class="amount_right">
+                          <!-- Display button in View Mode -->
+                          <button *ngIf="rowIndex != selectedCombineMax.rowIndex" type="button"
+                            class="table-action-btn edit-ico" (click)="enableEditWellnessCombineMax(row, rowIndex)"
+                            title="Edit"><i class="fa fa-pencil"></i></button>
+                          <button *ngIf="rowIndex != selectedCombineMax.rowIndex" type="button"
+                            class="table-action-btn del-ico" (click)="deleteWellnessCombineMax(rowIndex)"
+                            title="Delete"><i class="fa fa-trash"></i></button>
+                          <!-- Display button in Edit Mode -->
+                          <button *ngIf="WellnessCombineMaxEditMode && rowIndex == selectedCombineMax.rowIndex"
+                            type="button" class="table-action-btn save-ico" (click)="updateWellnessCombineMax(rowIndex)"
+                            title="Save" id="save4"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+                          <button *ngIf="WellnessCombineMaxEditMode && rowIndex == selectedCombineMax.rowIndex"
+                            type="button" class="table-action-btn cancel-ico" (click)="resetWellnessCombineMaxInfo()"
+                            title="Cancel"><i class="fa fa-times" aria-hidden="true"></i></button>
+                        </td>
+                      </tr>
+                    </ng-template>
+                  </tbody>
+                </table>
+              </div>
+              <!-- Table Ends -->
+            </div>
+          </div>
+        </div>
+
+        <!--    Start Generic Datatable   -->
+        <div class="form-row coverageCategory">
+          <div class="row">
+            <div class="col-md-12 col-xs-12 table-col ">
+              <div style="color: red" class="alert alert-danger" style="display: none">
+                <div class="showError"></div>
+              </div>
+              <div class="table-hdr">
+                <h3>Coverage Categories</h3>
+              </div>
+              <div class="card mb-5">
+                <div class="card-body">
+                  <div *ngIf="addPlanMode then PlanAddMode else PlanEditMode "></div>
+                  <ng-template #PlanAddMode>
+                    <!-- issue no #711  -->
+                    <div class="chk-table" style="width:35%; float:left;">
+                      <span class="chk-bg" style="width: 18.7%">
+                        <input *ngIf="currentBenefitId == 1" class="txt-top right_margin"
+                          name="select_{{currentBenefitId}}" id="select_{{currentBenefitId}}" type="checkbox"
+                          name="payLab" (change)="selectUnSelectAllCategory('mainCheckbox', $event)">
+                        <input *ngIf="currentBenefitId == 2" class="txt-top right_margin"
+                          name="select_{{currentBenefitId}}" id="select_{{currentBenefitId}}" type="checkbox"
+                          name="payLab" (change)="selectUnSelectAllCategory('mainCheckbox', $event)">
+                        <input *ngIf="currentBenefitId == 3" class="txt-top right_margin"
+                          name="select_{{currentBenefitId}}" id="select_{{currentBenefitId}}" type="checkbox"
+                          name="payLab" (change)="selectUnSelectAllCategory('mainCheckbox', $event)">
+                        <input *ngIf="currentBenefitId == 4" class="txt-top right_margin"
+                          name="select_{{currentBenefitId}}" id="select_{{currentBenefitId}}" type="checkbox"
+                          name="payLab" (change)="selectUnSelectAllCategory('mainCheckbox', $event)">
+                        <input *ngIf="currentBenefitId == 5" class="txt-top right_margin"
+                          name="select_{{currentBenefitId}}" id="select_{{currentBenefitId}}" type="checkbox"
+                          name="payLab" (change)="selectUnSelectAllCategory('mainCheckbox', $event)">
+                        <input *ngIf="currentBenefitId == 6" class="txt-top right_margin"
+                          name="select_{{currentBenefitId}}" id="select_{{currentBenefitId}}" type="checkbox"
+                          name="payLab" (change)="selectUnSelectAllCategory('mainCheckbox', $event)">
+
+                        &nbsp;
+                        <span style="display:block;">Select All</span></span>
+                    </div>
+                    <!-- issue no #711  Ends-->
+                    <div *ngIf="currentBenefitId == 1" class="chk-table " style="width:30%; float:right; margin-right: 161px;">
+                      <span class="chk-bg" style="width:33.3%;">
+                        <input class="txt-top" id="payLab_{{currentBenefitId}}" type="checkbox" name="payLab"
+                          (change)="selectAllPayClaimPayLab('payLab', $event)"> &nbsp;
+                        <span style="display:block;">Select All</span></span>
+
+                      <span class="chk-bg cs-wd" style="width:33.3%;">
+                        <input class="txt-top" id="payClaim_{{currentBenefitId}}" type="checkbox" name="payClaim"
+                          (change)="selectAllPayClaimPayLab('payClaim', $event)">&nbsp;
+                        <span style="display:block;">Select All</span></span>
+                    </div>
+
+                    <div *ngIf="currentBenefitId == 6" class="chk-table " style="width:35%; float:right; margin-right: 184px;">
+                      <span class="chk-bg cs-wd" style="width:22.3%;">
+                        <input class="txt-top" id="payClaim_{{currentBenefitId}}" type="checkbox" name="payClaim"
+                          (change)="selectAllPayClaimPayLab('payClaim', $event)">&nbsp;
+                        <span style="display:block;">Select All</span></span>
+                    </div>
+
+                    <div *ngIf="currentBenefitId == 2" class="chk-table" style="width:23.2%; float:right; margin-right: 163px;">
+                      <span class="chk-bg" style="width:50%;">
+                        <input class="txt-top" id="payClaim_{{currentBenefitId}}" type="checkbox" name="payClaim"
+                          (change)="selectAllPayClaimPayLab('payClaim', $event)">&nbsp; <span
+                          style="display:block;">Select All</span>
+                      </span>
+                    </div>
+
+                    <div *ngIf="currentBenefitId == 3" class="chk-table" style="width:32.8%; float:right; margin-right: 221px;">
+                      <span class="chk-bg" style="width:50.1%;">
+                        <input class="txt-top" id="payClaim_{{currentBenefitId}}" type="checkbox" name="payClaim"
+                          (change)="selectAllPayClaimPayLab('payClaim', $event)">&nbsp;
+                        <span style="display:block;">Select All</span></span>
+                    </div>
+                  </ng-template>
+                  <ng-template #PlanEditMode>
+                    <!-- issue no #711  -->
+                    <div class="chk-table" style="width:35%; float:left;">
+                      <span class="chk-bg" style="width: 18.7%">
+                        <input *ngIf="currentBenefitId == 1" class="txt-top right_margin"
+                          name="select_{{currentBenefitId}}" id="select_{{currentBenefitId}}" type="checkbox"
+                          name="payLab" (change)="selectUnSelectAllCategory('mainCheckbox', $event)">
+                        <input *ngIf="currentBenefitId == 2" class="txt-top right_margin"
+                          name="select_{{currentBenefitId}}" id="select_{{currentBenefitId}}" type="checkbox"
+                          name="payLab" (change)="selectUnSelectAllCategory('mainCheckbox', $event)">
+                        <input *ngIf="currentBenefitId == 3" class="txt-top right_margin"
+                          name="select_{{currentBenefitId}}" id="select_{{currentBenefitId}}" type="checkbox"
+                          name="payLab" (change)="selectUnSelectAllCategory('mainCheckbox', $event)">
+                        <input *ngIf="currentBenefitId == 4" class="txt-top right_margin"
+                          name="select_{{currentBenefitId}}" id="select_{{currentBenefitId}}" type="checkbox"
+                          name="payLab" (change)="selectUnSelectAllCategory('mainCheckbox', $event)">
+                        <input *ngIf="currentBenefitId == 5" class="txt-top right_margin"
+                          name="select_{{currentBenefitId}}" id="select_{{currentBenefitId}}" type="checkbox"
+                          name="payLab" (change)="selectUnSelectAllCategory('mainCheckbox', $event)">
+                        <input *ngIf="currentBenefitId == 6" class="txt-top right_margin"
+                          name="select_{{currentBenefitId}}" id="select_{{currentBenefitId}}" type="checkbox"
+                          name="payLab" (change)="selectUnSelectAllCategory('mainCheckbox', $event)">
+
+                        &nbsp;
+                        <span style="display:block;">Select All</span></span>
+                    </div>
+                    <!-- issue no #711  Ends-->
+
+                    <div *ngIf="currentBenefitId == 1" class="chk-table " style="width:48.7%; float:right;">
+                      <span class="chk-bg" style="width:17%; text-align:right;">
+                        <input class="txt-top" id="payLab_{{currentBenefitId}}" type="checkbox" name="payLab"
+                          (change)="selectAllPayClaimPayLab('payLab', $event)"> &nbsp;
+                        <span style="display:block;">Select All</span>
+                      </span>
+
+                      <span class="chk-bg cs-wd" style="width:17%; text-align:right;">
+                        <input class="txt-top" id="payClaim_{{currentBenefitId}}" type="checkbox" name="payClaim"
+                          (change)="selectAllPayClaimPayLab('payClaim', $event)">&nbsp;
+                        <span style="display:block;">Select All</span></span>
+                    </div>
+
+                    <div *ngIf="currentBenefitId == 6" class="chk-table " style="width:54%; float:right;">
+                      <span class="chk-bg cs-wd" style="width:13.3%;">
+                        <input class="txt-top" id="payClaim_{{currentBenefitId}}" type="checkbox" name="payClaim"
+                          (change)="selectAllPayClaimPayLab('payClaim', $event)">&nbsp;
+                        <span style="display:block;">Select All</span></span>
+                    </div>
+
+                    <div *ngIf="currentBenefitId == 2" class="chk-table" style="width:43.1%; float:right;">
+                      <span class="chk-bg" style="width:22.3%;">
+                        <input class="txt-top" id="payClaim_{{currentBenefitId}}" type="checkbox" name="payClaim"
+                          (change)="selectAllPayClaimPayLab('payClaim', $event)">&nbsp; <span
+                          style="display:block;">Select All</span>
+                      </span>
+                    </div>
+
+                    <div *ngIf="currentBenefitId == 3" class="chk-table" style="width:53.8%; float:right;">
+                      <span class="chk-bg" style="width:25.9%;">
+                        <input class="txt-top" id="payClaim_{{currentBenefitId}}" type="checkbox" name="payClaim"
+                          (change)="selectAllPayClaimPayLab('payClaim', $event)">&nbsp;
+                        <span style="display:block;">Select All</span></span>
+                    </div>
+                  </ng-template>
+
+
+                  <generic-table [ngClass]="(currentBenefitId == 1 || currentBenefitId == 2 ) ? 'dentalCategory benefitTablegen':'benefitTablegen' "
+                    [gtClasses]="'table table-bordered table-stripped fixed-tb'" #myTable
+                    [gtSettings]="configObject.settings" [gtFields]="configObject.fields" [gtData]="configObject.data"
+                    [gtOptions]="options" (gtEvent)="eventListener($event)"></generic-table>
+                  <div class="text-center">
+                    <small>
+                      <gt-table-info class="form-text text-muted mb-2" [genericTable]="myTable"></gt-table-info>
+                    </small>
+                    <gt-pagination [gtClasses]="'pagination-sm justify-content-center'" [genericTable]="myTable">
+                    </gt-pagination>
+                  </div>
+                </div>
+                <div class="card-footer" #checkboxExample></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--    End Generic Datatable   -->
+
+        <div
+          *ngIf="currentBenefitId == 1 || currentBenefitId == 2 || currentBenefitId == 3 || currentBenefitId == 4 "
+          class="form-row coverageMaximum">
+          <div class="row">
+            <div class="col-md-12 col-xs-12 table-col subtab-grid">
+              <div class=" table-hdr">
+                <h3>Coverage Maximum</h3>
+                <a *ngIf="showCovMaxHistoryIcon" title="Coverage Maximum History" (click)="coverageMaximumHistory()"
+                  href="javascript:;" class="history-ico" alt="History" data-toggle="modal"
+                  data-target="#CoverageMaximumHistory">
+                  <i class="fa fa-history" aria-hidden="true"></i>
+                </a>
+                <div class="web-reg"  *ngIf="currentBenefitId == 1">
+                  <button class="green-btn-add btn" (click)="enableAddDentalCoverageMax()"><i class="fa fa-plus"></i>
+                    Add New</button>
+                </div>
+                <div class="web-reg"  *ngIf="currentBenefitId == 2">
+                  <button class="green-btn-add btn" (click)="enableAddVisionCoverageMax()"><i class="fa fa-plus"></i>
+                    {{ 'button.addnew' | translate }}</button>
+                </div>
+                <div class="web-reg"  *ngIf="currentBenefitId == 3">
+                  <button class="green-btn-add btn" (click)="enableAddHealthCoverageMax()"><i class="fa fa-plus"></i>
+                    {{ 'button.addnew' | translate }}</button>
+                </div>
+              </div>
+              <div class="table-responsive clear">
+                <!-- Validation Errors Messages for new row -->
+                <div style="color: red" class="alert alert-danger" *ngIf="(dental_new_coverage_maximum_amount.invalid && (dental_new_coverage_maximum_amount.dirty || dental_new_coverage_maximum_amount.touched))
+                  || (dental_new_coverage_maximum_type.invalid && (dental_new_coverage_maximum_type.dirty || dental_new_coverage_maximum_type.touched))
+                  || (dental_new_coverage_maximum_period_type.invalid && (dental_new_coverage_maximum_period_type.dirty || dental_new_coverage_maximum_period_type.touched)) ||
+                  (dental_new_coverage_maximum_effective_date.invalid && (dental_new_coverage_maximum_effective_date.dirty || dental_new_coverage_maximum_effective_date.touched)) 
+                  || (dental_new_coverage_maximum_expiry_date.invalid && (dental_new_coverage_maximum_expiry_date.dirty || dental_new_coverage_maximum_expiry_date.touched)) 
+                  ">
+
+                  <!-- Validatoin for new record unit id -->
+                  <div
+                    *ngIf="dental_new_coverage_maximum_amount.invalid && (dental_new_coverage_maximum_amount.dirty || dental_new_coverage_maximum_amount.touched)">
+                    <div *ngIf="dental_new_coverage_maximum_amount.errors.required">
+                      Coverage Maximum Amount is Required.
+                    </div>
+                    <div
+                      *ngIf="!dental_new_coverage_maximum_amount.errors.required && dental_new_coverage_maximum_amount.errors.number">
+                      Please Enter Numbers Only
+                    </div>
+                    <div *ngIf="dental_new_coverage_maximum_amount.errors.maxlength">
+                      Please Enter Maximum 9 Numbers.
+                    </div>
+                  </div>
+
+                  <div
+                    *ngIf="dental_new_coverage_maximum_type.invalid && (dental_new_coverage_maximum_type.dirty || dental_new_coverage_maximum_type.touched)">
+                    <div *ngIf="dental_new_coverage_maximum_type.errors.required">
+                     Coverage Maximum Type is Required.
+                    </div>
+                  </div>
+
+                  <!-- Validatoin for new record period type id -->
+                  <div
+                    *ngIf="dental_new_coverage_maximum_period_type.invalid && (dental_new_coverage_maximum_period_type.dirty || dental_new_coverage_maximum_period_type.touched)">
+                    <div *ngIf="dental_new_coverage_maximum_period_type.errors.required">
+                      Coverage Maximum Period Type is Required.
+                    </div>
+                  </div>
+
+                  <!-- Validatoin for new record description -->
+                  <div
+                    *ngIf="editPlanMode == true 
+                  && (dental_new_coverage_maximum_effective_date.invalid && (dental_new_coverage_maximum_effective_date.dirty || dental_new_coverage_maximum_effective_date.touched)) 
+                  || (dental_new_coverage_maximum_expiry_date.invalid && (dental_new_coverage_maximum_expiry_date.dirty || dental_new_coverage_maximum_expiry_date.touched))">
+
+                    <div
+                      *ngIf="dental_new_coverage_maximum_effective_date.invalid && (dental_new_coverage_maximum_effective_date.dirty || dental_new_coverage_maximum_effective_date.touched)">
+                      <div *ngIf="dental_new_coverage_maximum_effective_date.errors.required">
+                        {{ 'company.plan.fee-guide.effectiveDateReq' | translate }}
+                      </div>
+                      <div
+                        *ngIf="!dental_new_coverage_maximum_effective_date.errors.required && dental_new_coverage_maximum_effective_date.errors.dateNotValid">
+                        {{ 'company.plan.fee-guide.enterValidDate' | translate }}
+                      </div>
+                      <div
+                        *ngIf="!dental_new_coverage_maximum_effective_date.errors.required && dental_new_coverage_maximum_effective_date.errors.EffectiveDateNotValid">
+                        {{ 'company.plan.fee-guide.effectiveDateCantbeLess' | translate }}
+                      </div>
+                    </div>
+
+                    <!-- Validatoin for new record expiry date -->
+                    <div
+                      *ngIf="dental_new_coverage_maximum_expiry_date.invalid && (dental_new_coverage_maximum_expiry_date.dirty || dental_new_coverage_maximum_expiry_date.touched)">
+
+                      <div *ngIf="dental_new_coverage_maximum_expiry_date.errors.dateNotValid">
+                        {{ 'company.plan.fee-guide.enterValidDate' | translate }}
+                      </div>
+                      <div *ngIf="dental_new_coverage_maximum_expiry_date.errors.ExpiryDateNotValid">
+                        {{ 'company.plan.fee-guide.expiryDateShouldBeGreater' | translate }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Validation Errors Messages for Update row -->
+                <div style="color: red" class="alert alert-danger"
+                  *ngIf="(dental_old_coverage_maximum_amount.invalid && (dental_old_coverage_maximum_amount.dirty || dental_old_coverage_maximum_amount.touched))
+                  || (dental_old_coverage_maximum_type.invalid && (dental_old_coverage_maximum_type.dirty || dental_old_coverage_maximum_type.touched))
+                  || (dental_old_coverage_maximum_period_type.invalid && (dental_old_coverage_maximum_period_type.dirty || dental_old_coverage_maximum_period_type.touched))
+                  || (dental_old_coverage_maximum_effective_date.invalid && (dental_old_coverage_maximum_effective_date.dirty || dental_old_coverage_maximum_effective_date.touched)) 
+                  || (dental_old_coverage_maximum_expiry_date.invalid && (dental_old_coverage_maximum_expiry_date.dirty || dental_old_coverage_maximum_expiry_date.touched))">
+                  <!-- Validatoin for old record unit id -->
+                  <div
+                    *ngIf="dental_old_coverage_maximum_amount.invalid && (dental_old_coverage_maximum_amount.dirty || dental_old_coverage_maximum_amount.touched)">
+                    <div *ngIf="dental_old_coverage_maximum_amount.errors.required">
+                      Coverage Maximum Amount is Required.
+                    </div>
+                    <div
+                      *ngIf="!dental_old_coverage_maximum_amount.errors.required && dental_old_coverage_maximum_amount.errors.number">
+                      Please Enter Numbers Only
+                    </div>
+                    <div *ngIf="dental_old_coverage_maximum_amount.errors.maxlength">
+                      Please Enter Maximum 9 Numbers.
+                    </div>
+                  </div>
+
+                  <!-- Validatoin for new record unit id -->
+                  <div
+                    *ngIf="dental_old_coverage_maximum_type.invalid && (dental_old_coverage_maximum_type.dirty || dental_old_coverage_maximum_type.touched)">
+                    <div *ngIf="dental_old_coverage_maximum_type.errors.required">
+                      Coverage Maximum Type is Required.
+                    </div>
+                  </div>
+
+                  <!-- Validatoin for new record -->
+
+                  <div
+                    *ngIf="dental_old_coverage_maximum_period_type.invalid && (dental_old_coverage_maximum_period_type.dirty || dental_old_coverage_maximum_period_type.touched)">
+                    <div *ngIf="dental_old_coverage_maximum_period_type.errors.required">
+                      Coverage Maximum Period Type is Required.
+                    </div>
+                  </div>
+                  <!-- Validatoin for old record description -->
+                  <div
+                    *ngIf="dental_old_coverage_maximum_effective_date.invalid && (dental_old_coverage_maximum_effective_date.dirty || dental_old_coverage_maximum_effective_date.touched)">
+                    <div *ngIf="dental_old_coverage_maximum_effective_date.errors.required">
+                      {{ 'company.plan.fee-guide.effectiveDateReq' | translate }}
+                    </div>
+
+                    <div
+                      *ngIf="!dental_old_coverage_maximum_effective_date.errors.required && dental_old_coverage_maximum_effective_date.errors.dateNotValid">
+                      {{ 'company.plan.fee-guide.enterValidDate' | translate }}
+                    </div>
+
+                    <div
+                      *ngIf="!dental_old_coverage_maximum_effective_date.required && dental_old_coverage_maximum_effective_date.errors.EffectiveDateNotValid">
+                      {{ 'company.plan.fee-guide.effectiveDateCantbeLess' | translate }}
+                    </div>
+                  </div>
+                  <!-- Validatoin for old record effective date -->
+                  <div
+                    *ngIf="dental_old_coverage_maximum_expiry_date.invalid && (dental_old_coverage_maximum_expiry_date.dirty || dental_old_coverage_maximum_expiry_date.touched)">
+                    <div *ngIf="dental_old_coverage_maximum_expiry_date.errors.dateNotValid">
+                      {{ 'company.plan.fee-guide.enterValidDate' | translate }}
+                    </div>
+                    <div *ngIf="dental_old_coverage_maximum_expiry_date.errors.ExpiryDateNotValid">
+                      {{ 'company.plan.fee-guide.expiryDateShouldBeGreater' | translate }}
+                    </div>
+                  </div>
+                </div>
+                <!-- Validation Error  -->
+                <table class="table table-bordered table-stripped" id="planBenefitTabCoverageMaximum">
+                  <thead>
+                    <tr>
+                      <th width="15%">Amount</th>
+                      <th class="amount_right" width="20%">Type</th>
+                      <th class="amount_right" width="20%">Period Type</th>
+                      <th class="amount_right" *ngIf="editPlanMode == true" width="15%">Effective Date</th>
+                      <th class="amount_right" *ngIf="editPlanMode == true" width="15%">Expiry Date</th>
+                      <th class="amount_right" width="15%">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody *ngIf="currentBenefitId == 1" id="dental-planBenefit">
+                    <!-- Adding New Row Data Here-->
+                    <tr *ngIf="DentalCoverageMaxAddMode">
+                      <td>
+                        <input #focusAddCoverageMaxEl class="fm-txt form-control" type="text"
+                          [formControl]="dental_new_coverage_maximum_amount">
+                      </td>
+                      <td class="amount_right">
+                        <ng2-completer [formControl]="dental_new_coverage_maximum_type" [datasource]="maximumTypeData"
+                          [minSearchLength]="0" [openOnFocus]="true" (opened)="onOpened($event)"
+                          [fillHighlighted]="false" [placeholder]="'Search Maximum Type'"
+                          [textSearching]="'Please wait...'" [inputClass]="'form-control amount_right'"
+                          (selected)="onMaximumTypeSelected($event)">
+                        </ng2-completer>
+                      </td>
+                      <td class="amount_right">
+                        <ng2-completer [formControl]="dental_new_coverage_maximum_period_type"
+                          [datasource]="maximumPeriodTypeData" [minSearchLength]="0" [openOnFocus]="true"
+                          (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Search Maximum Type'"
+                          [textSearching]="'Please wait...'" [inputClass]="'form-control amount_right'"
+                          (selected)="onMaximumPeriodTypeSelected($event)">
+                        </ng2-completer>
+                      </td>
+                      <td class="alignDpRight amount_right" *ngIf="editPlanMode == true">
+                        <div class="calender-field">
+                          <my-date-picker id="NewCoverageMaximumEffectiveOn"
+                            [formControl]="dental_new_coverage_maximum_effective_date" [options]="myDatePickerOptions"
+                            [placeholder]="myDatePickerPlaceholder"
+                            [selDate]="dateNameArray['NewCoverageMaximumEffectiveDate']"
+                            (inputFocusBlur)="changeFilterDateFormat($event, 'dental_new_coverage_maximum_effective_date', 'NewCoverageMaximumEffectiveDate', true)">
+                          </my-date-picker>
+                        </div>
+                      </td>
+                      <td class="alignDpRight amount_right expiryDate" *ngIf="editPlanMode == true">
+
+                        <div class="calender-field">
+                          <my-date-picker id="NewCoverageMaximumExpiryDate"
+                            [formControl]="dental_new_coverage_maximum_expiry_date" [options]="myDatePickerOptions"
+                            [placeholder]="myDatePickerPlaceholder"
+                            [selDate]="dateNameArray['NewCoverageMaximumExpiryDate']"
+                            [ngClass]="expired  ? 'expired' : 'notExpired'"
+                            (inputFocusBlur)="changeFilterDateFormat($event, 'dental_new_coverage_maximum_expiry_date', 'NewCoverageMaximumExpiryDate')">
+                          </my-date-picker>
+                        </div>
+                      </td>
+                      <td class="amount_right">
+                        <button type="button" (click)="addNewDentalCoverageMax()" class="table-action-btn save-ico"
+                          title="Save" id="save5"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+                        <button type="button" (click)="resetNewDentalCoverageMaxRow()"
+                          class="table-action-btn cancel-ico" title="Cancel"><i class="fa fa-times"
+                            aria-hidden="true" id="cancel5d"></i></button>
+                      </td>
+                    </tr>
+                    <!-- Updating Row Data-->
+                    <div
+                      *ngIf="(DentalCoverageMaxList != null && DentalCoverageMaxList.length > 0) || DentalCoverageMaxAddMode && currentBenefitId == 1; then recordFound else recordNotFound ">
+                    </div>
+                    <ng-template #recordNotFound>
+                      <tr>
+                        <td colspan="6" class="text-center">No data available in table.</td>
+                      </tr>
+                    </ng-template>
+                    <ng-template #recordFound>
+                      <tr *ngFor="let row of DentalCoverageMaxList; let rowIndex = index">
+                        <td class="amount_right_grid">
+                          <div *ngIf="rowIndex != selectedCoverageMax.rowIndex">
+                            <span>$</span>{{row.maximumAmt | number: '1.2'}}
+                          </div>
+
+                          <input type="hidden" [formControl]="dental_old_covMaxKey"
+                            *ngIf="DentalCoverageMaxEditMode && rowIndex == selectedCoverageMax.rowIndex"
+                            [(ngModel)]="selectedCoverageMax.covMaxKey">
+
+                          <input #focusEditCoverageMaxEl class="fm-txt form-control" type="text"
+                            [formControl]="dental_old_coverage_maximum_amount"
+                            *ngIf="DentalCoverageMaxEditMode && rowIndex == selectedCoverageMax.rowIndex"
+                            [(ngModel)]="selectedCoverageMax.maximumAmt">
+                        </td>
+                        <td class="amount_right">
+                          <div *ngIf="rowIndex != selectedCoverageMax.rowIndex">
+                            <div *ngFor="let maximumtype of MaximumTypeList">
+                              <span *ngIf="maximumtype.maxTypeKey == row.maximumTypeKey">
+                                {{maximumtype.maxTypeDesc}}
+                              </span>
+                            </div>
+                          </div>
+                          <ng2-completer *ngIf="DentalCoverageMaxEditMode && rowIndex == selectedCoverageMax.rowIndex"
+                            [formControl]="dental_old_coverage_maximum_type" [datasource]="maximumTypeData"
+                            [minSearchLength]="0" [openOnFocus]="true" (opened)="onOpened($event)"
+                            [fillHighlighted]="false" [placeholder]="'Search Maximum Type'"
+                            [textSearching]="'Please wait...'" [inputClass]="'form-control amount_right'"
+                            (selected)="onMaximumTypeSelected($event)">
+                          </ng2-completer>
+                        </td>
+                        <td class="amount_right">
+                          <div *ngIf="rowIndex != selectedCoverageMax.rowIndex">
+                            <div *ngFor="let periodtype of MaximumPeriodTypeList">
+                              <span *ngIf="periodtype.maxPeriodTypeKey == row.maximumPeroidKey">
+                                {{periodtype.maxPeriodTypeCd}}
+                              </span>
+                            </div>
+                          </div>
+                          <ng2-completer *ngIf="DentalCoverageMaxEditMode && rowIndex == selectedCoverageMax.rowIndex"
+                            [formControl]="dental_old_coverage_maximum_period_type" [datasource]="maximumPeriodTypeData"
+                            [minSearchLength]="0" [openOnFocus]="true" (opened)="onOpened($event)"
+                            [fillHighlighted]="false" [placeholder]="'Search Maximum Type'"
+                            [textSearching]="'Please wait...'" [inputClass]="'form-control amount_right'"
+                            (selected)="onMaximumPeriodTypeSelected($event)">
+                          </ng2-completer>
+                        </td>
+                        <td class="amount_right alignDpRight" *ngIf="editPlanMode == true">
+
+                          <span *ngIf="rowIndex != selectedCoverageMax.rowIndex">
+                            {{row.effectiveOn | dateFormate }}</span>
+                          <div *ngIf="DentalCoverageMaxEditMode && rowIndex == selectedCoverageMax.rowIndex"
+                            class="calender-field">
+                            <my-date-picker id="oldCoverageMaximumEffectiveDate"
+                              [formControl]="dental_old_coverage_maximum_effective_date"
+                              [(ngModel)]="selectedCoverageMax.effectiveOn" [options]="myDatePickerOptions"
+                              [placeholder]="myDatePickerPlaceholder"
+                              [selDate]="dateNameArray['OldCoverageMaximumEffectiveDate']"
+                              (inputFocusBlur)="changeFilterDateFormat($event, 'dental_old_coverage_maximum_effective_date', 'OldCoverageMaximumEffectiveDate')">
+                            </my-date-picker>
+                          </div>
+                        </td>
+                        <td class="amount_right alignDpRight expiryDate" *ngIf="editPlanMode == true">
+                          <span *ngIf="rowIndex != selectedCoverageMax.rowIndex">{{row.expiredOn | dateFormate}}</span>
+                          <div *ngIf="DentalCoverageMaxEditMode && rowIndex == selectedCoverageMax.rowIndex"
+                            class="calender-field">
+                            <my-date-picker id="oldCoverageMaximumExpiryDate"
+                              [formControl]="dental_old_coverage_maximum_expiry_date"
+                              [(ngModel)]="selectedCoverageMax.expiredOn" [options]="myDatePickerOptions"
+                              [placeholder]="myDatePickerPlaceholder"
+                              [selDate]="dateNameArray['OldCoverageMaximumExpiryDate']"
+                              (inputFocusBlur)="changeFilterDateFormat($event, 'dental_old_coverage_maximum_expiry_date', 'OldCoverageMaximumExpiryDate')">
+                            </my-date-picker>
+                          </div>
+                        </td>
+                        <td class="amount_right">
+                          <!-- Display button in View Mode -->
+                          <button *ngIf="rowIndex != selectedCoverageMax.rowIndex" type="button"
+                            class="table-action-btn edit-ico" (click)="enableEditDentalCoverageMax(row, rowIndex)"
+                            title="Edit" id="edit-dental"><i class="fa fa-pencil"></i></button>
+                          <button *ngIf="rowIndex != selectedCoverageMax.rowIndex" type="button"
+                            class="table-action-btn del-ico" (click)="deleteCoverageMax(rowIndex)" title="Delete"><i
+                              class="fa fa-trash"></i></button>
+                          <!-- Display button in Edit Mode -->
+                          <button *ngIf="DentalCoverageMaxEditMode && rowIndex == selectedCoverageMax.rowIndex"
+                            type="button" class="table-action-btn save-ico" (click)="updateDentalCoverageMax(rowIndex)"
+                            title="Save" id="save6"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+                          <button *ngIf="DentalCoverageMaxEditMode && rowIndex == selectedCoverageMax.rowIndex"
+                            type="button" class="table-action-btn cancel-ico" (click)="resetDentalCoverageMaxInfo()"
+                            title="Cancel" id="cancel6"><i class="fa fa-times" aria-hidden="true"></i></button>
+                        </td>
+                      </tr>
+                    </ng-template>
+                  </tbody>
+
+                  <tbody *ngIf="currentBenefitId == 2" id="vision-planBenefit">
+                    <!-- Adding New Row Data Here-->
+                    <tr *ngIf="VisionCoverageMaxAddMode">
+                      <td>
+                        <input #focusAddCoverageMaxEl class="fm-txt form-control" type="text"
+                          [formControl]="dental_new_coverage_maximum_amount">
+                      </td>
+                      <td class="amount_right">
+                        <ng2-completer [formControl]="dental_new_coverage_maximum_type" [datasource]="maximumTypeData"
+                          [minSearchLength]="0" [openOnFocus]="true" (opened)="onOpened($event)"
+                          [fillHighlighted]="false" [placeholder]="'Search Maximum Type'"
+                          [textSearching]="'Please wait...'" [inputClass]="'form-control amount_right'"
+                          (selected)="onMaximumTypeSelected($event)">
+                        </ng2-completer>
+                      </td>
+                      <td class="amount_right">
+                        <ng2-completer [formControl]="dental_new_coverage_maximum_period_type"
+                          [datasource]="maximumPeriodTypeData" [minSearchLength]="0" [openOnFocus]="true"
+                          (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Search Maximum Type'"
+                          [textSearching]="'Please wait...'" [inputClass]="'form-control amount_right'"
+                          (selected)="onMaximumPeriodTypeSelected($event)">
+                        </ng2-completer>
+                      </td>
+                      <td class="alignDpRight amount_right" *ngIf="editPlanMode == true">
+                        <div class="calender-field">
+                          <my-date-picker id="NewCoverageMaximumEffectiveOn"
+                            [formControl]="dental_new_coverage_maximum_effective_date" [options]="myDatePickerOptions"
+                            [placeholder]="myDatePickerPlaceholder"
+                            [selDate]="dateNameArray['NewCoverageMaximumEffectiveDate']"
+                            (inputFocusBlur)="changeFilterDateFormat($event, 'dental_new_coverage_maximum_effective_date', 'NewCoverageMaximumEffectiveDate', true)">
+                          </my-date-picker>
+                        </div>
+                      </td>
+                      <td class="alignDpRight amount_right expiryDate" *ngIf="editPlanMode == true">
+
+                        <div class="calender-field">
+                          <my-date-picker id="NewCoverageMaximumExpiryDate"
+                            [formControl]="dental_new_coverage_maximum_expiry_date" [options]="myDatePickerOptions"
+                            [placeholder]="myDatePickerPlaceholder"
+                            [selDate]="dateNameArray['NewCoverageMaximumExpiryDate']"
+                            [ngClass]="expired  ? 'expired' : 'notExpired'"
+                            (inputFocusBlur)="changeFilterDateFormat($event, 'dental_new_coverage_maximum_expiry_date', 'NewCoverageMaximumExpiryDate')">
+                          </my-date-picker>
+                        </div>
+                      </td>
+                      <td class="amount_right">
+                        <button type="button" (click)="addNewDentalCoverageMax()" class="table-action-btn save-ico"
+                          title="Save" id="save5v"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+                        <button type="button" (click)="resetNewVisionCoverageMaxRow()"
+                          class="table-action-btn cancel-ico" id="cancelVnew" title="Cancel"><i class="fa fa-times"
+                            aria-hidden="true"></i></button>
+                      </td>
+                    </tr>
+                    <!-- Updating Row Data-->
+                    <div
+                      *ngIf="(VisionCoverageMaxList != null && VisionCoverageMaxList.length > 0) || VisionCoverageMaxAddMode && currentBenefitId == 2; then vRecordFound else vRecordNotFound ">
+                    </div>
+                    <ng-template #vRecordNotFound>
+                      <tr>
+                        <td colspan="6" class="text-center">No data available in table.</td>
+                      </tr>
+                    </ng-template>
+                    <ng-template #vRecordFound>
+                      <tr *ngFor="let row of VisionCoverageMaxList; let rowIndex = index">
+                        <td class="amount_right_grid">
+                          <div *ngIf="rowIndex != selectedVCoverageMax.rowIndex">
+                            <span>$</span>{{row.maximumAmt | number: '1.2'}}
+                          </div>
+
+                          <input type="hidden" [formControl]="dental_old_covMaxKey"
+                            *ngIf="VisionCoverageMaxEditMode && rowIndex == selectedVCoverageMax.rowIndex"
+                            [(ngModel)]="selectedVCoverageMax.covMaxKey">
+
+                          <input #focusEditCoverageMaxEl class="fm-txt form-control" type="text"
+                            [formControl]="dental_old_coverage_maximum_amount"
+                            *ngIf="VisionCoverageMaxEditMode && rowIndex == selectedVCoverageMax.rowIndex"
+                            [(ngModel)]="selectedVCoverageMax.maximumAmt">
+                        </td>
+                        <td class="amount_right">
+                          <div *ngIf="rowIndex != selectedVCoverageMax.rowIndex">
+                            <div *ngFor="let maximumtype of MaximumTypeList">
+                              <span *ngIf="maximumtype.maxTypeKey == row.maximumTypeKey">
+                                {{maximumtype.maxTypeDesc}}
+                              </span>
+                            </div>
+                          </div>
+                          <ng2-completer *ngIf="VisionCoverageMaxEditMode && rowIndex == selectedVCoverageMax.rowIndex"
+                            [formControl]="dental_old_coverage_maximum_type" [datasource]="maximumTypeData"
+                            [minSearchLength]="0" [openOnFocus]="true" (opened)="onOpened($event)"
+                            [fillHighlighted]="false" [placeholder]="'Search Maximum Type'"
+                            [textSearching]="'Please wait...'" [inputClass]="'form-control amount_right'"
+                            (selected)="onMaximumTypeSelected($event)">
+                          </ng2-completer>
+                        </td>
+                        <td class="amount_right">
+                          <div *ngIf="rowIndex != selectedVCoverageMax.rowIndex">
+                            <div *ngFor="let periodtype of MaximumPeriodTypeList">
+                              <span *ngIf="periodtype.maxPeriodTypeKey == row.maximumPeroidKey">
+                                {{periodtype.maxPeriodTypeCd}}
+                              </span>
+                            </div>
+                          </div>
+                          <ng2-completer *ngIf="VisionCoverageMaxEditMode && rowIndex == selectedVCoverageMax.rowIndex"
+                            [formControl]="dental_old_coverage_maximum_period_type" [datasource]="maximumPeriodTypeData"
+                            [minSearchLength]="0" [openOnFocus]="true" (opened)="onOpened($event)"
+                            [fillHighlighted]="false" [placeholder]="'Search Maximum Type'"
+                            [textSearching]="'Please wait...'" [inputClass]="'form-control amount_right'"
+                            (selected)="onMaximumPeriodTypeSelected($event)">
+                          </ng2-completer>
+                        </td>
+                        <td class="amount_right alignDpRight" *ngIf="editPlanMode == true">
+
+                          <span *ngIf="rowIndex != selectedVCoverageMax.rowIndex">
+                            {{row.effectiveOn | dateFormate }}</span>
+                          <div *ngIf="VisionCoverageMaxEditMode && rowIndex == selectedVCoverageMax.rowIndex"
+                            class="calender-field">
+                            <my-date-picker id="oldCoverageMaximumEffectiveDate"
+                              [formControl]="dental_old_coverage_maximum_effective_date"
+                              [(ngModel)]="selectedVCoverageMax.effectiveOn" [options]="myDatePickerOptions"
+                              [placeholder]="myDatePickerPlaceholder"
+                              [selDate]="dateNameArray['OldCoverageMaximumEffectiveDate']"
+                              (inputFocusBlur)="changeFilterDateFormat($event, 'dental_old_coverage_maximum_effective_date', 'OldCoverageMaximumEffectiveDate')">
+                            </my-date-picker>
+                          </div>
+                        </td>
+                        <td class="amount_right alignDpRight expiryDate" *ngIf="editPlanMode == true">
+                          <span *ngIf="rowIndex != selectedVCoverageMax.rowIndex">{{row.expiredOn | dateFormate}}</span>
+                          <div *ngIf="VisionCoverageMaxEditMode && rowIndex == selectedVCoverageMax.rowIndex"
+                            class="calender-field">
+                            <my-date-picker id="oldCoverageMaximumExpiryDate"
+                              [formControl]="dental_old_coverage_maximum_expiry_date"
+                              [(ngModel)]="selectedVCoverageMax.expiredOn" [options]="myDatePickerOptions"
+                              [placeholder]="myDatePickerPlaceholder"
+                              [selDate]="dateNameArray['OldCoverageMaximumExpiryDate']"
+                              (inputFocusBlur)="changeFilterDateFormat($event, 'dental_old_coverage_maximum_expiry_date', 'OldCoverageMaximumExpiryDate')">
+                            </my-date-picker>
+                          </div>
+                        </td>
+                        <td class="amount_right">
+                          <!-- Display button in View Mode -->
+                          <button *ngIf="rowIndex != selectedVCoverageMax.rowIndex" type="button"
+                            class="table-action-btn edit-ico" (click)="enableEditVisionCoverageMax(row, rowIndex)"
+                            title="Edit" id="edit-dental"><i class="fa fa-pencil"></i></button>
+                          <button *ngIf="rowIndex != selectedVCoverageMax.rowIndex" type="button"
+                            class="table-action-btn del-ico" (click)="deleteCoverageMax(rowIndex)" title="Delete"><i
+                              class="fa fa-trash"></i></button>
+                          <!-- Display button in Edit Mode -->
+                          <button *ngIf="VisionCoverageMaxEditMode && rowIndex == selectedVCoverageMax.rowIndex"
+                            type="button" class="table-action-btn save-ico" (click)="updateDentalCoverageMax(rowIndex)"
+                            title="Save" id="save-6"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+                          <button *ngIf="VisionCoverageMaxEditMode && rowIndex == selectedVCoverageMax.rowIndex"
+                            type="button" class="table-action-btn cancel-ico" (click)="resetVisionCoverageMaxInfo()"
+                            title="Cancel" id="cancel-6"><i class="fa fa-times" aria-hidden="true"></i></button>
+                        </td>
+                      </tr>
+                    </ng-template>
+                  </tbody>
+
+                  <tbody *ngIf="currentBenefitId == 3" id="health-planBenefit">
+                    <!-- Adding New Row Data Here-->
+                    <tr *ngIf="HealthCoverageMaxAddMode">
+                      <td>
+                        <input #focusAddCoverageMaxEl class="fm-txt form-control" type="text"
+                          [formControl]="dental_new_coverage_maximum_amount">
+                      </td>
+                      <td class="amount_right">
+                        <ng2-completer [formControl]="dental_new_coverage_maximum_type" [datasource]="maximumTypeData"
+                          [minSearchLength]="0" [openOnFocus]="true" (opened)="onOpened($event)"
+                          [fillHighlighted]="false" [placeholder]="'Search Maximum Type'"
+                          [textSearching]="'Please wait...'" [inputClass]="'form-control amount_right'"
+                          (selected)="onMaximumTypeSelected($event)">
+                        </ng2-completer>
+                      </td>
+                      <td class="amount_right">
+                        <ng2-completer [formControl]="dental_new_coverage_maximum_period_type"
+                          [datasource]="maximumPeriodTypeData" [minSearchLength]="0" [openOnFocus]="true"
+                          (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Search Maximum Type'"
+                          [textSearching]="'Please wait...'" [inputClass]="'form-control amount_right'"
+                          (selected)="onMaximumPeriodTypeSelected($event)">
+                        </ng2-completer>
+                      </td>
+                      <td class="alignDpRight amount_right" *ngIf="editPlanMode == true">
+                        <div class="calender-field">
+                          <my-date-picker id="NewCoverageMaximumEffectiveOn"
+                            [formControl]="dental_new_coverage_maximum_effective_date" [options]="myDatePickerOptions"
+                            [placeholder]="myDatePickerPlaceholder"
+                            [selDate]="dateNameArray['NewCoverageMaximumEffectiveDate']"
+                            (inputFocusBlur)="changeFilterDateFormat($event, 'dental_new_coverage_maximum_effective_date', 'NewCoverageMaximumEffectiveDate', true)">
+                          </my-date-picker>
+                        </div>
+                      </td>
+                      <td class="alignDpRight amount_right expiryDate" *ngIf="editPlanMode == true">
+
+                        <div class="calender-field">
+                          <my-date-picker id="NewCoverageMaximumExpiryDate"
+                            [formControl]="dental_new_coverage_maximum_expiry_date" [options]="myDatePickerOptions"
+                            [placeholder]="myDatePickerPlaceholder"
+                            [selDate]="dateNameArray['NewCoverageMaximumExpiryDate']"
+                            [ngClass]="expired  ? 'expired' : 'notExpired'"
+                            (inputFocusBlur)="changeFilterDateFormat($event, 'dental_new_coverage_maximum_expiry_date', 'NewCoverageMaximumExpiryDate')">
+                          </my-date-picker>
+                        </div>
+                      </td>
+                      <td class="amount_right">
+                        <button type="button" (click)="addNewDentalCoverageMax()" class="table-action-btn save-ico"
+                          title="Save" id="save5h"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+                        <button type="button" (click)="resetNewHealthCoverageMaxRow()"
+                          class="table-action-btn cancel-ico" title="Cancel"><i class="fa fa-times"
+                            aria-hidden="true" id="cancel5h"></i></button>
+                      </td>
+                    </tr>
+                    <!-- Updating Row Data-->
+                    <div
+                      *ngIf="(HealthCoverageMaxList != null && HealthCoverageMaxList.length > 0) || HealthCoverageMaxAddMode && currentBenefitId == 3; then hRecordFound else hRecordNotFound ">
+                    </div>
+                    <ng-template #hRecordNotFound>
+                      <tr>
+                        <td colspan="6" class="text-center">No data available in table.</td>
+                      </tr>
+                    </ng-template>
+                    <ng-template #hRecordFound>
+                      <tr *ngFor="let row of HealthCoverageMaxList; let rowIndex = index">
+                        <td class="amount_right_grid">
+                          <div *ngIf="rowIndex != selectedHCoverageMax.rowIndex">
+                            <span>$</span>{{row.maximumAmt | number: '1.2'}}
+                          </div>
+
+                          <input type="hidden" [formControl]="dental_old_covMaxKey"
+                            *ngIf="HealthCoverageMaxEditMode && rowIndex == selectedHCoverageMax.rowIndex"
+                            [(ngModel)]="selectedHCoverageMax.covMaxKey">
+
+                          <input #focusEditCoverageMaxEl class="fm-txt form-control" type="text"
+                            [formControl]="dental_old_coverage_maximum_amount"
+                            *ngIf="HealthCoverageMaxEditMode && rowIndex == selectedHCoverageMax.rowIndex"
+                            [(ngModel)]="selectedHCoverageMax.maximumAmt">
+                        </td>
+                        <td class="amount_right">
+                          <div *ngIf="rowIndex != selectedHCoverageMax.rowIndex">
+                            <div *ngFor="let maximumtype of MaximumTypeList">
+                              <span *ngIf="maximumtype.maxTypeKey == row.maximumTypeKey">
+                                {{maximumtype.maxTypeDesc}}
+                              </span>
+                            </div>
+                          </div>
+                          <ng2-completer *ngIf="HealthCoverageMaxEditMode && rowIndex == selectedHCoverageMax.rowIndex"
+                            [formControl]="dental_old_coverage_maximum_type" [datasource]="maximumTypeData"
+                            [minSearchLength]="0" [openOnFocus]="true" (opened)="onOpened($event)"
+                            [fillHighlighted]="false" [placeholder]="'Search Maximum Type'"
+                            [textSearching]="'Please wait...'" [inputClass]="'form-control amount_right'"
+                            (selected)="onMaximumTypeSelected($event)">
+                          </ng2-completer>
+                        </td>
+                        <td class="amount_right">
+                          <div *ngIf="rowIndex != selectedHCoverageMax.rowIndex">
+                            <div *ngFor="let periodtype of MaximumPeriodTypeList">
+                              <span *ngIf="periodtype.maxPeriodTypeKey == row.maximumPeroidKey">
+                                {{periodtype.maxPeriodTypeCd}}
+                              </span>
+                            </div>
+                          </div>
+                          <ng2-completer *ngIf="HealthCoverageMaxEditMode && rowIndex == selectedHCoverageMax.rowIndex"
+                            [formControl]="dental_old_coverage_maximum_period_type" [datasource]="maximumPeriodTypeData"
+                            [minSearchLength]="0" [openOnFocus]="true" (opened)="onOpened($event)"
+                            [fillHighlighted]="false" [placeholder]="'Search Maximum Type'"
+                            [textSearching]="'Please wait...'" [inputClass]="'form-control amount_right'"
+                            (selected)="onMaximumPeriodTypeSelected($event)">
+                          </ng2-completer>
+                        </td>
+                        <td class="amount_right alignDpRight" *ngIf="editPlanMode == true">
+
+                          <span *ngIf="rowIndex != selectedHCoverageMax.rowIndex">
+                            {{row.effectiveOn | dateFormate }}</span>
+                          <div *ngIf="HealthCoverageMaxEditMode && rowIndex == selectedHCoverageMax.rowIndex"
+                            class="calender-field">
+                            <my-date-picker id="oldCoverageMaximumEffectiveDate"
+                              [formControl]="dental_old_coverage_maximum_effective_date"
+                              [(ngModel)]="selectedHCoverageMax.effectiveOn" [options]="myDatePickerOptions"
+                              [placeholder]="myDatePickerPlaceholder"
+                              [selDate]="dateNameArray['OldCoverageMaximumEffectiveDate']"
+                              (inputFocusBlur)="changeFilterDateFormat($event, 'dental_old_coverage_maximum_effective_date', 'OldCoverageMaximumEffectiveDate')">
+                            </my-date-picker>
+                          </div>
+                        </td>
+                        <td class="amount_right alignDpRight expiryDate" *ngIf="editPlanMode == true">
+                          <span *ngIf="rowIndex != selectedHCoverageMax.rowIndex">{{row.expiredOn | dateFormate}}</span>
+                          <div *ngIf="HealthCoverageMaxEditMode && rowIndex == selectedHCoverageMax.rowIndex"
+                            class="calender-field">
+                            <my-date-picker id="oldCoverageMaximumExpiryDate"
+                              [formControl]="dental_old_coverage_maximum_expiry_date"
+                              [(ngModel)]="selectedHCoverageMax.expiredOn" [options]="myDatePickerOptions"
+                              [placeholder]="myDatePickerPlaceholder"
+                              [selDate]="dateNameArray['OldCoverageMaximumExpiryDate']"
+                              (inputFocusBlur)="changeFilterDateFormat($event, 'dental_old_coverage_maximum_expiry_date', 'OldCoverageMaximumExpiryDate')">
+                            </my-date-picker>
+                          </div>
+                        </td>
+                        <td class="amount_right">
+                          <!-- Display button in View Mode -->
+                          <button *ngIf="rowIndex != selectedHCoverageMax.rowIndex" type="button"
+                            class="table-action-btn edit-ico" (click)="enableEditHealthCoverageMax(row, rowIndex)"
+                            title="Edit" id="edit-dental"><i class="fa fa-pencil"></i></button>
+                          <button *ngIf="rowIndex != selectedHCoverageMax.rowIndex" type="button"
+                            class="table-action-btn del-ico" (click)="deleteCoverageMax(rowIndex)" title="Delete"><i
+                              class="fa fa-trash"></i></button>
+                          <!-- Display button in Edit Mode -->
+                          <button *ngIf="HealthCoverageMaxEditMode && rowIndex == selectedHCoverageMax.rowIndex"
+                            type="button" class="table-action-btn save-ico" (click)="updateDentalCoverageMax(rowIndex)"
+                            title="Save" id="saveHealth"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+                          <button *ngIf="HealthCoverageMaxEditMode && rowIndex == selectedHCoverageMax.rowIndex"
+                            type="button" class="table-action-btn cancel-ico" (click)="resetHealthCoverageMaxInfo()"
+                            title="Cancel" id="cancelHealth"><i class="fa fa-times" aria-hidden="true"></i></button>
+                        </td>
+                      </tr>
+                    </ng-template>
+                  </tbody>
+                </table>
+              </div>
+              <!-- Table Ends -->
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="currentBenefitId == 5" class="form-row SupplementCoverageMaximum">
+          <div class="row">
+
+            <div class="col-md-12 col-xs-12 table-col subtab-grid">
+              <div class=" table-hdr">
+                <h3>Coverage Maximum</h3>
+                <div class="web-reg">
+                  <button class="green-btn-add btn" (click)="enableAddSupplementalCoverageMax()"><i
+                      class="fa fa-plus"></i> Add New</button>
+                </div>
+              </div>
+              <div class="table-responsive clear">
+                <!-- Validation Errors Messages for new row -->
+                <div style="color: red" class="alert alert-danger" *ngIf="(supplemental_new_coverage_maximum_amount.invalid && (supplemental_new_coverage_maximum_amount.dirty || supplemental_new_coverage_maximum_amount.touched))
+                  || (supplemental_new_coverage_maximum_type.invalid && (supplemental_new_coverage_maximum_type.dirty || supplemental_new_coverage_maximum_type.touched))
+                  || (supplemental_new_coverage_maximum_period_type.invalid && (supplemental_new_coverage_maximum_period_type.dirty || supplemental_new_coverage_maximum_period_type.touched)) ||
+                  (supplemental_new_coverage_maximum_effective_date.invalid && (supplemental_new_coverage_maximum_effective_date.dirty || supplemental_new_coverage_maximum_effective_date.touched)) 
+                  || (supplemental_new_coverage_maximum_expiry_date.invalid && (supplemental_new_coverage_maximum_expiry_date.dirty || supplemental_new_coverage_maximum_expiry_date.touched))||
+                  (supplemental_new_coverage_carry_frw_year.invalid && (supplemental_new_coverage_carry_frw_year.dirty || supplemental_new_coverage_carry_frw_year.touched)
+                  )
+                  ">
+
+                  <!-- Validatoin for new record unit id -->
+
+                  <div
+                    *ngIf="supplemental_new_coverage_maximum_amount.invalid && (supplemental_new_coverage_maximum_amount.dirty || supplemental_new_coverage_maximum_amount.touched)">
+                    <div *ngIf="supplemental_new_coverage_maximum_amount.errors.required">
+                      Coverage Maximum Amount is Required.
+                    </div>
+                    <div
+                      *ngIf="!supplemental_new_coverage_maximum_amount.errors.required && supplemental_new_coverage_maximum_amount.errors.number">
+                      Please Enter Numbers Only
+                    </div>
+                    <div *ngIf="supplemental_new_coverage_maximum_amount.errors.maxlength">
+                      Please Enter Maximum 9 Numbers.
+                    </div>
+                  </div>
+                  <div
+                    *ngIf="supplemental_new_coverage_carry_frw_year.invalid && (supplemental_new_coverage_carry_frw_year.dirty || supplemental_new_coverage_carry_frw_year.touched)">
+
+                    <div *ngIf="supplemental_new_coverage_carry_frw_year.errors.vaildCarryForwardYear">
+                      {{ 'company.plan.division-max.enterValues1or2' | translate }}
+                    </div>
+
+                  </div>
+                  <!-- Validatoin for new record coverage maximum -->
+                  <div
+                    *ngIf="supplemental_new_coverage_maximum_type.invalid && (supplemental_new_coverage_maximum_type.dirty || supplemental_new_coverage_maximum_type.touched)">
+                    <div *ngIf="supplemental_new_coverage_maximum_type.errors.required">
+                      Coverage Maximum Type is Required.
+                    </div>
+                  </div>
+
+                  <!-- Validatoin for new record period type id -->
+                  <div
+                    *ngIf="supplemental_new_coverage_maximum_period_type.invalid && (supplemental_new_coverage_maximum_period_type.dirty || supplemental_new_coverage_maximum_period_type.touched)">
+                    <div *ngIf="supplemental_new_coverage_maximum_period_type.errors.required">
+                      Coverage Maximum Period Type is Required.
+                    </div>
+                  </div>
+
+                  <!-- Validatoin for new record description -->
+                  <div
+                    *ngIf="editPlanMode == true 
+                  && (supplemental_new_coverage_maximum_effective_date.invalid && (supplemental_new_coverage_maximum_effective_date.dirty || supplemental_new_coverage_maximum_effective_date.touched)) 
+                  || (supplemental_new_coverage_maximum_expiry_date.invalid && (supplemental_new_coverage_maximum_expiry_date.dirty || supplemental_new_coverage_maximum_expiry_date.touched))">
+                    <div
+                      *ngIf="supplemental_new_coverage_maximum_effective_date.invalid && (supplemental_new_coverage_maximum_effective_date.dirty || supplemental_new_coverage_maximum_effective_date.touched)">
+                      <div *ngIf="supplemental_new_coverage_maximum_effective_date.errors.required">
+                        {{ 'company.plan.fee-guide.effectiveDateReq' | translate }}
+                      </div>
+
+                      <div
+                        *ngIf="!supplemental_new_coverage_maximum_effective_date.errors.required && supplemental_new_coverage_maximum_effective_date.errors.dateNotValid">
+                        {{ 'company.plan.fee-guide.enterValidDate' | translate }}
+                      </div>
+
+                      <div
+                        *ngIf="!supplemental_new_coverage_maximum_effective_date.errors.required && supplemental_new_coverage_maximum_effective_date.errors.EffectiveDateNotValid">
+                        {{ 'company.plan.fee-guide.effectiveDateCantbeLess' | translate }}
+                      </div>
+                    </div>
+
+                    <!-- Validatoin for new record expiry date -->
+                    <div
+                      *ngIf="supplemental_new_coverage_maximum_expiry_date.invalid && (supplemental_new_coverage_maximum_expiry_date.dirty || supplemental_new_coverage_maximum_expiry_date.touched)">
+                      <div *ngIf="supplemental_new_coverage_maximum_expiry_date.errors.dateNotValid">
+                        {{ 'company.plan.fee-guide.enterValidDate' | translate }}
+                      </div>
+
+                      <div *ngIf="supplemental_new_coverage_maximum_expiry_date.errors.ExpiryDateNotValid">
+                        {{ 'company.plan.fee-guide.expiryDateShouldBeGreater' | translate }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Validation Errors Messages for Update row -->
+                <div style="color: red" class="alert alert-danger"
+                  *ngIf="(supplemental_old_coverage_maximum_amount.invalid && (supplemental_old_coverage_maximum_amount.dirty || supplemental_old_coverage_maximum_amount.touched))
+                  || (supplemental_old_coverage_maximum_type.invalid && (supplemental_old_coverage_maximum_type.dirty || supplemental_old_coverage_maximum_type.touched))
+                  || (supplemental_old_coverage_maximum_period_type.invalid && (supplemental_old_coverage_maximum_period_type.dirty || supplemental_old_coverage_maximum_period_type.touched))
+                  || (supplemental_old_coverage_maximum_effective_date.invalid && (supplemental_old_coverage_maximum_effective_date.dirty || supplemental_old_coverage_maximum_effective_date.touched)) 
+                  || (supplemental_old_coverage_maximum_expiry_date.invalid && (supplemental_old_coverage_maximum_expiry_date.dirty || supplemental_old_coverage_maximum_expiry_date.touched))">
+                  <!-- Validatoin for old record unit id -->
+                  <div
+                    *ngIf="supplemental_old_coverage_maximum_amount.invalid && (supplemental_old_coverage_maximum_amount.dirty || supplemental_old_coverage_maximum_amount.touched)">
+                    <div *ngIf="supplemental_old_coverage_maximum_amount.errors.required">
+                      Coverage Maximum Amount is Required.
+                    </div>
+                    <div
+                      *ngIf="!supplemental_old_coverage_maximum_amount.errors.required && supplemental_old_coverage_maximum_amount.errors.number">
+                      Please Enter Numbers Only
+                    </div>
+                    <div *ngIf="supplemental_old_coverage_maximum_amount.errors.maxlength">
+                      Please Enter Maximum 9 Numbers.
+                    </div>
+                  </div>
+
+                  <!-- Validatoin for new record supplement coverage max -->
+                  <div
+                    *ngIf="supplemental_old_coverage_maximum_type.invalid && (supplemental_old_coverage_maximum_type.dirty || supplemental_old_coverage_maximum_type.touched)">
+                    <div *ngIf="supplemental_old_coverage_maximum_type.errors.required">
+                      Coverage Maximum Type is Required.
+                    </div>
+                  </div>
+
+                  <!-- Validatoin for new record unit id -->
+                  <div
+                    *ngIf="supplemental_old_coverage_maximum_period_type.invalid && (supplemental_old_coverage_maximum_period_type.dirty || supplemental_old_coverage_maximum_period_type.touched)">
+                    <div *ngIf="supplemental_old_coverage_maximum_period_type.errors.required">
+                      Coverage Maximum Period Type is Required.
+                    </div>
+                  </div>
+                  <!-- Validatoin for old record description -->
+                  <div
+                    *ngIf="supplemental_old_coverage_maximum_effective_date.invalid && (supplemental_old_coverage_maximum_effective_date.dirty || supplemental_old_coverage_maximum_effective_date.touched)">
+                    <div *ngIf="supplemental_old_coverage_maximum_effective_date.errors.required">
+                      {{ 'company.plan.fee-guide.effectiveDateReq' | translate }}
+                    </div>
+
+                    <div
+                      *ngIf="!supplemental_old_coverage_maximum_effective_date.errors.required && supplemental_old_coverage_maximum_effective_date.errors.dateNotValid">
+                      {{ 'company.plan.fee-guide.enterValidDate' | translate }}
+                    </div>
+
+                    <div
+                      *ngIf="!supplemental_old_coverage_maximum_effective_date.required && supplemental_old_coverage_maximum_effective_date.errors.EffectiveDateNotValid">
+                      {{ 'company.plan.fee-guide.effectiveDateCantbeLess' | translate }}
+                    </div>
+                  </div>
+                  <!-- Validatoin for old record effective date -->
+                  <div
+                    *ngIf="supplemental_old_coverage_maximum_expiry_date.invalid && (supplemental_old_coverage_maximum_expiry_date.dirty || supplemental_old_coverage_maximum_expiry_date.touched)">
+                    <div *ngIf="supplemental_old_coverage_maximum_expiry_date.errors.dateNotValid">
+                      {{ 'company.plan.fee-guide.enterValidDate' | translate }}
+                    </div>
+                    <div *ngIf="supplemental_old_coverage_maximum_expiry_date.errors.ExpiryDateNotValid">
+                      {{ 'company.plan.fee-guide.expiryDateShouldBeGreater' | translate }}
+                    </div>
+                  </div>
+                </div>
+                <!-- Validation Error  -->
+                <table class="table table-bordered table-stripped">
+                  <thead>
+                    <tr>
+                      <th width="15%">Amount</th>
+                      <th class="amount_right" width="20%">Type</th>
+                      <th class="amount_right" width="20%">Period Type</th>
+                      <th class="amount_right" width="12%">Carry Forward Years</th>
+                      <th class="amount_right" *ngIf="editPlanMode == true" width="12%">Effective Date</th>
+                      <th class="amount_right" *ngIf="editPlanMode == true" width="12%">Expiry Date</th>
+                      <th class="amount_right" width="25%">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Adding New Row Data Here-->
+                    <tr *ngIf="SupplementalCoverageMaxAddMode">
+                      <td>
+                        <input #focusAddCoverageMaxEl class="fm-txt form-control" type="text"
+                          [formControl]="supplemental_new_coverage_maximum_amount">
+                      </td>
+                      <td class="amount_right">
+                        <ng2-completer [formControl]="supplemental_new_coverage_maximum_type"
+                          [datasource]="supplementMaximumTypeData" [minSearchLength]="0" [openOnFocus]="true"
+                          (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Search Maximum Type'"
+                          [textSearching]="'Please wait...'" [inputClass]="'form-control amount_right'"
+                          (selected)="onSupplementMaximumTypeSelected($event)">
+                        </ng2-completer>
+                      </td>
+                      <td class="amount_right">
+                        <ng2-completer [formControl]="supplemental_new_coverage_maximum_period_type"
+                          [datasource]="supplementMaximumPeriodTypeData" [minSearchLength]="0" [openOnFocus]="true"
+                          (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Search Maximum Type'"
+                          [textSearching]="'Please wait...'" [inputClass]="'form-control amount_right'"
+                          (selected)="onSplementMaximumPeriodTypeSelected($event)">
+                        </ng2-completer>
+                      </td>
+                      <td class="amount_right">
+
+
+                        <input id="supplemental_new_coverage_carry_frw_year"
+                          class="fm-txt form-control text-center amount_right" type="text"
+                          [formControl]="supplemental_new_coverage_carry_frw_year">
+                      </td>
+                      <td class="amount_right alignDpRight" *ngIf="editPlanMode == true">
+                        <div class="calender-field">
+                          <my-date-picker id="NewSupplementalCoverageMaximumEffectiveDate"
+                            [formControl]="supplemental_new_coverage_maximum_effective_date"
+                            [options]="myDatePickerOptions" [placeholder]="myDatePickerPlaceholder"
+                            [selDate]="dateNameArray['NewSupplementalCoverageMaximumEffectiveDate']"
+                            (inputFocusBlur)="changeFilterDateFormat($event, 'supplemental_new_coverage_maximum_effective_date', 'NewSupplementalCoverageMaximumEffectiveDate', true)">
+                          </my-date-picker>
+                        </div>
+                      </td>
+                      <td class="amount_right alignDpRight expiryDate" *ngIf="editPlanMode == true">
+                        <div class="calender-field">
+                          <my-date-picker id="NewSupplementalCoverageMaximumExpiryDate"
+                            [formControl]="supplemental_new_coverage_maximum_expiry_date"
+                            [options]="myDatePickerOptions" [placeholder]="myDatePickerPlaceholder"
+                            [selDate]="dateNameArray['NewSupplementalCoverageMaximumExpiryDate']"
+                            (inputFocusBlur)="changeFilterDateFormat($event, 'supplemental_new_coverage_maximum_expiry_date', 'NewSupplementalCoverageMaximumExpiryDate')">
+                          </my-date-picker>
+                        </div>
+                      </td>
+                      <td class="amount_right">
+                        <button type="button" (click)="addNewSupplementalCoverageMax()"
+                          class="table-action-btn save-ico" title="Save" id="save7"><i class="fa fa-floppy-o"
+                            aria-hidden="true"></i></button>
+                        <button type="button" (click)="resetNewSupplementalCoverageMaxRow()"
+                          class="table-action-btn cancel-ico" title="Cancel"><i class="fa fa-times"
+                            aria-hidden="true"></i></button>
+                      </td>
+                    </tr>
+                    <!-- Updating Row Data-->
+                    <div
+                      *ngIf="SupplementalCoverageMaxList.length > 0 || SupplementalCoverageMaxAddMode; then recordFound else recordNotFound ">
+                    </div>
+                    <ng-template #recordNotFound>
+                      <tr>
+                        <td colspan="7" class="text-center">No data available in table.</td>
+                      </tr>
+                    </ng-template>
+                    <ng-template #recordFound>
+                      <tr *ngFor="let row of SupplementalCoverageMaxList; let rowIndex = index">
+
+                        <td class="amount_right_grid">
+                          <div *ngIf="rowIndex != selectedSupplementalCoverageMax.rowIndex">
+                            <span>$</span> {{row.maximumAmt | number: '1.2' }}
+                          </div>
+                          <input type="hidden" [formControl]="supplemental_old_benefitCarryFrwdKey"
+                            *ngIf="!SupplementalCoverageMaxAddMode && rowIndex == selectedSupplementalCoverageMax.rowIndex"
+                            [(ngModel)]="selectedSupplementalCoverageMax.benefitCarryFrwdKey">
+
+                          <input type="hidden" [formControl]="supplemental_old_covMaxKey"
+                            *ngIf="!SupplementalCoverageMaxAddMode && rowIndex == selectedSupplementalCoverageMax.rowIndex"
+                            [(ngModel)]="selectedSupplementalCoverageMax.covMaxKey">
+
+                          <input #focusEditCoverageMaxEl class="fm-txt form-control" type="text"
+                            [formControl]="supplemental_old_coverage_maximum_amount"
+                            *ngIf="SupplementalCoverageMaxEditMode && rowIndex == selectedSupplementalCoverageMax.rowIndex"
+                            [(ngModel)]="selectedSupplementalCoverageMax.maximumAmt">
+                        </td>
+                        <td class="amount_right">
+                          <div *ngIf="rowIndex != selectedSupplementalCoverageMax.rowIndex">
+                            <div *ngFor="let maximumtype of HSAMaximumTypeList">
+                              <span *ngIf="maximumtype.hsaMaxTypeKey == row.maximumTypeKey">
+                                {{maximumtype.hsaMaxTypeDesc}}
+                              </span>
+                            </div>
+                          </div>
+                          <ng2-completer
+                            *ngIf="SupplementalCoverageMaxEditMode && rowIndex == selectedSupplementalCoverageMax.rowIndex"
+                            [formControl]="supplemental_old_coverage_maximum_type"
+                            [datasource]="supplementMaximumTypeData" [minSearchLength]="0" [openOnFocus]="true"
+                            (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Search Maximum Type'"
+                            [textSearching]="'Please wait...'" [inputClass]="'form-control amount_right'"
+                            (selected)="onSupplementMaximumTypeSelected($event)">
+                          </ng2-completer>
+                        </td>
+                        <td class="amount_right">
+                          <div *ngIf="rowIndex != selectedSupplementalCoverageMax.rowIndex">
+                            <div *ngFor="let periodtype of HSAMaximumPeriodTypeList">
+                              <span *ngIf="periodtype.hsaMaxPeriodTypeKey == row.maximumPeroidKey">
+                                {{periodtype.hsaMaxPeriodTypeDesc}}
+                              </span>
+                            </div>
+                          </div>
+                          <ng2-completer
+                            *ngIf="SupplementalCoverageMaxEditMode && rowIndex == selectedSupplementalCoverageMax.rowIndex"
+                            [formControl]="supplemental_old_coverage_maximum_period_type"
+                            [datasource]="supplementMaximumPeriodTypeData" [minSearchLength]="0" [openOnFocus]="true"
+                            (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Search Maximum Type'"
+                            [textSearching]="'Please wait...'" [inputClass]="'form-control amount_right'"
+                            (selected)="onSplementMaximumPeriodTypeSelected($event)">
+                          </ng2-completer>
+                        </td>
+
+                        <td class="amount_right_grid">
+                          <div *ngIf="rowIndex != selectedSupplementalCoverageMax.rowIndex">
+                            {{row.carryFrwdYrs }}
+                          </div>
+
+                          <input
+                            *ngIf="SupplementalCoverageMaxEditMode && rowIndex == selectedSupplementalCoverageMax.rowIndex"
+                            id="supplemental_new_coverage_carry_frw_year"
+                            class="fm-txt form-control text-center amount_right" type="text"
+                            [formControl]="supplemental_new_coverage_carry_frw_year">
+
+
+                        </td>
+
+                        <td class="amount_right alignDpRight" *ngIf="editPlanMode == true">
+                          <span *ngIf="rowIndex != selectedSupplementalCoverageMax.rowIndex">{{row.effectiveOn |
+                            dateFormate}}</span>
+                          <div
+                            *ngIf="SupplementalCoverageMaxEditMode && rowIndex == selectedSupplementalCoverageMax.rowIndex"
+                            class="calender-field">
+                            <my-date-picker id="SupplementalOldCoverageMaximumEffectiveDate"
+                              [formControl]="supplemental_old_coverage_maximum_effective_date"
+                              [(ngModel)]="selectedSupplementalCoverageMax.effectiveOn" [options]="myDatePickerOptions"
+                              [placeholder]="myDatePickerPlaceholder"
+                              [selDate]="dateNameArray['SupplementalOldCoverageMaximumEffectiveDate']"
+                              (inputFocusBlur)="changeFilterDateFormat($event, 'supplemental_old_coverage_maximum_effective_date', 'SupplementalOldCoverageMaximumEffectiveDate', true)">
+                            </my-date-picker>
+                          </div>
+                        </td>
+                        <td *ngIf="editPlanMode == true" class="expiryDate">
+
+                          <span *ngIf="rowIndex != selectedSupplementalCoverageMax.rowIndex">{{row.expiredOn |
+                            dateFormate}}</span>
+                          <div
+                            *ngIf="SupplementalCoverageMaxEditMode && rowIndex == selectedSupplementalCoverageMax.rowIndex"
+                            class="calender-field">
+                            <my-date-picker id="SupplementalOldCoverageMaximumExpiryDate"
+                              [formControl]="supplemental_old_coverage_maximum_expiry_date"
+                              [(ngModel)]="selectedSupplementalCoverageMax.expiredOn" [options]="myDatePickerOptions"
+                              [placeholder]="myDatePickerPlaceholder"
+                              [selDate]="dateNameArray['SupplementalOldCoverageMaximumExpiryDate']"
+                              (inputFocusBlur)="changeFilterDateFormat($event, 'supplemental_old_coverage_maximum_expiry_date', 'SupplementalOldCoverageMaximumExpiryDate')">
+                            </my-date-picker>
+                          </div>
+                        </td>
+                        <td class="amount_right">
+
+                           <!-- Display button in View Mode -->
+                          <button *ngIf="rowIndex != selectedSupplementalCoverageMax.rowIndex" type="button"
+                            class="table-action-btn edit-ico" (click)="enableEditSupplementalCoverageMax(row, rowIndex)"
+                            title="Edit" id="edit4"><i class="fa fa-pencil"></i></button>
+                          <button *ngIf="rowIndex != selectedSupplementalCoverageMax.rowIndex" type="button"
+                            class="table-action-btn del-ico" (click)="deleteSupplementalCoverageMax(rowIndex)"
+                            title="Delete"><i class="fa fa-trash"></i></button>
+                          <button
+                            *ngIf="SupplementalCoverageMaxEditMode && rowIndex == selectedSupplementalCoverageMax.rowIndex"
+                            type="button" class="table-action-btn save-ico"
+                            (click)="updateSupplementalCoverageMax(rowIndex)" title="Save" id="save8"><i class="fa fa-floppy-o"
+                              aria-hidden="true"></i></button>
+                          <button
+                            *ngIf="SupplementalCoverageMaxEditMode && rowIndex == selectedSupplementalCoverageMax.rowIndex"
+                            type="button" class="table-action-btn cancel-ico"
+                            (click)="resetSupplementalCoverageMaxInfo()" title="Cancel"><i class="fa fa-times"
+                              aria-hidden="true"></i></button>
+                        </td>
+                      </tr>
+                    </ng-template>
+                  </tbody>
+                </table>
+              </div>
+              <!-- Table Ends -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Wellness Coverage Maximum section Start -->
+        <div *ngIf="currentBenefitId == 6" class="form-row SupplementCoverageMaximum">
+          <div class="row">
+            <div class="col-md-12 col-xs-12 table-col subtab-grid">
+              <div class=" table-hdr">
+                <h3>Coverage Maximum</h3>
+                <div class="web-reg">
+                  <button class="green-btn-add btn" (click)="enableAddWellnessCoverageMax()"><i
+                      class="fa fa-plus"></i> Add New</button>
+                </div>
+              </div>
+              <div class="table-responsive clear">
+                <!-- Validation Errors Messages for new row -->
+                <div style="color: red" class="alert alert-danger" *ngIf="(supplemental_new_coverage_maximum_amount.invalid && (supplemental_new_coverage_maximum_amount.dirty || supplemental_new_coverage_maximum_amount.touched))
+                  || (supplemental_new_coverage_maximum_type.invalid && (supplemental_new_coverage_maximum_type.dirty || supplemental_new_coverage_maximum_type.touched))
+                  || (supplemental_new_coverage_maximum_period_type.invalid && (supplemental_new_coverage_maximum_period_type.dirty || supplemental_new_coverage_maximum_period_type.touched)) ||
+                  (supplemental_new_coverage_maximum_effective_date.invalid && (supplemental_new_coverage_maximum_effective_date.dirty || supplemental_new_coverage_maximum_effective_date.touched)) 
+                  || (supplemental_new_coverage_maximum_expiry_date.invalid && (supplemental_new_coverage_maximum_expiry_date.dirty || supplemental_new_coverage_maximum_expiry_date.touched))||
+                  (supplemental_new_coverage_carry_frw_year.invalid && (supplemental_new_coverage_carry_frw_year.dirty || supplemental_new_coverage_carry_frw_year.touched)
+                  )
+                  ">
+                  <!-- Validatoin for new record unit id -->
+                  <div
+                    *ngIf="supplemental_new_coverage_maximum_amount.invalid && (supplemental_new_coverage_maximum_amount.dirty || supplemental_new_coverage_maximum_amount.touched)">
+                    <div *ngIf="supplemental_new_coverage_maximum_amount.errors.required">
+                      Coverage Maximum Amount is Required.
+                    </div>
+                    <div
+                      *ngIf="!supplemental_new_coverage_maximum_amount.errors.required && supplemental_new_coverage_maximum_amount.errors.number">
+                      Please Enter Numbers Only
+                    </div>
+                    <div *ngIf="supplemental_new_coverage_maximum_amount.errors.maxlength">
+                      Please Enter Maximum 9 Numbers.
+                    </div>
+                  </div>
+                  <div
+                    *ngIf="supplemental_new_coverage_carry_frw_year.invalid && (supplemental_new_coverage_carry_frw_year.dirty || supplemental_new_coverage_carry_frw_year.touched)">
+                    <div *ngIf="supplemental_new_coverage_carry_frw_year.errors.vaildCarryForwardYear">
+                      {{ 'company.plan.division-max.enterValues1or2' | translate }}
+                    </div>
+                  </div>
+                  <!-- Validatoin for new record coverage maximum -->
+                  <div
+                    *ngIf="supplemental_new_coverage_maximum_type.invalid && (supplemental_new_coverage_maximum_type.dirty || supplemental_new_coverage_maximum_type.touched)">
+                    <div *ngIf="supplemental_new_coverage_maximum_type.errors.required">
+                      Coverage Maximum Type is Required.
+                    </div>
+                  </div>
+                  <!-- Validatoin for new record period type id -->
+                  <div
+                    *ngIf="supplemental_new_coverage_maximum_period_type.invalid && (supplemental_new_coverage_maximum_period_type.dirty || supplemental_new_coverage_maximum_period_type.touched)">
+                    <div *ngIf="supplemental_new_coverage_maximum_period_type.errors.required">
+                      Coverage Maximum Period Type is Required.
+                    </div>
+                  </div>
+                  <!-- Validatoin for new record description -->
+                  <div
+                    *ngIf="editPlanMode == true 
+                  && (supplemental_new_coverage_maximum_effective_date.invalid && (supplemental_new_coverage_maximum_effective_date.dirty || supplemental_new_coverage_maximum_effective_date.touched)) 
+                  || (supplemental_new_coverage_maximum_expiry_date.invalid && (supplemental_new_coverage_maximum_expiry_date.dirty || supplemental_new_coverage_maximum_expiry_date.touched))">
+                    <div
+                      *ngIf="supplemental_new_coverage_maximum_effective_date.invalid && (supplemental_new_coverage_maximum_effective_date.dirty || supplemental_new_coverage_maximum_effective_date.touched)">
+                      <div *ngIf="supplemental_new_coverage_maximum_effective_date.errors.required">
+                        {{ 'company.plan.fee-guide.effectiveDateReq' | translate }}
+                      </div>
+                      <div
+                        *ngIf="!supplemental_new_coverage_maximum_effective_date.errors.required && supplemental_new_coverage_maximum_effective_date.errors.dateNotValid">
+                        {{ 'company.plan.fee-guide.enterValidDate' | translate }}
+                      </div>
+                      <div
+                        *ngIf="!supplemental_new_coverage_maximum_effective_date.errors.required && supplemental_new_coverage_maximum_effective_date.errors.EffectiveDateNotValid">
+                        {{ 'company.plan.fee-guide.effectiveDateCantbeLess' | translate }}
+                      </div>
+                    </div>
+                    <!-- Validatoin for new record expiry date -->
+                    <div
+                      *ngIf="supplemental_new_coverage_maximum_expiry_date.invalid && (supplemental_new_coverage_maximum_expiry_date.dirty || supplemental_new_coverage_maximum_expiry_date.touched)">
+                      <div *ngIf="supplemental_new_coverage_maximum_expiry_date.errors.dateNotValid">
+                        {{ 'company.plan.fee-guide.enterValidDate' | translate }}
+                      </div>
+                      <div *ngIf="supplemental_new_coverage_maximum_expiry_date.errors.ExpiryDateNotValid">
+                        {{ 'company.plan.fee-guide.expiryDateShouldBeGreater' | translate }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Validation Errors Messages for Update row -->
+                <div style="color: red" class="alert alert-danger"
+                  *ngIf="(supplemental_old_coverage_maximum_amount.invalid && (supplemental_old_coverage_maximum_amount.dirty || supplemental_old_coverage_maximum_amount.touched))
+                  || (supplemental_old_coverage_maximum_type.invalid && (supplemental_old_coverage_maximum_type.dirty || supplemental_old_coverage_maximum_type.touched))
+                  || (supplemental_old_coverage_maximum_period_type.invalid && (supplemental_old_coverage_maximum_period_type.dirty || supplemental_old_coverage_maximum_period_type.touched))
+                  || (supplemental_old_coverage_maximum_effective_date.invalid && (supplemental_old_coverage_maximum_effective_date.dirty || supplemental_old_coverage_maximum_effective_date.touched)) 
+                  || (supplemental_old_coverage_maximum_expiry_date.invalid && (supplemental_old_coverage_maximum_expiry_date.dirty || supplemental_old_coverage_maximum_expiry_date.touched))">
+                  <!-- Validatoin for old record unit id -->
+                  <div
+                    *ngIf="supplemental_old_coverage_maximum_amount.invalid && (supplemental_old_coverage_maximum_amount.dirty || supplemental_old_coverage_maximum_amount.touched)">
+                    <div *ngIf="supplemental_old_coverage_maximum_amount.errors.required">
+                      Coverage Maximum Amount is Required.
+                    </div>
+                    <div
+                      *ngIf="!supplemental_old_coverage_maximum_amount.errors.required && supplemental_old_coverage_maximum_amount.errors.number">
+                      Please Enter Numbers Only
+                    </div>
+                    <div *ngIf="supplemental_old_coverage_maximum_amount.errors.maxlength">
+                      Please Enter Maximum 9 Numbers.
+                    </div>
+                  </div>
+                  <!-- Validatoin for new record supplement coverage max -->
+                  <div
+                    *ngIf="supplemental_old_coverage_maximum_type.invalid && (supplemental_old_coverage_maximum_type.dirty || supplemental_old_coverage_maximum_type.touched)">
+                    <div *ngIf="supplemental_old_coverage_maximum_type.errors.required">
+                      Coverage Maximum Type is Required.
+                    </div>
+                  </div>
+                  <!-- Validatoin for new record unit id -->
+                  <div
+                    *ngIf="supplemental_old_coverage_maximum_period_type.invalid && (supplemental_old_coverage_maximum_period_type.dirty || supplemental_old_coverage_maximum_period_type.touched)">
+                    <div *ngIf="supplemental_old_coverage_maximum_period_type.errors.required">
+                      Coverage Maximum Period Type is Required.
+                    </div>
+                  </div>
+                  <!-- Validatoin for old record description -->
+                  <div
+                    *ngIf="supplemental_old_coverage_maximum_effective_date.invalid && (supplemental_old_coverage_maximum_effective_date.dirty || supplemental_old_coverage_maximum_effective_date.touched)">
+                    <div *ngIf="supplemental_old_coverage_maximum_effective_date.errors.required">
+                      {{ 'company.plan.fee-guide.effectiveDateReq' | translate }}
+                    </div>
+                    <div
+                      *ngIf="!supplemental_old_coverage_maximum_effective_date.errors.required && supplemental_old_coverage_maximum_effective_date.errors.dateNotValid">
+                      {{ 'company.plan.fee-guide.enterValidDate' | translate }}
+                    </div>
+                    <div
+                      *ngIf="!supplemental_old_coverage_maximum_effective_date.required && supplemental_old_coverage_maximum_effective_date.errors.EffectiveDateNotValid">
+                      {{ 'company.plan.fee-guide.effectiveDateCantbeLess' | translate }}
+                    </div>
+                  </div>
+                  <!-- Validatoin for old record effective date -->
+                  <div
+                    *ngIf="supplemental_old_coverage_maximum_expiry_date.invalid && (supplemental_old_coverage_maximum_expiry_date.dirty || supplemental_old_coverage_maximum_expiry_date.touched)">
+                    <div *ngIf="supplemental_old_coverage_maximum_expiry_date.errors.dateNotValid">
+                      {{ 'company.plan.fee-guide.enterValidDate' | translate }}
+                    </div>
+                    <div *ngIf="supplemental_old_coverage_maximum_expiry_date.errors.ExpiryDateNotValid">
+                      {{ 'company.plan.fee-guide.expiryDateShouldBeGreater' | translate }}
+                    </div>
+                  </div>
+                </div>
+                <!-- Validation Error  -->
+                <table class="table table-bordered table-stripped">
+                  <thead>
+                    <tr>
+                      <th width="15%">Amount</th>
+                      <th class="amount_right" width="20%">Type</th>
+                      <th class="amount_right" width="20%">Period Type</th>
+                      <th class="amount_right" width="12%">Carry Forward Years</th>
+                      <th class="amount_right" *ngIf="editPlanMode == true" width="12%">Effective Date</th>
+                      <th class="amount_right" *ngIf="editPlanMode == true" width="12%">Expiry Date</th>
+                      <th class="amount_right" width="25%">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Adding New Row Data Here-->
+                    <tr *ngIf="WellnessCoverageMaxAddMode">
+                      <td>
+                        <input #focusAddCoverageMaxEl class="fm-txt form-control" type="text"
+                          [formControl]="supplemental_new_coverage_maximum_amount">
+                      </td>
+                      <td class="amount_right">
+                        <ng2-completer [formControl]="supplemental_new_coverage_maximum_type"
+                          [datasource]="supplementMaximumTypeData" [minSearchLength]="0" [openOnFocus]="true"
+                          (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Search Maximum Type'"
+                          [textSearching]="'Please wait...'" [inputClass]="'form-control amount_right'"
+                          (selected)="onSupplementMaximumTypeSelected($event)">
+                        </ng2-completer>
+                      </td>
+                      <td class="amount_right">
+                        <ng2-completer [formControl]="supplemental_new_coverage_maximum_period_type"
+                          [datasource]="supplementMaximumPeriodTypeData" [minSearchLength]="0" [openOnFocus]="true"
+                          (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Search Maximum Type'"
+                          [textSearching]="'Please wait...'" [inputClass]="'form-control amount_right'"
+                          (selected)="onSplementMaximumPeriodTypeSelected($event)">
+                        </ng2-completer>
+                      </td>
+                      <td class="amount_right">
+                        <input id="supplemental_new_coverage_carry_frw_year"
+                          class="fm-txt form-control text-center amount_right" type="text"
+                          [formControl]="supplemental_new_coverage_carry_frw_year">
+                      </td>
+                      <td class="amount_right alignDpRight" *ngIf="editPlanMode == true">
+                        <div class="calender-field">
+                          <my-date-picker id="NewSupplementalCoverageMaximumEffectiveDate"
+                            [formControl]="supplemental_new_coverage_maximum_effective_date"
+                            [options]="myDatePickerOptions" [placeholder]="myDatePickerPlaceholder"
+                            [selDate]="dateNameArray['NewSupplementalCoverageMaximumEffectiveDate']"
+                            (inputFocusBlur)="changeFilterDateFormat($event, 'supplemental_new_coverage_maximum_effective_date', 'NewSupplementalCoverageMaximumEffectiveDate', true)">
+                          </my-date-picker>
+                        </div>
+                      </td>
+                      <td class="amount_right alignDpRight expiryDate" *ngIf="editPlanMode == true">
+                        <div class="calender-field">
+                          <my-date-picker id="NewSupplementalCoverageMaximumExpiryDate"
+                            [formControl]="supplemental_new_coverage_maximum_expiry_date"
+                            [options]="myDatePickerOptions" [placeholder]="myDatePickerPlaceholder"
+                            [selDate]="dateNameArray['NewSupplementalCoverageMaximumExpiryDate']"
+                            (inputFocusBlur)="changeFilterDateFormat($event, 'supplemental_new_coverage_maximum_expiry_date', 'NewSupplementalCoverageMaximumExpiryDate')">
+                          </my-date-picker>
+                        </div>
+                      </td>
+                      <td class="amount_right">
+                        <button type="button" (click)="addNewSupplementalCoverageMax()"
+                          class="table-action-btn save-ico" title="Save" id="save9"><i class="fa fa-floppy-o"
+                            aria-hidden="true"></i></button>
+                        <button type="button" (click)="resetNewWellnessCoverageMaxRow()"
+                          class="table-action-btn cancel-ico" title="Cancel"><i class="fa fa-times"
+                            aria-hidden="true"></i></button>
+                      </td>
+                    </tr>
+                    <!-- Updating Row Data-->
+                    <div
+                      *ngIf="wellnessCoverageMaxList.length > 0 || WellnessCoverageMaxAddMode; then recordFound else recordNotFound ">
+                    </div>
+                    <ng-template #recordNotFound>
+                      <tr>
+                        <td colspan="7" class="text-center">No data available in table.</td>
+                      </tr>
+                    </ng-template>
+                    <ng-template #recordFound>
+                      <tr *ngFor="let row of wellnessCoverageMaxList; let rowIndex = index">
+                        <td class="amount_right_grid">
+                          <div *ngIf="rowIndex != selectedWellnessCoverageMax.rowIndex">
+                            <span>$</span> {{row.maximumAmt | number: '1.2' }}
+                          </div>
+                          <input type="hidden" [formControl]="supplemental_old_benefitCarryFrwdKey"
+                            *ngIf="!WellnessCoverageMaxAddMode && rowIndex == selectedWellnessCoverageMax.rowIndex"
+                            [(ngModel)]="selectedWellnessCoverageMax.benefitCarryFrwdKey">
+
+                          <input type="hidden" [formControl]="supplemental_old_covMaxKey"
+                            *ngIf="!WellnessCoverageMaxAddMode && rowIndex == selectedWellnessCoverageMax.rowIndex"
+                            [(ngModel)]="selectedWellnessCoverageMax.covMaxKey">
+
+                          <input #focusEditCoverageMaxEl class="fm-txt form-control" type="text"
+                            [formControl]="supplemental_old_coverage_maximum_amount"
+                            *ngIf="WellnessCoverageMaxEditMode && rowIndex == selectedWellnessCoverageMax.rowIndex"
+                            [(ngModel)]="selectedWellnessCoverageMax.maximumAmt">
+                        </td>
+                        <td class="amount_right">
+                          <div *ngIf="rowIndex != selectedWellnessCoverageMax.rowIndex">
+                            <div *ngFor="let maximumtype of HSAMaximumTypeList">
+                              <span *ngIf="maximumtype.hsaMaxTypeKey == row.maximumTypeKey">
+                                {{maximumtype.hsaMaxTypeDesc}}
+                              </span>
+                            </div>
+                          </div>
+                          <ng2-completer
+                            *ngIf="WellnessCoverageMaxEditMode && rowIndex == selectedWellnessCoverageMax.rowIndex"
+                            [formControl]="supplemental_old_coverage_maximum_type"
+                            [datasource]="supplementMaximumTypeData" [minSearchLength]="0" [openOnFocus]="true"
+                            (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Search Maximum Type'"
+                            [textSearching]="'Please wait...'" [inputClass]="'form-control amount_right'"
+                            (selected)="onSupplementMaximumTypeSelected($event)">
+                          </ng2-completer>
+                        </td>
+                        <td class="amount_right">
+                          <div *ngIf="rowIndex != selectedWellnessCoverageMax.rowIndex">
+                            <div *ngFor="let periodtype of HSAMaximumPeriodTypeList">
+                              <span *ngIf="periodtype.hsaMaxPeriodTypeKey == row.maximumPeroidKey">
+                                {{periodtype.hsaMaxPeriodTypeDesc}}
+                              </span>
+                            </div>
+                          </div>
+                          <ng2-completer
+                            *ngIf="WellnessCoverageMaxEditMode && rowIndex == selectedWellnessCoverageMax.rowIndex"
+                            [formControl]="supplemental_old_coverage_maximum_period_type"
+                            [datasource]="supplementMaximumPeriodTypeData" [minSearchLength]="0" [openOnFocus]="true"
+                            (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Search Maximum Type'"
+                            [textSearching]="'Please wait...'" [inputClass]="'form-control amount_right'"
+                            (selected)="onSplementMaximumPeriodTypeSelected($event)">
+                          </ng2-completer>
+                        </td>
+                        <td class="amount_right_grid">
+                          <div *ngIf="rowIndex != selectedWellnessCoverageMax.rowIndex">
+                            {{row.carryFrwdYrs }}
+                          </div>
+                          <input
+                            *ngIf="WellnessCoverageMaxEditMode && rowIndex == selectedWellnessCoverageMax.rowIndex"
+                            id="supplemental_new_coverage_carry_frw_year"
+                            class="fm-txt form-control text-center amount_right" type="text"
+                            [formControl]="supplemental_new_coverage_carry_frw_year">
+                        </td>
+                        <td class="amount_right alignDpRight" *ngIf="editPlanMode == true">
+                          <span *ngIf="rowIndex != selectedWellnessCoverageMax.rowIndex">{{row.effectiveOn |
+                            dateFormate}}</span>
+                          <div
+                            *ngIf="WellnessCoverageMaxEditMode && rowIndex == selectedWellnessCoverageMax.rowIndex"
+                            class="calender-field">
+                            <my-date-picker id="SupplementalOldCoverageMaximumEffectiveDate"
+                              [formControl]="supplemental_old_coverage_maximum_effective_date"
+                              [(ngModel)]="selectedWellnessCoverageMax.effectiveOn" [options]="myDatePickerOptions"
+                              [placeholder]="myDatePickerPlaceholder"
+                              [selDate]="dateNameArray['SupplementalOldCoverageMaximumEffectiveDate']"
+                              (inputFocusBlur)="changeFilterDateFormat($event, 'supplemental_old_coverage_maximum_effective_date', 'SupplementalOldCoverageMaximumEffectiveDate', true)">
+                            </my-date-picker>
+                          </div>
+                        </td>
+                        <td *ngIf="editPlanMode == true" class="expiryDate">
+                          <span *ngIf="rowIndex != selectedWellnessCoverageMax.rowIndex">{{row.expiredOn |
+                            dateFormate}}</span>
+                          <div
+                            *ngIf="WellnessCoverageMaxEditMode && rowIndex == selectedWellnessCoverageMax.rowIndex"
+                            class="calender-field">
+                            <my-date-picker id="SupplementalOldCoverageMaximumExpiryDate"
+                              [formControl]="supplemental_old_coverage_maximum_expiry_date"
+                              [(ngModel)]="selectedWellnessCoverageMax.expiredOn" [options]="myDatePickerOptions"
+                              [placeholder]="myDatePickerPlaceholder"
+                              [selDate]="dateNameArray['SupplementalOldCoverageMaximumExpiryDate']"
+                              (inputFocusBlur)="changeFilterDateFormat($event, 'supplemental_old_coverage_maximum_expiry_date', 'SupplementalOldCoverageMaximumExpiryDate')">
+                            </my-date-picker>
+                          </div>
+                        </td>
+                        <td class="amount_right">
+                           <!-- Display button in View Mode -->
+                          <button *ngIf="rowIndex != selectedWellnessCoverageMax.rowIndex" type="button"
+                            class="table-action-btn edit-ico" (click)="enableEditWellnessCoverageMax(row, rowIndex)"
+                            title="Edit" id="edit5"><i class="fa fa-pencil"></i></button>
+                          <button *ngIf="rowIndex != selectedWellnessCoverageMax.rowIndex" type="button"
+                            class="table-action-btn del-ico" (click)="deleteSupplementalCoverageMax(rowIndex)"
+                            title="Delete"><i class="fa fa-trash"></i></button>
+                          <button
+                            *ngIf="WellnessCoverageMaxEditMode && rowIndex == selectedWellnessCoverageMax.rowIndex"
+                            type="button" class="table-action-btn save-ico"
+                            (click)="updateSupplementalCoverageMax(rowIndex)" title="Save" id="save10"><i class="fa fa-floppy-o"
+                              aria-hidden="true"></i></button>
+                          <button
+                            *ngIf="WellnessCoverageMaxEditMode && rowIndex == selectedWellnessCoverageMax.rowIndex"
+                            type="button" class="table-action-btn cancel-ico"
+                            (click)="resetWellnessCoverageMaxInfo()" title="Cancel"><i class="fa fa-times"
+                              aria-hidden="true"></i></button>
+                        </td>
+                      </tr>
+                    </ng-template>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Wellness Coverage Maximum section End -->
+
+        <div class="form-row services">
+          <div class="row">
+            <div class="col-md-12 col-xs-12 table-col">
+              <div class=" table-hdr">
+                <h3>{{ 'company.plan.benefits.services' | translate }}</h3>
+                <div class="web-reg">
+                </div>
+              </div>
+              <div class="loader-service" *ngIf="currentBenefitId == 1">
+
+                <div *ngIf="currentBenefitId == 1" [hidden]="arrDataDental" class="loader-outer">
+                  <div class="cube-wrapper">
+                    <div class="cube-folding">
+                      <span class="leaf1"></span>
+                      <span class="leaf2"></span>
+                      <span class="leaf3"></span>
+                      <span class="leaf4"></span>
+                    </div>
+                    <span class="loading" data-name="Loading">Please Wait...</span>
+                  </div>
+                </div>
+
+
+                <p-treeTable *ngIf="currentBenefitId == 1" [value]="arrDataDental" [class]="'tree-table'"
+                  [(selection)]="selectedNode">
+                  <p-column field="serviceId" header="Service">
+                    <ng-template let-col let-node="rowData" pTemplate="body">
+                      <input [(ngModel)]="node.data.isSelected || node.data.isPartial" value="node.data.serviceId"
+                        type="checkBox" (change)="setNodeSelectedFirst(node,$event.target.checked,'dental')"
+                        [disabled]="!serviceLayerDentalBoolean" name="{{node.data.serviceId}}"
+                        class="checkboxDissabled" />
+                      <span>{{node.data.serviceId}}</span>
+                    </ng-template>
+                  </p-column>
+                  <p-column field="procedureId" header="Proc ID"></p-column>
+                  <p-column field="serviceDesc" header="Description"></p-column>
+                </p-treeTable>
+
+              </div>
+
+              <div class="loader-service" *ngIf="currentBenefitId == 2">
+
+                <div *ngIf="currentBenefitId == 2" class="loader-outer" [hidden]="arrDataVision">
+                  <div class="cube-wrapper">
+                    <div class="cube-folding">
+                      <span class="leaf1"></span>
+                      <span class="leaf2"></span>
+                      <span class="leaf3"></span>
+                      <span class="leaf4"></span>
+                    </div>
+                    <span class="loading" data-name="Loading">Please Wait...</span>
+                  </div>
+                </div>
+                <p-treeTable *ngIf="currentBenefitId == 2" [value]="arrDataVision" [class]="'tree-table'"
+                  [(selection)]="selectedNode">
+                  <p-column field="serviceId" header="Service">
+                    <ng-template let-col let-node="rowData" pTemplate="body">
+                      <input [(ngModel)]="node.data.isSelected || node.data.isPartial" value="{{node.data.isSelected}}"
+                        type="checkBox" (change)="setNodeSelectedFirst(node,$event.target.checked,'vision')"
+                        [disabled]="!serviceLayerVisionBoolean" class="checkboxDissabled" />
+                      <span>{{node.data.serviceId}}</span>
+                    </ng-template>
+                  </p-column>
+                  <p-column field="procedureId" header="Proc ID"></p-column>
+                  <p-column field="serviceDesc" header="Description"></p-column>
+                </p-treeTable>
+
+              </div>
+
+              <div class="loader-service" *ngIf="currentBenefitId == 3">
+
+                <div *ngIf="currentBenefitId == 3" class="loader-outer" [hidden]="arrDataHealth">
+                  <div class="cube-wrapper">
+                    <div class="cube-folding">
+                      <span class="leaf1"></span>
+                      <span class="leaf2"></span>
+                      <span class="leaf3"></span>
+                      <span class="leaf4"></span>
+                    </div>
+                    <span class="loading" data-name="Loading">Please Wait...</span>
+                  </div>
+                </div>
+                <p-treeTable *ngIf="currentBenefitId == 3" [value]="arrDataHealth" [class]="'tree-table'"
+                  [(selection)]="selectedNode">
+                  <p-column field="serviceKey" header="Service">
+                    <ng-template let-col let-node="rowData" pTemplate="body">
+                      <input [(ngModel)]="node.data.isSelected || node.data.isPartial" value="{{node.data.isSelected}}"
+                        type="checkBox" (change)="setNodeSelectedFirst(node,$event.target.checked,'health')"
+                        [disabled]="!serviceLayerHealthBoolean" class="checkboxDissabled" />
+                      <span>{{node.data.serviceId}}</span>
+                    </ng-template>
+                  </p-column>
+                  <p-column field="procedureId" header="Proc ID"></p-column>
+                  <p-column field="serviceDesc" header="Description"></p-column>
+                </p-treeTable>
+              </div>
+              <div class="loader-service" *ngIf="currentBenefitId == 4">
+
+                <div *ngIf="currentBenefitId == 4" class="loader-outer" [hidden]="arrDataDrug">
+                  <div class="cube-wrapper">
+                    <div class="cube-folding">
+                      <span class="leaf1"></span>
+                      <span class="leaf2"></span>
+                      <span class="leaf3"></span>
+                      <span class="leaf4"></span>
+                    </div>
+                    <span class="loading" data-name="Loading">Please Wait...</span>
+                  </div>
+                </div>
+                <p-treeTable *ngIf="currentBenefitId == 4" [value]="arrDataDrug" [class]="'tree-table'"
+                  [(selection)]="selectedNode">
+                  <p-column field="serviceId" header="Service">
+                    <ng-template let-col let-node="rowData" pTemplate="body">
+                      <input [(ngModel)]="node.data.isSelected || node.data.isPartial" value="{{node.data.isSelected}}"
+                        type="checkBox" (change)="setNodeSelectedFirst(node,$event.target.checked,'drug')"
+                        [disabled]="!serviceLayerDrugBoolean" class="checkboxDissabled" />
+                      <span>{{node.data.serviceId}}</span>
+                    </ng-template>
+                  </p-column>
+                  <p-column field="procedureId" header="Proc ID"></p-column>
+                  <p-column field="serviceDesc" header="Description"></p-column>
+                </p-treeTable>
+              </div>
+
+
+              <div class="loader-service" *ngIf="currentBenefitId == 5">
+
+                <div *ngIf="currentBenefitId == 5 && !editPlanMode" class="loader-outer" [hidden]="arrDataSupplement">
+                  <div class="cube-wrapper">
+                    <div class="cube-folding">
+                      <span class="leaf1"></span>
+                      <span class="leaf2"></span>
+                      <span class="leaf3"></span>
+                      <span class="leaf4"></span>
+                    </div>
+                    <span class="loading" data-name="Loading">Please Wait...</span>
+                  </div>
+                </div>
+                <p-treeTable *ngIf="currentBenefitId == 5" [value]="arrDataSupplement" [class]="'tree-table'"
+                  [(selection)]="selectedNode">
+                  <p-column field="serviceId" header="Service">
+                    <ng-template let-col let-node="rowData" pTemplate="body">
+                      <input [(ngModel)]="node.data.isSelected || node.data.isPartial" value="{{node.data.isSelected}}"
+                        type="checkBox" (change)="setNodeSelectedFirst(node,$event.target.checked,'supplement')"
+                        [disabled]="!serviceLayerSupplementBoolean" class="checkboxDissabled" />
+                      <span>{{node.data.serviceId}}</span>
+                    </ng-template>
+                  </p-column>
+                  <p-column field="procedureId" header="Proc ID"></p-column>
+                  <p-column field="serviceDesc" header="Description"></p-column>
+                </p-treeTable>
+
+              </div>
+              
+              <div *ngIf="currentBenefitId == 6">
+                <div *ngIf="arrDataWellness && (arrDataWellness.length>0)">
+                  <p-treeTable *ngIf="currentBenefitId == 6" [value]="arrDataWellness" [class]="'tree-table'"
+                    [(selection)]="selectedNode">
+                    <p-column field="serviceId" header="Service">
+                      <ng-template let-col let-node="rowData" pTemplate="body">
+                        <input [(ngModel)]="node.data.isSelected || node.data.isPartial"
+                          value="{{node.data.isSelected}}" type="checkBox"
+                          (change)="setNodeSelectedFirst(node,$event.target.checked,'wellness')"
+                          [disabled]="!serviceLayerWellnessBoolean" class="checkboxDissabled" />
+                        <span>{{node.data.serviceId}}</span>
+                      </ng-template>
+                    </p-column>
+                    <p-column field="procedureId" header="Proc ID"></p-column>
+                    <p-column field="serviceDesc" header="Description"></p-column>
+                  </p-treeTable>
+                </div>
+                <div *ngIf="arrDataWellness && (arrDataWellness.length==0)">
+                  <div class="tree-table ng-star-inserted">
+                    <div class="ui-treetable ui-widget">
+                        <div class="ui-treetable-tablewrapper">
+                         
+                  <table class="undefined">
+                    <thead>
+                      <tr class="ui-state-default">
+
+                        <th class="ui-state-default ui-unselectable-text ng-star-inserted"
+                          ng-reflect-ng-class="ui-state-default ui-unselectab">
+                          <span class="ui-column-title ng-star-inserted">Service</span>
+
+                        </th>
+                        <th class="ui-state-default ui-unselectable-text ng-star-inserted"
+                          ng-reflect-ng-class="ui-state-default ui-unselectab">
+                          <span class="ui-column-title ng-star-inserted">Proc ID</span>
+
+                        </th>
+                        <th class="ui-state-default ui-unselectable-text ng-star-inserted"
+                          ng-reflect-ng-class="ui-state-default ui-unselectab">
+                          <span class="ui-column-title ng-star-inserted">Description</span>
+
+                        </th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      <tr>
+                        <td style="border-color: transparent;" class="text-center" colspan="3">No data available in table.</td>
+                      </tr>
+                    </tbody>
+
+                  </table>
+                </div>
+              </div>
+              </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Start History of Combine Max  Modal-->
+<div id="CombineMaximumHistory" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="CoverageMaximumCloseHeader" type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Combine Maximum History</h4>
+      </div>
+
+      <div class="modal-body">
+        <div class="grid-box">
+          <div class="grid-inner">
+            <div class="form-row">
+              <div class="row">
+                <div class="col-md-12 col-xs-12 table-col">
+                  <div class="table-responsive">
+                    <table id="combine_maximum_history" class="table table-bordered table-stripped">
+                    </table>
+                  </div>
+                  <!-- Table Ends -->
+                </div>
+              </div>
+            </div>
+            <!-- Form Row ENds -->
+          </div>
+          <!-- Grid Inner Ends -->
+        </div>
+        <!-- Grid Box Ends -->
+      </div>
+      <!-- Modal Body End-->
+
+      <div class="modal-footer">
+        <button id="CoverageMaximumCloseFooter" type="button" class="btn grey-btn" data-dismiss="modal">Close</button>
+      </div>
+      <!-- Modal Footer Ends-->
+
+    </div>
+  </div>
+
+</div>
+<!--End History of Combine Max Modal-->
+
+<!--Start History of Coverage Max  Modal-->
+<div id="CoverageMaximumHistory" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="CoverageMaximumCloseHeader" type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Coverage Maximum History</h4>
+      </div>
+
+      <div class="modal-body">
+        <div class="grid-box">
+          <div class="grid-inner">
+            <div class="form-row">
+              <div class="row">
+                <div class="col-md-12 col-xs-12 table-col">
+                  <div class="table-responsive">
+                    <table id="coverage_category_history" class="table table-bordered table-stripped">
+                    </table>
+                  </div>
+                  <!-- Table Ends -->
+                </div>
+              </div>
+            </div>
+            <!-- Form Row ENds -->
+          </div>
+          <!-- Grid Inner Ends -->
+        </div>
+        <!-- Grid Box Ends -->
+      </div>
+      <!-- Modal Body End-->
+
+      <div class="modal-footer">
+        <button id="CoverageMaximumCloseFooter" type="button" class="btn grey-btn" data-dismiss="modal">Close</button>
+      </div>
+      <!-- Modal Footer Ends-->
+
+    </div>
+  </div>
+
+</div>
+<!--End History of Coverage Max Modal-->
+
+<div *ngIf="showLoader" class="loader-outer">
+  <div class="cube-wrapper">
+    <div class="cube-folding">
+      <span class="leaf1"></span>
+      <span class="leaf2"></span>
+      <span class="leaf3"></span>
+      <span class="leaf4"></span>
+    </div>
+    <span class="loading" data-name="Loading">Please wait...</span>
+  </div>
+</div>

@@ -1,0 +1,107 @@
+{
+	"Header": {
+        "Title": "SHAM"
+    },
+	"Register": {
+        "Title": "Senregistrement",
+		"Email": "SEmail",
+		"Emailvalidation": "SLe courriel est requis.",
+		"Password": "SMot de passe",
+		"Passwordvalidation": "SMot de passe requis.",
+		"Submitbutton": "SSoumettre"
+    },
+    "Intro": "SBonjour je m'appelle {{name}}, j'ai {{age}} ans.",
+    "Startpage": {
+        "TranslationSections": "SBonjour Monde"
+    },
+    "Aboutpage": {
+        "TranslationSections": "Somos letsboot"
+    },
+	"Footer": {
+        "Copyright": "2018 Todos los derechos reservados con Quick Card Services"
+    },
+    "general-information": {
+        "company-name": "nombre de empresa",
+        "active":"activo",
+        "program":"Programa",
+        "Quikcard":"Quikcard",
+        "employee-pin":"Empleado/pino #",
+        "auto-generate":"Generar automáticamente",
+        "card-id":"Tarjeta de identificacion",
+        "employment-date":"Fecha empleo",
+        "communication-language":"Lenguaje de comunicación",
+        "card-type":"Tipo de tarjeta",
+        "family":"familia"
+    },
+    "card eligibility": {
+        "plan-div-unit":"plan # / div # / unidad # / Nombre de la unidad",
+        "max-type":"Tipo Max",
+        "effective-date":"Fecha efectiva",
+        "expiry-date":"Fecha de caducidad"
+    },
+    "button":{
+        "generate-password":"Generar contraseña",
+        "overrides":"Sobrescribe",
+        "view-plan-details":"Ver detalles del plan",
+        "add-extra-benefits":"Agregar beneficios adicionales",
+        "view-maximums":"Ver los máximos",
+        "add-new":"Agregar nuevo",
+        "print":"Impresión",
+        "terminate":"Terminar",
+        "claim-items":"Artículos de reclamo",
+        "edit":"Editar",
+        "delete":"Borrar"
+    },
+    "card-contact-address":{
+        "line-1":"Línea 1",
+        "line-2":"Línea 2",
+        "postal-code":"Código postal",
+        "city":"Ciudad",
+        "province":"Provincia",
+        "country":"País",
+        "fax-#":"fax #",
+        "phone":"Teléfono",
+        "email-address":"Dirección de correo electrónico",
+        "effective-date":"Fecha efectiva",
+        "expiry-date":"Fecha de caducidad"
+    },
+    "card-holder":{
+        "max-type":"Tipo Max",
+        "$-666":"$ 666",
+        "amount-available":"Cantidad disponible",
+        "$-600":"$ 600",
+        "data-tables":{
+            "last-name":"Apellido",
+            "first-name":"Nombre de pila",
+            "date-of-birth":"Fecha de nacimiento",
+            "role":"Papel",
+            "status":"Estado",
+            "action":"acción"
+        }
+    },
+    "bank-account":{
+        "bank-name":"Nombre del banco",
+        "bank-#":"Banco",	
+        "branch-no.":"Rama No.",
+        "branch-#":"rama #",	
+        "account-no.":"Cuenta No.",
+        "account-#":"cuenta #",	
+        "client-name":"nombre del cliente",
+        "effective-date":"Fecha efectiva",
+        "effective-on":"Efectivo en",	
+        "expiry-date":"Fecha de caducidad",
+        "expired-on":"Vencido en",	
+        "action":"acción"
+    },
+    "comments":{
+        "add-notes":"Agregar notas",
+        "importance":"Importancia",
+        "data-tables":{ 
+            "date":"Fecha",   
+            "user-id":"Identidad de usuario",
+            "notes":"Notas",
+            "importance":"Importancia",
+            "action":"acción"       
+        }
+    }
+}

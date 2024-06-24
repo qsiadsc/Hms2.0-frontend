@@ -1,0 +1,782 @@
+<div class="section-heading">
+  <h2>{{'finance.transactionSearch.transaction' | translate}} <span>{{'finance.transactionSearch.search' | translate}}</span></h2>
+</div>
+  <!-- Section Heading Ends -->
+<div *ngIf="hideSearch"> 
+  <form [formGroup]="transactionSearch" class="ts-main">
+  <div class="grid-box">
+    <div class="grid-heading">
+        <h3>{{'finance.transactionSearch.searchTransaction' | translate}}</h3>
+    </div>
+    <!-- Grid Heading Ends -->
+    <div class="grid-inner">
+      <div class="form-row ts-grid">
+        <div class="row min-ht-sf">
+          <div class="col-md-6 col-xs-12">
+            <label>{{'finance.transactionSearch.disciplines' | translate}}</label>
+            <div class="select-options">
+              <span><label><span class="custom-check"><input id="dentalChk" value="D" formControlName="disciplinesChkDental" type="checkbox" (change)="disciplineChange($event)"> {{'finance.transactionSearch.dental' | translate}} <span></span></span></label></span>
+              <span><label><span class="custom-check"><input id="visionChk" value="V"  formControlName="disciplinesChkVision" class="txt-top" type="checkbox" (change)="disciplineChange($event)"> {{'finance.transactionSearch.vision' | translate}} <span></span></span></label></span>
+              <span><label><span class="custom-check"><input id="healthChk" value="H"  formControlName="disciplinesChkHealth" class="txt-top" type="checkbox" (change)="disciplineChange($event)"> {{'finance.transactionSearch.health' | translate}}  <span></span></span></label></span>
+              <span><label><span class="custom-check"><input id="drugChk" value="DR" formControlName="disciplinesChkDrug" class="txt-top" type="checkbox" (change)="disciplineChange($event)"> {{'finance.transactionSearch.drug' | translate}}  <span></span></span></label></span>
+              <span><label><span class="custom-check"><input id="supplementChk" value="HS" formControlName="disciplinesChkSupplement" class="txt-top" type="checkbox" (change)="disciplineChange($event)"> {{'finance.transactionSearch.supplemental' | translate}}  <span></span></span></label></span>
+              <span><label><span class="custom-check"><input id="wellnessChk" value="W" formControlName="disciplinesChkWellness" class="txt-top" type="checkbox" (change)="disciplineChange($event)"> {{'finance.transactionSearch.wellness' | translate}}<span></span></span></label></span>
+            </div>
+          </div>
+
+          <div class="col-md-2 col-xs-12 min-ht-half">
+            <label>{{'finance.transactionSearch.searchTransOptions' | translate}}</label>
+            <ng2-completer formControlName = "TransName" [inputName]="'TransName'" name="TransName" formControlName="TransName" [datasource]="TransactionSearchRadio" [minSearchLength]="0" [openOnFocus]="true" (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Search Transaction Options'" [textSearching]="'Please wait...'" [inputClass]="'form-control inputSearch'" data-type="predective" (selected)="onTransactionSearchRadioSelected($event)"
+              [inputId]="'tsr'" id="tsr" [clearUnselected]="true"></ng2-completer>
+          </div>
+          <div class="col-md-4 col-xs-12">
+            <div class="row">
+              <div class="col-md-6 col-xs-12">
+                  <label *ngIf ="!transDate">&nbsp;</label>
+                  <label *ngIf ="transDate" >{{'finance.transactionSearch.from' | translate}}</label> 
+                <input  *ngIf="transNotext" type="text" name="transNo" placeholder="{{'finance.transactionSearch.transNumber' | translate}}" formControlName="transNo" id="transNo" class="form-control" />
+                <input *ngIf="transRange" type="text" name="transStartAmt" placeholder="{{'finance.transactionSearch.transStartAmount' | translate}}" formControlName="transStartAmt" id="transStartAmt" class="form-control" />               
+                <div class="calender-field" *ngIf="transDate">
+                  <my-date-picker id="transactionsearch_transStartDate" [options]="myDatePickerOptions" name="transStartDate" formControlName="transStartDate"
+                  (inputFocusBlur)="changeDateFormat($event, 'transStartDate','transactionSearch')" placeholder="{{'common.date-placeholder' | translate}}">
+                  </my-date-picker>
+                  <show-errors [control]="transactionSearch.controls.transStartDate"></show-errors>   
+                </div>   
+                <input *ngIf="cheqNo" type="text" name="chequeRefNo" placeholder="{{'finance.transactionSearch.chequeNumber' | translate}}" formControlName="chequeRefNo" id="chequeRefNo" class="form-control" />
+                <input *ngIf="cheque" type="text" name="chequeRefNoStart" placeholder="{{'finance.transactionSearch.chequeNumberFrom' | translate}}" formControlName="chequeRefNoStart" id="chequeRefNoStart" class="form-control" />
+                <input *ngIf="payment" type="text" name="paymentSumKey" placeholder="{{'finance.transactionSearch.payment' | translate}}" formControlName="paymentSumKey" id="paymentSumKey" class="form-control" />
+              </div>
+              <div class="col-md-6 col-xs-12">    
+                  <label *ngIf ="!transDate">&nbsp;</label>  
+                  <label *ngIf ="transDate" >{{'finance.transactionSearch.to' | translate}}</label>  
+                  <input *ngIf="transRange" type="text"  name="transEndAmt" placeholder="{{'finance.transactionSearch.transEndAmount' | translate}}" formControlName="transEndAmt" id="transEndAmt"class="form-control" />
+                  <div class="calender-field cl-right" *ngIf="transDate">
+                    <my-date-picker id="transactionsearch_transEndDate" [options]="myDatePickerOptions" name="transEndDate" formControlName="transEndDate" (inputFocusBlur)="changeDateFormat($event, 'transEndDate','transactionSearch')" placeholder="{{'common.date-placeholder' | translate}}">
+                    </my-date-picker>
+                    <show-errors [control]="transactionSearch.controls.transEndDate"></show-errors>   
+                  </div>
+                  <input *ngIf="cheque" type="text" name="chequeRefNoEnd" placeholder="{{'finance.transactionSearch.chequeNumberTo' | translate}}" formControlName="chequeRefNoEnd" id="chequeRefNoEnd" class="form-control" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>        
+      <!-- Form Row ENds -->
+    </div>
+    <!-- Grid Inner Ends -->
+  </div>
+  <!-- Grid Box Ends -->
+  <div class="form-row">
+    <div class="grid-box">
+      <div class="grid-heading">
+        <h3>{{'finance.transactionSearch.general' | translate}}</h3>
+      </div>
+      <!-- Grid Heading Ends -->
+      <div class="grid-inner">
+        <div class="row min-ht-sf">
+          <div class="col-md-3 col-xs-12">
+            <label>{{'finance.transactionSearch.generationDate' | translate}}</label>
+            <div class="calender-field">
+              <my-date-picker id="transactionsearch_generationDate" [options]="myDatePickerOptions" name="generationDate" formControlName="generationDate" (inputFocusBlur)="changeDateFormat($event, 'generationDate','transactionSearch')" placeholder="{{'common.date-placeholder' | translate}}">
+              </my-date-picker>
+              <show-errors [control]="transactionSearch.controls.generationDate"></show-errors>                
+            </div>            
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{'finance.transactionSearch.issueDate' | translate}}</label>
+            <div class="calender-field">
+              <my-date-picker id="transactionsearch_issueDate" [options]="myDatePickerOptions" name="issueDate" formControlName="issueDate"
+              (inputFocusBlur)="changeDateFormat($event, 'issueDate','transactionSearch')" placeholder="{{'common.date-placeholder' | translate}}">
+              </my-date-picker>
+              <show-errors [control]="transactionSearch.controls.issueDate"></show-errors>   
+            </div>              
+          </div>
+
+        <div class="col-md-3 col-xs-12">
+            <label>EFT Due Date</label>
+            <div class="calender-field">
+              <my-date-picker id="transactionsearch_eftDate" [options]="myDatePickerOptions" name="eftDueDate" formControlName="eftDueDate"
+              (inputFocusBlur)="changeDateFormat($event, 'eftDueDate','transactionSearch')" placeholder="dd/mmm/yyyy"
+              >
+              </my-date-picker>
+              <show-errors [control]="transactionSearch.controls.eftDueDate"></show-errors>   
+            </div>              
+          </div>
+
+          <div class="col-md-3 col-xs-12">
+              <label>Clear Date</label>
+              <div class="calender-field">
+                <my-date-picker id="transactionsearch_clearDate" [options]="myDatePickerOptions" name="clearDate" formControlName="clearDate"
+                (inputFocusBlur)="changeDateFormat($event, 'clearDate','transactionSearch')" placeholder="dd/mmm/yyyy"
+                >
+                </my-date-picker>
+                <show-errors [control]="transactionSearch.controls.clearDate"></show-errors>   
+              </div>              
+            </div>
+
+        <div class="col-md-3 col-xs-12">
+          <label>{{'finance.transactionSearch.businessType' | translate}}<span *ngIf= "transRange || transDate" class="required">*</span></label>
+          <ng2-completer
+          #finBusinessType
+          formControlName="businessType"
+          [datasource]="businessTypeData"
+          [minSearchLength]="0"
+          [openOnFocus]="true"
+          (opened)="onOpened($event)"
+          [fillHighlighted]="false"
+          [placeholder]="'Search Business Type'"
+          [textSearching]="'Please wait...'"
+          [inputClass]="'form-control'"
+          [clearUnselected]="true">
+          </ng2-completer>
+          <show-errors [control]="transactionSearch.controls.businessType"></show-errors>   
+        </div>
+
+        <div class="col-md-3 col-xs-12">
+          <label>{{'finance.transactionSearch.payee' | translate}}</label>
+          <ng2-completer
+          #finPayee
+          formControlName="payee"
+          [datasource]="payeeData"
+          [minSearchLength]="0"
+          [openOnFocus]="true"
+          (opened)="onOpened($event)"
+          [fillHighlighted]="false"
+          [placeholder]="'Search Payee'"
+          [textSearching]="'Please wait...'"
+          [inputClass]="'form-control'"
+          (selected)="onSelectedPayee($event)"
+          (blur)="onBlurPayeeDropdown()"
+          [clearUnselected]="true">
+          </ng2-completer>
+          <show-errors [control]="transactionSearch.controls.payee"></show-errors>
+        </div>
+
+        <div class="col-md-3 col-xs-12 min-ht-half"  *ngIf="providerNo">
+          <label>{{'finance.transactionSearch.providerNumber' | translate}}</label>              
+          <input  type="text" formControlName="providerNo" class="form-control" />
+        </div>
+
+        <div class="col-md-3 col-xs-12 min-ht-half" *ngIf="cardholderNo" >
+          <label>{{'finance.transactionSearch.cardholderNumber' | translate}}</label>              
+          <input  formControlName="cardholderNo" type="text" class="form-control" />
+        </div>
+
+        <div class="col-md-3 col-xs-12">
+          <label>{{'finance.transactionSearch.transStatus' | translate}}</label>
+          <ng2-completer
+          #finTransactionStatus
+          formControlName="transactionStatus"
+          [datasource]="transactionStatusData"
+          [minSearchLength]="0"
+          [openOnFocus]="true"
+          (opened)="onOpened($event)"
+          [fillHighlighted]="false"
+          [placeholder]="'Search Transaction Status'"
+          [textSearching]="'Please wait...'"
+          [inputClass]="'form-control'"
+          [clearUnselected]="true">
+          </ng2-completer>
+          <show-errors [control]="transactionSearch.controls.transactionStatus"></show-errors>
+        </div>
+
+        <div class="col-md-3 col-xs-12">
+          <label>{{'finance.transactionSearch.transType' |translate}}</label>
+          <ng2-completer
+          #finTransactionType
+          formControlName="transactionType"
+          [datasource]="transactionTypeData"
+          [minSearchLength]="0"
+          [openOnFocus]="true"
+          (opened)="onOpened($event)"
+          [fillHighlighted]="false"
+          [placeholder]="'Search Transaction Type'"
+          [textSearching]="'Please wait...'"
+          [inputClass]="'form-control'"
+          [clearUnselected]="true">
+          </ng2-completer>
+          <show-errors [control]="transactionSearch.controls.transactionType"></show-errors>
+        </div>
+
+        <div class="col-md-4 col-xs-12">
+          <label>&nbsp;</label>
+          <button id="transactionSearchForm" class="btn green-btn" (click)="searchTransaction(transactionSearch)">{{'button.search' | translate}}</button>
+          <button id="transactionSearchReset" class="grey-btn btn" data-toggle="modal" data-target="" (click)="clearSearchTransaction()">{{'button.reset' | translate}}</button>
+        <button class="btn green-btn generatepaymentPopup" data-toggle="modal" data-target="#generatepaymentPopup" (click)='patchPlanType()'>{{'button.generatePaymentRun' | translate}}</button>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+  </form>
+</div>
+
+<div [hidden]="!showSearchTable">
+  <div class="grid-box">
+    <div class="grid-heading">
+      <h3>{{'finance.transactionSearch.transactionList' | translate}}</h3>
+    </div>
+    <!-- Grid Heading Ends -->
+    <div class="grid-inner">
+      <form (submit)="searchTransactionList('transactionSearchList')">
+        <div class="form-row text-right search-top">
+            <button id="transactionSearchBtn" title="{{'common.search' | translate}}" class="btn green-btn searchreset" type="submit">
+              <span class="glyphicon glyphicon-search"></span>
+            </button>
+            <button id="resetTransactionSearchBtn" title="{{'common.reset' | translate}}" class="btn grey-btn searchreset" (click)="searchTransaction(transactionSearch)">
+              <span class="glyphicon glyphicon-repeat"></span>
+            </button>
+        </div>
+        <div class="form-row">
+          <div class="row">
+            <div class="col-md-12 col-xs-12 table-col">
+              <div class="table-responsive">
+                  <table id="transactionSearchList" class="table table-bordered table-stripped">
+                  <tfoot>
+                    <tr>
+                      <td width="7%">
+                        <ng2-completer
+                          name="disciplineList"
+                          [inputName]="'disciplineList'"
+                          [datasource]="discilipinData"
+                          [minSearchLength]="0"
+                          [openOnFocus]="true"
+                          (opened)="onOpened($event)"
+                          [fillHighlighted]="false"
+                          [placeholder]="'Search Discipline'"
+                          [textSearching]="'Please wait...'"
+                          [inputClass]="'form-control inputSearch'"
+                          data-type="predective"
+                          id="disciplines"
+                          [clearUnselected]="true"
+                          (selected)="onSelectedDiscipline($event)"
+                          [(ngModel)]="searchDiscilipineList">
+                        </ng2-completer>
+                      </td>
+                      <td width="7%"><input id="transactionNum"  [(ngModel)]="transNo" name="paymentKey" class="fm-txt form-control tFootInput inputSearch grid_right" type="text" placeholder="{{'finance.transactionSearch.transNo' | translate}}" ></td>
+                      <td width="7%" class="alignDpRight">
+                        <div class="calender-field">
+                          <my-date-picker id="transactionFilterIssueDate" class="inputSearch" name="issueDate" data-type="date" [options]="myDatePickerOptions"
+                          [selDate]="dateNameArray['issueDate']" (inputFocusBlur)="changeDateFormat1($event, 'issueDate')"
+                          placeholder="{{'common.date-placeholder' | translate}}">
+                          </my-date-picker>
+                        </div>     
+                      </td>
+                      <td width="7%"><input id="chequeRef" name="chequeRefNo" [(ngModel)]="chequeRefNo" class="fm-txt form-control tFootInput inputSearch grid_right" type="text" placeholder="{{'finance.transactionSearch.chequeRefNo' | translate}}" ></td>
+                      <td width="7%"><input id="trans" name="tranStatCd" [(ngModel)]="transStatusCd" class="fm-txt form-control tFootInput inputSearch grid_right" type="text" placeholder="{{'finance.transactionSearch.trans' | translate}}" ></td>
+                      <td width="7%"><input id="debitAmt" name="debitAmount" [(ngModel)]="debitAmount" class="fm-txt form-control tFootInput inputSearch grid_right" type="text" placeholder="{{'finance.transactionSearch.debitAmount' | translate}}" ></td>
+                      <td width="7%"><input id="adminFee" name="adminFee" class="fm-txt form-control tFootInput inputSearch grid_right" type="text" placeholder="{{'finance.transactionSearch.adminFee' | translate}}" [(ngModel)]="adminFee" ></td>
+                      <td width="10%" class="alignDpRight">
+                        <div class="calender-field">
+                          <my-date-picker id="transactionFilterGenerationDate" class="inputSearch" name="generatedDate" data-type="date" [options]="myDatePickerOptions"
+                          [selDate]="dateNameArray['generatedDate']" (inputFocusBlur)="changeDateFormat1($event, 'generatedDate')"
+                          placeholder="{{'common.date-placeholder' | translate}}" >
+                          </my-date-picker>
+                        </div>     
+                      </td>
+                      <td width="7%">
+                        <ng2-completer
+                          name="stransStatus"
+                          [(ngModel)]="stransStatus"
+                          [inputName]="'stransStatus'"
+                          [datasource]="transactionStatusDataLower"
+                          [minSearchLength]="0"
+                          [openOnFocus]="true"
+                          (opened)="onOpened($event)"
+                          [fillHighlighted]="false"
+                          [placeholder]="'Search Transaction Status'"
+                          [textSearching]="'Please wait...'"
+                          [inputClass]="'form-control inputSearch grid_right'"
+                          data-type="predective"
+                          id="finTransactionStatusFooter"
+                          [clearUnselected]="true"
+                          >
+                        </ng2-completer>
+                      </td>
+                      <td width="7%"><input id="clearSeq" name="clearSeq" class="fm-txt form-control tFootInput inputSearch grid_right" type="text" placeholder="{{'finance.transactionSearch.clearSeq' | translate}}" ></td>
+                      <td width="7%" class="alignDpRight">
+                        <div class="calender-field">
+                          <my-date-picker id="transactionFilterCancelledDate" class="inputSearch" name="cancelDate" data-type="date" [options]="myDatePickerOptions"
+                          [selDate]="dateNameArray['cancelDate']" (inputFocusBlur)="changeDateFormat1($event, 'cancelDate')"
+                          placeholder="{{'common.date-placeholder' | translate}}" >
+                          </my-date-picker>
+                        </div>     
+                      </td>
+                      <td width="7%">
+                        <ng2-completer
+                          name="stransType"
+                          [(ngModel)]="stransType"
+                          [inputName]="'stransType'"
+                          class="predictiveSearchLower"
+                          [datasource]="transactionTypeDataLower"
+                          [minSearchLength]="0"
+                          [openOnFocus]="true"
+                          (opened)="onOpened($event)"
+                          [fillHighlighted]="false"
+                          [placeholder]="'Search Transaction Type'"
+                          [textSearching]="'Please wait...'"
+                          [inputClass]="'form-control inputSearch grid_right'"
+                          data-type="predective"
+                          id="finTransactionTypeFooter"
+                          [clearUnselected]="true"
+                          >
+                        </ng2-completer>
+                      </td>
+                      <td width="7%">
+                        <ng2-completer
+                          name="sbusType"
+                          [(ngModel)]="sbusType"
+                          [inputName]="'sbusType'"
+                          class="predictiveSearchLower"
+                          [datasource]="businessTypeData"
+                          [minSearchLength]="0"
+                          [openOnFocus]="true"
+                          (opened)="onOpened($event)"
+                          [fillHighlighted]="false"
+                          [placeholder]="'Search Business Type'"
+                          [textSearching]="'Please wait...'"
+                          [inputClass]="'form-control inputSearch grid_right'"
+                          data-type="predective"
+                          id="finBusinessTypeFooter"
+                          [clearUnselected]="true"
+                          >
+                        </ng2-completer>
+                      </td>
+                      <td width="7%" class="alignDpRight">
+                        <div class="calender-field">
+                          <my-date-picker id="transactionFilterProcessDate" class="inputSearch" name="processDate" data-type="date" [options]="myDatePickerOptions"
+                          [selDate]="dateNameArray['processDate']" (inputFocusBlur)="changeDateFormat1($event, 'processDate')"
+                          placeholder="{{'common.date-placeholder' | translate}}" >
+                          </my-date-picker>
+                        </div>
+                      </td>
+                      <td width="8%">
+                        <ng2-completer
+                          name="payee"
+                          [(ngModel)]="payee"
+                          class="predictiveSearchLower"
+                          [inputName]="'payee'"
+                          [datasource]="payeeDataLower"
+                          [minSearchLength]="0"
+                          [openOnFocus]="true"
+                          (opened)="onOpened($event)"
+                          [fillHighlighted]="false"
+                          [placeholder]="'Search Payee'"
+                          [textSearching]="'Please wait...'"
+                          [inputClass]="'form-control inputSearch grid_right'"
+                          data-type="predective"
+                          id="finPayeeFooter"
+                          [clearUnselected]="true"
+                          >
+                        </ng2-completer>
+                        <input name="providerCardId" class="fm-txt form-control tFootInput inputSearch grid_right" type="hidden" >
+                      </td>
+                      <!-- Log #1137: Total Paid and Net Payable Amount fields added(05-Oct-2021) -->
+                      <td width="8%">
+                        <input id="totalPaid" name="transAmount" class="fm-txt form-control tFootInput inputSearch grid_right"
+                          type="text" placeholder="{{'finance.paymentSearch.totalPaid' | translate}}" [(ngModel)]="totalPaid">
+                      </td>
+                      <td width="9%">
+                        <input id="netPayAmt" name="netPayableAmount" class="fm-txt form-control tFootInput inputSearch grid_right"
+                          type="text" placeholder="{{'finance.paymentSearch.netPayableAmount' | translate}}" [(ngModel)]="netPayableAmount">
+                      </td>
+                      <td>&nbsp;</td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+              <!-- Table Ends -->
+            </div>
+          </div>
+        </div>
+      </form>
+      <!-- Form Row ENds --> 
+      <div class="form-row text-center">
+        <div class="row">
+          <div class="col-md-12 col-xs-12">
+            <div class="dropdown pull-right">
+              <button id="transactionExcelBtn" class="btn green-btn dropdown-toggle hideGPRunButton" type="button" data-toggle="dropdown">Export
+                <span class="caret"></span></button>
+              <ul class="dropdown-menu">
+                <li><a href="javascript:void(0)" (click)="exportTransactionSearchList()">Excel</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- Grid Inner Ends -->
+  </div>
+    <!-- Grid Box Ends -->
+
+  <div class="form-row text-center">
+    <div class="row">
+      <div class="col-md-12 col-xs-12">
+        <button  class="btn green-btn generatepaymentPopup hideGPRunButton" data-toggle="modal" data-target="#stalecheckPopup" (click)='staleChequePopup()'>Stale Cheque</button>
+        <button [attr.disabled]="isDisable == false ? '' : null" class="btn green-btn generatepaymentPopup hideGPRunButton" (click)='cancelCheque()'>Cancel Cheque</button>
+        <button class="btn green-btn generatepaymentPopup hideGPRunButton" data-toggle="modal" data-target="#cancelAndReissuePopup">Cancel and Reissue Cheque</button>
+        <button [attr.disabled]="isDisable == false ? '' : null" class="btn green-btn generatepaymentPopup hideGPRunButton" (click)='stopAndReissueCheque()'>Stop and Reissue Cheque</button>
+        <button class="btn green-btn generatepaymentPopup hideGPRunButton" data-toggle="modal" data-target="#cashReceiptPopup" (click)="cashReceiptPopup()">Cash Receipt</button>
+      </div>
+    </div>
+  </div>
+    <!-- Form Row ENds -->  
+  </div>
+
+  <div id="generatepaymentPopup" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button id="closeGeneratePaymentForm" type="button" class="close" data-dismiss="modal" (click)="resetGeneratePaymentForm()">&times;</button>
+          <h4 class="modal-title">{{'finance.transactionSearch.paymentRunGenPayment' | translate}}</h4>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="paymentGenerateForm">
+            <div class="grid-box">
+              <div class="grid-heading">
+                <h3>{{'finance.paymentGenerate.generatePayment' | translate}}</h3>
+              </div>
+              <!-- Grid Heading Ends -->                  
+              <div class="grid-inner">                
+                <div class="form-row">
+                  <div class="row min-ht-sf">                  
+                    <div class="col-md-12 col-xs-12">
+                      <label>&nbsp;</label>
+                      <div class="select-options">
+                        <span><label><span class="custom-check"><input id="payGenerateDental" value="D" type="checkbox" name="dental" formControlName="dental" (change)="disciplinePopupValueChange($event,'dental')"> {{'finance.paymentGenerate.dental' | translate}}<span></span></span></label></span>
+                        <span  *ngIf="!hideFields"><label><span class="custom-check"><input id="payGenerateVision" value="V" class="txt-top" type="checkbox" name="vision" formControlName="vision" (change)="disciplinePopupValueChange($event,'vision')">{{'finance.paymentGenerate.vision' | translate}} <span></span></span></label></span>                  
+                        <span *ngIf="!hideFields"><label><span class="custom-check"><input id="payGenerateHealth" value="H" class="txt-top" type="checkbox" name="health" formControlName="health" (change)="disciplinePopupValueChange($event,'health')"> {{'finance.paymentGenerate.health' | translate}} <span></span></span></label></span>                  
+                        <span *ngIf="!hideFields"><label><span class="custom-check"><input  id="payGenerateDrug" value="DR" class="txt-top" type="checkbox" disabled="disabled"  [checked] ="true"  name="drug" formControlName="drug" (change)="disciplinePopupValueChange($event,'drug')">{{'finance.paymentGenerate.drug' | translate}}  <span></span></span></label></span>                  
+                        <span *ngIf="!hideFields"><label><span class="custom-check"><input id="payGenerateSupplement" value="HS" class="txt-top" type="checkbox" name="supplement" formControlName="supplement" (change)="disciplinePopupValueChange($event,'supplement')"> {{'finance.paymentGenerate.supplement' | translate}} <span></span></span></label></span>
+                      </div>
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                      <label>{{'finance.paymentGenerate.planType' | translate}}</label>
+                      <select id="payGeneratePlanType" class="form-control" name="planType" formControlName="planType" (change)="onChangePlanType($event.target.value)">
+                        <option value="Q">{{'finance.transactionSearch.quikcard' | translate}}</option>
+                        <option value="S">{{'finance.transactionSearch.abGov' | translate}}</option>
+                        <option value="F">{{'finance.transactionSearch.fscdCp' | translate}}</option>
+                        <option value="O">{{'finance.transactionSearch.others' | translate}}</option>
+                      </select>
+                      <show-errors [control]="paymentGenerateForm.controls.planType"></show-errors>
+                    </div>                  
+                    <div class="col-md-3 col-xs-12">
+                      <label>{{'finance.paymentGenerate.eftDueDate' | translate}}<span class="required">*</span></label>
+                      <div class="calender-field">
+                        <my-date-picker id="payGenerateEffectiveDate" [options]="myDatePickerOptions" name="effectiveOn" formControlName="effectiveOn" (inputFocusBlur)="changeDateFormat($event, 'effectiveOn','paymentGenerateForm', true)"
+                          placeholder="{{'common.date-placeholder' | translate}}">
+                        </my-date-picker>
+                        <show-errors [control]="paymentGenerateForm.controls.effectiveOn"></show-errors>
+                      </div>
+                    </div>
+                    <div *ngIf="!hideFields" class="col-md-3 col-xs-12">
+                      <label>{{'finance.paymentGenerate.confirmationNo' | translate}}</label>
+                      <input id="payGenerateConfirmation" type="text" name="confirmationNo" formControlName="confirmationNo" class="form-control" placeholder="{{'finance.paymentGenerate.confirmationNo' | translate}}" />
+                      <show-errors [control]="paymentGenerateForm.controls.confirmationNo"></show-errors>
+                    </div>  
+                    <div *ngIf="!hideFields" class="col-md-3 col-xs-12">
+                      <label>{{'finance.transactionSearch.companyNo' | translate}}</label>
+                      <input id="payGenerateCompany" type="text" name="companyNo" formControlName="companyNo" class="form-control" placeholder="{{'finance.transactionSearch.companyNo' | translate}}" />
+                      <show-errors [control]="paymentGenerateForm.controls.companyNo"></show-errors>
+                    </div>                              
+                  </div>
+                </div>
+                <!-- Form Row ENds -->
+              </div>
+              <!-- Grid Inner Ends -->
+            </div>
+            <!-- Grid Box Ends -->
+
+            <div class="grid-box" *ngIf="!hideFields">
+              <div class="grid-heading">
+                <h3>{{'finance.transactionSearch.optionalMessage' | translate}}</h3>
+              </div>
+              <!-- Grid Heading Ends -->                  
+              <div class="grid-inner">
+                <div class="form-row">
+                  <div class="row">
+                    <div class="col-md-6 col-xs-12">
+                      <label>{{'finance.paymentGenerate.cardholder' | translate}}</label>
+                      <textarea id="payGenerateCardholder" type="text" name="cardholder" formControlName="cardholder" class="form-control" placeholder="{{'finance.paymentGenerate.cardholder' | translate}}" ></textarea>
+                      <show-errors [control]="paymentGenerateForm.controls.cardholder"></show-errors>
+                    </div>  
+                    <div class="col-md-6 col-xs-12">
+                      <label>{{'finance.paymentGenerate.provider' | translate}}</label>
+                      <textarea id="payGenerateProvider" type="text" name="provider" formControlName="provider" class="form-control" placeholder="{{'finance.paymentGenerate.provider' | translate}}" ></textarea>
+                      <show-errors [control]="paymentGenerateForm.controls.provider"></show-errors>
+                    </div>  
+                  </div> 
+                </div>
+              </div>
+              <!-- Grid Inner Ends -->
+            </div>
+            <!-- Grid Box Ends -->
+          </form>
+                
+          <div class="grid-box">
+            <div class="grid-heading">
+              <h3>{{'finance.paymentGenerate.processingSteps' | translate}}</h3>
+            </div>
+            <!-- Grid Heading Ends -->
+            <div class="grid-inner">  
+              <div class="form-row">
+                <div class="row">
+                  <div class="col-md-12 col-xs-12 table-col">
+                    <div class="table-responsive">
+                      <table id="processingStepList" class="table table-bordered table-stripped">
+                        <thead>
+                          <tr>
+                              <th>{{'finance.transactionSearch.done' | translate}}</th>
+                              <th class="grid_right">{{'finance.transactionSearch.steps' | translate}}</th>
+                              <th class="grid_right">{{'finance.transactionSearch.processing' | translate}}</th>
+                              <th class="grid_right">{{'finance.transactionSearch.result' | translate}}</th>
+                          </tr>                                    
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let field of fieldArray; let i = index">
+                              <td><input type="checkbox" disabled [checked]="(field.done == 0)?false:true" value="field.done"></td>
+                              <td class="grid_right">{{field.step}}</td>
+                              <td class="grid_right">{{field.processing}}</td>
+                              <td class="grid_right"><div [innerHTML]="field.result">
+                                </div>                                
+                              </td>
+                            </tr>
+                        </tbody>      
+                      </table>
+                    </div>
+                    <!-- Table Ends -->
+                  </div>
+                </div>
+              </div>
+              <!-- Form Row ENds -->
+            </div>
+            <!-- Grid Inner Ends -->
+          </div>
+          <!-- Grid Box Ends -->
+        </div>
+        <div class="modal-footer">
+          <button id="payGeneratebtn" [disabled]="generatePaymentButton" class="btn green-btn"  (click)="submitPaymentGenerateForm(paymentGenerateForm)">{{'button.generatePayment' | translate}}</button>
+          <button id="payGenerateClose" class="btn grey-btn" (click)="resetGeneratePaymentForm()">{{'button.close' | translate}}</button>
+          <div [hidden] = "!hiddenPaymentSumPopupBtn">
+            <button class="grey-btn btn" data-toggle="modal" data-target="#paymentSumPopup" id="paymentSumKeyButton" >{{'button.payment' | translate}}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="paymentSumPopup" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button id="closePaymentSumForm" type="button" class="close" data-dismiss="modal" (click)="resetPaymentSumForm()">&times;</button>
+          <h4 class="modal-title">{{'finance.transactionSearch.paymentSum' | translate}}</h4>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="paymentSumForm">
+            <div class="grid-box">
+              <div class="grid-heading">
+                <h3>{{'finance.transactionSearch.paymentSum' | translate}}</h3>
+              </div>
+              <!-- Grid Heading Ends -->                  
+              <div class="grid-inner">                
+                <div class="form-row">
+                  <div class="row min-ht-sf">        
+                    <div class="col-md-3 col-xs-12">
+                      <label>{{'finance.transactionSearch.paymentSumNumber' | translate}}</label>
+                      <input autofocus id="payGenerateCompany" type="text" name="paymentSumNo" formControlName="paymentSumNo" class="form-control" placeholder="{{'finance.transactionSearch.paymentSumNumber' | translate}}" />
+                      <show-errors [control]="paymentSumForm.controls.paymentSumNo"></show-errors>
+                    </div>                              
+                  </div>
+                </div>                   
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button id="paymentSumbtn" class="btn green-btn"  (click)="submitPaymentSumForm(paymentSumForm)">{{'button.ok' | translate}}</button>
+          <button id="paymentSumClose" class="btn grey-btn" (click)="resetPaymentSumForm()">{{'button.close' | translate}}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="stalecheckPopup" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button id="closeStaleChequeForm" type="button" class="close" data-dismiss="modal" (click)="resetStaleChequeForm()">&times;</button>
+          <h4 class="modal-title">Stale Cheque</h4>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="staleChequeForm">
+            <div class="grid-box">
+              <div class="grid-heading">
+                <h3>Stale Cheque</h3>
+              </div>
+              <!-- Grid Heading Ends -->                  
+              <div class="grid-inner">                
+                <div class="form-row">
+                  <div class="row min-ht-sf">                                                                
+                    <div class="col-md-3 col-xs-12">
+                      <label>Date as of<span class="required">*</span></label>
+                      <div class="calender-field">
+                        <my-date-picker id="dateAsOf" [options]="myDatePickerOptions" name="dateAsOf" formControlName="dateAsOf" (inputFocusBlur)="changeDateFormat($event, 'dateAsOf','staleChequeForm', true)"
+                          placeholder="{{'common.date-placeholder' | translate}}">
+                        </my-date-picker>
+                        <show-errors [control]="staleChequeForm.controls.dateAsOf"></show-errors>
+                      </div>
+                    </div>   
+                    <div class="col-md-3 col-xs-12">
+                    <label>{{ 'company.company-form.business-type' | translate }}<span class="required">*</span></label>                   
+                    <ng2-completer 
+                      formControlName="businessTypeKey" 
+                      [datasource]="businessTypeData"
+                      [minSearchLength]="0" 
+                      [openOnFocus]="true" 
+                      (opened)="onOpened($event)" 
+                      [fillHighlighted]="false"
+                      [placeholder]="'Search Business Type'" 
+                      [textSearching]="'Please wait...'" 
+                      [inputClass]="'form-control'"
+                      (selected)="onBusinessTypeSelected($event)">
+                    </ng2-completer> 
+                    <show-errors [control]="staleChequeForm.controls.businessTypeKey"></show-errors>
+                    </div>                    
+                  </div>
+                </div>
+                <!-- Form Row ENds -->
+              </div>
+              <!-- Grid Inner Ends -->
+            </div>
+            <!-- Grid Box Ends -->
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button id="staleChequeGeneratebtn" class="btn green-btn"  (click)="generateStaleCheque(staleChequeForm)">Generate</button>
+          <button id="staleChequeGenerateClose" class="btn grey-btn"  (click)="resetGenerateStaleChequeForm()">{{'button.close' | translate}}</button>           
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="cancelAndReissuePopup" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button id="closeCancelAndReissueForm" type="button" class="close" data-dismiss="modal" (click)="resetCancelAndReissueForm()">&times;</button>
+          <h4 class="modal-title">Cancel And Reissue</h4>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="cancelAndReissueForm">
+            <div class="grid-box">
+              <div class="grid-heading">
+                <h3>Cancel And Reissue</h3>
+              </div>
+              <!-- Grid Heading Ends -->                  
+              <div class="grid-inner">                
+                <div class="form-row">
+                  <div class="row min-ht-sf">                                                                
+                    <div class="col-md-3 col-xs-12">
+                      <label>Payment Key<span class="required">*</span></label>
+                      <div class="calender-field">
+                        <input class="fm-txt form-control tFootInput inputSearch" type="text" name="CancelAndReissuePaymentKey" formControlName="CancelAndReissuePaymentKey" >                     
+                        <show-errors [control]="cancelAndReissueForm.controls.CancelAndReissuePaymentKey"></show-errors>
+                      </div>
+                    </div>                  
+                  </div>
+                </div>
+                <!-- Form Row ENds -->
+              </div>
+              <!-- Grid Inner Ends -->
+            </div>
+            <!-- Grid Box Ends -->
+          </form>
+        </div>
+        <div class="modal-footer">
+            <button id="cancelAndReissuebtn" class="btn green-btn"  (click)="submitCancelAndReissueForm(cancelAndReissueForm)">{{'button.ok' | translate}}</button>
+            <button id="cancelAndReissueClose" class="btn grey-btn" (click)="resetCancelAndReissueForm()">{{'button.close' | translate}}</button>
+          </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="cashReceiptPopup" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button id="closeCashReceiptForm" type="button" class="close" data-dismiss="modal" (click)="resetCashReceiptForm()">&times;</button>
+          <h4 class="modal-title">Cash Receipt</h4>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="cashReceiptForm">
+            <div class="grid-box">
+              <div class="grid-heading">
+                <h3>Cash Receipt</h3>
+              </div>
+              <!-- Grid Heading Ends -->                  
+              <div class="grid-inner">                
+                <div class="form-row">
+                  <div class="row min-ht-sf">    
+                      <div class="col-md-6 col-xs-12">
+                        <label>Disciplines</label>
+                        <div class="select-options">
+                          <span>
+                            <label>
+                              <input type="radio" name="discipline" formControlName="discipline" value="D" (change)="cashReceiptDisciplineChange($event)">Dental</label>
+                          </span>
+                          <span>
+                            <label>
+                              <input type="radio" name="discipline" formControlName="discipline" value="V" (change)="cashReceiptDisciplineChange($event)">Vision</label>
+                          </span>
+                          <span>
+                            <label>
+                              <input type="radio" name="discipline" formControlName="discipline" value="H" (change)="cashReceiptDisciplineChange($event)">Health</label>
+                          </span>
+                          <span>
+                            <label>
+                              <input type="radio" name="discipline" formControlName="discipline" value="HS" (change)="cashReceiptDisciplineChange($event)">HSA</label>
+                          </span>
+                          <span>
+                            <label>
+                              <input type="radio" name="discipline" formControlName="discipline" value="DR" (change)="cashReceiptDisciplineChange($event)">Drug</label>
+                          </span>
+                        </div>
+                      </div>                                                             
+                    <div class="col-md-4 col-xs-12">
+                      <label>Please enter a Confirmation ID of reversed claims<span class="required">*</span></label>
+                        <input class="fm-txt form-control tFootInput inputSearch" type="text" name="confirmId" formControlName="confirmId" >
+                        <show-errors [control]="cashReceiptForm.controls.confirmId"></show-errors>
+                    </div>                  
+                  </div>
+                </div>
+                <!-- Form Row ENds -->
+              </div>
+              <!-- Grid Inner Ends -->
+            </div>
+            <!-- Grid Box Ends -->
+          </form>
+        </div>
+        <div class="modal-footer">
+            <button id="cashReceiptbtn" class="btn green-btn"  (click)="submitCashReceiptForm()">{{'button.ok' | translate}}</button>
+            <button id="cashReceiptClose" class="btn grey-btn" (click)="resetCashReceiptForm()">{{'button.close' | translate}}</button>
+          </div>
+      </div>
+    </div>
+  </div>
+
+<div [hidden]="!showLoader" class="loader-outer">
+  <div class="cube-wrapper">
+    <div class="cube-folding">
+      <span class="leaf1"></span>
+      <span class="leaf2"></span>
+      <span class="leaf3"></span>
+      <span class="leaf4"></span>
+    </div>
+    <span class="loading" data-name="Loading">{{'company.plan.benefits.pleaseWait'|translate}}</span>
+  </div>
+</div>

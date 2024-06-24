@@ -1,0 +1,166 @@
+<div class="grid-box">
+  <div class="grid-heading">
+    <h3>{{'common.generalinfo'|translate}}</h3>
+  </div>
+  <!-- Grid Heading Ends -->
+  <div class="grid-inner">
+    <div class="form-row">
+      <div class="row min-ht-sf">
+        <div class="col-md-2 col-xs-12">
+          <label>{{'common.last-name'|translate}}</label>
+          <input type="text" class="fm-txt form-control" disabled value="{{arrgeneralInfo.lastName}}" />
+        </div>
+        
+        <div class="col-md-2 col-xs-12">
+          <label>{{'common.first-name'|translate}}</label>
+          <input type="text" class="fm-txt form-control"  disabled value="{{arrgeneralInfo.firstName}}"/>
+        </div>
+        
+        <div class="col-md-3 col-xs-12">
+          <label>{{'claims.claims-edit.service-provider.service-provider.general-information.participation-date'|translate}}</label>
+          <div class="calender-field">
+            <input type="text" class="fm-txt form-control" disabled value="{{arrgeneralInfo.participationDate|dateFormate}}">
+          </div>
+          <!-- Calendar Field Ends -->
+        </div>
+        
+        <div class="col-md-2 col-xs-12">
+          <label>&nbsp;</label>
+          <label><input type="checkbox"  disabled [checked]="arrgeneralInfo.govtType == 'T'"  >{{'common.quikcard'|translate}}</label>
+        </div>
+        
+        <div class="col-md-3 col-xs-12">
+          <label>{{'common.email-address'|translate}}</label>
+          <input type="text" class="fm-txt form-control" disabled value="{{arrgeneralInfo.email}}" />
+        </div>
+        <div class="col-md-3 col-xs-12">
+          <label>{{'company.plan.discipline'|translate}}</label>
+          <input type="text" class="fm-txt form-control" disabled value="{{arrgeneralInfo.disciplineName}}" />
+        </div>
+        <div class="col-md-3 col-xs-12">
+          <label>{{'claims.claims-edit.service-provider.service-provider.billing-address.language'|translate}}</label>
+          <input type="text" class="fm-txt form-control" disabled value="{{arrgeneralInfo.languageName}}" />
+        </div>
+        <div class="col-md-3 col-xs-12">
+          <label>{{'serviceProvider.general-information.id'|translate}}</label>
+          <input type="text" class="fm-txt form-control"  disabled value="{{arrgeneralInfo.id}}" />
+        </div>
+      </div>
+    </div>
+    <!-- Form Row ENds -->
+  </div>
+  <!-- Grid Inner Ends -->
+
+</div>
+<div class="form-row">
+  <div class="grid-box">
+    <div class="grid-inner">
+      <div class="form-row">
+        <div class="row">
+          <div class="col-md-12 col-xs-12 table-col">
+            <div class="table-responsive">
+              <button id="btnRefreshApprovalGrid" (click)="getProviderApprovalList(false)" style="display: none"></button>
+              <button title="Add New General Approval" *ngIf=" serviceProviderChecks[0].addNewProc == 'T'" [disabled] = "serviceProviderViewMode" id="addNewApproval" class="green-btn-add btn"  (click)="AddNew()" style="float: right;"><i class="fa fa-plus"></i>{{'button.add-new'|translate}}</button>
+              <table id="SPGridGA" datatable [dtOptions]="dtOptions['SPGridGA']" [dtTrigger]="dtTrigger['SPGridGA']" class="table table-bordered table-stripped dataTable" >
+                <thead>
+                  <tr>
+                    <th>{{'serviceProvider.global-approval.user-id'|translate}}</th>
+                    <th class="amount_right">{{'serviceProvider.global-approval.proc-mask-id'|translate}}</th>
+                    <th class="amount_right">{{'card.card-eligibility.effectivedate'|translate}}</th>
+                    <th class="amount_right">{{'card.card-eligibility.expirydate'|translate}}</th>
+                    <th class="amount_right">{{'card.card-eligibility.action'|translate}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngIf="arrData.length == 0 && !addMode" class="odd">
+                    <td valign="top" colspan="6" class="dataTables_empty">{{'card.card-holder.data-tables.datamsg' | translate}}</td>
+                  </tr>
+                  <tr class="tableRow" *ngIf="addMode">
+                    <td>
+                      {{user}}
+                    </td>
+                    <td>
+                      <input type="text" name="procMask" OnlyNumber="true" [(ngModel)]="arrNewRow.procMask" class="fm-txt form-control"
+                      id="txtprocMask" maxlength="5" (blur)="validateMask($event)"
+                      [ngClass]="{ 'error_field': newRecordValidate && arrNewRow.procMask == ''}" >
+                    </td>
+                    <td>
+                      <my-date-picker id="txtEffectiveOn" [options]="myDatePickerOptions" placeholder="{{'common.date-placeholder' | translate}}" name="effectiveOn" 
+                      (inputFocusBlur)="ChangeInputDateFormat($event,0, 'effectiveOn')" [ngClass]="{ 'error_field': newRecordValidate && arrNewRow.effectiveOn == '' }"  [(ngModel)]="arrNewRow.effectiveOn">
+                    </my-date-picker>
+                  </td>
+                  <td>
+                    <my-date-picker id="txtExpireOn" [options]="myDatePickerOptions" placeholder="{{'common.date-placeholder' | translate}}" name="expiredOn" 
+                    (inputFocusBlur)="ChangeInputDateFormat($event,0, 'expiredOn')" [(ngModel)]="arrNewRow.expiredOn">
+                  </my-date-picker>
+                </td>
+                <td>
+                  <a title="{{'common.save' | translate}}" href="javascript:void(0)" class="save_row table-action-btn edit-ico" 
+                  (click)="SaveInfo()">
+                  <i class="fa fa-save"></i>
+                </a>
+                <a title="{{'common.delete' | translate}}" href="javascript:void(0)" class="delete_row table-action-btn del-ico" 
+                (click)="DeleteInfo()" *ngIf="serviceProviderChecks[0].deleteProc == 'T'">
+                <i class="fa fa-times"></i>
+              </a>
+            </td>
+          </tr>
+          <tr *ngFor="let dataRow of arrData;let i = index">
+            <td>
+              {{user}}
+            </td>
+            <td  class="amount_right">
+              <span *ngIf="dataRow.provApprKey != selectedRowId">{{dataRow.procMask}}</span>
+              <input type="text" name="procMask{{i}}" OnlyNumber="true" value="{{dataRow.procMask}}" [(ngModel)]="dataRow.procMask" 
+              id="txtprocMask{{i}}" maxlength="5" (blur)="validateMask($event)" *ngIf="dataRow.provApprKey == selectedRowId"
+              [ngClass]="{ 'error_field': dataRow.procMask == '', 'fm-txt': true, 'form-control':true }" >
+            </td>
+            <td  class="amount_right">
+              <span *ngIf="dataRow.provApprKey != selectedRowId">{{dataRow.effectiveOn  | dateFormate}}</span>
+              <my-date-picker id="txtEffectiveOn{{i}}" [options]="myDatePickerOptions" placeholder="{{'common.date-placeholder' | translate}}" name="EffectiveOn{{i}}" 
+              (inputFocusBlur)="ChangeInputDateFormat($event,i, 'effectiveOn')" [ngClass]="{ 'error_field': newRecordValidate && dataRow.effectiveOn == '' }"  [(ngModel)]="updateEffectiveRow[i]" 
+              *ngIf="dataRow.provApprKey == selectedRowId " >
+            </my-date-picker>
+          </td>
+          <td  class="amount_right" > 
+            <span *ngIf="dataRow.provApprKey != selectedRowId">{{dataRow.expiredOn  | dateFormate}}</span>
+            <my-date-picker id="txtExpireOn{{i}}" [options]="myDatePickerOptions" placeholder="{{'common.date-placeholder' | translate}}" name="expiredOn{{i}}" 
+            (inputFocusBlur)="ChangeInputDateFormat($event,i, 'expiredOn')"   [(ngModel)]="updateExpiredRow[i]" 
+            *ngIf="dataRow.provApprKey == selectedRowId " >
+          </my-date-picker>
+        </td>
+        <td class="amount_right">
+          <a  (click)="EditInfo(dataRow, i)" title="{{'common.edit' | translate}}"
+          [ngClass]="{ 'edit_row': true,'table-action-btn': true,'edit-ico': true, 'disabled': serviceProviderViewMode}" *ngIf="dataRow.provApprKey != selectedRowId  && serviceProviderChecks[0].editProc == 'T'">
+          <i class='fa fa-pencil'></i>
+        </a>
+        <a  title="{{'common.save' | translate}}" (click)="UpdateInfo(dataRow, i)" class="save_row table-action-btn edit-ico" *ngIf="dataRow.provApprKey == selectedRowId">
+          <i class="fa fa-save"></i>
+        </a>
+        <a href="javascript:void(0)" title="{{'common.delete' | translate}}" class="delete_row table-action-btn del-ico" 
+        (click)="CancelInfo()"
+        *ngIf="dataRow.provApprKey == selectedRowId">
+        <i class="fa fa-times"></i></a>
+        <a title="{{'common.delete' | translate}}" [ngClass]="{ 'delete_row': true,'table-action-btn': true,'del-ico': true, 'disabled': serviceProviderViewMode}" *ngIf="dataRow.provApprKey != selectedRowId && serviceProviderChecks[0].deleteProc == 'T'" (click)="DeleteInfo(dataRow)">
+          <i class="fa fa-trash"></i>
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<!-- Multiple calendars are opening at same time fixed-->
+<div style="width: 100%;text-align: center"> 
+  <button title="Close" id="closeButton" class="btn grey-btn"
+    (click)="CloseModal()" data-dismiss="modal">{{'button.close' | translate}}</button>
+</div>
+</div>
+<!-- Table Ends -->
+</div>
+</div>
+</div>
+<!-- Form Row ENds -->
+</div>
+<!-- Grid Inner Ends -->
+</div>
+<!-- Grid Box Ends -->

@@ -1,0 +1,641 @@
+<div class="grid-box">
+  <div class="grid-heading">
+    <h3>{{'claims.claims-add.claims-totals.totals' | translate}}</h3>
+    <div class="web-reg">
+      <button class="green-btn-add btn" data-toggle="modal" id="ClaimedTotalData" data-target="#ClaimedTotal"
+        style="display:none">
+        {{'button.totals'|translate}}</button>
+      <a class="green-btn-add btn" (click)="claimDetaislData()" data-toggle="modal" data-target="#" title="Totals">{{'claims.claims-add.claims-totals.totals'
+        | translate}}</a>
+    </div>
+  </div>
+  <!-- Grid Heading Ends -->
+
+  <div class="grid-inner">
+    <form [formGroup]="ClaimTotalFormGroup">
+      <div class="form-row">
+        <div class="row min-ht-sf">
+          <!-- /issue no 737 start -->
+           <!-- // issue no 772 start -->
+           <!-- custom-coll was chnged from custom-col -->
+            <!-- // issue no 772 Ends -->
+            <!-- issue no  737 isQuikcard -->
+          <div class="col-xs-12 custom-coll " *ngIf="isQuikcard!=1 &&  !claimTotalAddMode ">
+            <label>{{'claims.claims-add.claims-totals.totalClaimedItems' | translate}}</label>
+
+            <input type="text" class="fm-txt form-control datepicker amount_right" disabled id="totalClaime"
+              placeholder="{{'claims.claims-add.claims-totals.totalClaimedItems' | translate}}"
+              formControlName="totalClaime" />
+
+          </div>
+          <!-- /issue no 737 end -->
+          <div class="col-xs-12 custom-coll ">
+            <label>{{'claims.claims-add.claims-totals.claimed' | translate}}</label>
+
+            <input type="text" class="fm-txt form-control datepicker amount_right" disabled id="Claimed"
+              placeholder="{{'claims.claims-add.claims-totals.claimed' | translate}}" formControlName="Claimed" />
+
+          </div>
+          <div class="col-xs-12 custom-coll ">
+            <label>{{'claims.claims-add.claims-totals.allowed' | translate}}</label>
+            <input type="text" class="fm-txt form-control datepicker amount_right" disabled id="Allowed"
+              placeholder="{{'claims.claims-add.claims-totals.allowed' | translate}}" formControlName="Allowed" />
+          </div>
+          <div class="col-xs-12 custom-coll">
+            <label>{{'claims.claims-add.claims-totals.carrier' | translate}}</label>
+            <input type="text" class="fm-txt form-control datepicker  amount_right" disabled id="Carrier"
+              placeholder="{{'claims.claims-add.claims-totals.carrier' | translate}}" formControlName="Carrier" />
+          </div>
+          <div class="col-xs-12 custom-coll">
+            <label>{{'claims.claims-add.claims-totals.not-covered' | translate}}</label>
+            <input type="text" class="fm-txt form-control datepicker amount_right" disabled id="NotCovered"
+              placeholder="{{'claims.claims-add.claims-totals.not-covered' | translate}}"
+              formControlName="NotCovered" />
+          </div>
+          <div class="col-xs-12 custom-coll">
+            <label>{{'claims.claims-add.claims-totals.deductible' | translate}}</label>
+            <div class="calender-field">
+              <input class="fm-txt form-control amount_right" disabled id="Deductible"
+                placeholder="{{'claims.claims-add.claims-totals.deductible' | translate}}"
+                formControlName="Deductible" />
+            </div>
+          </div>
+          <div class="col-xs-12 custom-coll">
+            <label>{{'claims.claims-add.claims-totals.payable' | translate}}</label>
+            <div class="calender-field">
+              <input class="fm-txt form-control amount_right" disabled id="Payable"
+                placeholder="{{'claims.claims-add.claims-totals.payable' | translate}}" formControlName="Payable" />
+            </div>
+          </div>
+          <!--[Reference No. (322 Issue)]-->
+          <div class="col-xs-12 custom-coll">
+            <label>{{'claims.claims-add.claims-general-information.reference_no' | translate}}</label>
+            <input id="cgI_reference" type="text" disabled class="fm-txt form-control"
+              formControlName="ReferenceNumber">
+          </div>
+          <!--[Reference No. (322 Issue)]-->
+          <!-- // issue no 772 start -->
+          
+
+
+          <div class="col-xs-12 custom-checkcoll" *ngIf="hideForADSC">
+            <!-- // issue no 772 Ends -->
+            <label>&nbsp;</label>
+            <div class="select-options">
+              <span>
+                <label>
+                  <input type="checkbox" id="authorizedEb" [attr.disabled]="claimTotalViewMode ? 'disabled' : null"
+                    (change)="authorizedEbValue($event)" formControlName="authorizedEb">{{'claims.claims-add.claims-totals.authorizedEB' |
+                  translate}}</label>
+              </span>
+
+              <span>
+                <label>
+                  <input type="checkbox" id="IgnoreExtraBenefits"
+                    [attr.disabled]="claimTotalViewMode ? 'disabled' : null" (change)="IgnoreExtraBenefitsValue($event)"
+                    formControlName="IgnoreExtraBenefits">{{'claims.claims-add.claims-totals.ignore-extra-benefit'
+                  | translate}}</label>
+              </span>
+
+              <span>
+                <label>
+                  <input type="checkbox" id="PendingPaperWork" [attr.disabled]="claimTotalViewMode ? 'disabled' : null"
+                    (change)="PendingPaperWorkValue($event)" formControlName="PendingPaperWork">{{'claims.claims-add.claims-totals.pending-paper-work' |
+                  translate}}</label>
+              </span>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <!-- Form Row ENds -->
+    </form>
+  </div>
+  <!-- Grid Inner Ends -->
+
+</div>
+<!-- Grid Box Ends -->
+
+<!--Totals Modal -->
+
+<div id="ClaimedTotal" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="btnCloseClaimTotal" type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">{{'claims.claims-add.claims-totals.totals-button.totals.total' | translate}}</h4>
+      </div>
+
+      <div class="modal-body">
+        <div class="grid-box">
+          <form [formGroup]="TotalClaimGeneralInformationFormGroup">
+            <div class="grid-heading">
+              <h3>{{'claims.claims-add.claims-totals.totals-button.totals.general-information.general-information' |
+                translate}}</h3>
+            </div>
+            <div class="grid-inner">
+              <div class="form-row">
+                <div class="row min-ht-sf">
+                  <div class="col-xs-12 col-md-2">
+                    <label>{{'claims.claims-add.claims-totals.totals-button.totals.general-information.discipline-type'
+                      | translate}}</label>
+                    <select class="fm-txt form-control" (change)="getDisciplineType($event)" placeholder="Claim Type"
+                      name="TotalclaimType" id="claimType" formControlName="TotalclaimType">
+                      <option *ngFor="let type of TotalclaimType" [value]="type.disciplineKey">{{type.disciplineName}}
+                      </option>
+                    </select>
+                  </div>
+                  <!-- Localization issue is appearing in Totals Popup of Supplemental Claim -->
+                  <div class="col-md-2 col-xs-12">
+                    <label>{{'claims.claims-add.claims-totals.totals-button.totals.general-information.entry-date' |
+                      translate}}</label>
+                    <div class="calender-field">
+                      <my-date-picker id="dateEntryDate" [disabled]=true [options]="myDatePickerOptions"
+                        placeholder="{{'claims.claims-add.claims-totals.totals-button.totals.general-information.entry-date' | translate}}"
+                        name="entry_date" formControlName="Totalentry_date"
+                        (inputFocusBlur)="changeDateFormat($event, 'entry_date' ,'ClaimGeneralInformationFormGroup')">
+                      </my-date-picker>
+                    </div>
+                  </div>
+
+                  <div class="col-md-2 col-xs-12">
+                    <label>{{'claims.claims-add.claims-totals.totals-button.totals.general-information.claim-type' |
+                      translate}}</label>
+                    <select id="totalType" name="type" placeholder="Type" formControlName="Totaltype"
+                      class="fm-txt form-control">
+                      <option [ngValue]="null" disabled hidden selected>{{'claims.claims-add.claims-totals.totals-button.totals.general-information.select'
+                        | translate}}</option>
+                      <option *ngFor="let claim of arrClaimType" [value]="claim.claimTypeKey">
+                        {{claim.claimTypeDesc}}
+                      </option>
+                    </select>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <div class="input-half">
+                      <label>{{'claims.claims-add.claims-general-information.operator_name' | translate}}</label>
+                      <input id="totalOperator" type="text" disabled class="fm-txt form-control"
+                        placeholder="{{'claims.claims-add.claims-totals.totals-button.totals.general-information.operator' | translate}}"
+                        formControlName="Totaloperator">
+                    </div>
+                    <div class="input-half">
+                      <label>{{'claims.claims-add.claims-general-information.reference_no' | translate}}</label>
+                      <input id="totalReference" type="text" disabled class="fm-txt form-control"
+                        placeholder="{{'claims.claims-add.claims-totals.totals-button.totals.general-information.reference' | translate}}"
+                        formControlName="Totalreference">
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <div class="input-half">
+                      <label>{{'claims.claims-add.claims-general-information.modified_by' | translate}}</label>
+                      <input id="totalUserId" type="text" disabled class="fm-txt form-control"
+                        placeholder="{{'claims.claims-add.claims-totals.totals-button.totals.general-information.user-id' | translate}}"
+                        formControlName="TotaluserId">
+                    </div>
+                    <div class="input-half">
+                      <label>{{'claims.claims-add.claims-general-information.modified_on' | translate}}</label>
+                      <input id="totalModifiedDate" type="text" disabled class="fm-txt form-control"
+                        placeholder="{{'claims.claims-add.claims-totals.totals-button.totals.general-information.modified' | translate}}"
+                        formControlName="Totalmodified_date">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+
+      </div>
+      <!-- Modal Body End-->
+      <!-- Combined Form -->
+      <div [hidden]="!getCovMaxxValue">
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{'claims.claims-add.claims-totals.coverageMax' | translate}}</h3>
+          </div>
+          <div class="grid-inner">
+            <div class="form-row">
+              <div class="row">
+                <div class="  col-md-12 col-xs-12 table-col">
+                  <div class="table-responsive">
+                    <table id='ClaimTotalCOVMax' datatable [dtOptions]="dtOptions['ClaimTotalCOVMax']"
+                      [dtTrigger]="dtTrigger['ClaimTotalCOVMax']"
+                      class="inlinePopupTable table table-bordered table-stripped alignRightText">
+                      <thead>
+                        <tr>
+                          <th>{{'common.category' | translate}}</th>
+                          <th>{{'common.max-type' | translate}}</th>
+                          <th>{{'common.max_amount' | translate}}</th>
+                          <th>{{'common.prorated_max' | translate}}</th>
+                          <th>{{'common.paid_to_date' | translate}}</th>
+                          <th>{{'common.amt_avail' | translate}}</th>
+                          <th>{{'common.cfwd_amt' | translate}}</th>
+                          <th>{{'common.period_type' | translate}}</th>
+                          <th *ngIf="hideForADSC">{{'common.year_type' | translate}}</th>
+                          <th>{{'common.period_start' | translate}}</th>
+                          <th>{{'common.period_end' | translate}}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="tableRow" id="{{'row_'+i}}" *ngFor="let dataRow of getCovMax; let i = index">
+                          <td>{{dataRow.covCat}}</td>
+                          <td>{{dataRow.maxType}}</td>
+                          <td class="amount_right_grid"><span>$</span>{{dataRow.maxAmount | number: '1.2'}}</td>
+                          <td class="amount_right_grid"><span>$</span>{{dataRow.proratedAmount | number: '1.2'}}</td>
+                          <td><span>$</span>{{dataRow.totalExpense | number: '1.2'}}</td>
+                          <td class="amount_right_grid"><span>$</span>{{dataRow.availableAmount | number: '1.2'}}</td>
+                          <td class="amount_right_grid"><span>$</span>{{dataRow.cfwdamount | number: '1.2'}}</td>
+                          <td>{{dataRow.periodType}}</td>
+                          <td *ngIf="hideForADSC">{{dataRow.typeOfYear}}</td>
+                          <td>{{dataRow.periodStart | dateFormate}}</td>
+                          <td>{{dataRow.periodEnd | dateFormate}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <br><br>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Form Row ENds -->
+          </div>
+        </div>
+      </div>
+      <!--Coverage Combined-->
+      <div [hidden]="!getCcMaxValue">
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{'claims.claims-add.claims-totals.coverageCombinedMax' | translate}}</h3>
+          </div>
+          <div class="grid-inner">
+            <div class="form-row">
+              <div class="row">
+                <div class="col-md-12 col-xs-12 table-col">
+                  <div class="table-responsive">
+                    <table id='TotalCoverageCombinedMaximums'
+                      class="table table-bordered table-stripped alignRightText">
+                      <thead>
+                        <tr>
+                          <th>{{'common.category' | translate}}</th>
+                          <th>{{'common.max-type' | translate}}</th>
+                          <th>{{'common.max_amount' | translate}}</th>
+                          <th>{{'common.prorated_max' | translate}}</th>
+                          <th>{{'common.paid_to_date' | translate}}</th>
+                          <th>{{'common.amt_avail' | translate}}</th>
+                          <th>{{'common.cfwd_amt' | translate}}</th>
+                          <th>{{'common.period_type' | translate}}</th>
+                          <th *ngIf="hideForADSC">{{'common.year_type' | translate}}</th>
+                          <th>{{'common.period_start' | translate}}</th>
+                          <th>{{'common.period_end' | translate}}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="tableRow" id="{{'row_'+i}}" *ngFor="let dataRow of getCcMax; let i = index">
+              
+                        
+                          <td>{{dataRow.covCat}}</td>
+                          <td>{{dataRow.maxType}}</td>
+                          <td class="amount_right_grid"><span>$</span>{{dataRow.maxAmount | number: '1.2'}}</td>
+                          <td class="amount_right_grid"><span>$</span>{{dataRow.proratedAmount | number: '1.2'}}</td>
+                          <td> <span>$</span> {{dataRow.totalExpense | number: '1.2'}}</td>
+                          <td class="amount_right_grid"><span>$</span>{{dataRow.availableAmount | number: '1.2'}}</td>
+                          <td class="amount_right_grid"><span>$</span>{{dataRow.cfwdamount | number: '1.2'}}</td>
+                          <td>{{dataRow.periodType}}</td>
+                          <td *ngIf="hideForADSC">{{dataRow.typeOfYear}}</td>
+                          <td>{{dataRow.periodStart | dateFormate}}</td>
+                          <td>{{dataRow.periodEnd | dateFormate}}</td>
+                        </tr>
+                        <tr [hidden]='getCcMaxValue'>
+                          <td colspan="11" style="text-align:center">No Data Available</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <br><br>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Form Row ENds -->
+          </div>
+        </div>
+      </div>
+      <!--HSA Combined-->
+
+      <div [hidden]="!getHsaMaxValue">
+        <div class="grid-box">
+          <div class="grid-heading">
+            <!-- Notice the Supplemental maximum title is not consistent in Claim and Cardholder of Total Popup  -->
+            <h3>{{'claims.claims-add.claims-totals.supplementalMax' | translate}}</h3>
+          </div>
+          <div class="grid-inner">
+            <div class="form-row">
+              <div class="row">
+                <div class="col-md-12 col-xs-12 table-col">
+                  <div class="table-responsive">
+                    <table id='TotalCoverageMaximums'
+                      class="inlinePopupTable table table-bordered table-stripped alignRightText">
+                      <thead>
+                        <tr>
+                          <th>{{'common.max-type' | translate}}</th>
+                          <th>{{'common.period_type' | translate}}</th>
+                          <th>{{'common.cfwd_amt' | translate}}</th>
+                          <th>{{'common.max_amount' | translate}}</th>
+                          <th>{{'common.prorated_max' | translate}}</th>
+                          <th>{{'common.paid_to_date' | translate}}</th>
+                          <th>{{'common.avail_amt' | translate}}</th>
+                          
+
+                          <th *ngIf="hideForADSC">{{'common.year_type' | translate}}</th>
+                          <th>{{'common.period_start' | translate}}</th>
+                          <th>{{'common.period_end' | translate}}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="tableRow" id="{{'row_'+i}}" *ngFor="let dataRow of getHsaMax; let i = index">
+                          <td>{{dataRow.maxType}}</td>
+                          <td>{{dataRow.periodType}}</td>
+                          <td class="amount_right_grid"><span>$</span>{{dataRow.cfwdamount | number: '1.2'}}</td>
+                          <td class="amount_right_grid"><span>$</span>{{dataRow.maxAmount | number: '1.2'}}</td>
+                          <td class="amount_right_grid"><span>$</span>{{dataRow.proratedAmount |number: '1.2'}}</td>
+                          <td class="amount_right_grid"><span>$</span>{{dataRow.totalExpense | number: '1.2'}}</td>
+                          <td class="amount_right_grid"><span>$</span>{{dataRow.availableAmount | number: '1.2'}}</td>
+
+                          <td *ngIf="hideForADSC">{{dataRow.typeOfYear}}</td>
+                          <td>{{dataRow.periodStart | dateFormate}}</td>
+                          <td>{{dataRow.periodEnd | dateFormate}}</td>
+                        </tr>
+                        <tr [hidden]='getHsaMaxValue'>
+                          <td colspan="10" style="text-align:center">No Data Available</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <br><br>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Form Row ENds -->
+          </div>
+        </div>
+      </div>
+
+      <!--Div Max Grid-->
+      <div [hidden]="!getDivMaxValue">
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{'common.plan_combined_max' | translate}} </h3>
+          </div>
+          <div class="grid-inner">
+            <div class="form-row">
+              <div class="row">
+                <div class="col-md-12 col-xs-12 table-col">
+                  <div class="table-responsive">
+                    <form style="overflow: scroll;">
+                    <table id='TotalHistory' class="table table-bordered table-stripped alignRightText">
+                      <thead>
+                        <tr>
+                          <th>{{'common.max-type' | translate}}</th>
+                          <th>{{'common.period_type' | translate}}</th>
+                          <th>{{'common.cfwd_amt' | translate}}</th>
+                          <th>{{'common.max_amount' | translate}}</th>
+                          <th style="white-space: nowrap">{{'common.prorated' | translate}}
+                            <br>{{'common.max' | translate}}</th>
+                          <th *ngIf="!hideForADSC" style="white-space: nowrap">{{'common.cfed' | translate}}
+                            <br>{{'common.expense' | translate}}
+                          </th>
+                          <th *ngIf="!hideForADSC">{{'common.preauth' | translate}}
+                            <br>{{'common.amt' | translate}}
+                          </th>
+                          <th *ngIf="!hideForADSC" style="white-space: nowrap">{{'common.expense' | translate}}
+                            <br>{{'common.adj' | translate}}
+                          </th>
+                          <th>{{'common.paid_to_date' | translate}}</th>
+                          <th>{{'common.wellnessMaxAmt' | translate}}</th>
+                          <th>{{'common.wellnessAvail' | translate}}</th>
+                          <th>{{'common.wellnessMaxPer' | translate}}</th>
+                          <th>{{'common.avail_amt' | translate}}</th>
+                          <!-- Only show for quikcard-->
+                          <!-- <th *ngIf="hideForADSC" width="4%">{{'common.year_type' | translate}}</th> -->
+                          <!-- Only show for quikcard-->
+                          <th width="7%">Period <br>Start</th>
+                          <th width="7%">Period <br>End</th>
+                          <th width="5%">{{'common.dental' | translate}}</th>
+                          <!-- Only show for quikcard-->
+                          <th *ngIf="hideForADSC" width="5%">{{'common.vision' | translate}}</th>
+                          <th *ngIf="hideForADSC" width="5%">{{'common.health' | translate}}</th>
+                          <th *ngIf="hideForADSC" width="5%">{{'common.drug' | translate}}</th>
+                          <th *ngIf="hideForADSC" width="5%">{{'common.wellness' | translate}}</th>
+                          <!-- Only show for quikcard-->
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="tableRow" id="{{'row_'+i}}" *ngFor="let dataRow of getDivMax; let i = index">
+                          <td>{{dataRow.maxType}}</td>
+                          <td>{{dataRow.periodType}}</td>
+                          <td style="white-space: nowrap" class="amount_right_grid">
+                            <span>$</span>{{dataRow.cfwdamount | number: '1.2'}}</td>
+                          <td style="white-space: nowrap" class="amount_right_grid">
+                            <span>$</span>{{dataRow.maxAmount | number: '1.2'}}</td>
+                          <td style="white-space: nowrap" class="amount_right_grid">
+                            <span>$</span>{{dataRow.proratedAmount | number: '1.2'}}</td>
+                          <td *ngIf="!hideForADSC" class="amount_right_grid" style="white-space: nowrap"><span>$</span>{{dataRow.cfwdexpense | number: '1.2'}}</td>
+                          <td *ngIf="!hideForADSC" style="white-space: nowrap" class="amount_right_grid">
+                            <span>$</span>{{dataRow.preauthAmount | number: '1.2'}}</td>
+                          <td *ngIf="!hideForADSC" class="amount_right_grid" style="white-space: nowrap"><span>$</span>{{dataRow.expenseAdjustment | number: '1.2'}}</td>
+                          <td class="amount_right_grid" style="white-space: nowrap"><span>$</span>{{dataRow.totalExpense | number: '1.2'}}</td>
+                          <td style="white-space: nowrap" class="amount_right_grid">
+                              <span>$</span>{{dataRow.wellnessMaxAmt | number: '1.2'}}</td>
+                          <td style="white-space: nowrap" class="amount_right_grid">
+                              <span>$</span>{{dataRow.wlAvailable | number: '1.2'}}</td>
+                          <td style="white-space: nowrap" class="amount_right_grid">
+                            <span>%</span>{{dataRow.wellnessMaxPer != null ? dataRow.wellnessMaxPer : '0'}}</td>
+                          <td style="white-space: nowrap" class="amount_right_grid">
+                            <span>$</span>{{dataRow.availableAmount | number: '1.2'}}</td>
+                          <!-- <td *ngIf="hideForADSC" style="white-space: nowrap">{{dataRow.typeOfYear}}</td> -->
+                          <td style="white-space: nowrap">{{dataRow.periodStart | dateFormate}}</td>
+                          <td style="white-space: nowrap">{{dataRow.periodEnd | dateFormate}}</td>
+                          <td>{{(dataRow.dentalInd == 'T') ? 'Yes' : 'No'}}</td>
+                          <td *ngIf="hideForADSC">{{(dataRow.visionInd == 'T') ? 'Yes' : 'No'}}</td>
+                          <td *ngIf="hideForADSC">{{(dataRow.healthInd == 'T') ? 'Yes' : 'No'}}</td>
+                          <td *ngIf="hideForADSC">{{(dataRow.drugInd == 'T') ? 'Yes' : 'No'}}</td>
+                          <td *ngIf="hideForADSC">{{(dataRow.wellInd == 'T') ? 'Yes' : 'No'}}</td>
+                        </tr>
+                        <tr [hidden]='getDivMaxValue'>
+                          <td colspan="17" style="text-align:center">{{'common.noDataAvailable' |translate}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    </form>
+                    <br><br>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Form Row ENds -->
+          </div>
+        </div>
+      </div>
+
+      <!--Claim Secure Maximum Grid Start:-->
+      <div [hidden]="!getClaimSecureMaxValue">
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{'common.claim-secure-max' | translate}} </h3>
+          </div>
+          <div class="grid-inner">
+            <div class="form-row">
+              <div class="row">
+                <div class="col-md-12 col-xs-12 table-col">
+                  <div class="table-responsive">
+                    <form style="overflow: scroll;">
+                    <table id='claimSecureMaxTable' class="table table-bordered table-stripped alignRightText">
+                      <thead>
+                        <tr>
+                          <th>{{'common.max-type' | translate}}</th>
+                          <th>{{'common.period_type' | translate}}</th>
+                          <th>{{'common.cfwd_amt' | translate}}</th>
+                          <th>{{'common.max_amount' | translate}}</th>
+                          <th style="white-space: nowrap">{{'common.prorated' | translate}}
+                            <br>{{'common.max' | translate}}</th>
+                          <th style="white-space: nowrap">{{'common.cfed' | translate}}
+                            <br>{{'common.expense' | translate}}
+                          </th>
+                          <th>{{'common.preauth' | translate}}
+                            <br>{{'common.amt' | translate}}
+                          </th>
+                          <th style="white-space: nowrap">{{'common.expense' | translate}}
+                            <br>{{'common.adj' | translate}}
+                          </th>
+                          <th>{{'common.paid_to_date' | translate}}</th>
+                          <th>{{'common.wellnessMaxAmt' | translate}}</th>
+                          <th>{{'common.wellnessMaxPer' | translate}}</th>
+                          <th>{{'common.avail_amt' | translate}}</th>
+                          <!-- Only show for quikcard-->
+                          <th *ngIf="hideForADSC" width="4%">{{'common.year_type' | translate}}</th>
+                          <!-- Only show for quikcard-->
+                          <th width="7%">{{'common.period' | translate}} <br>{{'common.start' | translate}}</th>
+                          <th width="7%">{{'common.period' | translate}} <br>{{'common.end' | translate}}</th>
+                          <th width="5%">{{'common.dental' | translate}}</th>
+                          <!-- Only show for quikcard-->
+                          <th *ngIf="hideForADSC" width="5%">{{'common.vision' | translate}}</th>
+                          <th *ngIf="hideForADSC" width="5%">{{'common.health' | translate}}</th>
+                          <th *ngIf="hideForADSC" width="5%">{{'common.drug' | translate}}</th>
+                          <th *ngIf="hideForADSC" width="5%">{{'common.wellness' | translate}}</th>
+                          <!-- Only show for quikcard-->
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="tableRow" id="{{'row_'+i}}" *ngFor="let dataRow of getClaimSecureMax; let i = index">
+                          <td>{{dataRow.maxType}}</td>
+                          <td>{{dataRow.periodType}}</td>
+                          <td style="white-space: nowrap" class="amount_right_grid">
+                            <span>$</span>{{dataRow.cfwdamount | number: '1.2'}}</td>
+                          <td style="white-space: nowrap" class="amount_right_grid">
+                            <span>$</span>{{dataRow.maxAmount | number: '1.2'}}</td>
+                          <td style="white-space: nowrap" class="amount_right_grid">
+                            <span>$</span>{{dataRow.proratedAmount | number: '1.2'}}</td>
+                          <td class="amount_right_grid" style="white-space: nowrap"><span>$</span>{{dataRow.cfwdexpense | number: '1.2'}}</td>
+                          <td style="white-space: nowrap" class="amount_right_grid">
+                            <span>$</span>{{dataRow.preauthAmount | number: '1.2'}}</td>
+                          <td class="amount_right_grid" style="white-space: nowrap"><span>$</span>{{dataRow.expenseAdjustment | number: '1.2'}}</td>
+                          <td class="amount_right_grid" style="white-space: nowrap"><span>$</span>{{dataRow.totalExpense | number: '1.2'}}</td>
+                          <td style="white-space: nowrap" class="amount_right_grid">
+                              <span>$</span>{{dataRow.wellnessMaxAmt | number: '1.2'}}</td>
+                          <td style="white-space: nowrap" class="amount_right_grid">
+                            <span>%</span>{{dataRow.wellnessMaxPer != null ? dataRow.wellnessMaxPer : '0'}}</td>
+                          
+                          <td style="white-space: nowrap" class="amount_right_grid">
+                            <span>$</span>{{dataRow.availableAmount | number: '1.2'}}</td>
+                          <td *ngIf="hideForADSC" style="white-space: nowrap">{{dataRow.typeOfYear}}</td>
+                          <td style="white-space: nowrap">{{dataRow.periodStart | dateFormate}}</td>
+                          <td style="white-space: nowrap">{{dataRow.periodEnd | dateFormate}}</td>
+                          <td>{{(dataRow.dentalInd == 'T') ? 'Yes' : 'No'}}</td>
+                          <td *ngIf="hideForADSC">{{(dataRow.visionInd == 'T') ? 'Yes' : 'No'}}</td>
+                          <td *ngIf="hideForADSC">{{(dataRow.healthInd == 'T') ? 'Yes' : 'No'}}</td>
+                          <td *ngIf="hideForADSC">{{(dataRow.drugInd == 'T') ? 'Yes' : 'No'}}</td>
+                          <td *ngIf="hideForADSC">{{(dataRow.wellInd == 'T') ? 'Yes' : 'No'}}</td>
+                        </tr>
+                        <tr [hidden]='getClaimSecureMaxValue'>
+                          <td colspan="20" style="text-align:center">{{'common.noDataAvailable' |translate}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    </form>
+                    <br><br>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Form Row ENds -->
+          </div>
+        </div>
+      </div>
+      <!--Claim Secure Maximum Grid Ends -->
+
+      <!-- Wellness Maximum Grid Start-->
+      <div [hidden]="!getWellMaxValue">
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{'claims.claims-add.claims-totals.wellnessMax' | translate}}</h3>
+          </div>
+          <div class="grid-inner">
+            <div class="form-row">
+              <div class="row">
+                <div class="col-md-12 col-xs-12 table-col">
+                  <div class="table-responsive">
+                    <table id='TotalCoverageMaximums'
+                      class="inlinePopupTable table table-bordered table-stripped alignRightText">
+                      <thead>
+                        <tr>
+                          <th>{{'common.max-type' | translate}}</th>
+                          <th>{{'common.period_type' | translate}}</th>
+                          <th>{{'common.cfwd_amt' | translate}}</th>
+                          <th>{{'common.max_amount' | translate}}</th>
+                          <th>{{'common.prorated_max' | translate}}</th>
+                          <th>{{'common.paid_to_date' | translate}}</th>
+                          <th>{{'common.avail_amt' | translate}}</th>
+                          <th *ngIf="hideForADSC">{{'common.year_type' | translate}}</th>
+                          <th>{{'common.period_start' | translate}}</th>
+                          <th>{{'common.period_end' | translate}}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="tableRow" id="{{'row_'+i}}" *ngFor="let dataRow of getWellMax; let i = index">
+                          <td>{{dataRow.maxType}}</td>
+                          <td>{{dataRow.periodType}}</td>
+                          <td class="amount_right_grid"><span>$</span>{{dataRow.cfwdamount | number: '1.2'}}</td>
+                          <td class="amount_right_grid"><span>$</span>{{dataRow.maxAmount | number: '1.2'}}</td>
+                          <td class="amount_right_grid"><span>$</span>{{dataRow.proratedAmount |number: '1.2'}}</td>
+                          <td class="amount_right_grid"><span>$</span>{{dataRow.totalExpense | number: '1.2'}}</td>
+                          <td class="amount_right_grid"><span>$</span>{{dataRow.availableAmount | number: '1.2'}}</td>
+                          <td *ngIf="hideForADSC">{{dataRow.typeOfYear}}</td>
+                          <td>{{dataRow.periodStart | dateFormate}}</td>
+                          <td>{{dataRow.periodEnd | dateFormate}}</td>
+                        </tr>
+                        <tr [hidden]='getWellMaxValue'>
+                          <td colspan="10" style="text-align:center">No Data Available</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <br><br>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Wellness Maximum Grid Ends -->
+
+      <!-- Grid Box Ends -->
+      <div class="modal-footer">
+        <button id="closeClaimTotal" class="btn grey-btn" data-dismiss="modal">{{'button.close'|translate}}</button>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!--Totals Modal -->

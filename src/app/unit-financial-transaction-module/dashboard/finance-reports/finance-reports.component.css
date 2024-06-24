@@ -1,0 +1,35 @@
+table tr.total-row td {
+    font-weight: 600;
+    border-top:2px solid #909090 !important;
+    border-bottom:2px solid #909090 !important;
+}
+table.claimsPaymentRunSummary{
+    border-top: 1px solid #dddddd !important;
+    margin-bottom: 30px !important;
+}
+table.claimsPaymentRunSummary tr td:nth-child(2) > span{
+    float: left;
+}
+table.claimsPaymentRunSummary tr td:nth-child(2){
+    text-align: right;
+}
+.hideSearch{
+    display: none;
+}
+.showSearch{
+    display: block;
+}
+:host ::ng-deep .filterPos .countplaceholder {
+    right: 43px !important;
+    top: 24% !important;
+    z-index: 99 !important;;
+}
+:host ::ng-deep .filterPos .selected-list .c-list {
+    width: calc(100% - 20px) !important;
+}
+.customModalContent.modal-content{
+    overflow-y: hidden;
+    min-height: 750px;
+    background: transparent;
+    box-shadow: none;
+}

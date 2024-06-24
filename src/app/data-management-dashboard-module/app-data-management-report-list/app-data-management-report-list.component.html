@@ -1,0 +1,2047 @@
+<div class="grid-box" *ngIf="reportListShowHide">
+  <div class="grid-heading">
+    <h3>{{'uft.dashboard.financeReports.selectReport' | translate}} </h3>
+  </div>
+  <!-- Grid Heading Ends -->
+
+  <div class="grid-inner">
+    <div class="form-row">
+      <div class="table-responsive hms-loading-table">
+        <table id="reportsList_datamangement" class="display table table-bordered table-stripped">
+          <thead>
+          </thead>
+        </table>
+      </div>
+    </div>
+    <!-- Form Row ENds -->
+  </div>
+  <!-- Grid Inner Ends -->
+</div>
+<!-- Grid Box Ends -->
+<div [hidden]="!showPageLoader" class="loader-outer">
+  <div class="cube-wrapper">
+    <div class="cube-folding">
+      <span class="leaf1"></span>
+      <span class="leaf2"></span>
+      <span class="leaf3"></span>
+      <span class="leaf4"></span>
+    </div>
+    <span class="loading" data-name="Loading">{{'company.plan.benefits.pleaseWait'|translate}}</span>
+  </div>
+</div>
+
+<button class="green-btn-add btn" data-toggle="modal" id="reportsListPopUp" data-target="#financeReportPopUp" style="display:none"></button>
+
+
+<!--Report List Modal-->
+<div id="financeReportPopUp" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" (click)="resetReportForm()">&times;</button>
+        <h4 class="modal-title">{{reportPopUpTitle}}</h4>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="showHideFilter" class="grid-box">
+          <!-- Grid Heading Ends -->
+          <div class="grid-inner">
+            <form [formGroup]="filterReport" (ngSubmit)="onSubmitReport(filterReport)">
+              <div class="form-row">
+                <div class="row">
+                  <div class="col-md-3 col-xs-12" *ngIf="showFilterFields[0].startDate">
+                    <label>{{'uft.dashboard.financeReports.startDate' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <div class="calender-field">
+                      <my-date-picker id="startDate" placeholder="Start Date" [options]="myDatePickerOptions" name="startDate" (inputFocusBlur)="changeDateFormat($event, 'startDate' ,'filterReport')"
+                        formControlName="startDate" #filterReportStartDate> </my-date-picker>
+                      <show-errors [control]="filterReport.controls.startDate"></show-errors>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-xs-12" *ngIf="showFilterFields[1].asOfDate">
+                    <label>{{'uft.dashboard.financeReports.asOfDate' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <div class="calender-field" *ngIf= "tableId != 'studentStatusList'">
+                      <my-date-picker id="endDate" placeholder="{{'uft.dashboard.financeReports.asOfDate' | translate}}" [options]="myDatePickerOptions"
+                        name="endDate" (inputFocusBlur)="changeDateFormat($event, 'endDate' ,'filterReport')" formControlName="endDate">
+                      </my-date-picker>
+                      <show-errors [control]="filterReport.controls.endDate"></show-errors>
+                    </div>
+                    <div class="calender-field" *ngIf= "tableId == 'studentStatusList'">
+                      <my-date-picker id="endDate" placeholder="{{'uft.dashboard.financeReports.asOfDate' | translate}}" [options]="myDatePickerOptions"
+                        name="asOfDate" (inputFocusBlur)="changeDateFormat($event, 'asOfDate' ,'filterReport')" formControlName="asOfDate">
+                      </my-date-picker>
+                      <show-errors [control]="filterReport.controls.asOfDate"></show-errors>
+                    </div>
+                    <!-- Calendar Field Ends -->
+                  </div>
+                  <div class="col-md-3 col-xs-12" *ngIf="showFilterFields[1].endDate">
+                    <label>{{'uft.dashboard.financeReports.endDate' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <div class="calender-field">
+                      <my-date-picker id="endDate" placeholder="End Date" [options]="myDatePickerOptions" name="endDate" (inputFocusBlur)="changeDateFormat($event, 'endDate' ,'filterReport')"
+                        formControlName="endDate"> </my-date-picker>
+                      <show-errors [control]="filterReport.controls.endDate"></show-errors>
+                    </div>
+                    <!-- Calendar Field Ends -->
+                  </div>
+                  <div class="col-md-3 col-xs-12" *ngIf="showFilterFields[2].searchCompany">
+                    <div *ngIf="tableId != 'modifiedDASPPreauthClaimsList'">
+                      <label>{{ 'common.company-name' | translate }}
+                        <span *ngIf="tableId == 'companyMailingLabels' || tableId == 'summaryByCompanyPlanCardAndCoverage' || tableId == 'cardCountByCompanyList' || tableId == 'financialStatementCompanyLevelAnnualStatement' || tableId == 'serviceProvidersList' || tableId == 'educationalStatusLetters' || tableId == 'brokerQsi' || tableId == 'amountPaidByCompanyPlanAndCoverageCategoryList'"
+                          class="required">*</span>
+                      </label>
+                      <ng2-completer [inputId]="'searchCompany'" id="searchCompany" formControlName="searchCompany" [datasource]="companyDataRemote"
+                        [minSearchLength]="0" [placeholder]="'Search Company'" [textSearching]="'Please wait...'" [inputClass]="'form-control wwww'"
+                        [fillHighlighted]="false" (selected)="onCompanyNameSelected($event)" (blur)="onCompanyNameBlur(filterReport)"
+                        [autoHighlight]="true" [selectOnFocus]="true">
+                      </ng2-completer>
+                    </div>
+
+                    <div *ngIf="tableId == 'modifiedDASPPreauthClaimsList'">
+                      <label>Company Number
+                        <span class="required">*</span>
+                      </label>
+                      <ng2-completer [inputId]="'searchCompany'" id="searchAkiraCompany" formControlName="searchCompany" [datasource]="compAkiraDataRemote"
+                        [minSearchLength]="0" [placeholder]="'Search Company Number'" [textSearching]="'Please wait...'" [inputClass]="'form-control wwww'"
+                        [fillHighlighted]="false" (selected)="onCompanyAkiraSelected($event)" (blur)="onCompanyAkiraBlur(filterReport)"
+                        [autoHighlight]="true" [selectOnFocus]="true" [clearUnselected]="false">
+                      </ng2-completer>
+                    </div>
+
+                    <show-errors [control]="filterReport.controls.searchCompany"></show-errors>
+                  </div>
+                  {{showFilterFields[30] |json}}
+                  <div class="col-md-3 col-xs-12" *ngIf="tableId == 'brokerQsi'">
+                    <label>{{ 'common.search-broker' | translate }}
+                      <span *ngIf="tableId == 'jjj'" class="required">*</span>
+                    </label>
+                   
+                    <ng2-completer [autoHighlight]="true" [selectOnFocus]="true" (blur)="onBrokerBlur(filterReport)" [inputId]="'searchBroker'"
+                      id="searchBroker" formControlName="searchBroker" [datasource]="searchBrokerRemote" [minSearchLength]="0"
+                      [openOnFocus]="true" (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Search Broker'"
+                      [textSearching]="'Please wait...'" [inputClass]="'form-control wwww'" (selected)="onBrokerNameSelected($event)"
+                      [clearUnselected]="true">
+                    </ng2-completer>
+
+                    <show-errors [control]="filterReport.controls.searchBroker"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12" *ngIf="tableId == 'cardsbycompany'">
+                    <label>Sorting Direction
+                    </label>
+                    <input type="radio" formControlName="sortingDirection" value="ascending" /> Ascending
+                    <input type="radio" formControlName="sortingDirection" value="descending" /> Descending
+                    <show-errors [control]="filterReport.controls.sortingDirection"></show-errors>
+                  </div>
+
+                  <div class="col-md-3 col-xs-12" *ngIf="tableId == 'cardsbycompany'">
+                    <label>Sorting Direction
+                    </label>
+                    <input type="radio" formControlName="sortingOption" value="cardnumber" /> Card Number
+                    <input type="radio" formControlName="sortingOption" value="patientname" /> Patient Name
+                    <show-errors [control]="filterReport.controls.sortingOption"></show-errors>
+                  </div>
+
+                  <div class="col-md-3 col-xs-12" *ngIf="tableId == 'cardsbycompany'">
+                    <label>Sorting Direction
+                    </label>
+                    <input type="checkbox" formControlName="checkboxOption" value="printaddress" /> Print Address
+                    <input type="checkbox" formControlName="checkboxOption" value="listdependents" /> List Dependant
+                    <show-errors [control]="filterReport.controls.checkboxOption"></show-errors>
+                  </div>
+
+                  <div class="col-md-3 col-xs-12" *ngIf="showFilterFields[3].transactionType">
+                    <label>{{'uft.dashboard.financeReports.transType' | translate}}</label>
+                    <angular2-multiselect [data]="transactionTypeList" [(ngModel)]="transactionType" [ngModelOptions]="{standalone: true}" (onSelect)="onSelectMultiDropDown($event,'transactionType')"
+                      (onDeSelect)="onDeSelectMultiDropDown($event,'transactionType')" (onSelectAll)="onSelectAllMultiDropDown($event,'transactionType')"
+                      (onDeSelectAll)="onDeSelectAllMultiDropDown($event,'transactionType')" [settings]="dropdownSettings">
+                    </angular2-multiselect>
+                  </div>
+                  <div class="col-md-3 col-xs-12" *ngIf="showFilterFields[4].transactionIsPositiveNegative">
+                    <label>{{'uft.dashboard.financeReports.transIs' | translate}}</label>
+                    <input type="text" class="fm-txt form-control" name="transactionIsPositiveNegative" id="transactionIsPositiveNegative" formControlName="transactionIsPositiveNegative"
+                      placeholder="{{'uft.dashboard.financeReports.transIs' | translate}}" />
+                  </div>
+
+                  <div class="col-md-3 col-xs-12" *ngIf="showFilterFields[5].transactionIsElectronicCheque">
+                    <label>{{'uft.dashboard.financeReports.transElectronicCheque' | translate}}</label>
+                    <ng2-completer formControlName="transactionIsElectronicCheque" [datasource]="transactionIsElectronicChequeData" [minSearchLength]="0"
+                      [openOnFocus]="true" (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Search Transaction is Electronic/Cheque/All'"
+                      [textSearching]="'Please wait...'" [inputClass]="'form-control inputSearch'" data-type="predective" (selected)="onTransactionIsElectronicChequeSelected($event)"
+                      [clearUnselected]="true" [autoHighlight]="true" [selectOnFocus]="true">
+                    </ng2-completer>
+                  </div>
+
+                  <div class="col-md-3 col-xs-12" *ngIf="showFilterFields[6].brokerNameOrNumber">
+                    <label>{{'uft.dashboard.financeReports.brokerNameNum' | translate}}
+                      <span *ngIf="tableId == 'broker0371Commission'" class="required">*</span>
+                    </label>
+                    <ng2-completer [inputId]="'brokerNameOrNo'" id="brokerNameOrNo" formControlName="brokerNameOrNumber" [datasource]="brokerNameNoRemoteData"
+                      [minSearchLength]="0" [placeholder]="'Search Broker'" [textSearching]="'Please wait...'" [inputClass]="'form-control'"
+                      [fillHighlighted]="false" (selected)="onBrokerNameNoSelected($event)" (blur)="onBlurBrokerNameNo(filterReport)"
+                      [clearUnselected]="true" [autoHighlight]="true" [selectOnFocus]="true">
+                    </ng2-completer>
+                  </div>
+
+                  <div class="col-md-3 col-xs-12" *ngIf="showFilterFields[7].divisionName">
+                    <label>{{'uft.dashboard.financeReports.divNumber' | translate}}</label>
+                    <input type="text" name="divisionName" id="divisionName" formControlName="divisionName" class="fm-txt form-control" placeholder="{{'uft.dashboard.financeReports.divNumber' | translate}}"
+                    />
+                  </div>
+
+                  <div class="col-md-3 col-xs-12" *ngIf="showFilterFields[9].benefitCategory">
+                    <label>{{'uft.dashboard.financeReports.benefitCategory' | translate}}</label>
+                    <input type="text" name="benefitCategory" id="benefitCategory" formControlName="benefitCategory" class="fm-txt form-control"
+                      placeholder="{{'uft.dashboard.financeReports.benefitCategory' | translate}}" />
+                  </div>
+
+                  <div class="col-md-3 col-xs-12" *ngIf="showFilterFields[10].claimStatus">
+                    <label>{{'uft.dashboard.financeReports.claimStatus' | translate}}</label>
+                    <angular2-multiselect [data]="claimStatusList" [(ngModel)]="claimStatus" [ngModelOptions]="{standalone: true}" (onSelect)="onSelectMultiDropDown($event,'claimStatus')"
+                      (onDeSelect)="onDeSelectMultiDropDown($event,'claimStatus')" (onSelectAll)="onSelectAllMultiDropDown($event,'claimStatus')"
+                      (onDeSelectAll)="onDeSelectAllMultiDropDown($event,'claimStatus')" [settings]="dropdownSettings">
+                    </angular2-multiselect>
+                  </div>
+
+                  <div class="col-md-3 col-xs-12" *ngIf="showFilterFields[11].licenceNumber">
+                    <label>{{'uft.dashboard.financeReports.licenceNumber' | translate}}</label>
+                    <input type="text" name="licenceNumber" id="licenceNumber" formControlName="licenceNumber" class="fm-txt form-control" placeholder="{{'uft.dashboard.financeReports.licenceNumber' | translate}}"
+                    />
+                  </div>
+                  <div class="col-md-3 col-xs-12" *ngIf="showFilterFields[12].provinceName">
+                    <label>{{'uft.dashboard.financeReports.province' | translate}}</label>
+                    <ng2-completer formControlName="provinceName" [datasource]="provinceData" [minSearchLength]="0" [openOnFocus]="true" (opened)="onOpened($event)"
+                      [fillHighlighted]="false" [placeholder]="'Search Province'" [textSearching]="'Please wait...'" [inputClass]="'form-control inputSearch'"
+                      data-type="predective" (selected)="onProvinceSelected($event)" [clearUnselected]="true" [autoHighlight]="true"
+                      [selectOnFocus]="true">
+                    </ng2-completer>
+                  </div>
+
+                  <div class="col-md-3 col-xs-12" *ngIf="showFilterFields[13].businessType">
+                    <label>{{'uft.dashboard.financeReports.bussType' | translate}}</label>
+                    <ng2-completer formControlName="businessType" [datasource]="businessTypeData" [minSearchLength]="0" [openOnFocus]="true"
+                      (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Search Business Type'" [textSearching]="'Please wait...'"
+                      [inputClass]="'form-control inputSearch'" data-type="predective" (selected)="onBusinessTypeSelected($event)"
+                      (blur)="onBlurBusinessType(filterReport)" [clearUnselected]="true" [autoHighlight]="true" [selectOnFocus]="true">
+                    </ng2-completer>
+                  </div>
+
+                  <div class="col-md-3 col-xs-12" *ngIf="showFilterFields[14].companyStatus">
+                    <label>{{'uft.dashboard.financeReports.companyStatus' | translate}}</label>
+                    <ng2-completer formControlName="companyStatus" [datasource]="companyStatusData" [minSearchLength]="0" [openOnFocus]="true"
+                      (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Search Company Status'" [textSearching]="'Please wait...'"
+                      [inputClass]="'form-control inputSearch'" data-type="predective" (selected)="onCompanyStatusSelected($event)"
+                      [clearUnselected]="true" [autoHighlight]="true" [selectOnFocus]="true">
+                    </ng2-completer>
+                  </div>
+
+                  <div class="col-md-3 col-xs-12" *ngIf="showFilterFields[15].coFlag">
+                    <label>{{'uft.dashboard.financeReports.uftBalance' | translate}}</label>
+                    <ng2-completer formControlName="coFlag" [datasource]="uftData" [minSearchLength]="0" [openOnFocus]="true" (opened)="onOpened($event)"
+                      [fillHighlighted]="false" [placeholder]="'Search UFT Balance'" [textSearching]="'Please wait...'" [inputClass]="'form-control inputSearch'"
+                      data-type="predective" (selected)="onUftSelected($event)" [clearUnselected]="true" [autoHighlight]="true"
+                      [selectOnFocus]="true">
+                    </ng2-completer>
+                  </div>
+
+
+
+                  <div class="col-md-3 col-xs-12" *ngIf="showFilterFields[17].displayAddress">
+                    <label>{{'uft.dashboard.financeReports.cardholderAddress' | translate}}</label>
+                    <ng2-completer formControlName="displayAddress" [datasource]="cardholderAddressData" [minSearchLength]="0" [openOnFocus]="true"
+                      (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Search Cardholder Address'" [textSearching]="'Please wait...'"
+                      [inputClass]="'form-control inputSearch'" data-type="predective" (selected)="onCardholderAddressSelected($event)"
+                      [clearUnselected]="true" [autoHighlight]="true" [selectOnFocus]="true">
+                    </ng2-completer>
+                  </div>
+
+                  <div class="col-md-3 col-xs-12" *ngIf="showFilterFields[18].displayDependent">
+                    <label>{{'uft.dashboard.financeReports.dependants' | translate}}</label>
+                    <ng2-completer formControlName="displayDependent" [datasource]="dependantData" [minSearchLength]="0" [openOnFocus]="true"
+                      (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Search Dependant'" [textSearching]="'Please wait...'"
+                      [inputClass]="'form-control inputSearch'" data-type="predective" (selected)="onDependantSelected($event)"
+                      [clearUnselected]="true" [autoHighlight]="true" [selectOnFocus]="true">
+                    </ng2-completer>
+                  </div>
+
+                  <div class="col-md-3 col-xs-12" *ngIf="showFilterFields[19].transactionIsPositiveNegative">
+                    <label>{{'uft.dashboard.financeReports.transPositiveNegative' | translate}}</label>
+                    <ng2-completer formControlName="transAmtType" [datasource]="transactionIsPositiveNegativeData" [minSearchLength]="0" [openOnFocus]="true"
+                      (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Search Transaction is Positive/Negative/All'"
+                      [textSearching]="'Please wait...'" [inputClass]="'form-control inputSearch'" data-type="predective" (selected)="onTransactionIsPositiveNegativeSelected($event)"
+                      [clearUnselected]="true" [autoHighlight]="true" [selectOnFocus]="true">
+                    </ng2-completer>
+                  </div>
+
+                  <div class="col-md-3 col-xs-12" *ngIf="showFilterFields[20].claimType">
+                    <label>{{'uft.dashboard.financeReports.claimType' | translate}}</label>
+                    <ng2-completer formControlName="claimType" [datasource]="claimTypeData" [minSearchLength]="0" [openOnFocus]="true" (opened)="onOpened($event)"
+                      [fillHighlighted]="false" [placeholder]="'Search Claim Type'" [textSearching]="'Please wait...'" [inputClass]="'form-control inputSearch'"
+                      data-type="predective" (selected)="onClaimTypeSelected($event)" [clearUnselected]="true" [autoHighlight]="true"
+                      [selectOnFocus]="true">
+                    </ng2-completer>
+                  </div>
+
+                  <div class="col-md-3 col-xs-12" *ngIf="showFilterFields[21].discipline">
+                    <label>{{'uft.dashboard.financeReports.discipline' | translate}}</label>
+                    <ng2-completer formControlName="discipline" [datasource]="disciplineData" [minSearchLength]="0" [openOnFocus]="true" (opened)="onOpened($event)"
+                      [fillHighlighted]="false" [placeholder]="'Search Discipline'" [textSearching]="'Please wait...'" [inputClass]="'form-control inputSearch'"
+                      data-type="predective" (selected)="onDisciplineSelected($event)" [clearUnselected]="true" [autoHighlight]="true"
+                      [selectOnFocus]="true">
+                    </ng2-completer>
+                  </div>
+
+                  <div class="col-md-3 col-xs-12" *ngIf="showFilterFields[22].processorId">
+                    <label>{{'uft.dashboard.financeReports.processorID' | translate}}</label>
+                    <ng2-completer formControlName="processorId" [datasource]="procIdData" [minSearchLength]="1" [openOnFocus]="true" (opened)="onOpened($event)"
+                      [fillHighlighted]="false" [autoHighlight]="true" [selectOnFocus]="true" [placeholder]="'Search Processor ID'"
+                      [textSearching]="'Please wait...'" [inputClass]="'form-control'" data-type="predective" (selected)="onSelectedProcId($event)">
+                    </ng2-completer>
+                  </div>
+                  <div class="col-md-3 col-xs-12" *ngIf="showFilterFields[23].planNumberStart">
+                    <label>{{'uft.dashboard.financeReports.planNumberStart' | translate}}</label>
+                    <ng2-completer formControlName="planNumberStart" [datasource]="planNumberStartData" [minSearchLength]="1" [openOnFocus]="true"
+                      (opened)="onOpened($event)" [fillHighlighted]="false" [autoHighlight]="true" [selectOnFocus]="true" [placeholder]="'Plan Number Start'"
+                      [textSearching]="'Please wait...'" [inputClass]="'form-control'" data-type="predective" (selected)="onSelectedPlainNumberStart($event)">
+                    </ng2-completer>
+
+                  </div>
+                  <div class="col-md-3 col-xs-12" *ngIf="showFilterFields[24].planNumberEnd">
+                    <label>{{'uft.dashboard.financeReports.planNumberEnd' | translate}}</label>
+                    <ng2-completer formControlName="planNumberEnd" [datasource]="planNumberEndData" [minSearchLength]="1" [openOnFocus]="true"
+                      (opened)="onOpened($event)" [fillHighlighted]="false" [autoHighlight]="true" [selectOnFocus]="true" [placeholder]="'Plan Number End'"
+                      [textSearching]="'Please wait...'" [inputClass]="'form-control'" data-type="predective" (selected)="onSelectedPlainNumberEnd($event)">
+                    </ng2-completer>
+                  </div>
+
+                  <div class="col-md-3 col-xs-12" *ngIf="tableId =='claimpaymentbycardholder'">
+                    <label>{{'uft.dashboard.financeReports.cardNumber' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <input type="text" name="cardNumber" id="cardNumber" formControlName="cardNumber" class="fm-txt form-control" (focusout)="getOverrideReason()"
+                      placeholder="{{'uft.dashboard.financeReports.cardNumber' | translate}}" />
+                    <show-errors [control]="filterReport.controls.cardNumber"></show-errors>
+                  </div>
+
+                  <div class="col-md-3 col-xs-12" *ngIf="tableId =='claimpaymentbycardholder'">
+                    <label>{{'uft.dashboard.financeReports.cardholderNameOrNumber' | translate}}</label>
+                    <angular2-multiselect [data]="overrideReasonList" [(ngModel)]="overrideReason" [ngModelOptions]="{standalone: true}" (onSelect)="onSelectMultiDropDown($event,'overrideReason')"
+                      (onDeSelect)="onDeSelectMultiDropDown($event,'overrideReason')" (onSelectAll)="onSelectAllMultiDropDown($event,'overrideReason')"
+                      (onDeSelectAll)="onDeSelectAllMultiDropDown($event,'overrideReason')" [settings]="dropdownSettings">
+                    </angular2-multiselect>
+                  </div>
+                  <!-- Log #487 Cardholder Labels -->
+                  <div class="col-md-3 col-xs-12" *ngIf="tableId =='cardholderLabels' || tableId =='summaryByCompanyPlanCardAndCoverage'">
+                    <label>{{'uft.dashboard.financeReports.cardNumber' | translate}}
+                    </label>
+                    <input type="text" name="cardNum" id="cardNum" formControlName="cardNum" class="fm-txt form-control" placeholder="{{'uft.dashboard.financeReports.cardNumber' | translate}}"
+                    />
+                  </div>
+                  <div class="col-md-3 col-xs-12" *ngIf="tableId =='cardholderLabels'">
+                    <label>Cardholder Name
+                    </label>
+                    <input type="text" name="cardHolderName" id="cardHolderName" formControlName="cardHolderName" class="fm-txt form-control"
+                      placeholder="Cardholder Name" />
+                    <show-errors [control]="filterReport.controls.cardHolderName"></show-errors>
+                  </div>
+
+                  <!-- #487 Broker Mailing Labels -->
+                  <div class="col-md-3 col-xs-12" *ngIf="tableId == 'brokerMailingLabels'">
+                    <label>{{ 'common.search-broker' | translate }}
+                    </label>
+                    <ng2-completer [inputId]="'brokerNameOrNo'" id="brokerNameOrNo" formControlName="brokerNameOrNumber" [datasource]="brokerNameNoRemoteData"
+                      [minSearchLength]="0" [placeholder]="'Search Broker'" [textSearching]="'Please wait...'" [inputClass]="'form-control'"
+                      [fillHighlighted]="false" (selected)="onBrokerNameNoSelected($event)" (blur)="onBlurBrokerNameNo(filterReport)"
+                      [clearUnselected]="true" [autoHighlight]="true" [selectOnFocus]="true">
+                    </ng2-completer>
+                    <show-errors [control]="filterReport.controls.brokerNameOrNumber"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12" *ngIf="tableId =='brokerMailingLabels' || tableId =='serviceProvidersList'">
+                    <label>{{ 'company.company-search.city' | translate }}</label>
+                    <ng2-completer formControlName="brokerCity" [datasource]="cityDataRemote" [minSearchLength]="2" [fillHighlighted]="false"
+                      [placeholder]="'Search City'" [textSearching]="'Please wait...'" [inputClass]="'form-control'" [clearUnselected]="true">
+                    </ng2-completer>
+                  </div>
+                  <div class="col-md-3 col-xs-12" *ngIf="tableId =='brokerMailingLabels' || tableId =='serviceProvidersList'">
+                    <label>{{ 'company.company-search.province' | translate }}</label>
+                    <ng2-completer formControlName="brokerProvince" [datasource]="provinceDataRemote" [minSearchLength]="2" [fillHighlighted]="false"
+                      [placeholder]="'Search Province'" [textSearching]="'Please wait...'" [inputClass]="'form-control'" [clearUnselected]="true">
+                    </ng2-completer>
+                  </div>
+
+                  <div class="col-md-3 col-xs-12" *ngIf="tableId == 'brokerMailingLabels'">
+                    <label>{{ 'common.status' | translate }}</label>
+                    <select name="status" id="status" formControlName="status" class="fm-txt form-control searchInput">
+                      <option [ngValue]="null" disabled hidden>{{ 'common.select' | translate }}</option>
+                      <option value="all">{{ 'company.search-broker.all' | translate }}</option>
+                      <option value="active">{{ 'company.search-broker.active' | translate }}</option>
+                      <option value="inactive">{{ 'company.search-broker.inactive' | translate }}</option>
+                    </select>
+                  </div>
+                  
+                  <div class="col-md-3 col-xs-12" *ngIf="tableId =='serviceProviderMailingLabels'">
+                    <label>Provider Name
+                    </label>
+                    <input type="text" name="providerName" id="providerName" formControlName="providerName" class="fm-txt form-control" placeholder="Provider Name"
+                    />
+                    <show-errors [control]="filterReport.controls.providerName"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12" *ngIf="tableId =='serviceProviderMailingLabels'">
+                    <label>Provider Licence Number
+                    </label>
+                    <input type="text" name="providerLicenseNum" id="providerLicenseNum" formControlName="providerLicenseNum" class="fm-txt form-control"
+                      placeholder="Provider Licence Number" />
+                    <show-errors [control]="filterReport.controls.providerLicenseNum"></show-errors>
+                  </div>
+
+                  <!-- case 18: Service Provider List  -->
+                  <div class="col-md-3 col-xs-12" *ngIf="tableId == 'serviceProvidersList'">
+                    <label>{{'claims.claims-edit.service-provider.service-provider.billing-address.language'|translate}}</label>
+                    <select id="dmd_language" class="fm-txt form-control" placeholder="Language" name="language" formControlName="language">
+                      <option [ngValue]="null" disabled hidden selected>{{'common.select' | translate}}</option>
+                        <option *ngFor="let languageValue of languages" [ngValue]="languageValue.languageCD">
+                        {{ languageValue.languageDesc }}
+                      </option>
+                    </select>
+                  </div>
+                  <div class="col-md-3 col-xs-12" *ngIf="tableId == 'serviceProvidersList'">
+                    <label>Dental Specialty Group
+                    </label>
+                    <ng2-completer [inputId]="'dentalSpecialtyGroup'" formControlName="specialtyGroup" [datasource]="dentalSpecialtyGroupRemote"
+                      [minSearchLength]="1" [clearUnselected]="false" [placeholder]="'Search Specialty Group'" [textSearching]="'Please wait...'"
+                      [inputClass]="'form-control'" [fillHighlighted]="false" [autoHighlight]="true" [selectOnFocus]="true"
+                      (selected)="onSelectSpecialtyGroup($event,'specialtyGroup')">
+                    </ng2-completer>
+                    <show-errors [control]="filterReport.controls.specialtyGroup"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12" *ngIf="tableId == 'serviceProvidersList'">
+                    <label>Dental Provider Type
+                    </label>
+                    <ng2-completer [inputId]="'dentalProviderType'" formControlName="providerType" [datasource]="dentalProviderTypeRemote" [minSearchLength]="1"
+                      [clearUnselected]="false" [placeholder]="'Search Provider Type'" [textSearching]="'Please wait...'" [inputClass]="'form-control'"
+                      [fillHighlighted]="false" [autoHighlight]="true" [selectOnFocus]="true" (selected)="onSelectProviderType($event,'providerType')">
+                    </ng2-completer>
+                    <show-errors [control]="filterReport.controls.providerType"></show-errors>
+                  </div>
+
+                  <div class="col-md-3 col-xs-12" *ngIf="tableId == 'serviceProvidersList' || tableId == 'amountPaidByCompanyPlanAndCoverageCategoryList'">
+                    <label>Sorting Direction</label>
+                   
+                    <input type="radio" formControlName="sortingDirection" value="ASC" /> Ascending
+                    <input type="radio" formControlName="sortingDirection" value="DESC" /> Descending
+                    <show-errors [control]="filterReport.controls.sortingDirection"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12" *ngIf="tableId == 'serviceProvidersList'">
+                    <label>Discipline</label>
+                    <input type="radio" formControlName="disciplineSpec" value="Dental" (change)="onChangeDiscipline($event)" /> Dental
+                    <input type="radio" formControlName="disciplineSpec" value="Vision" (change)="onChangeDiscipline($event)" /> Vision
+                    <input type="radio" formControlName="disciplineSpec" value="Health" (change)="onChangeDiscipline($event)" /> Health
+                    <input type="radio" formControlName="disciplineSpec" value="All" (change)="onChangeDiscipline($event)" /> All
+                    
+                  </div>
+                  <div class="col-md-3 col-xs-12" *ngIf="tableId == 'serviceProvidersList'">
+                    <label>Discipline Specialty Type
+                    </label>
+                    <select class="fm-txt form-control" name="speciality" id="dmd_speciality" formControlName="speciality">
+                      <option [ngValue]="null" disabled hidden selected>{{'common.select' | translate}}</option>
+                      <option *ngFor="let speciality of specialityList" [value]="speciality.provSpecialDesc">
+                        {{speciality.provSpecialDesc}}</option>
+                    </select>
+                  </div>
+                  <div class="col-md-3 col-xs-12" *ngIf="tableId == 'serviceProvidersList'">
+                    <label>Sorting Option</label>
+                    <input type="radio" formControlName="sortingOption" value="LICENSE" /> License No.
+                    <input type="radio" formControlName="sortingOption" value="PROV" />Province
+                    <input type="radio" formControlName="sortingOption" value="POSTAL" />Postal Code
+                    <input type="radio" formControlName="sortingOption" value="CITY" /> City
+                    <show-errors [control]="filterReport.controls.sortingOption"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12" *ngIf="tableId == 'serviceProvidersList'">
+                    <label>Participant</label>
+                    <input type="radio" formControlName="participant" value="QP" /> Quikcard Participant
+                    <input type="radio" formControlName="participant" value="NP" /> Non Participant
+                    <input type="radio" formControlName="participant" value="ALL" /> All
+                    <show-errors [control]="filterReport.controls.participant"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12" *ngIf="tableId == 'serviceProvidersList'">
+                    <label></label>
+                    <div class="select-options">
+                      <span>
+                        <label>
+                          <span class="custom-check">
+                            <input type="checkbox" id="dmd_checkboxOption" formControlName="checkboxOption">Exclude drug card providers
+                            <span></span>
+                          </span>
+                        </label>
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="col-md-12 col-xs-12" *ngIf="tableId == 'financialStatementCompanyLevelAnnualStatement'">
+                    <ul class="nav company-tabs nav-pills">
+                      <li class="active">
+                        <a data-toggle="pill" (click)='selected("single")' href="#single">Single</a>
+                      </li>
+                      <li>
+                        <a data-toggle="pill" (click)='selected("annual")' href="#annual">Annual</a>
+                      </li>
+
+                    </ul>
+                    <div class="tab-content" style="margin-top: 10px;">
+
+                      <!--- claim-system TAB STARTS -->
+                      <div id="single" class="tab-pane fade in active">
+                        <div class="col-md-3 col-xs-12">
+                          <label>{{ 'common.company-name' | translate }}
+                            <span class="required">*</span>
+                          </label>
+                          <ng2-completer [inputId]="'searchCompany'" id="searchCompany" formControlName="searchCompany" [datasource]="companyDataRemote"
+                            [minSearchLength]="0" [placeholder]="'Search Company'" [textSearching]="'Please wait...'" [inputClass]="'form-control wwww'"
+                            [fillHighlighted]="false" (selected)="onCompanyNameSelected($event)" (blur)="onCompanyNameBlur(filterReport)"
+                            [autoHighlight]="true" [selectOnFocus]="true">
+                          </ng2-completer>
+                          <show-errors [control]="filterReport.controls.searchCompany"></show-errors>
+                        </div>
+
+                        <div class="col-md-3 col-xs-12">
+                          <label>{{'uft.dashboard.financeReports.endDate' | translate}}
+                            <span class="required">*</span>
+                          </label>
+                          <div class="calender-field">
+                            <my-date-picker id="endDate" placeholder="{{'uft.dashboard.financeReports.endDate' | translate}}" [options]="myDatePickerOptions"
+                              name="endDate" (inputFocusBlur)="changeDateFormat($event, 'endDate' ,'filterReport')" formControlName="endDate">
+                            </my-date-picker>
+                            <show-errors [control]="filterReport.controls.endDate"></show-errors>
+                          </div>
+                          <!-- Calendar Field Ends -->
+                        </div>
+
+                      </div>
+                      <div id="annual" class="tab-pane fade in ">
+
+                        <div class="col-md-2 col-xs-12">
+                          <label>Option
+                          </label>
+                          <input type="radio" formControlName="annual_option" value="6" /> 6-Month
+                          <input type="radio" formControlName="annual_option" value="12" /> 12-Month
+                          <show-errors [control]="filterReport.controls.annual_option"></show-errors>
+                        </div>
+
+                        <div class="col-md-3 col-xs-12">
+                          <label>{{'uft.dashboard.financeReports.asOfDate' | translate}}
+                            <span class="required">*</span>
+                          </label>
+                          <div class="calender-field">
+                            <my-date-picker id="endDate" placeholder="{{'uft.dashboard.financeReports.asOfDate' | translate}}" [options]="myDatePickerOptions"
+                              name="endDate" (inputFocusBlur)="changeDateFormat($event, 'endDate' ,'filterReport')" formControlName="endDate">
+                            </my-date-picker>
+                            <show-errors [control]="filterReport.controls.endDate"></show-errors>
+                          </div>
+                          <!-- Calendar Field Ends -->
+                        </div>
+
+                        <div class="col-md-4 col-xs-12">
+                          <label>Choose month Company become effective</label>
+                          <select name="status" id="status" formControlName="status" class="fm-txt form-control searchInput">
+                            <option [ngValue]="null" disabled hidden>{{ 'common.select' | translate }}</option>
+                            <option *ngFor="let month of monthLabels" value='{{month}}'>{{month}} </option>
+
+                          </select>
+                        </div>
+
+                        <div class="col-md-3 col-xs-12">
+                          <label>{{ 'common.company-name' | translate }}
+
+                          </label>
+                          <ng2-completer [inputId]="'searchCompany'" id="searchCompany" formControlName="searchCompany" [datasource]="companyDataRemote"
+                            [minSearchLength]="0" [placeholder]="'Search Company'" [textSearching]="'Please wait...'" [inputClass]="'form-control wwww'"
+                            [fillHighlighted]="false" (selected)="onCompanyNameSelected($event)" (blur)="onCompanyNameBlur(filterReport)"
+                            [autoHighlight]="true" [selectOnFocus]="true">
+                          </ng2-completer>
+                          <show-errors [control]="filterReport.controls.searchCompany"></show-errors>
+                        </div>
+
+                        <div class="col-md-3 col-xs-12">
+                          <label>Viewing Option
+                          </label>
+                          <input type="radio" formControlName="viewing_option" value="6" /> Preview First
+                          <input type="radio" formControlName="viewing_option" value="12" /> Print Direct
+                          <show-errors [control]="filterReport.controls.viewing_option"></show-errors>
+                        </div>
+
+                        <div class="col-md-9 col-xs-12">
+                          <label></label>
+                          <div class="select-options">
+                            <span>
+                              <label>
+                                <span class="custom-check">
+                                  <input type="checkbox" id="op1_checkboxOption" formControlName="checkboxOption"> Include "Summary by Comapany,Plan and Coverage"
+                                  <span></span>
+                                </span>
+                              </label>
+                            </span>
+                            <span>
+                              <label>
+                                <span class="custom-check">
+                                  <input type="checkbox" id="op2_checkboxOption" formControlName="checkboxOption"> Include "Cards by Comapany" Report?
+                                  <span></span>
+                                </span>
+                              </label>
+                            </span>
+                            <span>
+                              <label>
+                                <span class="custom-check">
+                                  <input type="checkbox" id="op3_checkboxOption" formControlName="checkboxOption"> Do 1st 15 only!
+                                  <span></span>
+                                </span>
+                              </label>
+                            </span>
+                          </div>
+                        </div>
+
+
+
+
+                      </div>
+                    </div>
+
+                  </div>
+
+                  <div class="col-md-3 col-xs-12" *ngIf="tableId == 'cardCountByCompanyList'">
+                    <label>{{ 'common.company-name' | translate }}
+                      <span class="required">*</span>
+                    </label>  <!-- companyData commeted which was used for static earlier -->
+                    <ng2-completer [inputId]="'company'" id="company" formControlName="company" [datasource]="companyDataRemote" [minSearchLength]="0"
+                      [placeholder]="'Search Company'" [textSearching]="'Please wait...'" [inputClass]="'form-control wwww'"
+                      [fillHighlighted]="false" (selected)="onCompanyNameSelected($event)"
+                      [autoHighlight]="true" [selectOnFocus]="true">
+                    </ng2-completer>
+                    <show-errors [control]="filterReport.controls.company"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12" *ngIf="tableId == 'amountPaidByCompanyPlanAndCoverageCategoryList'">
+                    <label>Sorting Option</label>
+                    <input type="radio" formControlName="sortingOption" value="company" /> Company
+                    <input type="radio" formControlName="sortingOption" value="plan number" /> Plan Number
+                    <input type="radio" formControlName="sortingOption" value="cov cat" /> Coverage Category
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>&nbsp;</label>
+                    <button type="submit" id="{{reportID}}-dataManagementReport" style="display: none" class="btn green-btn">{{'button.search' | translate}}</button>
+                    <button type="button" id="{{reportID}}-dataManagementReport-search" (click)="callSubmitButton()" class="btn green-btn">{{'button.search' | translate}}</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div *ngIf="showHideNoDataFound" class="grid-box">
+          <div class="grid-heading">
+            <h3>{{'common.noDataFound' | translate}}</h3>
+          </div>
+        </div>
+        <div [hidden]="!showReportList" *ngIf="reportID != 82 && reportID != 78">
+          <div class="grid-box">
+            <div class="grid-heading">
+              <h3>{{'uft.dashboard.financeReports.reportGrid' | translate}}</h3>
+            </div>
+            <!-- Grid Heading Ends -->
+            <div class="grid-inner">
+              <form>
+                <div class="form-row">
+                  <div class="row">
+                    <div class="col-md-12 col-xs-12 table-col">
+                      <div *ngIf="tableId == 'studentStatusList'" class="table-responsive hms-loading-table">
+                        <!--[Start Grid Column Filters Buttons]-->
+                        <div class="form-row text-right search-top">
+                          <button type="submit" id="companySearchFilterSearch" class="btn green-btn searchreset" (click)="filterGridColumnSearch('studentStatusList')"
+                            title="Search">
+                            <span class="glyphicon glyphicon-search"></span>
+                          </button>
+                          <button id="gridColumnSearchFilterReset" class="btn grey-btn searchreset" (click)="resetGridColumnSearchFilter('studentStatusList')">
+                            <span class="glyphicon glyphicon-repeat" title="Clear"></span>
+                          </button>
+                        </div>
+                        <table id="studentStatusList" class="display table table-bordered table-stripped">
+                          <tfoot>
+                            <tr>
+                              <td width="50px">
+                                <input id="gridFilter55_cardNum" class="fm-txt form-control tFootInput inputSearch" type="text" placeholder="Card Number"
+                                  name="cardNum" [(ngModel)]="gridFilter55_cardNum" />
+                              </td>
+
+                              <td width="50px">
+                                <input id="gridFilter55_studentName" class="fm-txt form-control tFootInput inputSearch" type="text" placeholder="Student Name"
+                                  name="studentName" [(ngModel)]="gridFilter55_studentName" />
+                              </td>
+                              <td width="50px">
+                                <my-date-picker id="gridFilter55_studentDob" class="inputSearch" name="studentDob" data-type="date" [options]="myDatePickerOptions"
+                                  [selDate]="dateNameArray['studentDob']" (inputFocusBlur)="changeFilterDateFormat($event, 'studentDob')"
+                                  placeholder="dd/mmm/yyyy" [(ngModel)]="gridFilter55_studentDob">
+                                </my-date-picker>
+                              </td>
+                              <!-- #487: Student Status Report - As of now School Name comented until backend confirmation -->
+                              <td width="50px">
+                                <input id="gridFilter55_schoolName" class="fm-txt form-control tFootInput inputSearch" type="text" placeholder="School Name"
+                                  name="schoolName" [(ngModel)]="gridFilter55_schoolName" />
+                              </td>
+                              <td width="90px">
+                                <my-date-picker id="gridFilter55_schoolStartDate" class="inputSearch" name="studentEffDt" data-type="date" [options]="myDatePickerOptions"
+                                  [selDate]="dateNameArray['studentEffDt']" (inputFocusBlur)="changeFilterDateFormat($event, 'studentEffDt')"
+                                  placeholder="dd/mmm/yyyy" [(ngModel)]="gridFilter55_schoolStartDate">
+                                </my-date-picker>
+                              </td>
+                              <td width="50px">
+                                <my-date-picker id="gridFilter55_schoolEndDate" class="inputSearch" name="studentExpDt" data-type="date" [options]="myDatePickerOptions"
+                                  [selDate]="dateNameArray['studentExpDt']" (inputFocusBlur)="changeFilterDateFormat($event, 'studentExpDt')"
+                                  placeholder="dd/mmm/yyyy" [(ngModel)]="gridFilter55_schoolEndDate">
+                                </my-date-picker>
+                              </td>
+                              <td width="50px">
+                                <input id="gridFilter55_age1" class="fm-txt form-control tFootInput inputSearch" type="text" placeholder="Age 1" name="age1"
+                                  [(ngModel)]="gridFilter55_age1" />
+                              </td>
+                              <td width="50px">
+                                <input id="gridFilter55_age2" class="fm-txt form-control tFootInput inputSearch" type="text" placeholder="Age 2" name="age2"
+                                  [(ngModel)]="gridFilter55_age2" />
+                              </td>
+                              <td width="50px">
+                                <my-date-picker id="gridFilter55_age1Exp" class="inputSearch" name="age1Exp" data-type="date" [options]="myDatePickerOptions"
+                                  [selDate]="dateNameArray['age1Exp']" (inputFocusBlur)="changeFilterDateFormat($event, 'age1Exp')"
+                                  placeholder="dd/mmm/yyyy" [(ngModel)]="gridFilter55_age1Exp">
+                                </my-date-picker>
+                              </td>
+                              <td width="50px">
+                                <my-date-picker id="gridFilter55_age2Exp" class="inputSearch" name="age2Exp" data-type="date" [options]="myDatePickerOptions"
+                                  [selDate]="dateNameArray['age2Exp']" (inputFocusBlur)="changeFilterDateFormat($event, 'age2Exp')"
+                                  placeholder="dd/mmm/yyyy" [(ngModel)]="gridFilter55_age2Exp">
+                                </my-date-picker>
+                              </td>
+                            </tr>
+                          </tfoot>
+                          <!--[End Grid Column Filters]-->
+                        </table>
+                      </div>
+                      <div *ngIf="tableId == 'amountPaidCompanyplancard'" class="table-responsive uFTReportList">
+
+                        <!--[Start Grid Column Filters Buttons]-->
+                        <div class="form-row text-right search-top">
+                          <button type="submit" id="companySearchFilterSearch" class="btn green-btn searchreset" (click)="filterGridColumnSearch('fundingSummary')"
+                            title="Search">
+                            <span class="glyphicon glyphicon-search"></span>
+                          </button>
+                          <button id="gridColumnSearchFilterReset" class="btn grey-btn searchreset" (click)="resetGridColumnSearchFilter('fundingSummary')">
+                            <span class="glyphicon glyphicon-repeat" title="Clear"></span>
+                          </button>
+                        </div>
+                        <table id="amountPaidCompanyplancard" class="display table table-bordered table-stripped">
+                          <!--[Start Grid Column Filters]-->
+                          <tfoot>
+                            <tr>
+
+                              <td width="50px">
+                                <input id="GridFilter27_coId" class="fm-txt form-control tFootInput inputSearch" type="text" placeholder="Company Number"
+                                  name="GridFilter27_coId" [(ngModel)]="GridFilter27_coId" />
+                              </td>
+                              <td width="50px">
+                                <input id="GridFilter27_coName" class="fm-txt form-control tFootInput inputSearch" type="text" placeholder="Company Name"
+                                  name="coId" [(ngModel)]="GridFilter27_coName" />
+                              </td>
+                              <td width="50px">
+                                <input id="GridFilter27_planId" class="fm-txt form-control tFootInput inputSearch" type="text" placeholder="Plan Id" name="GridFilter27_planId"
+                                  [(ngModel)]="GridFilter27_planId" />
+                              </td>
+
+                              <td width="50px">
+                                <input id="GridFilter27_dentalAmountClaimed" class="fm-txt form-control tFootInput inputSearch" type="text" placeholder="Dental Amount Claimed"
+                                  name="GridFilter27_dentalAmountClaimed" [(ngModel)]="GridFilter27_dentalAmountClaimed" />
+                              </td>
+                              <td width="50px">
+                                <input id="GridFilter27_dentalAmountPaid" class="fm-txt form-control tFootInput inputSearch" type="text" placeholder="Dental Amount Paid"
+                                  name="GridFilter27_dentalAmountPaid" [(ngModel)]="GridFilter27_dentalAmountPaid" />
+                              </td>
+                              <td width="50px">
+                                <input id="GridFilter27_visionAmountClaimed" class="fm-txt form-control tFootInput inputSearch" type="text" placeholder="Vision Amount Claimed"
+                                  name="GridFilter27_visionAmountClaimed" [(ngModel)]="GridFilter27_visionAmountClaimed" />
+                              </td>
+                              <td width="50px">
+                                <input id="GridFilter27_visionAmountPaid" class="fm-txt form-control tFootInput inputSearch" type="text" placeholder="Vision Amount Paid"
+                                  name="GridFilter27_primaryCardholderName" [(ngModel)]="GridFilter27_visionAmountPaid" />
+                              </td>
+
+
+                              <td width="50px">
+                                <input id="GridFilter27_healthAmountClaimed" class="fm-txt form-control tFootInput inputSearch" type="text" placeholder="Health Amount Claimed"
+                                  name="GridFilter27_healthAmountClaimed" [(ngModel)]="GridFilter27_healthAmountClaimed" />
+                              </td>
+                              <td width="50px">
+                                <input id="GridFilter27_healthAmountPaid" class="fm-txt form-control tFootInput inputSearch" type="text" placeholder="Health Amount Paid"
+                                  name="GridFilter27_healthAmountPaid" [(ngModel)]="GridFilter27_healthAmountPaid" />
+                              </td>
+                              <td width="50px">
+                                <input id="GridFilter27_drugAmountClaimed" class="fm-txt form-control tFootInput inputSearch" type="text" placeholder="Drug Amount Claimed"
+                                  name="GridFilter27_drugAmountClaimed" [(ngModel)]="GridFilter27_drugAmountClaimed" />
+                              </td>
+
+                              <td width="50px">
+                                <input id="GridFilter27_drugAmountPaid" class="fm-txt form-control tFootInput inputSearch" type="text" placeholder="Drug Amount Paid"
+                                  name="GridFilter27_drugAmountPaid" [(ngModel)]="GridFilter27_drugAmountPaid" />
+                              </td>
+                              <td width="50px">
+                                <input id="GridFilter27_hsaAmountClaimed" class="fm-txt form-control tFootInput inputSearch" type="text" placeholder="Hsa Amount Claimed"
+                                  name="GridFilter27_hsaAmountClaimed" [(ngModel)]="GridFilter27_hsaAmountClaimed" />
+                              </td>
+                              <td width="50px">
+                                <input id="GridFilter27_hsaAmountPaid" class="fm-txt form-control tFootInput inputSearch" type="text" placeholder="Hsa Amount Paid"
+                                  name="GridFilter27_hsaAmountPaid" [(ngModel)]="GridFilter27_hsaAmountPaid" />
+                              </td>
+
+                            </tr>
+                          </tfoot>
+                        </table>
+                      </div>
+                      <div *ngIf="tableId == 'brokerQsi'" class="table-responsive">
+                        <div class="form-row text-right search-top">
+                          <button id="reports_gridSearch" class="btn green-btn searchreset" type="submit" (click)="filterGridColumnSearch('brokerQsi')"
+                            title="Search">
+                            <span class="glyphicon glyphicon-search"></span>
+                          </button>
+                          <button id="reports_resetGridSearch" class="btn grey-btn searchreset" (click)="resetGridColumnSearchFilter('brokerQsi')"
+                            title="Reset">
+                            <span class="glyphicon glyphicon-repeat"></span>
+                          </button>
+                        </div>
+                        <table id="brokerQsi" class="display table table-bordered table-stripped">
+                          <tfoot>
+                            <tr>
+
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch" type="text" name="brokerCoId" placeholder="Company Number"
+                                  [(ngModel)]="brokerCoId">
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="brokerCoName" placeholder="Company Name"
+                                  [(ngModel)]="brokerCoName">
+                              </td>
+                              
+                              <td class="alignDpRight">
+                                <div class="calender-field">
+                                <my-date-picker id="brokerEffectiveDate" [(ngModel)]="brokerEffectiveDate" class="inputSearch" name="brokerEffectiveDate"
+                                  data-type="date" [options]="myDatePickerOptions" [selDate]="dateNameArray['brokerEffectiveDate']"
+                                  (inputFocusBlur)="changeFilterDateFormat($event, 'brokerEffectiveDate')" placeholder="dd/mmm/yyyy">
+                                </my-date-picker>
+                                </div>
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="brokerComission" placeholder="Commission Rate"
+                                  [(ngModel)]="brokerComission">
+                              </td>
+                              <td class="alignDpRight">
+                                <div class="calender-field">
+                               
+                                <my-date-picker id="brokerTerminationDate" [(ngModel)]="brokerTerminationDate" class="inputSearch" name="brokerTerminationDate"
+                                  data-type="date" [options]="myDatePickerOptions" [selDate]="dateNameArray['brokerTerminationDate']"
+                                  (inputFocusBlur)="changeFilterDateFormat($event, 'brokerTerminationDate')" placeholder="dd/mmm/yyyy">
+                                </my-date-picker>
+                                </div>
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="brokerPreAuthPayment" placeholder="Pre-Autherized Payment"
+                                  [(ngModel)]="brokerPreAuthPayment">
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="brokerBalance" placeholder="Balance"
+                                  [(ngModel)]="brokerBalance">
+                              </td>
+                            </tr>
+                          </tfoot>
+                        </table>
+                      </div>
+
+                      <div *ngIf="  tableId =='cardsbycompany'" class="table-responsive hms-loading-table">
+                        <!--[Start Grid Column Filters Buttons]-->
+                        <div class="form-row text-right search-top">
+                          <button type="submit" id="companySearchFilterSearch" class="btn green-btn searchreset" (click)="filterGridColumnSearch('cardsbycompany')"
+                            title="Search">
+                            <span class="glyphicon glyphicon-search"></span>
+                          </button>
+                          <button id="gridColumnSearchFilterReset" class="btn grey-btn searchreset" (click)="resetGridColumnSearchFilter('cardsbycompany')">
+                            <span class="glyphicon glyphicon-repeat" title="Clear"></span>
+                          </button>
+                        </div>
+                        <table id="cardsbycompany" class="display table table-bordered table-stripped">
+                          <!--[Start Grid Column Filters]-->
+                          <tfoot>
+                            <tr>
+                              <td>
+                                <input id="GridFilter22_cardHolderName" class="fm-txt form-control tFootInput inputSearch" type="text" placeholder="Card Holder Name"
+                                  name="GridFilter22_cardHolderName" [(ngModel)]="GridFilter22_cardHolderName" />
+                              </td>
+
+                              <td>
+                                <input id="GridFilter22_cardNumber" class="fm-txt form-control tFootInput inputSearch grid_right" type="text" placeholder="Card Number"
+                                  name="cardNumber" [(ngModel)]="GridFilter22_cardNumber" />
+                              </td>
+                              <td>
+                                <input id="GridFilter22_address" class="fm-txt form-control tFootInput inputSearch grid_right" type="text" placeholder="Address" name="address"
+                                  [(ngModel)]="GridFilter22_address" />
+                              </td>
+                              <td>
+                                <input id="GridFilter22_cityAddress" class="fm-txt form-control tFootInput inputSearch grid_right" type="text" placeholder="City Address"
+                                  name="cityaddress" [(ngModel)]="GridFilter22_cityAddress" />
+                              </td>
+                              <td>
+                                <input id="GridFilter22_planName" class="fm-txt form-control tFootInput inputSearch grid_right" type="text" placeholder="Plan Name"
+                                  name="planame" [(ngModel)]="GridFilter22_planName" />
+                              </td>
+                              <td>
+                                <input id="GridFilter22_personGender" class="fm-txt form-control tFootInput inputSearch grid_right" type="text" placeholder="Gender"
+                                  name="gender" [(ngModel)]="GridFilter22_personGender" />
+                              </td>
+                              <td class="alignDpRight">
+                                <div class="calender-field">
+                                  <my-date-picker id="filterServiceDate" class="inputSearch" name="serviceDate" data-type="date" [options]="myDatePickerOptions"
+                                    [selDate]="dateNameArray['serviceDate']" (inputFocusBlur)="changeFilterDateFormat($event, 'serviceDate')"
+                                    placeholder="dd/mmm/yyyy" [(ngModel)]="GridFilter22_effectiveDate">
+                                  </my-date-picker>
+                                </div>
+                              </td>
+                              <td class="alignDpRight">
+                                <div class="calender-field">
+                                  <my-date-picker id="filterexpiryDate" class="inputSearch" name="expiryDate" data-type="date" [options]="myDatePickerOptions"
+                                    [selDate]="dateNameArray['expiryDate']" (inputFocusBlur)="changeFilterDateFormat($event, 'expiryDate')"
+                                    placeholder="dd/mmm/yyyy" [(ngModel)]="GridFilter22_expiryDate">
+                                  </my-date-picker>
+                                </div>
+                              </td>
+                            </tr>
+                          </tfoot>
+                          <!--[End Grid Column Filters]-->
+                        </table>
+                      </div>
+                      <div *ngIf="tableId =='claimpaymentbycardholder'" class="table-responsive hms-loading-table">
+                        <!--[Start Grid Column Filters Buttons]-->
+                        <div class="form-row text-right search-top">
+                          <button type="submit" id="companySearchFilterSearch" class="btn green-btn searchreset" (click)="filterGridColumnSearch('claimpaymentbycardholder')"
+                            title="{{'common.search' | translate }}">
+                            <span class="glyphicon glyphicon-search"></span>
+                          </button>
+                          <button id="gridColumnSearchFilterReset" class="btn grey-btn searchreset" (click)="resetGridColumnSearchFilter('claimpaymentbycardholder')">
+                            <span class="glyphicon glyphicon-repeat" title="{{'common.clear' | translate }}"></span>
+                          </button>
+                        </div>
+                        <table id="claimpaymentbycardholder" class="display table table-bordered table-stripped">
+                          <!--[Start Grid Column Filters]-->
+                          <tfoot>
+                            <tr>
+                              <td>
+                                <input id="GridFilter26_cardNumber" class="fm-txt form-control tFootInput inputSearch" type="text" placeholder="{{'dashboard.report.cardNumber' | translate}}"
+                                  name="GridFilter26_cardNumber" [(ngModel)]="GridFilter26_cardNumber" />
+                              </td>
+                              <td>
+                                <input id="GridFilter26_confirmationNumber" class="fm-txt form-control tFootInput inputSearch amount_right_grid" type="text" placeholder="{{'dashboard.report.confirmationNumber' | translate }}"
+                                  name="GridFilter26_confirmationNumber" [(ngModel)]="GridFilter26_confirmationNumber" />
+                              </td>
+                              <td>
+                                <input id="GridFilter26_cardholderName" class="fm-txt form-control tFootInput inputSearch amount_right_grid" type="text" placeholder="{{'dashboard.report.clientName' | translate }}"
+                                  name="GridFilter26_cardholderName" [(ngModel)]="GridFilter26_cardholderName" />
+                              </td>
+                              <td class="alignDpRight">
+                                <div class="calender-field">
+                                  <my-date-picker id="filterServiceDate" class="inputSearch" name="serviceDate" data-type="date" [options]="myDatePickerOptions"
+                                    [selDate]="dateNameArray['serviceDate']" (inputFocusBlur)="changeFilterDateFormat($event, 'serviceDate')"
+                                    placeholder="{{'common.date-placeholder' | translate }}" [(ngModel)]="GridFilter26_serviceDate">
+                                  </my-date-picker>
+                                </div>
+                              </td>
+                              <td>
+                                <input id="GridFilter26_procCd" class="fm-txt form-control tFootInput inputSearch amount_right_grid" type="text" placeholder="{{'dashboard.report.procedureCode' | translate }}" name="GridFilter26_procCd"
+                                  [(ngModel)]="GridFilter26_procCd" />
+                              </td>
+                              <td>
+                                <input id="GridFilter26_procDesc" class="fm-txt form-control tFootInput inputSearch amount_right_grid" type="text" placeholder="{{'dashboard.report.procedureDescription' | translate }}"
+                                  name="GridFilter26_procDesc" [(ngModel)]="GridFilter26_procDesc" />
+                              </td>
+                              <td>
+                                <input id="GridFilter26_amountSubmitted" class="fm-txt form-control tFootInput inputSearch amount_right_grid" type="text" placeholder="{{'dashboard.report.amountSubmitted' | translate }}"
+                                  name="GridFilter26_amountSubmitted" [(ngModel)]="GridFilter26_amountSubmitted" />
+                              </td>
+                              <td>
+                                <input id="GridFilter26_amountPaid" class="fm-txt form-control tFootInput inputSearch amount_right_grid" type="text" placeholder="{{'dashboard.report.amountPaid' | translate }}"
+                                  name="GridFilter26_amountPaid" [(ngModel)]="GridFilter26_amountPaid" />
+                              </td>
+                              <td>
+                                <input id="GridFilter26_amountNotPaid" class="fm-txt form-control tFootInput inputSearch amount_right_grid" type="text" placeholder="{{'dashboard.report.amountNotPaid' | translate }}"
+                                  name="GridFilter26_amountNotPaid" [(ngModel)]="GridFilter26_amountNotPaid" />
+                              </td>
+
+                            </tr>
+                          </tfoot>
+                          <!--[End Grid Column Filters]-->
+                        </table>
+                      </div>
+
+                      <!-- Log #487 Broker Labels Report Start-->
+                      <div *ngIf="tableId == 'brokerMailingLabels'" class="table-responsive brokerMailingLabels">
+                        <div class="form-row text-right search-top">
+                          <button id="reports_gridSearch" class="btn green-btn searchreset" type="submit" (click)="filterGridColumnSearch('brokerMailingLabels')"
+                            title="Search">
+                            <span class="glyphicon glyphicon-search"></span>
+                          </button>
+                          <button id="reports_resetGridSearch" class="btn grey-btn searchreset" (click)="resetGridColumnSearchFilter('brokerMailingLabels')"
+                            title="Reset">
+                            <span class="glyphicon glyphicon-repeat"></span>
+                          </button>
+                        </div>
+                        <table id="brokerMailingLabels" class="display table table-bordered table-stripped">
+                          <tfoot>
+                            <tr>
+
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch" type="text" name="brokerId" placeholder="Broker Id" [(ngModel)]="brokerId">
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="brokerName" placeholder="Broker Name"
+                                  [(ngModel)]="brokerName">
+                              </td>
+                              
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="province" placeholder="Province" [(ngModel)]="province">
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="city" placeholder="City" [(ngModel)]="city">
+                              </td>
+                              <td width="10%">
+                                <select [(ngModel)]='active' dir="rtl" id="brokerStatus" class="fm-txt form-control inputSearch" name="active">
+                                  <option value="" hidden>{{'common.select' | translate}}</option>
+                                  <option value="">{{ 'company.search-broker.all' | translate }}</option>
+                                  <option value="active">{{ 'company.search-broker.active' | translate }}</option>
+                                  <option value="inactive">{{ 'company.search-broker.inactive' | translate }}</option>
+                                </select>
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="addLine1" placeholder="Address Line 1"
+                                  [(ngModel)]="addLine1">
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="addLine2" placeholder="Address Line 2"
+                                  [(ngModel)]="addLine2">
+                              </td>
+                            </tr>
+                          </tfoot>
+                        </table>
+                      </div>
+                      <!-- Log #487 Broker Labels Report Ends -->
+
+                      <!-- Log #487 Cardholder Labels Report Start -->
+                      <div *ngIf="tableId == 'cardholderLabels'" class="table-responsive">
+                        <div class="form-row text-right search-top">
+                          <button id="reports_gridSearch" class="btn green-btn searchreset" type="submit" (click)="filterGridColumnSearch('cardholderLabels')"
+                            title="Search">
+                            <span class="glyphicon glyphicon-search"></span>
+                          </button>
+                          <button id="reports_resetGridSearch" class="btn grey-btn searchreset" (click)="resetGridColumnSearchFilter('cardholderLabels')"
+                            title="Reset">
+                            <span class="glyphicon glyphicon-repeat"></span>
+                          </button>
+                        </div>
+                        <table id="cardholderLabels" class="display table table-bordered table-stripped">
+                          <tfoot>
+                            <tr>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch" type="text" name="cardNum" placeholder="Card Number"
+                                  [(ngModel)]="cardNumber">
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="cardHolderName" placeholder="cardholder Name"
+                                  [(ngModel)]="cardHolderName">
+                              </td>
+                            
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="city" placeholder="City" [(ngModel)]="cardHolderCity">
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="province" placeholder="Province" [(ngModel)]="cardHolderProvince">
+                              </td>
+                              
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="addLine1" placeholder="Address Line 1"
+                                  [(ngModel)]="cardHolderAddLine1">
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="addLine2" placeholder="Address Line 2"
+                                  [(ngModel)]="cardHolderAddLine2">
+                              </td>
+                            </tr>
+                          </tfoot>
+                        </table>
+                      </div>
+                      <!-- Log #487 Cardholder Labels Report End  -->
+
+                      <!-- Log #487 Company Mailing Labels Report Start -->
+                      <div *ngIf="tableId == 'companyMailingLabels'" class="table-responsive">
+                        <div class="form-row text-right search-top">
+                          <button id="reports_gridSearch" class="btn green-btn searchreset" type="submit" (click)="filterGridColumnSearch('companyMailingLabels')"
+                            title="Search">
+                            <span class="glyphicon glyphicon-search"></span>
+                          </button>
+                          <button id="reports_resetGridSearch" class="btn grey-btn searchreset" (click)="resetGridColumnSearchFilter('companyMailingLabels')"
+                            title="Reset">
+                            <span class="glyphicon glyphicon-repeat"></span>
+                          </button>
+                        </div>
+                        <table id="companyMailingLabels" class="display table table-bordered table-stripped">
+                          <tfoot>
+                            <tr>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch" type="text" name="companyNum" placeholder="Company No." [(ngModel)]="companyNum">
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="companyName" placeholder="Company Name"
+                                  [(ngModel)]="companyName">
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="city" placeholder="City" [(ngModel)]="companyCity">
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="province" placeholder="Province" [(ngModel)]="companyProvince">
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="addLine1" placeholder="Address Line 1"
+                                  [(ngModel)]="companyAddLine1">
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="addLine2" placeholder="Address Line 2"
+                                  [(ngModel)]="companyAddLine2">
+                              </td>
+                            </tr>
+                          </tfoot>
+                        </table>
+                      </div>
+                      <!-- Log #487 Company Mailing Labels Report End  -->
+
+                      <!-- Log #487 Service Provider Mailing Labels Report Start -->
+                      <div *ngIf="tableId == 'serviceProviderMailingLabels'" class="table-responsive">
+                        <div class="form-row text-right search-top">
+                          <button id="reports_gridSearch" class="btn green-btn searchreset" type="submit" (click)="filterGridColumnSearch('serviceProviderMailingLabels')"
+                            title="Search">
+                            <span class="glyphicon glyphicon-search"></span>
+                          </button>
+                          <button id="reports_resetGridSearch" class="btn grey-btn searchreset" (click)="resetGridColumnSearchFilter('serviceProviderMailingLabels')"
+                            title="Reset">
+                            <span class="glyphicon glyphicon-repeat"></span>
+                          </button>
+                        </div>
+                        <table id="serviceProviderMailingLabels" class="display table table-bordered table-stripped">
+                          <tfoot>
+                            <tr>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch" type="text" name="discipline" placeholder="Discipline" [(ngModel)]="providerDiscipline">
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="providerName" placeholder="Provider Name"
+                                  [(ngModel)]="providerName">
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="providerLicenseNum" placeholder="Provider License Num"
+                                  [(ngModel)]="providerLicenseNum">
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="city" placeholder="City" [(ngModel)]="providerCity">
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="province" placeholder="Province" [(ngModel)]="providerProvince">
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="addLine1" placeholder="Address Line 1"
+                                  [(ngModel)]="providerAddLine1">
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="addLine2" placeholder="Address Line 2"
+                                  [(ngModel)]="providerAddLine2">
+                              </td>
+                            </tr>
+                          </tfoot>
+                        </table>
+                      </div>
+                      <!-- Log #487 Service Provider Labels Report End  -->
+
+                      <!-- Log #487 Summary By Card, Company, Plan and Coverage Report Start -->
+                      <div *ngIf="tableId == 'summaryByCompanyPlanCardAndCoverage'" class="table-responsive">
+                        <div class="form-row text-right search-top">
+                          <button id="reports_gridSearch" class="btn green-btn searchreset" type="submit" (click)="filterGridColumnSearch('summaryByCompanyPlanCardAndCoverage')"
+                            title="Search">
+                            <span class="glyphicon glyphicon-search"></span>
+                          </button>
+                          <button id="reports_resetGridSearch" class="btn grey-btn searchreset" (click)="resetGridColumnSearchFilter('summaryByCompanyPlanCardAndCoverage')"
+                            title="Reset">
+                            <span class="glyphicon glyphicon-repeat"></span>
+                          </button>
+                        </div>
+                        <table id="summaryByCompanyPlanCardAndCoverage" class="display table table-bordered table-stripped">
+                          <tfoot>
+                            <tr>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch" type="text" name="coId" placeholder="Company ID" [(ngModel)]="companyId">
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="coName" placeholder="Company Name"
+                                  [(ngModel)]="compName">
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="cardNum" placeholder="Card Num" [(ngModel)]="cardNum">
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="planId" placeholder="Plan Id" [(ngModel)]="planId">
+                              </td>
+                              <td class="alignDpRight">
+                                <div class="calender-field">
+                                  <my-date-picker id="filterServiceDate" class="inputSearch" name="dcItemSeriveDate" data-type="date" [options]="myDatePickerOptions"
+                                    [selDate]="dateNameArray['dcItemSeriveDate']" (inputFocusBlur)="changeFilterDateFormat($event, 'dcItemSeriveDate')"
+                                    placeholder="{{'common.date-placeholder' | translate }}" [(ngModel)]="itemServiceDate">
+                                  </my-date-picker>
+                                </div>
+                              </td>
+                              
+                              <td class="alignDpRight">
+                                <div class="calender-field">
+                                  <my-date-picker id="filterPaymentSumRunDate" class="inputSearch" name="paymentSumRunDate" data-type="date" [options]="myDatePickerOptions"
+                                    [selDate]="dateNameArray['paymentSumRunDate']" (inputFocusBlur)="changeFilterDateFormat($event, 'paymentSumRunDate')"
+                                    placeholder="{{'common.date-placeholder' | translate }}" [(ngModel)]="paymentSumRunDate">
+                                  </my-date-picker>
+                                </div>
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="businessTypeCd" placeholder="Business Type"
+                                  [(ngModel)]="bussType">
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="dentCovCatDesc" placeholder="Coverage Description"
+                                  [(ngModel)]="covCatDesc">
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="amountClaimed" placeholder="Claimed Amount"
+                                  [(ngModel)]="amountClaimed">
+                              </td>
+                            </tr>
+                          </tfoot>
+                        </table>
+                      </div>
+                      <!-- Log #487 Summary By Card, Company, Plan and Coverage Report End -->
+
+                      <!-- Log #487 Card Count By Company Report Start -->
+                      <div *ngIf="tableId == 'cardCountByCompanyList'" class="table-responsive">
+                        <div class="form-row text-right search-top">
+                          <button id="reports_gridSearch" class="btn green-btn searchreset" type="submit" (click)="filterGridColumnSearch('cardCountByCompanyList')"
+                            title="Search">
+                            <span class="glyphicon glyphicon-search"></span>
+                          </button>
+                          <button id="reports_resetGridSearch" class="btn grey-btn searchreset" (click)="resetGridColumnSearchFilter('cardCountByCompanyList')"
+                            title="Reset">
+                            <span class="glyphicon glyphicon-repeat"></span>
+                          </button>
+                        </div>
+                        <table id="cardCountByCompanyList" class="display table table-bordered table-stripped">
+                          <tfoot>
+                            <tr>
+                             
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch" type="text" name="coId" placeholder="Company Name & No."
+                                  [(ngModel)]="gridFilter62_companyId">
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="divIdDivName" placeholder="Division" [(ngModel)]="gridFilter62_division">
+                              </td>
+                              
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="countSingle" placeholder="Singles"
+                                  [(ngModel)]="gridFilter62_singles">
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="countFamily" placeholder="Families"
+                                  [(ngModel)]="gridFilter62_families">
+                              </td>
+                              <td width="8%">
+                                
+                              </td>
+                            </tr>
+                          </tfoot>
+                        </table>
+                      </div>
+                      <!-- Log #487 Card Count By Company Report  -->
+
+                      <!-- Log #487 Educational Status Letters Report -->
+                      <div *ngIf="tableId == 'educationalStatusLetters'" class="table-responsive">
+                        <div class="form-row text-right search-top">
+                          <button id="reports_gridSearch" class="btn green-btn searchreset" type="submit" (click)="filterGridColumnSearch('educationalStatusLetters')"
+                            title="Search">
+                            <span class="glyphicon glyphicon-search"></span>
+                          </button>
+                          <button id="reports_resetGridSearch" class="btn grey-btn searchreset" (click)="resetGridColumnSearchFilter('educationalStatusLetters')"
+                            title="Reset">
+                            <span class="glyphicon glyphicon-repeat"></span>
+                          </button>
+                        </div>
+                        <table id="educationalStatusLetters" class="display table table-bordered table-stripped">
+                          <tfoot>
+                            <tr>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch" type="text" name="coId" placeholder="Company ID" [(ngModel)]="companyId">
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="coName" placeholder="Company Name"
+                                  [(ngModel)]="compName">
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="planId" placeholder="Card Number" [(ngModel)]="searchCardNumber">
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="businessTypeCd" placeholder="First Name"
+                                  [(ngModel)]="firstName">
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="dentCovCatDesc" placeholder="Last Name"
+                                  [(ngModel)]="lastName">
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="amountClaimed" placeholder="Address Line 1"
+                                  [(ngModel)]="addressLineOne">
+                              </td>
+                              
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="amountClaimed" placeholder="City"
+                                  [(ngModel)]="searchCity">
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="amountClaimed" placeholder="Province"
+                                  [(ngModel)]="searchProvince">
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="amountClaimed" placeholder="Email"
+                                  [(ngModel)]="email">
+                              </td>
+                              
+                            </tr>
+                          </tfoot>
+                        </table>
+                      </div>
+                      <!-- Log #487 Educational Status Letters Report  -->
+
+                      <!-- Log #487 FINANCIAL: Statement - Company Level/Annual Statement Report -->
+                      <div *ngIf="tableId == 'financialStatementCompanyLevelAnnualStatement'" class="table-responsive">
+
+
+                        <div class="form-row text-right search-top">
+                          <button id="reports_gridSearch" class="btn green-btn searchreset" type="submit" (click)="filterGridColumnSearch('financialStatementCompanyLevelAnnualStatement')"
+                            title="Search">
+                            <span class="glyphicon glyphicon-search"></span>
+                          </button>
+                          <button id="reports_resetGridSearch" class="btn grey-btn searchreset" (click)="resetGridColumnSearchFilter('financialStatementCompanyLevelAnnualStatement')"
+                            title="Reset">
+                            <span class="glyphicon glyphicon-repeat"></span>
+                          </button>
+                        </div>
+                        <table id="financialStatementCompanyLevelAnnualStatement" class="display table table-bordered table-stripped">
+                          <tfoot>
+                            <tr>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch" type="text" name="coId" placeholder="Company ID" [(ngModel)]="companyId">
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="coName" placeholder="Company Name"
+                                  [(ngModel)]="compName">
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="planId" placeholder="Plan Id" [(ngModel)]="planId">
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="businessTypeCd" placeholder="Business Type"
+                                  [(ngModel)]="bussType">
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="dentCovCatDesc" placeholder="Coverage Description"
+                                  [(ngModel)]="covCatDesc">
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="amountClaimed" placeholder="Claimed Amount"
+                                  [(ngModel)]="amountClaimed">
+                              </td>
+                            </tr>
+                          </tfoot>
+                        </table>
+                      </div>
+                      <!-- Log #487 FINANCIAL: Statement - Company Level/Annual Statement Report  -->
+
+                      <!-- Log #487 Service Provider List Report -->
+                      <div *ngIf="tableId == 'serviceProvidersList'" class="table-responsive">
+                        <div class="form-row text-right search-top">
+                          <button id="reports_gridSearch" class="btn green-btn searchreset" type="submit" (click)="filterGridColumnSearch('serviceProvidersList')"
+                            title="{{'common.search' | translate}}">
+                            <span class="glyphicon glyphicon-search"></span>
+                          </button>
+                          <button id="reports_resetGridSearch" class="btn grey-btn searchreset" (click)="resetGridColumnSearchFilter('serviceProvidersList')"
+                            title="{{'common.reset' | translate}}">
+                            <span class="glyphicon glyphicon-repeat"></span>
+                          </button>
+                        </div>
+                        <table id="serviceProvidersList" class="display table table-bordered table-stripped">
+                          <tfoot>
+                            <tr>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch" type="text" name="dentProvLicenseNum" placeholder="{{'dashboard.report.providerNo' | translate }}" [(ngModel)]="dentProvLicenseNum">
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="providerName" placeholder="{{'dashboard.report.providerName' | translate }}"
+                                  [(ngModel)]="providersName">
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="dentProvUli" placeholder="{{'dashboard.report.uli' | translate}}" [(ngModel)]="provUli">
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="dentSpecialityTypeDesc" placeholder="{{'dashboard.report.specialty' | translate }}"
+                                  [(ngModel)]="specialityType">
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="discipline" placeholder="{{'dashboard.report.discipline' | translate}}"
+                                  [(ngModel)]="provDiscipline">
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="dentProvBillAddL1MailAdd" placeholder="{{'dashboard.report.address' | translate }}"
+                                  [(ngModel)]="providerAddress">
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="postalCd" placeholder="{{'dashboard.report.postalCode' | translate }}"
+                                  [(ngModel)]="postalCode">
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="dentProvBillAddPhoneNum" placeholder="{{'dashboard.report.telephone' | translate}}"
+                                  [(ngModel)]="provTelephone">
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="languageCd" placeholder="{{'dashboard.report.language' | translate }}"
+                                  [(ngModel)]="language">
+                              </td>
+                            </tr>
+                          </tfoot>
+                        </table>
+                      </div>
+                      <!-- Log #487 Service Provider List Report  -->
+
+                      <!-- Log #1061 :  START -->
+                      <div *ngIf="tableId == 'modifiedDASPPreauthClaimsList'" class="table-responsive uFTReportList">
+                        <div class="form-row text-right search-top">
+                          <button type="submit" id="companySearchFilterSearch" class="btn green-btn searchreset" (click)="filterGridColumnSearch('modifiedDASPPreauthClaimsList')"
+                            title="Search">
+                            <span class="glyphicon glyphicon-search"></span>
+                          </button>
+                          <button id="gridColumnSearchFilterReset" class="btn grey-btn searchreset" (click)="resetGridColumnSearchFilter('modifiedDASPPreauthClaimsList')">
+                            <span class="glyphicon glyphicon-repeat" title="Clear"></span>
+                          </button>
+                        </div>
+                        <table id="modifiedDASPPreauthClaimsList" class="display table table-bordered table-stripped">
+                          <tfoot>
+                            <tr>
+                              <td width="50px">
+                                <input id="filterCardId" class="fm-txt form-control tFootInput inputSearch" type="text" placeholder="Card Number" name="cardNum"
+                                  [(ngModel)]="GridFilter112_cardNumber" />
+                              </td>
+                              <td width="50px">
+                                <input id="filterFirstName" class="fm-txt form-control tFootInput inputSearch amount_right_grid" type="text" placeholder="Problem"
+                                  name="problem" [(ngModel)]="GridFilter112_problem" />
+                              </td>
+                            </tr>
+                          </tfoot>
+                        </table>
+                      </div>
+                      <!-- Log #1061 : END -->
+
+                      <!-- QSI.010  -->
+                      <div *ngIf="tableId == 'amountPaidByCompanyPlanAndCoverageCategoryList'" class="table-responsive uFTReportList">
+                        <div class="form-row text-right search-top">
+                          <button type="submit" id="companySearchFilterSearch" class="btn green-btn searchreset" (click)="filterGridColumnSearch('fundingSummary')"
+                            title="Search">
+                            <span class="glyphicon glyphicon-search"></span>
+                          </button>
+                          <button id="gridColumnSearchFilterReset" class="btn grey-btn searchreset" (click)="resetGridColumnSearchFilter('fundingSummary')">
+                            <span class="glyphicon glyphicon-repeat" title="Clear"></span>
+                          </button>
+                        </div>
+                        <table id="amountPaidByCompanyPlanAndCoverageCategoryList" class="display table table-bordered table-stripped">
+                          <!--[Start Grid Column Filters]-->
+                          <tfoot>
+                            <tr>
+                              <td width="50px">
+                                <input id="GridFilter15_coId" class="fm-txt form-control tFootInput inputSearch" type="text" placeholder="Company Number"
+                                  name="coId" [(ngModel)]="GridFilter15_coId" />
+                              </td>
+                              <td width="50px">
+                                <input id="GridFilter15_coName" class="fm-txt form-control tFootInput inputSearch amount_right_grid" type="text" placeholder="Company Name"
+                                  name="coName" [(ngModel)]="GridFilter15_coName" />
+                              </td>
+                              <td width="50px">
+                                <input id="GridFilter15_planNo" class="fm-txt form-control tFootInput inputSearch amount_right_grid" type="text" placeholder="Plan Number" name="planNo"
+                                  [(ngModel)]="GridFilter15_planNo" />
+                              </td>
+                              <td width="50px">
+                                <input id="GridFilter15_noOfProc" class="fm-txt form-control tFootInput inputSearch amount_right_grid" type="text" placeholder="No. of Proc"
+                                  name="noOfProc" [(ngModel)]="GridFilter15_noOfProc" />
+                              </td>
+                              <td width="50px">
+                                <input id="GridFilter15_amountClaimed" class="fm-txt form-control tFootInput inputSearch amount_right_grid" type="text" placeholder="Amount Claimed"
+                                  name="amountClaimed" [(ngModel)]="GridFilter15_amountClaimed" />
+                              </td>
+                              <td width="50px">
+                                <input id="GridFilter15_professionalAmtPaid" class="fm-txt form-control tFootInput inputSearch amount_right_grid" type="text" placeholder="Professional Fee Paid"
+                                  name="professionalAmtPaid" [(ngModel)]="GridFilter15_professionalAmtPaid" />
+                              </td>
+                              <td width="50px">
+                                <input id="GridFilter15_labPaid" class="fm-txt form-control tFootInput inputSearch amount_right_grid" type="text" placeholder="Lab Paid"
+                                  name="labPaid" [(ngModel)]="GridFilter15_labPaid" />
+                              </td>
+                              <td width="50px">
+                                <input id="GridFilter15_amountPaid" class="fm-txt form-control tFootInput inputSearch amount_right_grid" type="text" placeholder="Amount Paid"
+                                  name="amountPaid" [(ngModel)]="GridFilter15_amountPaid" />
+                              </td>
+                            </tr>
+                          </tfoot>
+                        </table>
+                      </div>
+                      <!--[Start Download Dropdown]-->
+                      <div class="form-row text-center " id="{{tableId}}_reportsPdfButton">
+                        <div class="row">
+                          <div class="col-md-12 col-xs-12">
+                            <div class="dropdown pull-right">
+                              <button class="btn green-btn dropdown-toggle" type="button" data-toggle="dropdown">{{'common.export' | translate}}
+                                <span class="caret"></span>
+                              </button>
+                              <ul class="dropdown-menu">
+                                <li>
+                                  <a href="javascript:void(0)" (click)="dowloadPDFReport()">{{ 'common.pdf' | translate }}</a>
+                                </li>
+                                <li>
+                                  <a href="javascript:void(0)" class="excelExport" (click)="exportReportList()">{{ 'common.excel' | translate }}</a>
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+
+                        </div>
+                      </div>
+                      <!--[End Download Dropdown]-->
+                      <!-- Table Ends -->
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <!-- Grid Inner Ends -->
+          </div>
+        </div>
+        <!-- Grid Box Ends -->
+      </div>
+      <!-- Modal Body End-->
+    </div>
+  </div>
+
+</div>
+<!--Report List Modal-->
+
+
+<div style=" display:none;margin: 11px; display:non;background: #ffff;padding: 1%;" id="hidenTable">
+
+  <body style="overflow-x: hidden; background: #ffff; padding-top:15px; font-family: 'Helvetica Neue', Arial, Helvetica, Geneva, sans-serif; font-size:13px; line-height:19px; margin:0;">
+    <div style="width: 100%; margin-bottom: 30px;">
+      <img style="height: 54px;width: 126px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIQAAAA2CAYAAAAGRjHZAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTM4IDc5LjE1OTgyNCwgMjAxNi8wOS8xNC0wMTowOTowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NEQ4M0Q4NjE1NTBBMTFFOEE3QzVFNjk3RkREMEY4QjciIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NEQ4M0Q4NjA1NTBBMTFFOEE3QzVFNjk3RkREMEY4QjciIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6MTU1MzkwMUYzRTQxMTFFOEJGREZGNjQwNDg5QzFGMTMiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6MTU1MzkwMjAzRTQxMTFFOEJGREZGNjQwNDg5QzFGMTMiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz4x0Cf0AAAW60lEQVR42uxd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">
+      <div>
+        <div style="width: 100%; text-align: left;">
+          <h1 style=" color:#009BDB; font-size: 14px;font-weight: 700; width: 48%;float: left; text-align: left;">
+            {{reportPopUpTitle}}</h1>
+          <p style="width: 48%; float: left; text-align: end;">{{reportDate}}</p>
+        </div>
+
+      </div>
+
+
+
+    </div>
+
+    <table width="1320px" cellspacing="0" cellpadding="0" style="margin: 0 auto;" id='listatble_broker'>
+      <tbody>
+        <tr *ngIf='reportID == 36'>
+          <td class="id-numbers" style="min-height: 125px;
+          float: left; width: 20%;" *ngFor='let data of reportDataArray; let i = index'>
+            <div class="idtype" style="width: 100%;     margin-top: 13px; padding: 9px; border-collapse: collapse;">
+              <p style="font-size: 12px; line-height: 16px; margin: 0px; padding: 0px"> {{data.brokerName}}</p>
+              <p style="font-size: 12px; line-height: 16px; margin: 0px; padding: 0px">{{data.addLine1}}</p>
+              <p style="font-size: 12px; line-height: 16px; margin: 0px; padding: 0px">{{data.addLine2}}</p>
+              <p style="font-size: 12px; line-height: 16px; margin: 0px; padding: 0px">{{data.postalCd}}</p>
+            </div>
+
+
+          </td>
+
+        </tr>
+        <tr *ngIf='reportID == 63'>
+          <td class="id-numbers" style="min-height: 125px;
+          float: left; width: 20%;" *ngFor='let data of reportDataArray'>
+            <div class="idtype" style="width: 100%;     margin-top: 13px; padding: 9px; border-collapse: collapse;">
+              <p style="font-size: 12px; line-height: 16px; margin: 0px; padding: 0px">{{data.cardHolderName ||''}}</p>
+              <p style="font-size: 12px; line-height: 16px; margin: 0px; padding: 0px">{{data.addLine1 ||''}}</p>
+              <p style="font-size: 12px; line-height: 16px; margin: 0px; padding: 0px">{{data.addLine2 ||''}}</p>
+              <p style="font-size: 12px; line-height: 16px; margin: 0px; padding: 0px">{{data.postalCd || ''}}</p>
+            </div>
+
+
+          </td>
+
+        </tr>
+        <tr *ngIf='reportID == 32'>
+          <td class="id-numbers" style="min-height: 125px;
+          float: left; width: 20%;" *ngFor='let data of reportDataArray; let i = index'>
+            <div class="idtype" style="width: 100%;     margin-top: 13px; padding: 9px; border-collapse: collapse;">
+
+              <p style="font-size: 12px; line-height: 16px; margin: 0px; padding: 0px"> {{data.coName ||''}}</p>
+              <p style="font-size: 12px; line-height: 16px; margin: 0px; padding: 0px">{{data.addLine1 ||''}}</p>
+              <p style="font-size: 12px; line-height: 16px; margin: 0px; padding: 0px">{{data.addLine2 ||''}}</p>
+              <p style="font-size: 12px; line-height: 16px; margin: 0px; padding: 0px">{{data.postalCd || ''}}</p>
+            </div>
+
+
+          </td>
+
+        </tr>
+        <tr *ngIf='reportID == 31'>
+          <td style="min-height: 125px;
+          float: left; width: 20%;" *ngFor='let dataArray of primaryArray; let ii = index' class="id-numbers{{ii}}">
+            <div *ngFor='let data of dataArray; let i = index' class="idtype_{{ii}}" style="width: 100%;margin-top: 13px; padding: 9px; border-collapse: collapse;">
+
+              <p style="font-size: 12px; line-height: 16px; margin: 0px; padding: 0px"> {{data.coName ||''}}</p>
+              <p style="font-size: 12px; line-height: 16px; margin: 0px; padding: 0px">{{data.addLine1 ||''}}</p>
+              <p style="font-size: 12px; line-height: 16px; margin: 0px; padding: 0px">{{data.addLine2 ||''}}</p>
+              <p style="font-size: 12px; line-height: 16px; margin: 0px; padding: 0px">{{data.postalCd || ''}}</p>
+            </div>
+
+
+          </td>
+
+        </tr>
+
+
+        <tr *ngIf='reportID == -101'>
+          <table cellpadding="0" cellspacing="0" width="100%" align="center" id="report101">
+
+            <tr>
+              <td style=" padding: 5px 2px; vertical-align: top;">
+                <p style="font-weight: 600; margin: 0; padding: 2px 5px; margin-bottom: 3px; font-family:Helvetica;">
+                  Piper Education</p>
+                <p style="font-weight: 500; font-size: 13px; margin: 0; padding: 2px 5px; font-family:Helvetica;">
+                  Tanya CAmp</p>
+                <p style="font-weight: 500; margin: 0; font-size: 13px; padding: 2px 5px; font-family:Helvetica;">
+                  1055-35 AVE</p>
+
+              </td>
+
+              <td style="    vertical-align: top; ">
+                <p style=" margin: 0; padding: 2px 5px; margin-bottom: 5px; font-family:Helvetica;">03/2021
+                </p>
+                <p style="font-weight: 500; font-size: 13px; margin: 0; padding: 2px 5px; font-family:Helvetica; margin-bottom: 5px; ">
+                  19/02/2019 12:26:22 PM</p>
+              </td>
+            </tr>
+
+            <tr>
+              <td colspan="3" style="border-top: 1px solid #000;">
+                <p style="margin: 0; padding: 3px 5px; font-family:Helvetica; font-size: 13px;">
+                  <span style=" font-weight: 600; margin-left: 38px;">Statement for the service</span>
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="3">
+                <table cellpadding="0" cellspacing="0" width="100%" align="center" style="padding: 0 0px;">
+                  <thead>
+                    <tr>
+                      <th width="13%" style="padding: 0 4px">&nbsp;</th>
+                      <th width="5%" style="padding: 0 4px">
+                        <p style="font-weight: 700; font-family:Helvetica; font-size: 14px; margin: 0; text-align: left;">
+                          DENTAL</p>
+                      </th>
+                      <th width="5%" style="padding: 0 4px">
+                        <p style="font-weight: 700; font-family:Helvetica; font-size: 14px; margin: 0; text-align: left;">
+                          VISION</p>
+                      </th>
+                      <th width="5%" style="padding: 0 4px">
+                        <p style="font-weight: 600; font-family:Helvetica; font-size: 14px; margin: 0;text-align: left;">
+                          TOOTH</p>
+                      </th>
+                      <th width="5%" style="padding: 0 4px">
+                        <p style="font-weight: 600; font-family:Helvetica; font-size: 14px; margin: 0;text-align: left;">
+                          HEALTH</p>
+                      </th>
+                      <th width="5%" style="padding: 0 4px">
+                        <p style="font-weight: 600; font-family:Helvetica; font-size: 14px; margin: 0; text-align: right;">
+                          DRUG</p>
+                      </th>
+                      <th width="5%" style="padding: 0 4px">
+                        <p style="font-weight: 600; font-family:Helvetica; font-size: 14px; margin: 0; text-align: right;">
+                          TOPUP</p>
+                      </th>
+                      <th width="5%" style="padding: 0 4px">
+                        <p style="font-weight: 600; font-family:Helvetica; font-size: 14px; margin: 0; text-align: right;">
+                          TOTAL</p>
+                      </th>
+                      <th width="5%" style="padding: 0 4px">
+                        <p style="font-weight: 600; font-family:Helvetica; font-size: 14px; margin: 0; text-align: right;">
+                          FEES</p>
+                      </th>
+                      <th width="10%" style="padding: 0 4px">
+                        <p style="font-weight: 600; font-family:Helvetica; font-size: 14px; margin: 0; text-align: right;">
+                          FLAT</p>
+                      </th>
+                      <th width="10%" style="padding: 0 4px">
+                        <p style="font-weight: 600; font-family:Helvetica; font-size: 14px; margin: 0; text-align: right;">
+                          GST/HT 5%</p>
+                      </th>
+                      <th width="10%" style="padding: 0 4px">
+                        <p style="font-weight: 600; font-family:Helvetica; font-size: 14px; margin: 0; text-align: right;">
+                          FLAT</p>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td style="padding: 0 4px">
+                        <p style=" font-family:Helvetica; font-size: 13px; margin: 0; margin-bottom: 2px;">
+                          MARCH 2020</p>
+                      </td>
+                      <td style="padding: 0 4px">
+                        <p style=" font-family:Helvetica; font-size: 13px; margin: 0; margin-bottom: 2px; text-align: right;">
+                          00.0</p>
+                      </td>
+                      <td style="padding: 0 4px">
+                        <p style=" font-family:Helvetica; font-size: 13px; margin: 0; margin-bottom: 2px; text-align: right;">
+                          00.0</p>
+                      </td>
+                      <td style="padding: 0 4px">
+                        <p style=" font-family:Helvetica; font-size: 13px; margin: 0; margin-bottom: 2px; text-align: right;">
+                          00.0</p>
+                      </td>
+                      <td style="padding: 0 4px">
+                        <p style=" font-family:Helvetica; font-size: 13px; text-align: right; margin: 0; margin-bottom: 2px;">
+                          00.0</p>
+                      </td>
+                      <td style="padding: 0 4px">
+                        <p style=" font-family:Helvetica; font-size: 13px;  text-align: right;margin: 0; margin-bottom: 2px;">
+                          02061</p>
+                      </td>
+                      <td style="padding: 0 4px">
+                        <p style=" font-family:Helvetica; font-size: 13px; text-align: right; margin: 0; margin-bottom: 2px;">
+                          0</p>
+                      </td>
+                      <td style="padding: 0 4px">
+                        <p style=" font-family:Helvetica; font-size: 13px; margin: 0; margin-bottom: 2px; text-align: right;">
+                          0.00</p>
+                      </td>
+                      <td style="padding: 0 4px">
+                        <p style=" font-family:Helvetica; font-size: 13px; margin: 0; margin-bottom: 2px; text-align: right;">
+                          $90.00</p>
+                      </td>
+                      <td style="padding: 0 4px">
+                        <p style=" font-family:Helvetica; font-size: 13px; margin: 0; margin-bottom: 2px; text-align: right;">
+                          $0.00</p>
+                      </td>
+                      <td style="padding: 0 4px">
+                        <p style=" font-family:Helvetica; font-size: 13px; margin: 0; margin-bottom: 2px; text-align: right;">
+                          $90.00</p>
+                      </td>
+                      <td style="padding: 0 4px">
+                        <p style=" font-family:Helvetica; font-size: 13px; margin: 0; margin-bottom: 2px; text-align: right;">
+                          $0.00</p>
+                      </td>
+                      <td style="padding: 0 4px">
+                        <p style=" font-family:Helvetica; font-size: 13px; margin: 0; margin-bottom: 2px; text-align: right;">
+                          &nbsp;</p>
+                      </td>
+                    </tr>
+
+
+                    <tr>
+                      <td style="border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 0 4px;">
+                        <p style=" font-family:Helvetica; font-size: 13px; margin: 0; margin-bottom: 2px;">
+                          TOTAL</p>
+                      </td>
+                      <td style="border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 0 4px;">
+                        <p style=" font-family:Helvetica; font-size: 13px; margin: 0; text-align: right; margin-bottom: 2px;">
+                          000</p>
+                      </td>
+                      <td style="border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 0 4px;">
+                        <p style=" font-family:Helvetica; font-size: 13px; margin: 0; text-align: right;margin-bottom: 2px;">
+                          00</p>
+                      </td>
+                      <td style="border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 0 4px;">
+                        <p style=" font-family:Helvetica; font-size: 13px; margin: 0;text-align: right; margin-bottom: 2px;">
+                          000</p>
+                      </td>
+                      <td style="border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 0 4px;">
+                        <p style=" font-family:Helvetica; font-size: 13px; margin: 0; text-align: right;margin-bottom: 2px;">
+                          000</p>
+                      </td>
+                      <td style="border-top: 1px solid #000;border-bottom: 1px solid #000; padding: 0 4px;">
+                        <p style=" font-family:Helvetica; font-size: 13px; margin: 0; text-align: right;margin-bottom: 2px; text-align: right;">
+                          000</p>
+                      </td>
+                      <td style="border-bottom: 1px solid #000; border-top: 1px solid #000; padding: 0 4px;">
+                        <p style=" font-family:Helvetica; font-size: 13px; margin: 0; margin-bottom: 2px; text-align: right; text-transform: uppercase; ">
+                          0.00</p>
+                      </td>
+                      <td style="border-top: 1px solid #000;border-bottom: 1px solid #000; padding: 0 4px;">
+                        <p style=" font-family:Helvetica; font-size: 13px; margin: 0; margin-bottom: 2px;  text-align: right;">
+                          470.00</p>
+                      </td>
+                      <td style="border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 0 4px;">
+                        <p style=" font-family:Helvetica; font-size: 13px; margin: 0; margin-bottom: 2px; text-align: right; ">
+                          $0.00</p>
+                      </td>
+                      <td style="border-top: 1px solid #000;border-bottom: 1px solid #000; padding: 0 4px;">
+                        <p style=" font-family:Helvetica; font-size: 13px; margin: 0; margin-bottom: 2px; text-align: right;">
+                          000.0</p>
+                      </td>
+                      <td style="border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 0 4px;">
+                        <p style=" font-family:Helvetica; font-size: 13px; margin: 0; margin-bottom: 2px; text-align: right;">
+                          000.0</p>
+                      </td>
+                      <td style="border-top: 1px solid #000;border-bottom: 1px solid #000; padding: 0 4px;">
+                        <p style=" font-family:Helvetica; font-size: 13px; margin: 0; margin-bottom: 2px; text-align: right;">
+                          000.0</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+
+            <tr>
+              <td colspan="3" style="padding-bottom: 20px; padding-top: 20px;">
+                <table cellpadding="0" cellspacing="0" width="100%" align="center" style="padding: 0 0px;">
+                  <thead>
+                    <tr>
+                      <th width="13%" style="padding: 0 4px">&nbsp;</th>
+                      <th width="5%" style="padding: 0 4px">
+                        <p style="font-weight: 700; font-family:Helvetica; font-size: 14px; margin: 0; text-align: left;">
+                          DENTAL</p>
+                      </th>
+                      <th width="5%" style="padding: 0 4px">
+                        <p style="font-weight: 700; font-family:Helvetica; font-size: 14px; margin: 0; text-align: left;">
+                          VISION</p>
+                      </th>
+                      <th width="5%" style="padding: 0 4px">
+                        <p style="font-weight: 600; font-family:Helvetica; font-size: 14px; margin: 0;text-align: left;">
+                          TOOTH</p>
+                      </th>
+                      <th width="5%" style="padding: 0 4px">
+                        <p style="font-weight: 600; font-family:Helvetica; font-size: 14px; margin: 0;text-align: left;">
+                          HEALTH</p>
+                      </th>
+                      <th width="5%" style="padding: 0 4px">
+                        <p style="font-weight: 600; font-family:Helvetica; font-size: 14px; margin: 0; text-align: right;">
+                          DRUG</p>
+                      </th>
+                      <th width="5%" style="padding: 0 4px">
+                        <p style="font-weight: 600; font-family:Helvetica; font-size: 14px; margin: 0; text-align: right;">
+                          TOPUP</p>
+                      </th>
+                      <th width="5%" style="padding: 0 4px">
+                        <p style="font-weight: 600; font-family:Helvetica; font-size: 14px; margin: 0; text-align: right;">
+                          TOTAL</p>
+                      </th>
+                      <th width="5%" style="padding: 0 4px">
+                        <p style="font-weight: 600; font-family:Helvetica; font-size: 14px; margin: 0; text-align: right;">
+                          &nbsp;</p>
+                      </th>
+                      <th width="10%" style="padding: 0 4px">
+                        <p style="font-weight: 600; font-family:Helvetica; font-size: 14px; margin: 0; text-align: right;">
+                          &nbsp;</p>
+                      </th>
+                      <th width="10%" style="padding: 0 4px">
+                        <p style="font-weight: 600; font-family:Helvetica; font-size: 14px; margin: 0; text-align: right;">
+                          &nbsp;</p>
+                      </th>
+                      <th width="10%" style="padding: 0 4px">
+                        <p style="font-weight: 600; font-family:Helvetica; font-size: 14px; margin: 0; text-align: right;">
+                          &nbsp;</p>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td style="padding: 0 4px">
+                        <p style=" font-family:Helvetica; font-size: 13px; margin: 0; margin-bottom: 2px;">
+                          MARCH 2020</p>
+                      </td>
+                      <td style="padding: 0 4px">
+                        <p style=" font-family:Helvetica; font-size: 13px; margin: 0; margin-bottom: 2px; text-align: right;">
+                          00.0</p>
+                      </td>
+                      <td style="padding: 0 4px">
+                        <p style=" font-family:Helvetica; font-size: 13px; margin: 0; margin-bottom: 2px; text-align: right;">
+                          00.0</p>
+                      </td>
+                      <td style="padding: 0 4px">
+                        <p style=" font-family:Helvetica; font-size: 13px; margin: 0; margin-bottom: 2px; text-align: right;">
+                          00.0</p>
+                      </td>
+                      <td style="padding: 0 4px">
+                        <p style=" font-family:Helvetica; font-size: 13px; text-align: right; margin: 0; margin-bottom: 2px;">
+                          00.0</p>
+                      </td>
+                      <td style="padding: 0 4px">
+                        <p style=" font-family:Helvetica; font-size: 13px;  text-align: right;margin: 0; margin-bottom: 2px;">
+                          02061</p>
+                      </td>
+                      <td style="padding: 0 4px">
+                        <p style=" font-family:Helvetica; font-size: 13px; text-align: right; margin: 0; margin-bottom: 2px;">
+                          0</p>
+                      </td>
+                      <td style="padding: 0 4px">
+                        <p style=" font-family:Helvetica; font-size: 13px; margin: 0; margin-bottom: 2px; text-align: right;">
+                          0.00</p>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td style="border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 0 4px;">
+                        <p style=" font-family:Helvetica; font-size: 13px; margin: 0; margin-bottom: 2px;">
+                          TOTAL</p>
+                      </td>
+                      <td style="border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 0 4px;">
+                        <p style=" font-family:Helvetica; font-size: 13px; margin: 0; text-align: right; margin-bottom: 2px;">
+                          000</p>
+                      </td>
+                      <td style="border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 0 4px;">
+                        <p style=" font-family:Helvetica; font-size: 13px; margin: 0; text-align: right;margin-bottom: 2px;">
+                          00</p>
+                      </td>
+                      <td style="border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 0 4px;">
+                        <p style=" font-family:Helvetica; font-size: 13px; margin: 0;text-align: right; margin-bottom: 2px;">
+                          000</p>
+                      </td>
+                      <td style="border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 0 4px;">
+                        <p style=" font-family:Helvetica; font-size: 13px; margin: 0; text-align: right;margin-bottom: 2px;">
+                          000</p>
+                      </td>
+                      <td style="border-top: 1px solid #000;border-bottom: 1px solid #000; padding: 0 4px;">
+                        <p style=" font-family:Helvetica; font-size: 13px; margin: 0; text-align: right;margin-bottom: 2px; text-align: right;">
+                          000</p>
+                      </td>
+                      <td style="border-bottom: 1px solid #000; border-top: 1px solid #000; padding: 0 4px;">
+                        <p style=" font-family:Helvetica; font-size: 13px; margin: 0; margin-bottom: 2px; text-align: right; text-transform: uppercase; ">
+                          0.00</p>
+                      </td>
+                      <td style="border-top: 1px solid #000;border-bottom: 1px solid #000; padding: 0 4px;">
+                        <p style=" font-family:Helvetica; font-size: 13px; margin: 0; margin-bottom: 2px;  text-align: right;">
+                          470.00</p>
+                      </td>
+
+                    </tr>
+                    <tr>
+                      <td colspan="3" style="border-top: 1px solid #000;">
+                        <p style=" font-family:Helvetica; font-size: 14px; margin: 0; margin-bottom: 2px; padding: 5px 4px 2px; font-weight: 600; text-transform: uppercase;">
+                          Part2- Employee/Plan Member/Subscriber</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colspan="3" style="border-top: 1px solid #000;">
+                        <table>
+                          <tbody>
+                            <tr>
+                              <td style="text-align: left; padding: 10px 0 5px 5px;">
+                                <p style="font-family:Helvetica; font-size:13px; margin:0; padding: 0; line-height: 18px;  display: inline-block;">
+                                  1. Group PlicyPlan No.</p>
+                                <span style="display: inline-block; width: 130px; border-bottom: 1px solid #000; font-weight: 600;">10523</span>
+                                <p style="font-family:Helvetica; font-size:13px; margin:0; padding: 0; line-height: 18px;  display: inline-block; padding: 0 0 0 10px;">
+                                  Divson/Section No.</p>
+                              </td>
+                              <td style="text-align: left; padding: 10px 0 5px 15px;">
+                                <p style="font-family:Helvetica; font-size:13px; margin:0; padding: 0; line-height: 18px;  display: inline-block;">
+                                  2. Your Name</p>
+                                <span style="display: inline-block; width: 90px; border-bottom: 1px solid #000; font-weight: 600;">Tanya</span>
+                                <span style="display: inline-block; width: 90px; border-bottom: 1px solid #000; font-weight: 600;">Camp</span>
+                              </td>
+
+                            </tr>
+                            <tr>
+                              <td style="text-align: left; padding: 10px 0 5px 5px;">
+                                <p style="font-family:Helvetica; font-size:13px; margin:0; padding: 0; line-height: 18px;  display: inline-block;">
+                                  Employer</p>
+                                <span style="display: inline-block; width: 180px; border-bottom: 1px solid #000; font-weight: 600;">10523</span>
+
+                              </td>
+                              <td style="text-align: left; padding: 10px 0 5px 15px;">
+                                <p style="font-family:Helvetica; font-size:13px; margin:0; padding: 0; line-height: 18px;  display: inline-block;">
+                                  Your Cert No or S.I.N</p>
+                                <span style="display: inline-block; width: 90px; border-bottom: 1px solid #000; font-weight: 600;">1062501001</span>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td style="text-align: left; padding: 10px 0 5px 5px;">
+                                <p style="font-family:Helvetica; font-size:13px; margin:0; padding: 0; line-height: 18px;  display: inline-block;">
+                                  Name of Insuring Agency of Plan</p>
+                                <span style="display: inline-block; width: 180px; border-bottom: 1px solid #000; font-weight: 600;">ADSC</span>
+                              </td>
+                              <td style="text-align: left; padding: 10px 0 5px 15px;">
+                                <table>
+                                  <tbody>
+                                    <tr>
+                                      <td>
+                                        <p style="font-family:Helvetica; font-size:13px; width: 110px; margin:0; padding: 0; line-height: 18px;  display: inline-block;">
+                                          Your Date Of Birth</p>
+                                        <span style="display: inline-block; width: 90px; border-bottom: 1px solid #000; font-weight: 600;">09 / 02 / 1978</span>
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>
+                                        <p style="font-family:Helvetica; font-size:13px; width: 110px; margin:0; padding: 0; line-height: 18px;  display: inline-block;">
+                                          &nbsp;</p>
+                                        <span style="display: inline-block; width: 90px; font-size:13px;  font-weight: 500;">DAY MO YR</span>
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+          </table>
+
+        </tr>
+      </tbody>
+    </table>
+    <div style="color:black; margin: 10px;margin-top: 20px;">
+      <p style="width: 48%;float: left; text-align: left;">
+        <span style="color:#46c4b8;">T</span>1-800-232-1997 | 780-426-7526</p>
+      <p style="width: 50%; float: left; text-align: end;">#200, 17010 - 103 Avenue </p>
+    </div>
+
+    <div style="color:black;margin: 0 10px;">
+      <p style="  width: 48%;float: left; text-align: left;">
+        <span style="color:#46c4b8;">F</span>780-426-7581</p>
+      <p style="width: 50%; float: left; text-align: end;">Edmonton, AB T5S 1K7</p>
+    </div>
+    <div style="color:black; margin: 0 10px">
+      <p style="  width: 50%;float: left; text-align: left;">
+        <span style="color:#46c4b8;">E</span>claims@quikcard.com</p>
+      <p style="color:#46c4b8; width: 48%; float: left; text-align: end;">
+        <b>
+          quikcard.com</b>
+      </p>
+    </div>
+  </body>
+</div>

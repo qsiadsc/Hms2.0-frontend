@@ -1,0 +1,65 @@
+  <div class="grid-box">
+    <div class="grid-heading">
+      <h3 style="float: left;">
+        Processed Log
+    </h3>
+      <div style="float: right;">
+          <input style="display: none" type="file" (change)="onFileChanged($event)" (click)="importFileInput.value = null" value="" #importFileInput>
+          <button style="height: -7px;margin-top: -6px;" class="btn green-btn-add" (click)="exportElig()">
+            Export Elig File
+          </button>
+              <button style="height: -7px;margin-top: -6px;" (click)="importFileInput.click()" href="javascript:void(0)" class="btn green-btn-add">
+                Load Daily File
+              </button>
+              <button style="height: -7px;margin-top: -6px;" class="btn green-btn-add" (click)="loadPaymentFile(loadPayment)">
+                Load Payment File
+              </button>
+              <button style="height: -7px;margin-top: -6px;" class="btn green-btn-add" (click)="exportExpense()">
+                Export Expense
+              </button>             
+          <!-- form Row Ends  -->
+      </div>
+    <!-- Grid Heading Ends -->
+
+    <div class="grid-inner">
+      <div class="form-row">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-row">
+              <p *ngFor= "let data of msg">{{data}}</p>
+            </div>  
+            <!-- Form Row Ends -->
+          </div>
+        </div>
+      </div>
+      <!-- Form Row Ends -->
+    </div>
+    <!-- Grid Inner Ends -->
+  </div>
+
+  <modal #loadPayment [closeOnEscape]="false" [closeOnOutsideClick]="false" [hideCloseButton]="true" modalClass="modal-sm fixed-modal image-modal">
+      <modal-header>
+          <h4 class="modal-title">Load Daily File</h4>
+          <button type="button" class="close" data-dismiss="modal" (click)="closeModal(loadPayment)">&times;</button>
+      </modal-header>
+      <modal-content>        
+          <pdf-viewer [src]="imagePath" style="display: block;"
+              [fit-to-page]="true">
+          </pdf-viewer>
+      </modal-content>
+      <modal-footer>
+          <button id="btnCloseBanModal" class="btn red-btn " (click)="closeModal(loadPayment)">Close</button>
+      </modal-footer>
+  </modal>
+
+  <div *ngIf="showLoader" class="loader-outer">
+      <div class="cube-wrapper">
+          <div class="cube-folding">
+              <span class="leaf1"></span>
+              <span class="leaf2"></span>
+              <span class="leaf3"></span>
+              <span class="leaf4"></span>
+          </div>
+          <span class="loading" data-name="Loading">{{loaderPlaceHolder}}</span>
+      </div>
+  </div>

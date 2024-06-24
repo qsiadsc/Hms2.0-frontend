@@ -1,0 +1,101 @@
+<!--[Start Listing]-->
+<div class="form-row">
+  <div class="">
+
+    <div class="grid-box">
+      <div class="grid-heading">
+        <h3>CDA Files List</h3>
+        <button (click)="fileUploadCda()" class="green-btn btn"
+          style="float: right; margin:-5px -10px 0 8px!important;padding:5px 5px 5px 5px!important;">Upload
+          File</button>
+      </div>
+      <div class="grid-inner">
+        <div class="row">
+          <div class="col-md-12 col-xs-12 table-col">
+            <div class="table-responsive">
+              <table id="cda-netList-table" class="display table table-bordered table-stripped">
+                <thead>
+                </thead>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--[End Listing]-->
+
+<!--[Start File Upload Pop Up Cda]-->
+<button class="green-btn-add btn" data-toggle="modal" id="uploadGovCdaNetPopUp"
+  data-target="#openUploadGovCdaNetPopUp" style="display:none"></button>
+
+<div id="openUploadGovCdaNetPopUp" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" (click)="resetGovCdaNetForm()">&times;</button>
+        <h4 class="modal-title">CDA Net- File Upload</h4>
+      </div>
+      <div class="modal-body">
+        <div class="grid-box">
+          <!-- Grid Heading Ends -->
+          <div class="grid-inner">
+            <form [formGroup]="uploadCDANetFileFormGroup">
+              <div class="grid-inner">
+                <div class="form-row">
+                  <div class="row min-ht-sf">
+                    <div class="col-md-3 col-xs-12">
+                      <label>File Type Category</label>
+                      <select class="fm-txt form-control" (change)="onFileTypeChange($event)" name="fileType" id="fileType" formControlName="fileType">
+                        <option value="" selected disabled hidden>{{'common.select' | translate}}</option>
+                        <option *ngFor="let category of fileType" [value]="category.cdadataType">
+                          {{category.cdadataTypeDesc}}</option>
+                      </select>
+                      <show-errors [control]="uploadCDANetFileFormGroup.controls.fileType"></show-errors>
+                    </div>
+                    <div class="col-md-3 col-xs-12 min-ht-half">
+                      <label>Document Name</label>
+                      <input style="display: none" type="file" (click)="crFileInput.value = null"
+                        (change)="onFileChanged($event)" #crFileInput>
+                      <input formControlName="selectedFileName" name="selectedFileName" disabled
+                        class="fm-txt form-control datepicker" type="text">
+                      <show-errors [control]="uploadCDANetFileFormGroup.controls.selectedFileName"></show-errors>
+                      <ul *ngIf="error.isError==true" class="validation-errors">
+                        <li style="color: red">{{error.errorMessage}}</li>
+                      </ul>
+                      <ul *ngIf="error3.isError==true" class="validation-errors">
+                        <li style="color: red">{{error3.errorMessage}}</li>
+                      </ul>
+                    </div>
+                    <div class="col-md-4 col-xs-12 min-ht-half">
+                      <label>&nbsp;</label>
+                      <button class="btn green-btn" (click)="crFileInput.click()">Select File</button>
+                      
+                      <button (click)="uploadFile()" class="btn green-btn">Process</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="row min-ht-st">
+                    <div class="col-md-11 col-xs-12">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+
+          </div>
+        </div>
+      
+      </div><!-- Modal Body End-->
+      <div class="modal-footer">
+        <button id="ReportResetFooterButton" type="button" class="btn grey-btn" data-dismiss="modal"
+          (click)="resetGovCdaNetForm()">{{ 'button.close' | translate }}</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+<!--[End File Upload Pop Up Cda]-->

@@ -1,0 +1,134 @@
+<button class="btn green-btn sm-width" id="btnModalVoucherHistory" data-toggle="modal" (click)="getVoucherHistory();"
+  data-target="#ModalVoucherHistory" style="display:none"></button>
+<div id="ModalVoucherHistory" class="modal fade dbPopup" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="btnCloseVoucherHistoryPopup" (click)="resetVoucher()" type="button" title="Close" class="close"
+          data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">{{'card.card-holder.voucher-history-popup.voucher-history' | translate}}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{'card.card-holder.voucher-history-popup.add-voucher' | translate}}</h3>
+          </div>
+          <form [formGroup]="CardHolderPopUpVoucherFormGroup">
+            <div class="grid-inner">
+              <div class="form-row">
+                <div class="row">
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'card.card-holder.voucher-history-popup.voucher-no' | translate}}<span
+                        class="required">*</span></label>
+                    <input id="cch_voucherHistoryVoucherno" type="text" title="voucherNo"
+                      placeholder="{{'card.card-holder.voucher-history-popup.voucher-no' | translate}}"
+                      formControlName="voucherNo" class="fm-txt form-control" />
+                    <show-errors [control]="CardHolderPopUpVoucherFormGroup.controls.voucherNo"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'card.card-holder.voucher-history-popup.district-office' | translate}} <span
+                        class="required">*</span></label>
+                    <input id="cch_voucherHistoryDistrictOffice" type="text" title="districtOffice"
+                      placeholder="{{'card.card-holder.voucher-history-popup.district-office' | translate}}"
+                      formControlName="districtOffice" class="fm-txt form-control" />
+                    <show-errors [control]="CardHolderPopUpVoucherFormGroup.controls.districtOffice"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'card.card-holder.voucher-history-popup.license-no' | translate}}<span
+                        class="required">*</span></label>
+                    <input id="cch_voucherHistoryLicenseno" type="text" title="licenseNo"
+                      placeholder="{{'card.card-holder.voucher-history-popup.license-no' | translate}}"
+                      formControlName="licenseNo" class="fm-txt form-control" />
+                    <show-errors [control]="CardHolderPopUpVoucherFormGroup.controls.licenseNo"></show-errors>
+                  </div>
+
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'common.effectivedate' | translate}}<span class="required">*</span></label>
+                    <div class="calender-field">
+                      <my-date-picker id="cch_voucherHistoryEffdatepicker" [options]="myDatePickerOptions"
+                        name="effectiveOn" placeholder="{{'common.date-placeholder' | translate}}"
+                        formControlName="effectiveOn"
+                        (inputFocusBlur)="changeDateFormat($event, 'effectiveOn' ,'CardHolderPopUpVoucherFormGroup',true)">
+                      </my-date-picker>
+                      <show-errors [control]="CardHolderPopUpVoucherFormGroup.controls.effectiveOn"></show-errors>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'common.expirydate' | translate}}<span class="required">*</span></label>
+                    <div class="calender-field">
+                      <my-date-picker id="cch_voucherHistoryExpdatepicker" [options]="myDatePickerOptions"
+                        name="expiredOn" placeholder="{{'common.date-placeholder' | translate}}"
+                        formControlName="expiredOn"
+                        (inputFocusBlur)="changeDateFormat($event, 'expiredOn' ,'CardHolderPopUpVoucherFormGroup')">
+                      </my-date-picker>
+                      <show-errors [control]="CardHolderPopUpVoucherFormGroup.controls.expiredOn"></show-errors>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>&nbsp;</label>
+                    <button id="btnSaveVoucherHistory" class="btn green-btn btn-lg" type="submit"
+                      (click)="SaveCHVoucherHistory()">
+                      {{VoucherSubmitButtonText}}</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{'card.card-holder.voucher-history-popup.voucher-history' | translate}}</h3>
+          </div>
+          <div class="grid-inner">
+            <div class="form-row">
+              <div class="row">
+                <div class="col-md-12 col-xs-12 table-col">
+                  <div class="table-responsive">
+                    <table id="VoucherHistory" datatable [dtOptions]="dtOptions['VoucherHistory']" [dtTrigger]="dtTrigger['VoucherHistory']"
+                      class="table table-bordered table-stripped inlinePopupTable">
+                      <thead>
+                        <tr>
+                          <th width="10%">{{'card.card-holder.voucher-history-popup.voucher-no' | translate}}</th>
+                          <th width="10%" class="amount_right_grid">
+                            {{'card.card-holder.voucher-history-popup.district-office' | translate}}</th>
+                          <th width="10%" class="amount_right_grid">
+                            {{'card.card-holder.voucher-history-popup.license-no' | translate}}</th>
+                          <th width="10%" class="amount_right_grid">{{'common.effectivedate' | translate}}</th>
+                          <th width="10%" class="amount_right_grid">{{'common.expirydate' | translate}}</th>
+                          <th width="10%" class="amount_right_grid">{{'common.action' | translate}}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="tableRow" *ngFor="let dataRow of VoucherHistorytableData; let i = index"
+                          id="{{'row_'+i}}">
+                          <td>{{dataRow.voucherNo}}</td>
+                          <td class="amount_right_grid">
+                            {{dataRow.districtOffice}}
+                          </td>
+                          <td class="amount_right_grid">{{dataRow.licenseNo}}</td>
+                          <td class="amount_right_grid">{{dataRow.effectiveOn | dateFormate}}</td>
+                          <td class="amount_right_grid">{{dataRow.expiredOn | dateFormate}}</td>
+                          <td class="amount_right_grid"><a href='javascript:void(0)'
+                              (click)="setVoucherHistoryForm(dataRow)" class='edit_row table-action-btn edit-ico'><i
+                                class='fa fa-pencil'></i>
+                            </a>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="closeVoucherHistoryPopup" title="Close" class="btn grey-btn" (click)="resetVoucher()"
+          data-dismiss="modal">{{'button.close' | translate}}</button>
+      </div>
+    </div>
+  </div>
+</div>

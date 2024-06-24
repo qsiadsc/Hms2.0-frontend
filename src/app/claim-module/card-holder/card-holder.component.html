@@ -1,0 +1,432 @@
+<div class="grid-box">
+  <div class="grid-heading">
+    <h3>{{'claims.claims-add.claims-card-holder.card-holder' | translate}}</h3>
+    <div class="web-reg" *ngIf="patientPert">
+      <span *ngIf="hasSchedule" class="claim-status btn status-btn">{{patientPert}}</span>
+    </div>
+  </div>
+  <!-- Grid Heading Ends -->
+  <div class="grid-inner">
+    <form [formGroup]="ClaimCardHolderFormGroup">
+      <!-- Form Row start -->
+      <div class="form-row">
+        <div class="row min-ht-sf">
+          <div class="col-md-2 custom-col col-xs-12">
+            <label>{{'claims.claims-add.claims-card-holder.received-date' | translate}}
+              <span class="required">*</span>
+            </label>
+            <div class="calender-field" id='setFocus' >
+              <my-date-picker   [ngClass]="(viewMode == true) ? 'removeCross':''" #recievedp="mydatepicker"
+                id="receive_date" [options]="myDatePickerOptions"
+                placeholder="{{'common.datepicker-placeholder'|translate}}" name="receive_date"
+                formControlName="receive_date" 
+                (inputFocusBlur)="changeDateFormat($event, 'receive_date' ,'ClaimCardHolderFormGroup')">
+              </my-date-picker>
+            </div>
+            <show-errors [control]="ClaimCardHolderFormGroup.controls.receive_date"></show-errors>
+          </div>
+          <div class="col-md-2 custom-col col-xs-12">
+            <label>{{'claims.claims-add.claims-card-holder.card-id' | translate}}
+              <span class="required">*</span>
+              <!-- Log #1008: As per client new feedback for comments flag Start Here  -->
+              <span class="comment-fm" *ngIf="showFlag && (isCommentTypeExistRed || isShowRedFlag)">
+                <i class="fa fa-flag"  *ngIf="isCommentTypeExistRed || isShowRedFlag" aria-hidden="true" style="cursor:pointer; color:red;"
+                data-toggle="modal" data-target="#BindCommentData"></i>
+                <div class="comment-top">
+                  <p>{{cardCommentText}}</p>
+                </div>
+              </span>
+              <span class="comment-fm" *ngIf="showFlag && (!isCommentTypeExistRed && !isShowRedFlag)">
+                <i class="fa fa-flag"  *ngIf="!isCommentTypeExistRed" aria-hidden="true" style="cursor:pointer; color:green;"
+                data-toggle="modal" data-target="#BindCommentData"></i>
+                <div class="comment-top">
+                  <p>{{cardCommentText}}</p>
+                </div>
+              </span>
+              <span class="comment-fm" *ngIf="!showFlag"><i class="fa fa-flag"
+                aria-hidden="true" style="cursor:pointer; color:grey;"></i>
+              </span>
+              <!-- Log #1008 Ends Here -->
+              <span class="status-label active" *ngIf="bussinessType == 'Quikcard'">{{bussinessType}}</span>
+            </label>
+            <div class="calender-field" >
+                <input (focus)='date()' [ngClass]="expired  ? 'expired' : 'notExpired'" class="fm-txt form-control datepicker input-padding" (keydown.tab)="getCardHolderListByCardIdOrDOB()" id="cardId" placeholder="{{'common.card-id' | translate}}"
+                 type="text" formControlName="cardId" [ngClass]="{'disableInput': disableCardHolderForm}" (keydown)="isNumberKey($event)">
+                <!-- For 684 issue card id -->
+              <label
+                [ngClass]="{'alberta-gov':bussinessTypeCd == ConstantAlbertaCd, 'quikCard': bussinessTypeCd == ConstantQuikcardCd }"
+                class="input-group-addon btn dt-picker">
+                <a id="cardId_icon"
+                  *ngIf="bussinessTypeCd == ConstantAlbertaCd || bussinessTypeCd == ConstantQuikcardCd" target="_blank"
+                  [routerLink]="['/card/view',cardId]" [queryParams]="{'unitKey':unitKey}">
+                  <i class="fa fa-user"></i>
+                </a>
+              </label>
+            </div>
+            <span *ngIf="hasPlan" class="status-label active programStatus"><a (click)="viewPlanDetails()">{{'claims.claims-add.claims-card-holder.plan'
+                | translate}}</a></span>
+            <show-errors [control]="ClaimCardHolderFormGroup.controls.cardId"></show-errors>
+          </div>
+          <div class="col-md-2 custom-col col-xs-12">
+            <label *ngIf="bussinessTypeCd != ConstantAlbertaCd">{{'claims.claims-add.claims-card-holder.claim-DOB' |
+              translate}}</label>
+            <label *ngIf="bussinessTypeCd === ConstantAlbertaCd">{{'claims.claims-add.claims-card-holder.claim-DOB' |
+              translate}}
+              <span class="required">*</span>
+              <span *ngIf="dobNotValid" class="status-label active" title="DOB Not Valid" style="margin-top:-4px;"><i
+                  class="fa fa-exclamation-circle" style="font-size:18px;color:#d0202f" aria-hidden="true"></i></span>
+              <span *ngIf="dobValid" class="status-label active" title="DOB Valid" style="margin-top:-4px;"><i
+                  class="fa fa-check-circle" style="font-size:18px;color:#148b2d" aria-hidden="true"></i></span>
+            </label>
+            <div id="claimDOB" class="calender-field">
+              <my-date-picker [ngClass]="{'removeCross':editMode == false}" #mydp="mydatepicker" id="dop"
+                [options]="myDatePickerOptions" placeholder="{{'common.datepicker-placeholder'|translate}}" name="dob"
+                formControlName="dob"
+                (inputFocusBlur)="changeDateFormatLessthanCurrentMonth($event, 'dob' ,'ClaimCardHolderFormGroup',true)">
+              </my-date-picker>
+            </div>
+            <show-errors [control]="ClaimCardHolderFormGroup.controls.dob"></show-errors>
+          </div>
+          <div class="col-md-2 wd-tt col-xs-12">
+            <label *ngIf="bussinessTypeCd != ConstantAlbertaCd">{{'claims.claims-add.claims-card-holder.cardholder' |
+              translate}}
+              <span class="required">*</span>
+              <span class="comment-fm" *ngIf="cardHolderCommentFlag"><i class="fa fa-flag" data-toggle="modal"
+                  data-target="#ClientCommentData" aria-hidden="true" (click)="getCardHolderCommentListReload()"
+                  style="cursor:pointer; color:red;"></i>
+                <div class="comment-top" (click)="getCardHolderCommentListReload()">
+                  <p>{{commentTextClient}}</p>
+                </div>
+              </span>
+              <span class="comment-fm" *ngIf="!cardHolderCommentFlag"><i class="fa fa-flag" data-toggle="modal"
+                  aria-hidden="true" style="cursor:pointer; color:grey;"></i>
+              </span>
+              <!-- add claim history button for #1283 -->
+                <!-- Buttons aligned by designer.  -->
+                <!-- Space is missing in Claim History Tooltip-->
+              <a title="Claim History" *ngIf="cobValid || cobNotValid" href="#" (click)= "GetClaimItemsByIdCardHolderKey(cardHolderKey)" id="btnCloseShowClaimItems1"
+                class="history-ico" style="float:right; margin: 1px 39px 0px 0px;font-size:2px;" alt="History" data-toggle="modal" data-target="#ClaimItemHistory">
+                <i class="fa fa-history" style="font-size:10px;" aria-hidden="true"></i>
+                </a>
+                <!-- end -->
+              <span *ngIf="cobNotValid" class="status-label active" title="COB Not Added"><i class="fa fa-minus-square"
+                  style="font-size:18px;color:#d0202f" aria-hidden="true"></i></span>
+              <span *ngIf="cobValid" class="status-label active" title="COB Added"><i class="fa fa-plus-square"
+                  style="font-size:18px;color:#148b2d" aria-hidden="true"></i></span>
+              <a *ngIf="cobValid || cobNotValid" title="Add COB" class="status-label active" style="margin-right: 20px"
+                alt="COB" data-toggle="modal" (click)="CobHistory()"><i class="fa fa-external-link-square"
+                  style="font-size:18px;color:#00bbb5" aria-hidden="true"></i>
+              </a>
+            </label>
+            <label *ngIf="bussinessTypeCd === ConstantAlbertaCd">{{'common.clients' | translate}}
+              <span class="required">*</span>
+              <span class="comment-fm" *ngIf="cardHolderCommentFlag"><i class="fa fa-flag" data-toggle="modal"
+                  data-target="#ClientCommentData" aria-hidden="true" (click)="getCardHolderCommentListReload()"
+                  style="cursor:pointer; color:red;"></i>
+                <div class="comment-top" (click)="getCardHolderCommentListReload()">
+                  <p>{{commentTextClient}}</p>
+                </div>
+              </span>
+              <span class="comment-fm" *ngIf="!cardHolderCommentFlag"><i class="fa fa-flag" data-toggle="modal"
+                  aria-hidden="true" style="cursor:pointer; color:grey;"></i>
+              </span>
+              <!-- add claim history button for #1283 -->
+              <a title="ClaimHistory" *ngIf="cobValid || cobNotValid" href="#" (click)= "GetClaimItemsByIdCardHolderKey(cardHolderKey)" id="btnCloseShowClaimItems"
+                class="history-ico" style="float:right;margin-top:-3px; margin-right:38px;background:#00bbb5;padding:0px 4px;" alt="History" data-toggle="modal" data-target="#ClaimItemHistory">
+                <i class="fa fa-history" style="font-size: 12px;" aria-hidden="true"></i>
+              </a>
+              <!-- end -->
+              <span *ngIf="cobNotValid" class="status-label active" title="COB Not Added" style="margin-top:-4px;"><i
+                  class="fa fa-minus-square" style="font-size:18px;color:#d0202f" aria-hidden="true"></i></span>
+              <span *ngIf="cobValid" class="status-label active" title="COB Added" style="margin-top:-4px;"><i
+                  class="fa fa-plus-square" style="font-size:18px;color:#148b2d" aria-hidden="true"></i></span>
+              <span *ngIf="cobValid || cobNotValid" class="status-label active"
+                style="margin-top:-4px;margin-right: 20px"><a title="Add COB" alt="COB" data-toggle="modal"
+                  (click)="CobHistory()">
+                  <i class="fa fa-external-link-square" style="font-size:18px;color:#00bbb5" aria-hidden="true"></i>
+                </a></span>
+            </label>
+            <select (blur)="skipTab()" 
+              [ngClass]="{'disableInput': disableCardHolderForm,'pinkClass': cardHolderClass == 'pinkClass' ,'greyClass':cardHolderClass == 'greyClass','aquaClass': cardHolderClass == 'aquaClass','whiteClass':  cardHolderClass == 'whiteClass'}"
+              class="fm-txt form-control cardHolderDropdown" (change)="setClaimCardholderDOB($event)" name="cardHolder"
+              id="claim_cardHolder" formControlName="cardHolder">
+              <option hidden value="">{{'common.select' |translate}}</option>
+              <option *ngFor="let holder of cardHolder"
+                [ngClass]="{'pinkClass':holder.personTwinsFlag == 'TWINS' ,'greyClass': holder.status == 'INACTIVE' && holder.personTwinsFlag != 'TWINS' && holder.personNameTwinsFlag != 'T','aquaClass': holder.personNameTwinsFlag == 'T','whiteClass': holder.personTwinsFlag != 'TWINS' && holder.personNameTwinsFlag != 'T' && holder.status != 'INACTIVE'}"
+                [attr.data-dob]="holder.personDtOfBirth" [value]="holder.cardHolderKey">{{holder.personFirstName}}
+                {{holder.personLastName}} - {{holder.personDtOfBirth | dateFormate }}</option>
+            </select>
+            <show-errors [control]="ClaimCardHolderFormGroup.controls.cardHolder"></show-errors>
+          </div>
+          <div class="col-md-4 col-xs-12">
+            <label>{{'common.address' | translate }}
+              <span *ngIf="bussinessTypeCd != ConstantAlbertaCd" class="required">*</span>
+            </label>
+            <input type="text" class="fm-txt form-control" id="address"
+              [ngClass]="{'disableInput': disableCardHolderForm || isLowIncome ||isDasp =='T' ||disableCardHolderAddressSch }"
+              title="{{card_address}}" placeholder="{{'common.address' | translate }}" formControlName="address"
+              (change)="setClaimCardholderAddress($event)" />
+            <div class="comment-top">
+              <p>{{card_address}}</p>
+            </div>
+            <show-errors [control]="ClaimCardHolderFormGroup.controls.address"></show-errors>
+          </div>
+        </div>
+      </div>
+      <!-- Form Row ENds -->
+    </form>
+  </div>
+  <!-- Grid Inner Ends -->
+</div>
+<app-card-holder-cobhistory-popup (emitOnSave)="emitOnSaveCOBHistory($event)" [cardHolderKey]="cardHolderKey"
+  [alberta]="bussinessTypeCd == ConstantAlbertaCd ? true : false"></app-card-holder-cobhistory-popup>
+
+<div id="BindCommentData" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="closeSearchCompany" type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">{{'card.card' | translate}} {{'common.comments' | translate}} 
+        </h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12 col-xs-12 table-col">
+
+            <div class="table-responsive">
+              <!-- Log #1008: As per client new feedback -->
+              <!-- General feedback on Claimview Page popUp comments and  on No data available massage issue are resolved -->
+              <table id="cardCommentsFlag"  datatable [dtOptions]="dtOptions['cardCommentsFlag']" [dtTrigger]="dtTrigger['cardCommentsFlag']" class="inlinePopupTable table table-bordered table-stripped"
+                class="table table-bordered table-stripped">
+                <thead>
+                  <tr>
+                    <th width="10%">{{'common.date' | translate}}</th>
+                    <th class="amount_right" width="25%">{{'common.username' | translate}}</th>
+                    <th class="amount_right" width="25%">{{'common.comments' | translate}}</th>
+                    <th class="amount_right" width="25%">{{'common.department' | translate}}</th>
+                    <th class="amount_right" width="25%">{{'common.importance' | translate}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let cardComment of cardCommentList">
+                    <td>{{ cardComment.createdOn|dateFormate }}</td>
+                    <td class="amount_right">{{ cardComment.userName}}</td>
+                    <td class="amount_right">{{ cardComment.commentText }}</td>
+                    <td class="amount_right">{{ cardComment.userGroupName}}</td>
+                    <td class="amount_right"  *ngIf="cardComment.cardImportance == 'Y'">
+                      <span class="flag">
+                        <i class="fa fa-flag" aria-hidden="true"></i>
+                      </span>
+                    </td>
+                    <td *ngIf="cardComment.cardImportance == 'N' || cardComment.cardImportance == ''"></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- Table Ends -->
+          </div>
+        </div>
+      </div>
+      <!-- Modal Body Ends -->
+      <div class="modal-footer">
+        <button id="closeSearchCompanyModal" type="button" class="btn grey-btn"
+          data-dismiss="modal">{{'button.close' | translate}}</button>
+      </div>
+    </div>
+    <!-- Modal Content Ends -->
+  </div>
+</div>
+
+<div id="ClientCommentData" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="closeSearchCompany" type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">CLIENT {{'common.comments' | translate}} <span class="comment-fm"> <i class="fa fa-flag"
+              style="color:red;" aria-hidden="true"></i></span>
+        </h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12 col-xs-12 table-col">
+            <div class="table-responsive">
+              <table id="CardHolder-Comment" class="table table-bordered table-stripped">
+                <thead>
+                </thead>
+                <tfoot>
+                </tfoot>
+                <tfoot></tfoot>
+              </table>
+            </div>
+            <!-- Table Ends -->
+          </div>
+        </div>
+      </div>
+      <!-- Modal Body Ends -->
+      <div class="modal-footer">
+        <button id="closeSearchCompanyModal" type="button" class="btn grey-btn"
+          data-dismiss="modal">{{'button.close' | translate}}</button>
+      </div>
+    </div>
+    <!-- Modal Content Ends -->
+  </div>
+</div>
+<!-- add CardHolderHistoryTable(#1283)-->
+<div id="ClaimItemHistory" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="btnCloseShowClaimItems" type="button" title="Close" class="close"
+          data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">{{'claims.claims-view.claims' | translate}}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{'claims.claims-view.claims' | translate}}</h3>
+          </div>
+          <!-- Grid Heading Ends -->
+
+          <div class="grid-inner">
+            <div class="form-row">
+              <div class="row">
+                <div class="col-md-12 col-xs-12 table-col">
+                  <div class="table-responsive">
+                    <table id="CardHolderClaimHistory" datatable [dtOptions]="dtOptions['CardHolderClaimHistory']"
+                      [dtTrigger]="dtTrigger['CardHolderClaimHistory']"
+                      class="row-border hover cardholder-table table-striped table-bordered dataTable">
+                      <thead>
+                        <tr>
+                          <th>{{'claims-history.discipline' | translate}}</th>
+                          <th class="amount_right_grid">{{'claims.claims-add.claims-general-information.reference_no' | translate}}</th>
+                          <th class="amount_right_grid">{{'claims-history.claimtype' | translate}}</th>
+                          <th class="amount_right_grid">{{'common.date' | translate}} </th>
+                          <th class="amount_right_grid">{{'claims-history.proc' | translate}}</th>
+                          <th class="amount_right_grid">{{'claims-history.tooth' | translate}}</th>
+                          <th class="amount_right_grid">{{'claims-history.surf' | translate}}</th>
+                          <th class="amount_right_grid">{{'claims-history.freeclaim' | translate}}</th>
+                          <th class="amount_right_grid">{{'claims-history.freepaid' | translate}}</th>
+                          <th class="amount_right_grid">{{'claims-history.labclaim' | translate}}</th>
+                          <th class="amount_right_grid">{{'claims-history.labpaid' | translate}}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <ng-container *ngIf="bussinessType == 'AB Gov.'">
+                          <tr  *ngFor="let claimItem of claimItems; let idx= index" [ngClass]="
+                          {'hPreAuthReview-row': (claimItem.isReversed == 'F' && claimItem.itemRejectedInd == 'F' && claimItem.claimType == 'Pre-Authorized By Review'),
+                          'hactive-row': (claimItem.isReversed == 'F' && claimItem.itemRejectedInd == 'F' && claimItem.claimType == 'Pre-Authorization - Paper'),
+                          'hsuspended-row': (claimItem.isReversed == 'F' && claimItem.itemRejectedInd == 'F' && claimItem.claimType == 'Pre-Authorization - Phone-In'),
+                          'historyPink': (claimItem.isReversed == 'T' || claimItem.itemRejectedInd == 'T')
+                          }" 
+                          (click)="openClaim(claimItem.claimKey,claimItem.disciplineKey, claimItem.dcpKey,claimItem)">
+                          <td>{{claimItem.discipline}}</td>
+                          <td class="amount_right_grid">{{claimItem.refId}}</td>
+                          <td class="amount_right_grid">{{claimItem.claimType}}</td>
+                          <td class="amount_right_grid">{{claimItem.itemServiceDt}}</td>
+                          <td class="amount_right_grid">{{claimItem.itemProcedureCd}}</td>
+                          <td class="amount_right_grid" *ngIf="claimItem.itemToothId == -1"></td>
+                          <td class="amount_right_grid" *ngIf="claimItem.itemToothId >= 0">{{claimItem.itemToothId}}</td>
+                          <td class="amount_right_grid">{{claimItem.itemToothSurfaceTxt}}</td>
+                          <td class="amount_right_grid"><span>$</span>{{claimItem.itemFeeClaimAmt | number: '1.2'}}</td>
+                          <td class="amount_right_grid"><span>$</span>{{claimItem.itemFeePaidAmt | number: '1.2'}}</td>
+                          <td class="amount_right_grid"><span>$</span>{{claimItem.itemLabClaimAmt||0 | number: '1.2'}}</td>
+                          <td class="amount_right_grid"><span>$</span>{{claimItem.itemLabPaidAmt||0 | number: '1.2'}}</td>
+                        </tr>
+                      </ng-container>
+                      <ng-container *ngIf="bussinessType == 'Quikcard'">
+                        <tr *ngFor="let claimItem of claimItems; let idx= index" [ngClass]="
+                          {'hsuspended-row': (claimItem.isReversed == 'F' && claimItem.itemRejectedInd == 'F' && claimItem.disciplineKey == 2),
+                          'hPreAuthReview-row': (claimItem.isReversed == 'F' && claimItem.itemRejectedInd == 'F' && (claimItem.disciplineKey == 3 || claimItem.disciplineKey == 4)),
+                          'hsa-row': (claimItem.isReversed == 'F' && claimItem.itemRejectedInd == 'F' && claimItem.disciplineKey == 5),
+                          'wellness-row': (claimItem.isReversed == 'F' && claimItem.itemRejectedInd == 'F' && claimItem.disciplineKey == 6),
+                          'hactive-row' : (claimItem.isReversed == 'F' && claimItem.itemRejectedInd == 'F' && claimItem.claimType == 'Pre-Authorization - Paper' && claimItem.disciplineKey == 1),
+                          'historyPink': (claimItem.isReversed == 'T' || claimItem.itemRejectedInd == 'T') 
+                         }"
+                        (click)="openClaim(claimItem.claimKey,claimItem.disciplineKey, claimItem.dcpKey,claimItem)">
+                          <td>{{claimItem.discipline}}</td>
+                          <td class="amount_right_grid">{{claimItem.refId}}</td>
+                          <td class="amount_right_grid">{{claimItem.claimType}}</td>
+                          <td class="amount_right_grid">{{claimItem.itemServiceDt}}</td>
+                          <td class="amount_right_grid">{{claimItem.itemProcedureCd}}</td>
+                          <td class="amount_right_grid" *ngIf="claimItem.itemToothId == -1"></td>
+                          <td class="amount_right_grid" *ngIf="claimItem.itemToothId >= 0">{{claimItem.itemToothId}}</td>
+                          <td class="amount_right_grid">{{claimItem.itemToothSurfaceTxt}}</td>
+                          <td class="amount_right_grid"><span>$</span>{{claimItem.itemFeeClaimAmt | number: '1.2'}}</td>
+                          <td class="amount_right_grid"><span>$</span>{{claimItem.itemFeePaidAmt | number: '1.2'}}</td>
+                          <td class="amount_right_grid"><span>$</span>{{claimItem.itemLabClaimAmt||0 | number: '1.2'}}</td>
+                          <td class="amount_right_grid"><span>$</span>{{claimItem.itemLabPaidAmt||0 | number: '1.2'}}</td>
+                        </tr>
+                      </ng-container>
+                      </tbody>
+                    </table>
+                  </div>
+                  <!-- Table Ends -->
+                </div>
+              </div>
+            </div>
+            <!-- Form Row ENds -->
+            <ul class="color-list" *ngIf="bussinessType == 'AB Gov.'">
+              <li>
+                <span class="color-des violet-color"></span>
+                <h5>Pre-Authorized By Review</h5>
+              </li>
+              <li>
+                <span class="color-des green-color"></span>
+                <h5>Pre-Authorization-Paper</h5>
+              </li>
+              <li>
+                <span class="color-des yellow-color"></span>
+                <h5>Pre-Authorization-Phone-In</h5>
+              </li>
+              <li>
+                <span class="color-des historyPink"></span>
+                <h5>Rejected/Reversed</h5>
+              </li>
+            </ul>
+            <ul class="color-list" *ngIf="bussinessType == 'Quikcard'">
+              <li>
+                <span class="color-des yellow-color"></span>
+                <h5>Vision</h5>
+              </li>
+              <li>
+                <span class="color-des violet-color"></span>
+                <h5>Health/Drug</h5>
+              </li>
+              <li>
+                <span class="color-des hsa-row"></span>
+                <h5>Supplement</h5>
+              </li>
+              <li>
+                <span class="color-des wellness-row"></span>
+                <h5>Wellness</h5>
+              </li>
+              <li>
+                <span class="color-des historyPink"></span>
+                <h5>Rejected/Reversed</h5>
+              </li>
+            </ul>
+            
+          </div>
+          <!-- Grid Inner Ends -->
+
+        </div>
+        <!-- Grid Box Ends -->
+      </div>
+    </div>
+  </div>
+</div>
+<!-- end cardHolderHistoryTable -->
+<div *ngIf="showLoader" class="loader-outer">
+  <div class="cube-wrapper">
+    <div class="cube-folding">
+      <span class="leaf1"></span>
+      <span class="leaf2"></span>
+      <span class="leaf3"></span>
+      <span class="leaf4"></span>
+    </div>
+    <span class="loading" data-name="Loading"></span>
+  </div>
+</div>

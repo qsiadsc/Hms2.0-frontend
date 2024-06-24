@@ -1,0 +1,47 @@
+[
+  {
+    "SuccessMessage": "Record Saved Successfully", 
+    "FailureMessage": "Record Saved Successfully", 
+    "fieldValue": "عنوان البريد الإلكتروني / اسم المستخدم", 
+    "helpMessage": "عنوان البريد الإلكتروني / اسم المستخدم", 
+    "listDtoFieldValidationMessage": [
+       {
+           "validationName": "REQUIRED",
+           "validationMessage": "أدخل عنوان البريد الالكتروني"
+       },
+       {
+          "validationName": "Invalid",
+          "validationMessage": "الرجاء إدخال عنوان / اسم بريد إلكتروني صالح"
+       }
+     ]
+  },
+  {
+    "fieldName": "PASSWORD", 
+    "fieldValue": "كلمه السر", 
+    "helpMessage": "كلمه السر", 
+    "listDtoFieldValidationMessage": [
+       {
+           "validationName": "REQUIRED",
+           "validationMessage": "من فضلك أدخل كلمة المرور"
+       }
+     ]
+  },
+  {
+    "fieldName": "REMEMBER_ME", 
+    "fieldValue": "تذكرنى", 
+    "helpMessage": "تذكرنى", 
+    "listDtoFieldValidationMessage": []
+  },
+  {
+    "fieldName": "FORGOT_PASSWORD", 
+    "fieldValue": "هل نسيت كلمة المرور", 
+    "helpMessage": "هل نسيت كلمة المرور", 
+    "listDtoFieldValidationMessage": []
+  },
+  {
+    "fieldName": "LOGIN_BUTTON", 
+    "fieldValue": "تسجيل الدخول", 
+    "helpMessage": "تسجيل الدخول", 
+    "listDtoFieldValidationMessage": []
+  }
+]

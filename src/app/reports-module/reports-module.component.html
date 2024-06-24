@@ -1,0 +1,179 @@
+<div class="grid-box">
+  <div class="grid-heading">
+    <h3>{{'report.reportList' | translate}} </h3>
+  </div>
+  <!-- Grid Heading Ends -->
+  <div class="grid-inner">
+    <div class="form-row">
+      <div class="table-responsive hms-loading-table">
+          <div class="table-responsive alignDpRight">
+            <div class="table-responsive dashboard">
+              <generic-table [gtClasses]="'table-sm'" #myReportTable [gtSettings]="configObjectReport.settings"
+                [gtFields]="configObjectReport.fields" [(gtData)]="configObjectReport.data"
+                (gtEvent)="onClickReportRow($event)" [gtOptions]="{numberOfRows:20}"></generic-table>
+              <div class="text-center">
+                <small>
+                  <gt-table-info class="form-text text-muted mb-2" [genericTable]="myReportTable"></gt-table-info>
+                </small>
+                <gt-pagination [gtClasses]="'pagination-sm justify-content-center'" [genericTable]="myReportTable">
+                </gt-pagination>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+    <!-- Form Row ENds -->
+  </div>
+  <!-- Grid Inner Ends -->
+</div>
+<!-- Grid Box Ends -->
+
+<button class="green-btn-add btn" data-toggle="modal" id="reportListPopUp" data-target="#openReportPopUp" style="display:none"></button>
+<!--Report List Modal-->
+<div id="openReportPopUp" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" (click)="resetReportForm()">&times;</button>
+        <h4 class="modal-title">{{reportPopUpTitle}}</h4>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="showHideFilter" class="grid-box">
+          <!-- Grid Heading Ends -->
+          <div class="grid-inner">
+             <form [formGroup]="reportFormGroup" (ngSubmit)="onSubmitReport(reportFormGroup)">
+                <div class="form-row">
+                    <div class="row">
+                        <div class="col-md-3 col-xs-12" *ngIf="showReportFilterFields[0].startDate" >
+                            <label>{{'report.startDate' | translate}}<span class="required">*</span></label>    
+                            <div class="calender-field">
+                                <my-date-picker id="startDate" placeholder="Start Date" [options]="myDatePickerOptions" name="startDate" (inputFocusBlur)="changeDateFormat($event, 'startDate' ,'reportFormGroup')" formControlName="startDate"> </my-date-picker> 
+                                <show-errors [control]="reportFormGroup.controls.startDate"></show-errors>		 
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-xs-12" *ngIf="showReportFilterFields[1].endDate">
+                            <label>{{'report.endDate' | translate}}<span class="required">*</span></label>    
+                            <div class="calender-field">
+                                <my-date-picker id="endDate" placeholder="End Date" [options]="myDatePickerOptions" name="endDate" (inputFocusBlur)="changeDateFormat($event, 'endDate' ,'reportFormGroup')" formControlName="endDate"> </my-date-picker> 
+                                <show-errors [control]="reportFormGroup.controls.endDate"></show-errors>			 
+                            </div><!-- Calendar Field Ends -->
+                        </div>
+                        <!-- Calendar Field Ends -->
+                        <div class="col-md-3 col-xs-12">
+                            <label>&nbsp;</label>
+                            <button id="financeReport" class="btn green-btn">{{'button.search' | translate}}</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+          </div>
+        </div>
+        <div *ngIf="showHideNoDataFound" class="grid-box">
+          <div class="grid-heading">
+            <h3>{{'report.noDataFound' | translate}}</h3>
+          </div>
+        </div>  
+        <div [hidden]="!showReportList">
+          <div class="grid-box">
+            <div class="grid-heading">
+              <h3>{{'report.reportGrid' | translate}}</h3>
+            </div>
+            <!-- Grid Heading Ends -->
+            <div class="grid-inner">
+              <div class="form-row">
+                <div class="row">
+                  <div class="col-md-12 col-xs-12 table-col">
+
+                    <div *ngIf="tableId == 'ClientAgeGroupByPostcodeAndService'" class="table-responsive">
+                        <table id="ClientAgeGroupByPostcodeAndService" class="display table table-bordered table-stripped">
+                        </table>
+                    </div>
+
+                    <div *ngIf="tableId == 'ClaimAndClainantCount'" class="table-responsive">
+                        <table id="ClaimAndClainantCount" class="display table table-bordered table-stripped">
+                        </table>
+                    </div>
+
+                    <div *ngIf="tableId == 'ClaimByMonthCat'" class="table-responsive">
+                        <table id="ClaimByMonthCat" class="display table table-bordered table-stripped">
+                        </table>
+                    </div>
+
+                    <div *ngIf="tableId == 'COBSavings'" class="table-responsive">
+                        <table id="COBSavings" class="display table table-bordered table-stripped">
+                        </table>
+                    </div>
+
+                    <div *ngIf="tableId == 'DemographicStat'" class="table-responsive">
+                        <table id="DemographicStat" class="display table table-bordered table-stripped">
+                        </table>
+                    </div>
+
+                    <div *ngIf="tableId == 'ProcedureRank'" class="table-responsive">
+                        <table id="ProcedureRank" class="display table table-bordered table-stripped">
+                        </table>
+                    </div>
+
+                    <div *ngIf="tableId == 'Exception'" class="table-responsive">
+                        <table id="Exception" class="display table table-bordered table-stripped">
+                        </table>
+                    </div>
+
+                    <div *ngIf="tableId == 'DentureReplacement'" class="table-responsive">
+                        <table id="DentureReplacement" class="display table table-bordered table-stripped">
+                        </table>
+                    </div>
+
+                    <div *ngIf="tableId == 'ExceptionReport'" class="table-responsive">
+                        <table id="ExceptionReport" class="display table table-bordered table-stripped">
+                        </table>
+                    </div>
+
+                    <div *ngIf="tableId == 'PreauthByReviewAndDASPException'" class="table-responsive">
+                        <table id="PreauthByReviewAndDASPException" class="display table table-bordered table-stripped">
+                        </table>
+                    </div>
+
+                    <div *ngIf="tableId == 'PreauthByReviewDASP'" class="table-responsive">
+                        <table id="PreauthByReviewDASP" class="display table table-bordered table-stripped">
+                        </table>
+                    </div>
+
+                    <div *ngIf="tableId == 'PreauthByReviewOther'" class="table-responsive">
+                        <table id="PreauthByReviewOther" class="display table table-bordered table-stripped">
+                        </table>
+                    </div>
+                    <!--[Start Download Dropdown]-->
+                    <div class="form-row text-center disable-export-button" id="{{tableId}}_reportsPdfButton">
+                        <div class="row">
+                          <div class="col-md-12 col-xs-12">
+                            <div class="dropdown pull-right">
+                              <button class="btn green-btn dropdown-toggle " type="button" data-toggle="dropdown">{{'button.export' | translate}} <span class="caret"></span></button>
+                              <ul class="dropdown-menu">
+                                <li><a href="javascript:void(0)" (click)="dowloadPDFReport()">{{'button.pdf' | translate}}</a></li>
+                                <li><a href="javascript:void(0)" (click)="exportReportListExcel()">{{'button.excel' | translate}}</a></li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <!--[End Download Dropdown]-->
+                    <!-- Table Ends -->
+                  </div>
+                </div>
+              </div>
+              <!-- Form Row ENds -->
+            </div>
+            <!-- Grid Inner Ends -->
+          </div>
+        </div>  
+        <!-- Grid Box Ends -->
+      </div><!-- Modal Body End-->
+        <div class="modal-footer">
+				<button id="ReportResetFooterButton" type="button" class="btn grey-btn" data-dismiss="modal" (click)="resetReportForm()">{{ 'button.close' | translate }}</button>
+			</div>  
+    </div>
+  </div>
+</div>
+<!--Report List Modal-->

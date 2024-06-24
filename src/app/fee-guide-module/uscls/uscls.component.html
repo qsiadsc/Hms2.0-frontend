@@ -1,0 +1,189 @@
+<div class="section-heading">
+  <h2>ADD Service/Proc Code <span></span></h2>
+</div>
+
+<div id="uscls" class="grid-box">
+  <div class="grid-inner">
+    <!--  652 reverting old design 2 march  Start-->
+    <div id="uscls" class="">
+      <ul class="nav company-tabs nav-pills">
+        <li id="step1" class="active">
+          <a data-toggle="pill" href="#stepOne">Add Procedure To Plans</a>
+        </li>
+        <li id="step2">
+          <a data-toggle="pill" href="#stepTwo">
+            Add Service To Plans </a>
+        </li>
+      </ul>
+      <div class="form-row">
+        <div class="tab-content">
+          <div id="stepOne" class="tab-pane fade in active">
+            <form [formGroup]="usclsFormGroup">
+              <div class="form-row">
+                <div class="row min-ht-sf">
+                  <div class="col-md-12 col-xs-12" style="margin: 10px 0px;">
+                    <div class="col-md-4 col-xs-12">
+                      <label>Proc Code<span class="required">*</span></label>
+                      <input id="proc_code" class="fm-txt form-control" placeholder="Proc Code" type="text"
+                        formControlName="proc_code">
+                      <show-errors [control]="usclsFormGroup.controls.proc_code"></show-errors>
+                    </div>
+                    <div class="col-md-4 col-xs-12">
+                      <label>Look Up Proc Code<span class="required">*</span></label>
+                      <ng2-completer [(ngModel)]="parentKey" [inputId]="'ProcedureprocedureKey'"
+                        id="ProcedureprocedureKey" formControlName="lookUpProc_code"
+                        [datasource]="ProcedureParentServiceDataRemote" [minSearchLength]="1" [fillHighlighted]="false"
+                        [autoHighlight]="true" [clearUnselected]="true" [selectOnFocus]="true"
+                        [placeholder]="'Procedure ID'" [textSearching]="'Please wait...'" [inputClass]="'form-control'"
+                        (selected)="onSelectPro($event, 'parentKey')">
+                      </ng2-completer>
+                      <show-errors [control]="usclsFormGroup.controls.lookUpProc_code"></show-errors>
+                    </div>
+                    <div class="col-md-4 col-xs-12">
+                      <label>Effective Date<span class="required">*</span></label>
+                      <div class="calender-field">
+                        <my-date-picker id="usclsEffectiveDate" [options]="myDatePickerOptions"
+                          name="usclsEffectiveDate" formControlName="usclsEffectiveDate" placeholder="Effective Date"
+                          (inputFocusBlur)="changeDateFormat($event, 'usclsEffectiveDate', 'usclsFormGroup','No')">
+                        </my-date-picker>
+                      </div>
+                      <show-errors [control]="usclsFormGroup.controls.usclsEffectiveDate"></show-errors>
+                    </div>
+                    <div class="select-options" style="padding: 0px 17px;">
+                      <span>
+                        <label class="papComment">
+                          <span class="custom-check">
+                            <input formControlName="qcInd" type="checkbox" class="" name="qcInd">Quickcard
+                            <span></span>
+                          </span>
+                        </label>
+                      </span>
+                      <span>
+                        <label class="papComment">
+                          <span class="custom-check">
+                            <input formControlName="hreInd" type="checkbox" class="" name="hreInd">HRE
+                            <span></span>
+                          </span>
+                        </label>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+
+            <div class="modal-footer">
+              <button class="btn green-btn" style="display: none;" id="step22" data-toggle="pill"
+                href="#stepTwo">Next</button>
+              <button class="btn green-btn" id="step2btn" (click)='next()'>
+                Add Proc Code
+              </button>
+              <button id="planViewClose5" type="button" class="btn grey-btn" data-dismiss="modal"
+                (click)="resetPlanCommentForm()">{{ 'button.close' | translate }}</button>
+            </div>
+          </div>
+          <div id="stepTwo" class="tab-pane fade in">
+            <form [formGroup]="usclsFormGroupStep2">
+              <div class="form-row">
+                <div class="row min-ht-sf">
+                  <div class="col-md-12 col-xs-12" style="margin: 10px 0px;">
+                    <div class="col-md-4 col-xs-12">
+                      <label>Service Id<span class="required">*</span></label>
+                      <ng2-completer [(ngModel)]="parentServiceId" [inputId]="'dentalPatientServiceId'"
+                        id="dentalPatientServiceId" [formControl]="serviceCode"
+                        [datasource]="dentalParentServiceDataRemote" [minSearchLength]="1" [fillHighlighted]="false"
+                        [autoHighlight]="true" [clearUnselected]="true" [selectOnFocus]="true"
+                        [placeholder]="'Service ID'" [textSearching]="'Please wait...'" [inputClass]="'form-control'"
+                        (selected)="onSelect($event, 'parentServiceId')">
+                      </ng2-completer>
+                      <show-errors [control]="usclsFormGroupStep2.controls.serviceCode"></show-errors>
+                    </div>
+                    <div class="col-md-4 col-xs-12">
+                      <label>Coverage Category<span class="required">*</span></label>
+                      <ng2-completer [(ngModel)]="covCat" [inputId]="'dentCoverageCategory'" formControlName="covCat"
+                        [datasource]="coverageCategoryDataRemote" [minSearchLength]="0" [fillHighlighted]="false"
+                        [clearUnselected]="true" [autoHighlight]="true" [selectOnFocus]="true"
+                        [placeholder]="'Search Coverage Category'" [textSearching]="'Please wait...'"
+                        [inputClass]="'form-control'" (selected)="onSelect($event, 'coverageCategory')">
+                      </ng2-completer>
+                      <show-errors [control]="usclsFormGroupStep2.controls.covCat"></show-errors>
+
+                    </div>
+                    <div class="col-md-4 col-xs-12">
+                      <label>Effective Date<span class="required">*</span></label>
+                      <div class="calender-field">
+
+                        <my-date-picker id="usclsEffectiveDate" [options]="myDatePickerOptions"
+                          name="usclsEffectiveDate" formControlName="usclsEffectiveDate" placeholder="Effective Date"
+                          (inputFocusBlur)="changeDateFormat($event, 'usclsEffectiveDate', 'usclsFormGroupStep2','No')">
+                        </my-date-picker>
+                      </div>
+                      <show-errors [control]="usclsFormGroupStep2.controls.usclsEffectiveDate"></show-errors>
+
+                    </div>
+                    <div>
+
+                      <div class="select-options" style="padding: 0px 17px;">
+                        <span>
+                          <label class="papComment">
+                            <span class="custom-check">
+                              <input formControlName="approvalInd" type="checkbox" class="" name="approvalInd">Approval
+                              <span></span>
+                            </span>
+                          </label>
+                        </span>
+                        <span>
+                          <label class="papComment">
+                            <span class="custom-check">
+                              <input formControlName="reviewInd" type="checkbox" class="" name="reviewInd">Review
+                              <span></span>
+                            </span>
+                          </label>
+                        </span>
+                        <span>
+                          <label class="papComment">
+                            <span class="custom-check">
+                              <input formControlName="qcInd" type="checkbox" class="" name="qcInd">Quickcard
+                              <span></span>
+                            </span>
+                          </label>
+                        </span>
+                        <span>
+                          <label class="papComment">
+                            <span class="custom-check">
+                              <input formControlName="hreInd" type="checkbox" class="" name="hreInd">HRE
+                              <span></span>
+                            </span>
+                          </label>
+                        </span>
+                      </div>
+                    </div>
+                    <!-- Calendar Field Ends -->
+                  </div>
+                </div>
+              </div>
+            </form>
+            <div class="modal-footer">
+              <button type="button" id class="btn green-btn" (click)="submitUslcs()">Add Service</button>
+              <button id="planViewClose5" type="button" id class="btn grey-btn" data-dismiss="modal"
+                (click)="resetPlanCommentForm()">{{ 'button.close' | translate }}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 652 old design revert ends  -->
+
+    <div [hidden]="!showLoader" class="loader-outer">
+      <div class="cube-wrapper">
+        <div class="cube-folding">
+          <span class="leaf1"></span>
+          <span class="leaf2"></span>
+          <span class="leaf3"></span>
+          <span class="leaf4"></span>
+        </div>
+        <span class="loading" data-name="Loading">{{'company.plan.benefits.pleaseWait'|translate}}</span>
+      </div>
+    </div>
+  </div>
+</div>

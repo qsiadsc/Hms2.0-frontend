@@ -1,0 +1,7 @@
+#visionServicesCoveredSection{overflow: scroll;height: 200px;}
+#visionCoverageProceduresSection{overflow: scroll;height: 200px;}
+#visionCoverageRulesSection{overflow: scroll;height: 300px;}
+
+#visionServicesCoveredSection table th{position: sticky; top: 0;z-index: 1;}
+#visionCoverageProceduresSection table th{position: sticky; top: 0;z-index: 1;}
+#visionCoverageRulesSection table th{position: sticky; top: 0;z-index: 1;}

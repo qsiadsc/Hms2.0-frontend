@@ -1,0 +1,13 @@
+.check-ht{
+    float: left;
+}
+
+.form-row .minht-new div[class^="col-"] {
+    min-height: 82px ;
+}
+
+.employeeIdInputField{
+    display: inline-block;
+    width: 105%;
+    position: relative;
+}

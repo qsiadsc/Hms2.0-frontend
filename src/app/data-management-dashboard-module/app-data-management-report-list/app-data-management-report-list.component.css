@@ -1,0 +1,12 @@
+.brokerMailingLabels  .searchreset {
+    margin: -8px 0 0 0 !important;
+}
+
+
+#report101 th {
+    background: #ffffff;
+}
+
+#report101 tr:nth-child(2n+2) {
+    background: #ffffff;
+}

@@ -1,0 +1,395 @@
+<div class="container">
+    <nav class="breadcrumb">
+        <span [routerLink]="['/unitFinancialTransaction']"
+            class="breadcrumb-item">{{'uft.upcomingTransactionsSearch.unitFinancialTransaction' | translate}} </span> >
+        <a class="active serviceProviderActive"
+            href="javascript:void(0)">{{'uft.upcomingTransactionsSearch.upcomingTransactions' | translate}}</a>
+    </nav>
+    <div class="section-heading">
+        <h2>{{'uft.upcomingTransactionsSearch.upcomingTransactions' | translate}} -
+            <span>{{'uft.upcomingTransactionsSearch.list' | translate}}</span></h2>
+    </div>
+    <!-- Grid Heading Ends -->
+    <!-- Grid Inner Ends -->
+    <!-- Grid Box Ends -->
+    <div class="grid-box">
+        <div class="grid-heading">
+            <h3>{{'uft.upcomingTransactionsSearch.upcomingTransList' | translate}}</h3>
+            <div class="web-reg">
+                <a id="addUftOTP" data-toggle="modal" data-target="#oneTimePayment" (click)="addOTP()"
+                    class="green-btn-add btn">
+                    <i class="fa fa-plus"></i>{{'button.addnew' | translate}}</a>
+                <button data-toggle="modal" id="openOTPBankAccount" data-target="#oneTimePaymentBankDetail"
+                    style="display:none"> {{'button.openpopUp' | translate}}</button>
+                <button hidden id="openOTPBankAccount">
+                </button>
+            </div>
+        </div>
+        <!-- Grid Heading Ends -->
+        <div class="grid-inner">
+            <div class="form-row">
+                <div class="row">
+                    <div class="col-md-12 col-xs-12 table-col">
+                        <div class="table-responsive">
+                            <table id="upcomingTransactionsList" class="table table-bordered table-stripped">
+                            </table>
+                        </div>
+                        <!-- Table Ends -->
+                    </div>
+                </div>
+            </div>
+            <!-- Form Row ENds -->
+            <div class="form-row text-center">
+                <div class="row">
+                    <div class="col-md-12 col-xs-12">
+                        <button class="btn green-btn generatepaymentPopup" id="" data-toggle="modal"
+                            data-target="#genetrateEft"
+                            (click)="generateEftPopup()">{{'button.generateEft' | translate}}</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Form Row ENds -->
+        </div>
+        <!-- Grid Inner Ends -->
+    </div>
+    <!-- Grid Box Ends -->
+</div>
+
+<div id="oneTimePayment" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button title="Close" id="closeOTP" (click)="resetOTP()" type="button" class="close"
+                    data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">{{'uft.upcomingTransactionsSearch.otpNew' | translate}}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="grid-box">
+                    <div class="grid-inner">
+                        <form [formGroup]="addOTPform">
+                            <div class="form-row">
+                                <div class="row min-ht-sf">
+                                    <div class="col-md-3 col-xs-12">
+                                        <label>{{'uft.upcomingTransactionsSearch.companyNameNo' | translate}}<span
+                                                class="required">*</span> </label>
+                                        <ng2-completer (keyup)="ngOnBlur()" formControlName="otp_companyName"
+                                            [datasource]="companyListData" [minSearchLength]="0" [openOnFocus]="false"
+                                            (opened)="onOpened($event)" [fillHighlighted]="false"
+                                            [placeholder]="'Search Company Name & No.'"
+                                            [textSearching]="'Please wait...'" [inputClass]="'form-control'"
+                                            (selected)="onCompanyNameSelected($event)" [clearUnselected]="true">
+                                        </ng2-completer>
+                                        <show-errors [control]="addOTPform.controls.otp_companyName"></show-errors>
+                                    </div>
+                                    <div class="col-md-3 col-xs-12">
+                                        <label>{{'uft.upcomingTransactionsSearch.transactionDate' | translate}}<span
+                                                class="required">*</span></label>
+                                        <div class="calender-field">
+                                            <my-date-picker id="otp_accTrans" value=""
+                                                placeholder="{{'common.date-placeholder' | translate}}"
+                                                [options]="myDatePickerOptions" name="otp_accTrans"
+                                                (inputFocusBlur)="changeDateFormat($event, 'otp_accTrans' ,'addOTPform')"
+                                                formControlName="otp_accTrans">
+                                            </my-date-picker>
+                                            <show-errors [control]="addOTPform.controls.otp_accTrans"></show-errors>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-xs-12">
+                                        <label>{{'uft.upcomingTransactionsSearch.transactionAmount' | translate}}<span
+                                                class="required">*</span></label>
+                                        <div class="calender-field d-amount">
+                                            <input id="otp_TransAmt"
+                                                placeholder="{{'uft.upcomingTransactionsSearch.transactionAmount' | translate}}"
+                                                type="text" formControlName="otp_transactionAmt"
+                                                class="form-control in-number"
+                                                (blur)="addDecimal($event,'otp_transactionAmt')" appTwoDigitDecimaNumber />
+                                            <show-errors [control]="addOTPform.controls.otp_transactionAmt">
+                                            </show-errors>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-xs-12">
+                                    
+                                        <label>{{'uft.upcomingTransactionsSearch.transactionType' | translate}}</label>
+                                        <ng2-completer [disableInput]="true" #otp_transactionType
+                                            formControlName="otp_transactionType" [datasource]="transactionTypeData"
+                                            [minSearchLength]="0" [openOnFocus]="false" (opened)="onOpened($event)"
+                                            [fillHighlighted]="false" [placeholder]="'Search Transaction Type'"
+                                            [textSearching]="'Please wait...'" [inputClass]="'form-control'"
+                                            [clearUnselected]="true">
+                                        </ng2-completer>
+                                        <show-errors [control]="addOTPform.controls.otp_transactionType"></show-errors>
+                                    </div>
+
+                                    <div class="col-md-3 col-xs-12">
+                                        <label>{{'uft.upcomingTransactionsSearch.transactionDescription' | translate}}</label>
+                                        <textarea id="otp_TransDesc" class="form-control"
+                                            formControlName="otp_transactionDesc"
+                                            placeholder="{{'uft.upcomingTransactionsSearch.transactionDescription' | translate}}"></textarea>
+                                        <show-errors [control]="addOTPform.controls.otp_transactionDesc"></show-errors>
+                                    </div>
+                                    <div class="col-md-3 col-xs-12">
+                                        <label>{{'uft.upcomingTransactionsSearch.currentBalance' | translate}}</label>
+                                        <div class="calender-field d-amount">
+                                            <input
+                                                placeholder="{{'uft.upcomingTransactionsSearch.currentBalance' | translate}}"
+                                                id="otp_currentbalance" type="text" disabled
+                                                formControlName="otp_currentbalance" class="form-control in-number" />
+                                            <show-errors [control]="addOTPform.controls.otp_currentbalance">
+                                            </show-errors>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3 col-xs-12">
+                                        <label>&nbsp;</label>
+                                        <button id="addOTPGrid" class="btn green-btn"
+                                        (keyup.arrowLeft) = "focusNextEle($event,'saveOTPClose')" (keyup.arrowRight) = "focusNextEle($event,'saveOTPClose')" (click)="submitOTP()">{{'button.save' | translate}}</button>
+                                        <button id="saveOTPClose" type="button" class="btn grey-btn"
+                                            data-dismiss="modal" (keyup.arrowLeft) = "focusNextEle($event,'addOTPGrid')" (keyup.arrowRight) = "focusNextEle($event,'addOTPGrid')" (click)="resetOTP()">{{ 'button.close' | translate }}</button>
+                                    </div>
+                                    <!--[Start Grid To Show Bank Details Associated With Company]-->
+                                    <table *ngIf="showBankGrid" class="table table-bordered table-stripped dataTable"
+                                        id="company-bank-account-active">
+                                        <thead>
+                                            <th>Bank Number</th>
+                                            <th class="amount_right_grid">Branch Number</th>
+                                            <th class="amount_right_grid">Bank Name</th>
+                                            <th class="amount_right_grid">Account Number</th>
+                                            <th class="amount_right_grid">Effective Date</th>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let bd of bankDetailsArr">
+                                                <td>{{bd.coBankNum}}</td>
+                                                <td class="amount_right_grid">{{bd.coBankBranchNum}}</td>
+                                                <td class="amount_right_grid">{{bd.coBankName}}</td>
+                                                <td class="amount_right_grid">{{bd.coBankAccountNum}}</td>
+                                                <td class="amount_right_grid">{{bd.effectiveOn}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <!--[End Grid To Show Bank Details Associated With Company]-->
+                                </div>
+                            </div>
+                            <!-- Form Row ENds -->
+                        </form>
+                    </div>
+                    <!-- Grid Inner Ends -->
+                    <!--modal-footer Ends-->
+                            <div class="grid-box">
+                                <div class="grid-heading">
+                                    <h3>{{'uft.upcomingTransactionsSearch.reportGrid' | translate}}</h3>
+                                </div>
+                                <div class="grid-inner">
+                                    <div class="form-row">
+                                        <div class="row">
+                                            <div class="col-md-12 col-xs-12 table-col">
+                                                <table class="table table-bordered" id="dailyPapList"></table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                </div>
+                <!-- [Start Grid Data] -->
+                <!-- [End Grid Data]-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- generate EFT Popup -->
+<div id="genetrateEft" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-header">
+            <button title="Close" id="closeGenerateEFTForm" (click)="resetGenerateEFTForm()" type="button" class="close"
+                data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">{{'button.generateEft' | translate}}</h4>
+        </div>
+        <div class="modal-body">
+            <div class="grid-box">
+                <div class="grid-inner">
+                    <form [formGroup]="generateEftform">
+                        <div class="form-row">
+                            <div class="row min-ht-sf">
+                                <div class="col-md-3 col-xs-12">
+                                    <label>{{'uft.upcomingTransactionsSearch.transactionDate' | translate}}<span
+                                            class="required">*</span></label>
+                                    <div class="calender-field">
+                                        <my-date-picker id="entry_date" value=""
+                                            placeholder="{{'common.date-placeholder' | translate}}"
+                                            [options]="myDatePickerOptions" name="entry_date"
+                                            (inputFocusBlur)="changeDateFormat($event, 'entry_date' ,'generateEftform')"
+                                            formControlName="entry_date">
+                                        </my-date-picker>
+                                        <show-errors [control]="generateEftform.controls.entry_date"></show-errors>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Form Row ENds -->
+                    </form>
+                    <div class="grid-box">
+                        <div class="grid-heading">
+                            <h3>{{'finance.paymentGenerate.processingSteps' | translate}}</h3>
+                        </div>
+                        <!-- Grid Heading Ends -->
+                        <div class="grid-inner">
+                            <div class="form-row">
+                                <div class="row">
+                                    <div class="col-md-12 col-xs-12 table-col">
+                                        <div class="table-responsive">
+                                            <table id="processingStepList" class="table table-bordered table-stripped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>{{'uft.eftProcess.done' | translate}}</th>
+                                                        <th class="grid_right">{{'uft.eftProcess.steps' | translate}}
+                                                        </th>
+                                                        <th class="grid_right">
+                                                            {{'uft.eftProcess.processing' | translate}}</th>
+                                                        <th class="grid_right">{{'uft.eftProcess.result' | translate}}
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let field of fieldArray; let i = index">
+                                                        <td><input type="checkbox" disabled
+                                                                [checked]="(field.done == 0)?false:true"
+                                                                value="field.done"></td>
+                                                        <td class="grid_right">{{field.step}}</td>
+                                                        <td class="grid_right">{{field.processing}}</td>
+                                                        <td class="grid_right">{{field.result}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <!-- Table Ends -->
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Form Row ENds -->
+                        </div>
+                        <!-- Grid Inner Ends -->
+                    </div>
+                </div>
+                <!-- Grid Inner Ends -->
+                <div class="modal-footer">
+                    <button id="generteEftProcess" [disabled]="generateEftBut" class="btn green-btn"
+                        (click)="generteEFTProcessClick()">{{'button.generateEft' | translate}}</button>
+                    <button id="payGenerateClose" class="btn grey-btn" (click)="resetGenerateEFTForm()">{{'button.close'
+                        | translate}}</button>
+                </div>
+                <!--modal-footer Ends-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- One time payment bank details Popup -->
+<div id="oneTimePaymentBankDetail" class="modal fade double-modal" role="dialog" data-keyboard="false"
+    data-backdrop="static">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button title="Close" id="closeOTPBankDetail" (click)="resetOTPBankDetail()" type="button" class="close"
+                    data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">
+                    {{ 'uft.upcomingTransactionsSearch.otp-bank-account.add-bank-account' | translate }}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="grid-box">
+                    <div class="grid-inner">
+                        <form [formGroup]="otpBankAccountsForm">
+                            <div class="form-row">
+                                <div class="row">
+                                    <div class="col-md-3 col-xs-12">
+                                        <label>{{ 'uft.upcomingTransactionsSearch.otp-bank-account.bank-no' | translate }}<span
+                                                class="required">*</span></label>
+                                        <input type="text" name="bankNumber" #otpBankAccountName
+                                            formControlName="bankNumber" class="fm-txt form-control"
+                                            placeholder="{{'uft.upcomingTransactionsSearch.otp-bank-account.bank-no' | translate }}" />
+                                        <show-errors [control]="otpBankAccountsForm.controls.bankNumber"></show-errors>
+                                    </div>
+                                    <div class="col-md-3 col-xs-12">
+                                        <label>{{ 'uft.upcomingTransactionsSearch.otp-bank-account.branch-no.' | translate }}<span
+                                                class="required">*</span></label>
+                                        <input type="text" name="branch" id="company_bank_account_branch"
+                                            formControlName="branch" class="fm-txt form-control"
+                                            placeholder="{{ 'uft.upcomingTransactionsSearch.otp-bank-account.branch-no.' | translate }}" />
+                                        <show-errors [control]="otpBankAccountsForm.controls.branch"></show-errors>
+                                    </div>
+                                    <div class="col-md-3 col-xs-12">
+                                        <label>{{ 'uft.upcomingTransactionsSearch.otp-bank-account.bank-name' | translate }}<span
+                                                class="required">*</span></label>
+                                        <input type="text" class="fm-txt form-control" name="bankName"
+                                            id="company_bank_account_bank_name" formControlName="bankName"
+                                            placeholder="{{'uft.upcomingTransactionsSearch.otp-bank-account.bank-name' | translate }}" />
+                                        <show-errors [control]="otpBankAccountsForm.controls.bankName"></show-errors>
+                                    </div>
+                                    <div class="col-md-3 col-xs-12">
+                                        <label>{{ 'uft.upcomingTransactionsSearch.otp-bank-account.account-no.' | translate }}<span
+                                                class="required">*</span></label>
+                                        <input type="text" name="account" id="company_bank_account_account"
+                                            formControlName="account" class="fm-txt form-control"
+                                            placeholder="{{ 'uft.upcomingTransactionsSearch.otp-bank-account.account-no.' | translate }}" />
+                                        <show-errors [control]="otpBankAccountsForm.controls.account"></show-errors>
+                                    </div>
+                                    <div class="col-md-3 col-xs-12">
+                                        <label>{{ 'uft.upcomingTransactionsSearch.otp-bank-account.effective-date' | translate }}<span
+                                                class="required">*</span></label>
+                                        <div class="calender-field">
+                                            <my-date-picker id="company-bank-account_effective_on"
+                                                [options]="myDatePickerOptions" name="effectiveOn"
+                                                formControlName="effectiveOn"
+                                                (inputFocusBlur)="changeDateFormat($event, 'effectiveOn', 'otpBankAccountsForm', true)"
+                                                placeholder="{{ 'uft.upcomingTransactionsSearch.otp-bank-account.dd/mm/yyyy' | translate }}">
+                                            </my-date-picker>
+                                            <show-errors [control]="otpBankAccountsForm.controls.effectiveOn">
+                                            </show-errors>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-xs-12">
+                                        <label>{{ 'uft.upcomingTransactionsSearch.otp-bank-account.expiry-date' | translate }}</label>
+                                        <div class="calender-field">
+                                            <my-date-picker id="company-bank-account_expired_on"
+                                                [options]="myDatePickerOptions" name="expiredOn"
+                                                formControlName="expiredOn"
+                                                (inputFocusBlur)="changeDateFormat($event, 'expiredOn', 'otpBankAccountsForm', false)"
+                                                placeholder="{{ 'uft.upcomingTransactionsSearch.otp-bank-account.dd/mm/yyyy' | translate }}">
+                                            </my-date-picker>
+                                            <show-errors [control]="otpBankAccountsForm.controls.expiredOn">
+                                            </show-errors>
+                                        </div><!-- Calendar Field Ends -->
+                                    </div>
+                                    <!-- Calendar Field Ends -->
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="opt-bank-account" class="btn green-btn"
+                    (click)="onSubmitBankDetail(otpBankAccountsForm)">{{'button.save' | translate}}</button>
+                <button id="saveOTPBnakAccountClose" type="button" class="btn grey-btn" data-dismiss="modal"
+                    (click)="resetOTPBankDetail()">{{ 'button.close' | translate }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div hidden>
+    <button id="openEftPdfPopup" class="green-btn-add btn" data-toggle="modal" data-target="#eftPdfPopup"><i
+            class="fa fa-plus"></i>{{'uft.upcomingTransactionsSearch.eftPopup' | translate}}</button>
+</div>
+<div [hidden]="!showLoader" class="loader-outer">
+    <div class="cube-wrapper">
+        <div class="cube-folding">
+            <span class="leaf1"></span>
+            <span class="leaf2"></span>
+            <span class="leaf3"></span>
+            <span class="leaf4"></span>
+        </div>
+        <span class="loading" data-name="Loading">{{'company.plan.benefits.pleaseWait'|translate}}</span>
+    </div>
+</div>

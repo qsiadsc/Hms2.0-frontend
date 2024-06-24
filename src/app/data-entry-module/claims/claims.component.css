@@ -1,0 +1,48 @@
+.secondBtn{
+float: left;
+margin-left: 8px;
+z-index: 2;
+margin-top: 5px;
+}
+
+.secondBtn_2{
+margin-top: 19px;
+
+}
+
+.secondBtnDel{
+    float: right;
+    margin-left: 8px;
+    z-index: 2;
+    margin-top: 5px;
+    }
+    
+
+.scd-absolute {
+    position: relative;
+    bottom: 57px;
+
+    width: calc(100vw - 430px);
+    left: 262px;
+    text-align: left;
+}
+
+.scd-absolute-add-mode {
+    position: relative;
+    bottom: 42px;
+    width: calc(100vw - 400px);
+    left: 243px;
+    text-align: left;
+}
+ .scd-absolute.is-cancelable {
+    width: calc(100% - 390px);
+    left: 260px;
+}
+
+:host ::ng-deep .addbtn.green-btn-add {
+    background: #00bbb5;
+    color: #fff;
+    font-size: 14px;
+    padding: 9px 10px;
+    border-radius: 5px;
+}

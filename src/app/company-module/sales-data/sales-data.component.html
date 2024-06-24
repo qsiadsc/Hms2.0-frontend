@@ -1,0 +1,124 @@
+<div class="grid-box">
+  <div class="grid-heading collapse-heading" aria-expanded="false" data-toggle="collapse" data-target="#salesDateForm">
+    <h3 aria-expanded="false" data-toggle="collapse" data-target="#salesDateForm">{{ 'company.sales-data.sales-data' | translate }}</h3>
+  </div>
+  <!-- Grid Heading Ends -->
+  <div class="collapse" id="salesDateForm"><!-- id="Funding" class="panel-collapse collapse"-->
+  <div class="grid-inner">
+    <form [formGroup]="salesDataForm" >
+      <div class="form-row">
+        <div class="row">    
+          <div class="col-md-3 col-xs-12">
+            <label>{{ 'company.sales-data.sold-date' | translate }}</label>
+            <div class="calender-field">
+              <my-date-picker id="soldDate"
+              [options]="myDatePickerOptions"
+              name="soldDate" placeholder="{{ 'company.sales-data.dd/mm/yyyy' | translate }}"
+              formControlName="soldDate"
+              (inputFocusBlur)="changeDateFormat($event, 'soldDate','salesDataForm')" > 
+              </my-date-picker>
+              <show-errors [control]="salesDataForm.controls.soldDate"></show-errors>
+            </div>
+          </div>
+          <!-- Calendar Field Ends -->
+
+          <div class="col-md-3 col-xs-12">
+            <label>{{ 'company.sales-data.referral' | translate }}</label>
+            <div class="calender-field">
+              <ng2-completer
+                formControlName="referral"
+                [datasource]="referralData"
+                [minSearchLength]="0"
+                [openOnFocus]="true"
+                (opened)="onOpened($event)"
+                [fillHighlighted]="false"
+                [placeholder]="'Search Referral'"
+                [textSearching]="'Please wait...'"
+                [inputClass]="'form-control'"
+                (selected)="onReferralSelected($event)"
+                [clearUnselected]="true">
+              </ng2-completer>
+              <show-errors [control]="salesDataForm.controls.referral"></show-errors>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-xs-12" *ngIf="isBrokerReferralSelected">
+            <label>{{ 'company.sales-data.broker' | translate }}</label>
+            <div class="calender-field">
+                <ng2-completer
+                formControlName="broker"
+                [datasource]="brokerData"
+                [minSearchLength]="2"
+                [openOnFocus]="true"
+                (opened)="onOpened($event)"
+                [fillHighlighted]="false"
+                [placeholder]="'Search Broker'"
+                [textSearching]="'Please wait...'"
+                [inputClass]="'form-control'"
+                (selected)="onReferralBrokerSelected($event)"
+                [clearUnselected]="true">
+                </ng2-completer>
+              <show-errors [control]="salesDataForm.controls.broker"></show-errors>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-xs-12" *ngIf="isStaffMemberReferralSelected">
+            <label>{{ 'company.sales-data.staff-member' | translate }}</label>
+            <div class="calender-field">
+              <ng2-completer
+                formControlName="staff_member"
+                [datasource]="staffMemberData"
+                [minSearchLength]="2"
+                [openOnFocus]="true"
+                (opened)="onOpened($event)"
+                [fillHighlighted]="false"
+                [placeholder]="'Search Staff Member'"
+                [textSearching]="'Please wait...'"
+                [inputClass]="'form-control'"
+                (selected)="onReferralStaffMemberSelected($event)"
+                [clearUnselected]="true"> 
+              </ng2-completer>
+              <show-errors [control]="salesDataForm.controls.staff_member"></show-errors>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-xs-12" *ngIf="isCompanyReferralSelected">
+            <label>{{ 'company.sales-data.company' | translate }}</label>
+            <div class="calender-field">
+              <ng2-completer
+              formControlName="company"
+              [datasource]="companyData"
+              [minSearchLength]="2"
+              [openOnFocus]="true"
+              (opened)="onOpened($event)"
+              [fillHighlighted]="false"
+              [placeholder]="'Search Company'"
+              [textSearching]="'Please wait...'"
+              [inputClass]="'form-control'"
+              (selected)="onReferralCompanySelected($event)"
+              [clearUnselected]="true">
+              </ng2-completer>
+              <show-errors [control]="salesDataForm.controls.company"></show-errors>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-xs-12" *ngIf="isOtherReferralSelected">
+            <label>{{ 'company.sales-data.other' | translate }}</label>
+            <div class="calender-field">
+              <input type="text" name="other" formControlName="other"  class="fm-txt form-control">
+              <show-errors [control]="salesDataForm.controls.other"></show-errors>
+            </div>
+          </div>
+          
+
+        </div>
+      </div>
+      <!-- Form Row ENds -->
+    </form>
+    <!-- Form Row ENds -->
+  </div>
+  </div>
+  <!-- Grid Inner Ends -->
+</div>  
+
+

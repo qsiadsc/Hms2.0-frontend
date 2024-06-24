@@ -1,0 +1,36 @@
+<div class="grid-box">
+  <div class="grid-heading">
+    <h3>{{'common.generalinfo' | translate}}</h3>
+  </div>
+  <div class="grid-inner"  *ngIf="CardHolderGeneralInfo">
+    <div class="form-row">
+      <div class="row">
+        <div class="col-md-3 col-xs-12">
+          <label>{{'common.card-id' | translate}} </label> 
+          <input id="cch_popupGeneralInfoCardId" type="text" placeholder="{{'common.card-id' | translate}}" value="{{CardHolderGeneralInfo.card_id}}" readonly  class="fm-txt form-control" />
+        </div>
+        <div class="col-md-3 col-xs-12">
+          <label>{{'common.first-name' | translate}} </label>
+          <input id="cch_popupGeneralInfoFirstName" type="text" placeholder="{{'common.first-name' | translate}}" value="{{CardHolderGeneralInfo.first_name}}" readonly class="fm-txt form-control" />
+        </div>
+        <div class="col-md-3 col-xs-12">
+          <label>{{'common.last-name' | translate}} </label>
+          <input id="cch_popupGeneralInfoLastName" type="text" placeholder="{{'common.last-name' | translate}}" value="{{CardHolderGeneralInfo.last_name}}" readonly class="fm-txt form-control" />
+        </div>
+        <div class="col-md-3 col-xs-12">
+          <label>{{'common.gender' | translate}} </label>
+          <input id="cch_popupGeneralInfoGender"  type="text" placeholder="{{'common.gender' | translate}}" class="fm-txt form-control" readonly value="{{CardHolderGeneralInfo.gender}}"/>
+        </div>
+        <div class="col-md-3 col-xs-12">
+          <label>{{'common.date-of-birth' | translate}}</label>
+          <div class="calender-field">
+            <input id="cch_popupGeneralInfodatepicker" placeholder="{{'common.date-placeholder' | translate}}" type="text" readonly value="{{CardHolderGeneralInfo.date_of_birth | dateFormate}}"   class="fm-txt form-control datepicker">
+            <label for="datepicker10" class="input-group-addon dt-picker calender-icon m-0">
+              <span class="glyphicon glyphicon-calendar"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

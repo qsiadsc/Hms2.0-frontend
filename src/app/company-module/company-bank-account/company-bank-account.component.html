@@ -1,0 +1,99 @@
+<div class="grid-box">
+    <div class="grid-inner">
+        <form [formGroup]="bankAccountsForm" (ngSubmit)="onSubmit(bankAccountsForm)">
+            <div class="form-row">
+                <div class="row">
+                    <div class="col-md-3 col-xs-12">
+                        <label>{{ 'company.company-bank-account.bank-no' | translate }}<span
+                                class="required">*</span></label>
+                        <input type="text" name="bank" #CompanyBankAccountName formControlName="bank"
+                            class="fm-txt form-control"
+                            placeholder="{{'company.company-bank-account.bank-no' | translate }}"
+                            (blur)="bankFields(bankAccountsForm.controls.bank,bankAccountsForm.controls.branch)" />
+                        <show-errors [control]="bankAccountsForm.controls.bank"></show-errors>
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                        <label>{{ 'company.company-bank-account.branch-no.' | translate }}<span
+                                class="required">*</span></label>
+                        <input type="text" name="branch" id="company_bank_account_branch" formControlName="branch"
+                            class="fm-txt form-control"
+                            placeholder="{{ 'company.company-bank-account.branch-no.' | translate }}"
+                            (blur)="bankFields(bankAccountsForm.controls.bank,bankAccountsForm.controls.branch)" />
+                        <show-errors [control]="bankAccountsForm.controls.branch"></show-errors>
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                        <label>{{ 'company.company-bank-account.bank-name' | translate }}<span
+                                class="required">*</span></label>
+                        <input type="text" class="fm-txt form-control" name="bankName"
+                            id="company_bank_account_bank_name" formControlName="bankName"
+                            placeholder="{{'company.company-bank-account.bank-name' | translate }}" />
+                        <show-errors [control]="bankAccountsForm.controls.bankName"></show-errors>
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                        <label>{{ 'company.company-bank-account.account-no.' | translate }}<span
+                                class="required">*</span></label>
+                        <input type="text" name="account" id="company_bank_account_account" formControlName="account"
+                            class="fm-txt form-control"
+                            placeholder="{{ 'company.company-bank-account.account-no.' | translate }}" />
+                        <show-errors [control]="bankAccountsForm.controls.account"></show-errors>
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                        <label>{{ 'company.company-bank-account.effective-date' | translate }}<span
+                                class="required">*</span></label>
+                        <div class="calender-field">
+                            <my-date-picker [ngClass]="(buttonText == 'Update') ? 'removeCross':''"
+                                id="company-bank-account_effective_on" [options]="myDatePickerOptions"
+                                name="effectiveOn" formControlName="effectiveOn"
+                                (inputFocusBlur)="changeDateFormat($event, 'effectiveOn', 'bankAccountsForm', true)"
+                                placeholder="{{ 'company.company-bank-account.dd/mm/yyyy' | translate }}">
+                            </my-date-picker>
+                            <show-errors [control]="bankAccountsForm.controls.effectiveOn"></show-errors>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                        
+                        <label>{{ 'company.company-bank-account.expiry-date' | translate }}</label>
+                        <div class="calender-field">
+                            <my-date-picker id="company-bank-account_expired_on" [options]="myDatePickerOptions"
+                                name="expiredOn" formControlName="expiredOn"
+                                [ngClass]="expired  ? 'expired' : 'notExpired'"
+                                (inputFocusBlur)="changeDateFormat($event, 'expiredOn', 'bankAccountsForm', false)"
+                                placeholder="{{ 'company.company-bank-account.dd/mm/yyyy' | translate }}">
+                            </my-date-picker>
+                            <show-errors [control]="bankAccountsForm.controls.expiredOn"></show-errors>
+                        </div><!-- Calendar Field Ends -->
+                    </div>
+                    <!-- Calendar Field Ends -->
+                    <div class="col-md-3 col-xs-12">
+                        <label>&nbsp;</label>
+                        <button *ngIf="mainCompanyArray[0].saveCompanyBankAccount == 'T'" id="company-bank-account"
+                            class="btn green-btn">{{buttonText}}</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="grid-box">
+    <div class="grid-heading">
+        <h3>{{ 'company.company-bank-account.list-of-bank-accounts' | translate }}</h3>
+    </div>
+    <!-- Grid Heading Ends -->
+    <div class="grid-inner">
+        <div class="form-row">
+            <div class="row">
+                <div class="col-md-12 col-xs-12 table-col">
+                    <div class="table-responsive">
+                        <table id="company-bank-account-history"
+                            class="table table-bordered table-stripped inlinePopupTable">
+                        </table>
+                    </div>
+                    <!-- Table Ends -->
+                </div>
+            </div>
+        </div>
+        <!-- Form Row ENds -->
+    </div>
+    <!-- Grid Inner Ends -->
+</div>

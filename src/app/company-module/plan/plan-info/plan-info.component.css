@@ -1,0 +1,8 @@
+.resultsDropdown{ /* Added by balwinder to resolve padding issue */
+  margin: 0 0 5px 0;
+}
+
+/* added to make single deductible amount and family deductible amount right aligned */
+.align_right{
+  text-align-last: right;
+}

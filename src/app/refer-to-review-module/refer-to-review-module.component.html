@@ -1,0 +1,125 @@
+<div class="web-reg">
+  <button id="AddBulletin" href="javascript:void();" class="green-btn-add btn" data-toggle="modal"
+    data-target="#Bulletin" *ngIf="addBulatineBtn" (click)="getBulletin(businessTypeCd)"><i class="fa fa-plus"></i>Add
+    Bulletin</button>
+  <button *ngIf="showBulletin && deleteBulatineBtn" id="deleteBulletin" class="green-btn-add btn"
+    (click)="deleteBulletin(businessTypeCd)">Delete Bulletin</button>
+</div>
+
+<div class="b-marquee" *ngIf="showBulletin">
+  <span class="m-heading">Updates</span>
+  <marquee scrollamount="8">{{bulletinTxt}} </marquee>
+</div>
+<div class="section-heading">
+  <h2>{{'reviewApp.dashboard.heading' | translate}} </h2>
+</div>
+
+<div class="form-row dashboard">
+  <div class="row reviewer-tabs">
+    <div class="col-md-3 col-xs-12" *ngFor='let column of commentColumns; let i = index'>
+      <a (click)="getClaimInfo(column.type, column.isMonthly,column.data)" href="javascript:void(0)">
+        <div class="db-box cl{{i}}">
+          <h3>{{column.title}}</h3>
+          <div class="fig-facts">{{column.data}}</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+<!-- Form Row ENds -->
+
+<!--[Counters Start]-->
+<div class="form-group claim-dashboard">
+  <div class="row">
+    <div class="col-md-12 col-xs-12">
+      <!--  Below code commented -->
+      <div class="grid-box">
+        <ul class="nav company-tabs nav-pills">
+          <li id="dashboard-tab" class="active">
+            <a id="enterdsubmitTab" data-toggle="pill" href="#submission"
+              (click)="getSubmission('N')">{{'reviewApp.dashboard.NewSubmissions' | translate }}</a>
+          </li>
+          <li>
+            <a data-toggle="pill" href="#BackfromConsultant"
+              (click)="getBackConsultant('M')">{{'reviewApp.dashboard.BackfromConsultant' | translate
+              }}</a>
+          </li>
+        </ul>
+        <div class="form-row ds-table">
+          <div class="grid-inner">
+            <div class="tab-content">
+              <div id="submission" class="tab-pane fade in active">
+                <table id="submissionTable" class="display table table-bordered table-stripped">
+                  <thead>
+                  </thead>
+                  <tfoot>
+                  </tfoot>
+                </table>
+              </div>
+
+              <div id="BackfromConsultant" class="tab-pane fade">
+                <table id="consultantTable" class="display table table-bordered table-stripped">
+                  <thead>
+                  </thead>
+                  <tfoot>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="Bulletin" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" (click)="resetBulletinForm()">&times;</button>
+              <h4 class="modal-title">Add Bulletin</h4>
+            </div>
+            <div class="modal-body">
+              <div class="grid-box">
+                <div class="grid-heading">
+                  <h3>Bulletin Board</h3>
+                </div>
+                <div class="grid-inner">
+                  <form [formGroup]="bulletinForm">
+                    <div class="form-row">
+                      <div class="add-comments">
+                        <div class="row">
+                          <div class="col-sm-8">
+                            <label>&nbsp;</label>
+                            <textarea #focusAddBulatineEl class="fm-txt form-control"
+                              formControlName="bulletinTxt"></textarea>
+                            <show-errors [control]="bulletinForm.controls.bulletinTxt"></show-errors>
+                          </div>
+                          <div class="col-sm-2">
+                            <label>&nbsp;</label>
+                            <button class="green-btn-add btn" (click)="addBulatine()">
+                              Publish </button>
+                            <!-- Please don't remove following button -->
+                            <button id="btnResetBulatine" class="green-btn-add btn" style="display:none">
+                              <i class="fa fa-plus"></i> Cancel </button>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Add Comments Ends -->
+                    </div>
+                  </form>
+                </div>
+                <!-- Grid Inner Ends -->
+              </div>
+              <!-- Grid Box Ends -->
+            </div>
+            <!-- Modal Body End-->
+            <div class="modal-footer">
+              <button type="button" class="btn grey-btn" data-dismiss="modal"
+                (click)="resetBulletinForm()">Close</button>
+            </div>
+            <!-- Modal  Footer Ends -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--[Counters Ends]-->
+  </div>

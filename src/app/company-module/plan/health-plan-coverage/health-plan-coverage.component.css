@@ -1,0 +1,4 @@
+
+#healthCoverageRulesSection{overflow: scroll;height: 300px;}
+/* # 1277 Services was opening in large space so created below css for healthServicesCoveredSection */
+#healthServicesCoveredSection{overflow: scroll;height: 200px;}

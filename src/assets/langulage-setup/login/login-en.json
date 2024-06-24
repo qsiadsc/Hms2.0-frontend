@@ -1,0 +1,62 @@
+[
+  {
+    "fieldName": "User_Name", 
+    "fieldValue": "Email Address/ Username", 
+    "helpMessage": "Email Address/ Username", 
+    "listDtoFieldValidationMessage": [
+       {
+           "validationName": "REQUIRED",
+           "validationMessage": "Please Enter Email Address/ Username"
+       },
+       {
+        "validationName": "Invalid",
+        "validationMessage": "Please Enter valid email address"
+       }
+     ]
+  },
+  {
+    "fieldName": "PASSWORD", 
+    "fieldValue": "Password", 
+    "helpMessage": "Password", 
+    "listDtoFieldValidationMessage": [
+       {
+           "validationName": "REQUIRED",
+           "validationMessage": "Please Enter Password"
+       },
+       {
+        "validationName": "Invalid",
+        "validationMessage": "Please enter a valid Email Address/ Username"
+       }
+     ]
+  },
+  {
+    "fieldName": "REMEMBER_ME", 
+    "fieldValue": "Remember Me", 
+    "helpMessage": "Remember Me", 
+    "listDtoFieldValidationMessage": []
+  },
+  {
+    "fieldName": "FORGOT_PASSWORD", 
+    "fieldValue": "Forgot Password", 
+    "helpMessage": "Forgot Password", 
+    "listDtoFieldValidationMessage": []
+  },
+  {
+    "fieldName": "LOGIN_BUTTON", 
+    "fieldValue": "Login", 
+    "helpMessage": "Login", 
+    "listDtoFieldValidationMessage": []
+  },
+  {
+    "fieldName": "LOGIN_SUCCESS", 
+    "fieldValue": "User Login Successfully",
+    "helpMessage": "Login", 
+    "listDtoFieldValidationMessage": []
+  },
+  {
+    "fieldName": "LOGIN_FAILURE", 
+    "fieldValue": "Incorrect Credentials",
+    "helpMessage": "Login", 
+    "listDtoFieldValidationMessage": []
+  }
+]

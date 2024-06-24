@@ -1,0 +1,20 @@
+.dateBirth{max-width: 75px;}
+
+.cust_box{
+    border: 1px solid black;
+    padding: 0px 6px;
+    font-size: 11px;
+}
+
+input.selection.ng-pristine.ng-valid.ng-touched {
+    color: #555 !important;
+    font-weight: 100;
+}
+
+:host ::ng-deep #search-card-table > tbody > tr > td:nth-child(6) {
+    word-break: break-all;
+}
+:host ::ng-deep .table-responsive > .dataTables_wrapper > .top {
+    min-height: .01%;
+    overflow-x: auto;
+}

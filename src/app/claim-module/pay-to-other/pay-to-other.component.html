@@ -1,0 +1,64 @@
+<div class="grid-box" *ngIf="showOtherForm">
+    <div class="grid-heading">
+        <h3>{{'claims.claims-view.pay-to-other.payToOther' | translate}}</h3>
+    </div>    
+    <div class="grid-inner">
+        <form [formGroup]="ClaimPayToOtherFormGroup">
+            <div class="form-row">
+                <div class="row min-ht-sf">
+                    <div class="col-md-4 col-xs-12">
+                        <label>{{'claims.claims-view.pay-to-other.payeeName' | translate}}
+                            <span class="required">*</span>
+                        </label>    
+                        <input id="cpto_payeeName" type="text" class="fm-txt form-control datepicker" placeholder="{{'claims.claims-view.pay-to-other.payeeName' | translate}}" formControlName="payeeName">
+                        <show-errors [control]="ClaimPayToOtherFormGroup.controls.payeeName"></show-errors>
+                    </div>
+                    <div class="col-md-2 col-xs-12">
+                        <label>{{'claims.claims-view.pay-to-other.postalCode' | translate}}
+                            <span class="required">*</span>
+                        </label>    
+                        <input id="cpto_postalCode" type="text" class="upperCase fm-txt form-control datepicker" (blur)= "isCompanyPostalcodeValid($event)" placeholder="{{'claims.claims-view.pay-to-other.postalCode' | translate}}" formControlName="postalCode">
+                        <show-errors [control]="ClaimPayToOtherFormGroup.controls.postalCode"></show-errors>
+                    </div>
+                    <div class="col-md-2 col-xs-12">
+                        <label>{{'claims.claims-view.pay-to-other.city' | translate}}
+                            <span class="required">*</span>
+                        </label>    
+                        <input id="cpto_city" type="text" class="fm-txt form-control datepicker" (blur)="isCompanyPostalVerifyValid($event, 'city')" placeholder="{{'claims.claims-view.pay-to-other.city' | translate}}" formControlName="city">
+                        <show-errors [control]="ClaimPayToOtherFormGroup.controls.city"></show-errors>
+                    </div>
+                    <div class="col-md-2 col-xs-12">
+                        <label>{{'claims.claims-view.pay-to-other.province' | translate}}
+                            <span class="required">*</span>
+                        </label>
+                        <input id="cpto_province" type="text" class="fm-txt form-control datepicker" (blur)="isCompanyPostalVerifyValid($event, 'province')" placeholder="{{'claims.claims-view.pay-to-other.province' | translate}}" formControlName="province">
+                        <show-errors [control]="ClaimPayToOtherFormGroup.controls.province"></show-errors>
+                    </div>
+                    <div class="col-md-2 col-xs-12">
+                        <label>{{'claims.claims-view.pay-to-other.country' | translate}}
+                            <span class="required">*</span>
+                        </label>
+                        <input id="cpto_country" type="text" class="fm-txt form-control datepicker" (blur)="isCompanyPostalVerifyValid($event, 'country')" placeholder="{{'claims.claims-view.pay-to-other.country' | translate}}" formControlName="country">
+                        <show-errors [control]="ClaimPayToOtherFormGroup.controls.country"></show-errors>
+                    </div>
+                </div>
+                <div class="row min-ht-sf">
+                    <div class="col-md-6 col-xs-12">
+                        <label>{{'claims.claims-view.pay-to-other.addressLine1' | translate}}  
+                            <span class="required">*</span>
+                        </label>    
+                        <input id="cpto_addressLine1" type="text" class="fm-txt form-control datepicker" placeholder="{{'claims.claims-view.pay-to-other.addressLine1' | translate}}  " formControlName="addressLine1">
+                        <show-errors [control]="ClaimPayToOtherFormGroup.controls.addressLine1"></show-errors>
+                   </div>
+                    <div class="col-md-6 col-xs-12">
+                        <label>{{'claims.claims-view.pay-to-other.addressLine2' | translate}}
+                            <span class="required">*</span>
+                        </label>    
+                        <input id="cpto_addressLine2" type="text" class="fm-txt form-control datepicker" placeholder="{{'claims.claims-view.pay-to-other.addressLine2' | translate}}" formControlName="addressLine2">
+                        <show-errors [control]="ClaimPayToOtherFormGroup.controls.addressLine2"></show-errors>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

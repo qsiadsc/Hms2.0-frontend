@@ -1,0 +1,648 @@
+<!-- Section Heading Starts -->
+<div class="section-heading">
+  <h2>VISION SERVICES -
+    <span>{{'button.search'|translate}}</span>
+  </h2>
+</div>
+<!-- Section Heading Ends -->
+<div class="grid-box">
+  <div class="grid-heading">
+    <h3>Search Vision Service</h3>
+    <div class="web-reg">
+      <button id="fgvs_addNewProcCode" *ngIf="visionServiceCheck[0].addVisionService == 'T'" data-toggle="modal"
+        data-target="#AddNewVisionService" class="green-btn-add btn" (click)="addNewProcCodeClick()">
+        <i class="fa fa-plus"></i>Add New Vision Service</button>
+    </div>
+  </div>
+  <!-- Grid Heading Ends -->
+  <div class="grid-inner">
+    <form [formGroup]="visionServiceSearchForm">
+      <div class="form-row">
+        <div class="row min-ht-sf">
+          <div class="col-md-3 col-xs-12">
+            <label>Service ID</label>
+            <input type="text" id="fgvs_searchId" formControlName="searchId" class="form-control"
+              placeholder="Service ID" />
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>Effective Date</label>
+            <div class="calender-field">
+              <my-date-picker id="fgvs_effectiveDate" [options]="myDatePickerOptions" name="searchEffectiveOn"
+                formControlName="searchEffectiveOn"
+                (inputFocusBlur)="changeDateFormat($event, 'searchEffectiveOn','visionServiceSearchForm')"
+                placeholder="{{'common.date-placeholder' | translate}}">
+              </my-date-picker>
+              <show-errors [control]="visionServiceSearchForm.controls.searchEffectiveOn"></show-errors>
+            </div>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>&nbsp;</label>
+            <button id="fgvs_searchFilter" *ngIf="visionServiceCheck[0].searchVisionService == 'T'" type="submit"
+              class="btn green-btn" (click)="searchProcedureCode()" title="{{'common.search' | translate}}">
+              {{ 'button.search' | translate }}</button>
+            <button id="fgvs_Clear" type="button" class="btn grey-btn" (click)="resetSearchForm()"
+              title="{{'common.clear' | translate}}">{{ 'button.clear' | translate }}</button>
+          </div>
+        </div>
+      </div>
+      <!-- Form Row ENds -->
+    </form>
+  </div>
+  <!-- Grid Inner Ends -->
+</div>
+<div [hidden]="!showSearchTable">
+  <div class="grid-box">
+    <div class="grid-heading">
+      <h3>Vision Service List</h3>
+    </div>
+    <div class="grid-inner">
+      <div [ngClass]="{'tableLoader': showtableLoader}">
+        <div class="form-group">
+          <div class="table-responsive">
+            <table id="visionServiceList" class="table table-bordered table-tree-str alignRightText">
+              <thead>
+                <tr>
+                  <th>Service ID</th>
+                  <th>Coverage Category</th>
+                  <th>Parent ID - Description</th>
+                  <th>Effective On</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody *ngIf="ServiceList.length != 0 && !showtableLoader">
+                <ng-container *ngFor="let service of ServiceList">
+                  <tr>
+                    <td (click)="service.firstChild.length != 0 ? changeIcon(service) : false">
+                      <span style="width:25% !important"
+                        *ngIf="service.firstChild.length == 0">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                      <span style="width:25% !important" *ngIf="service.firstChild.length != 0">
+                        <i class="fa fa-fw"
+                          [ngClass]="{'fa-caret-down': !showRightArrow , 'fa-caret-right': serviceKey!= service.serviceKey }"
+                          aria-hidden="true"></i>
+                      </span>
+                      <span style="width:75% !important">{{service.serviceId}}</span>
+                    </td>
+                    <td>{{service.coverageCategory}}</td>
+                    <td>{{service.parentDescription}}</td>
+                    <td>{{service.effectiveOn | dateFormate }}</td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td colspan="5" [hidden]="serviceKey!= service.serviceKey">
+                      <table class="table table-bordered alignRightText">
+                        <tbody *ngIf="service.firstChild.length != 0 && !showtableLoader">
+                          <ng-container *ngFor="let service1 of service.firstChild">
+                            <tr class="treeChildRow">
+                              <td (click)="service1.secondChild.length != 0 ? changeIconSecondChild(service1) : false">
+                                <span style="width:25% !important"
+                                  *ngIf="service1.secondChild.length == 0">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                <span style="width:25% !important" *ngIf="service1.secondChild.length != 0">
+                                  <i class="fa fa-fw"
+                                    [ngClass]="{'fa-caret-down': !showRightChildArrow , 'fa-caret-right': childServiceKey!= service1.serviceKey }"
+                                    aria-hidden="true"></i>
+                                </span>
+                                <span style="width:75% !important">{{service1.serviceId}}</span>
+                              </td>
+                              <td>{{service1.coverageCategory}}</td>
+                              <td>{{service1.parentDescription}}</td>
+                              <td>{{service1.effectiveOn | dateFormate }}</td>
+                              <td>
+                                <a class="green-btn btn" title="{{'common.view' | translate}}"
+                                  *ngIf="visionServiceCheck[0].viewVisionService == 'T'" data-toggle="modal"
+                                  data-target="#AddNewVisionService" (click)="viewVisionServiceByKey(service1)">
+                                  <i class="fa fa-eye"></i>
+                                </a>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td colspan="5" [hidden]="childServiceKey!= service1.serviceKey">
+                                <table class="table table-bordered alignRightText">
+                                  <tbody *ngIf="service1.secondChild.length != 0">
+                                    <ng-container *ngFor="let service2 of service1.secondChild">
+                                      <tr class="treeChildRow">
+                                        <td
+                                          (click)="service2.thirdChild.length != 0 ? changeIconThirdChild(service2) : false">
+                                          <span style="width:25% !important"
+                                            *ngIf="service2.thirdChild.length == 0">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                          <span style="width:25% !important" *ngIf="service2.thirdChild.length != 0">
+                                            <i class="fa fa-fw"
+                                              [ngClass]="{'fa-caret-down': !showRightThirdChildArrow , 'fa-caret-right': thirdChildServiceKey!= service2.serviceKey }"
+                                              aria-hidden="true"></i>
+                                          </span>
+                                          <span style="width:75% !important">{{service2.serviceId}}</span>
+                                        </td>
+                                        <td>{{service2.coverageCategory}}</td>
+                                        <td>{{service2.parentDescription}}</td>
+                                        <td>{{service2.effectiveOn | dateFormate }}</td>
+                                        <td>
+                                          <a class="green-btn btn" title="{{'common.view' | translate}}"
+                                            *ngIf="visionServiceCheck[0].viewVisionService == 'T'" data-toggle="modal"
+                                            data-target="#AddNewVisionService"
+                                            (click)="viewVisionServiceByKey(service2)">
+                                            <i class="fa fa-eye"></i>
+                                          </a>
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                        <td colspan="5" [hidden]="thirdChildServiceKey!= service2.serviceKey">
+                                          <table class="table table-bordered alignRightText">
+                                            <tbody *ngIf="service2.thirdChild.length != 0 && !showtableLoader">
+                                              <ng-container *ngFor="let service3 of service2.thirdChild">
+                                                <tr class="treeChildRow">
+                                                  <td
+                                                    (click)="service3.fourthChild.length != 0 ? changeIconFourthChild(service3) : false">
+                                                    <span style="width:25% !important"
+                                                      *ngIf="service3.fourthChild.length == 0">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                                    <span style="width:25% !important"
+                                                      *ngIf="service3.fourthChild.length != 0">
+                                                      <i class="fa fa-fw"
+                                                        [ngClass]="{'fa-caret-down': !showRightFourthChildArrow , 'fa-caret-right': fourthChildServiceKey!= service3.serviceKey }"
+                                                        aria-hidden="true"></i>
+                                                    </span>
+                                                    <span style="width:75% !important">{{service3.serviceId}}</span>
+                                                  </td>
+                                                  <td>{{service3.coverageCategory}}</td>
+                                                  <td>{{service3.parentDescription}}</td>
+                                                  <td>{{service3.effectiveOn | dateFormate }}</td>
+                                                  <td>
+                                                    <a class="green-btn btn" title="{{'common.view' | translate}}"
+                                                      *ngIf="visionServiceCheck[0].viewVisionService == 'T'"
+                                                      data-toggle="modal" data-target="#AddNewVisionService"
+                                                      (click)="viewVisionServiceByKey(service3)">
+                                                      <i class="fa fa-eye"></i>
+                                                    </a>
+                                                  </td>
+                                                </tr>
+                                                <tr>
+                                                  <td colspan="5"
+                                                    [hidden]="fourthChildServiceKey != service3.serviceKey">
+                                                    <table class="table table-bordered alignRightText">
+                                                      <tbody *ngIf="service3.fourthChild.length != 0">
+                                                        <ng-container *ngFor="let service4 of service3.fourthChild">
+                                                          <tr class="treeChildLastRow">
+                                                            <td>{{service4.serviceId}}</td>
+                                                            <td>{{service4.coverageCategory}}</td>
+                                                            <td>{{service4.parentDescription}}</td>
+                                                            <td>{{service4.effectiveOn | dateFormate }}</td>
+                                                            <td>
+                                                              <a class="green-btn btn"
+                                                                title="{{'common.view' | translate}}"
+                                                                *ngIf="visionServiceCheck[0].viewVisionService == 'T'"
+                                                                data-toggle="modal" data-target="#AddNewVisionService"
+                                                                (click)="viewVisionServiceByKey(service4)">
+                                                                <i class="fa fa-eye"></i>
+                                                              </a>
+                                                            </td>
+                                                          </tr>
+                                                          <tr>
+                                                            <td colspan="5"
+                                                              [hidden]="fifthChildServiceKey != service4.serviceKey">
+                                                              <table class="table table-bordered alignRightText">
+                                                                <tbody
+                                                                  *ngIf="service4.fifthChild && service4.fifthChild.length != 0">
+                                                                  <ng-container
+                                                                    *ngFor="let service5 of service4.fifthChild">
+                                                                    <tr class="treeChildFifthRow">
+                                                                      <td>
+                                                                        <span style="width:25% !important"
+                                                                          *ngIf="service5.sixthChild && service5.sixthChild.length == 0">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                                                        <span style="width:25% !important"
+                                                                          *ngIf="service5.sixthChild && service5.sixthChild.length != 0">
+                                                                          <i class="fa fa-fw"
+                                                                            [ngClass]="{'fa-caret-down': !showRightSixthChildArrow , 'fa-caret-right': sixthChildServiceKey!= service5.serviceKey }"
+                                                                            aria-hidden="true"></i>
+                                                                        </span>
+                                                                        <span
+                                                                          style="width:75% !important">{{service5.serviceId}}</span>
+                                                                      </td>
+                                                                      <td>{{service5.coverageCategory}}</td>
+                                                                      <td>{{service5.parentDescription}}</td>
+                                                                      <td>{{service5.effectiveOn | dateFormate }}</td>
+                                                                      <td>
+                                                                        <a class="green-btn btn"
+                                                                          title="{{'common.view' | translate}}"
+                                                                          *ngIf="visionServiceCheck[0].viewVisionService == 'T'"
+                                                                          data-toggle="modal"
+                                                                          data-target="#AddNewVisionService"
+                                                                          (click)="viewVisionServiceByKey(service5)">
+                                                                          <i class="fa fa-eye"></i>
+                                                                        </a>
+                                                                      </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                      <td colspan="5"
+                                                                        [hidden]="sixthChildServiceKey != service5.serviceKey">
+                                                                        <table
+                                                                          class="table table-bordered alignRightText">
+                                                                          <tbody
+                                                                            *ngIf="service5.sixthChild && service5.sixthChild.length != 0">
+                                                                            <ng-container
+                                                                              *ngFor="let service6 of service5.sixthChild">
+                                                                              <tr class="treeChildSixthRow">
+                                                                                <td>
+                                                                                  <span style="width:25% !important"
+                                                                                    *ngIf="service6.seventhChild && service6.seventhChild.length == 0">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                                                                  <span style="width:25% !important"
+                                                                                    *ngIf="service6.seventhChild && service6.seventhChild.length != 0">
+                                                                                    <i class="fa fa-fw"
+                                                                                      [ngClass]="{'fa-caret-down': !showRightSeventhChildArrow , 'fa-caret-right': seventhChildServiceKey!= service6.serviceKey }"
+                                                                                      aria-hidden="true"></i>
+                                                                                  </span>
+                                                                                  <span
+                                                                                    style="width:75% !important">{{service6.serviceId}}</span>
+                                                                                </td>
+                                                                                <td>{{service6.coverageCategory}}</td>
+                                                                                <td>{{service6.parentDescription}}</td>
+                                                                                <td>{{service6.effectiveOn | dateFormate
+                                                                                  }}</td>
+                                                                                <td>
+                                                                                  <a class="green-btn btn"
+                                                                                    title="{{'common.view' | translate}}"
+                                                                                    *ngIf="visionServiceCheck[0].viewVisionService == 'T'"
+                                                                                    data-toggle="modal"
+                                                                                    data-target="#AddNewVisionService"
+                                                                                    (click)="viewVisionServiceByKey(service6)">
+                                                                                    <i class="fa fa-eye"></i>
+                                                                                  </a>
+                                                                                </td>
+                                                                              </tr>
+                                                                              <tr>
+                                                                                <td colspan="5"
+                                                                                  [hidden]="seventhChildServiceKey != service6.serviceKey">
+                                                                                  <table
+                                                                                    class="table table-bordered alignRightText">
+                                                                                    <tbody
+                                                                                      *ngIf="service6.seventhChild && service6.seventhChild.length != 0">
+                                                                                      <ng-container
+                                                                                        *ngFor="let service7 of service6.seventhChild">
+                                                                                        <tr class="treeChildLastRow">
+                                                                                          <td>{{service7.serviceId}}
+                                                                                          </td>
+                                                                                          <td>
+                                                                                            {{service7.coverageCategory}}
+                                                                                          </td>
+                                                                                          <td>
+                                                                                            {{service7.parentDescription}}
+                                                                                          </td>
+                                                                                          <td>{{service7.effectiveOn |
+                                                                                            dateFormate
+                                                                                            }}</td>
+                                                                                          <td>
+                                                                                            <a class="green-btn btn"
+                                                                                              title="{{'common.view' | translate}}"
+                                                                                              *ngIf="visionServiceCheck[0].viewVisionService == 'T'"
+                                                                                              data-toggle="modal"
+                                                                                              data-target="#AddNewVisionService"
+                                                                                              (click)="viewVisionServiceByKey(service7)">
+                                                                                              <i class="fa fa-eye"></i>
+                                                                                            </a>
+                                                                                          </td>
+                                                                                        </tr>
+                                                                                      </ng-container>
+                                                                                    </tbody>
+                                                                                  </table>
+                                                                                </td>
+                                                                              </tr>
+                                                                            </ng-container>
+                                                                          </tbody>
+                                                                        </table>
+                                                                      </td>
+                                                                    </tr>
+                                                                  </ng-container>
+                                                                </tbody>
+                                                              </table>
+                                                            </td>
+                                                          </tr>
+                                                        </ng-container>
+                                                      </tbody>
+                                                    </table>
+                                                  </td>
+                                                </tr>
+                                              </ng-container>
+                                            </tbody>
+                                          </table>
+                                        </td>
+                                      </tr>
+                                    </ng-container>
+                                  </tbody>
+                                </table>
+                              </td>
+                            </tr>
+                          </ng-container>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </ng-container>
+              </tbody>
+              <tbody *ngIf="ServiceList">
+                <tr *ngIf="ServiceList.length == 0 && !showtableLoader" class="odd">
+                  <td valign="top" colspan="5" style="text-align: center" class="dataTables_empty">
+                    {{'card.card-holder.data-tables.datamsg' | translate}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <span *ngIf="showtableLoader" class="loading" data-name="Loading">Processing....</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add New Vision Service Modal-->
+<div id="AddNewVisionService" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="resetVisionServiceForm" type="button" class="close" data-dismiss="modal"
+          (click)="clearAddVisionServiceForm()">&times;</button>
+        <h4 *ngIf="addMode" class="modal-title">Add Vision Service</h4>
+        <h4 *ngIf="viewMode" class="modal-title">Vision Service Details</h4>
+        <h4 *ngIf="editMode" class="modal-title">Edit Vision Service</h4>
+      </div>
+
+      <div class="modal-body">
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{'feeGuide.dentalService.service' | translate}}</h3>
+          </div>
+          <!-- Grid Heading Ends -->
+          <div class="grid-inner">
+            <form [formGroup]="addVisionServiceForm">
+              <div class="form-row">
+                <div class="row min-ht-sf">
+                  <div class="col-md-4 col-xs-12">
+                    <label>{{'feeGuide.dentalService.coverageCategory' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <div [ngClass]="{'disableMultiselect': viewMode}">
+                      <ng2-completer [inputId]="'coverageCategoryID'" formControlName="coverageCategory"
+                        [datasource]="covCategoryDataRemote" [minSearchLength]="0" [fillHighlighted]="false"
+                        [autoHighlight]="true" [selectOnFocus]="true" [placeholder]="'Search Coverage Category'"
+                        [textSearching]="'Please wait...'" [inputClass]="'form-control'"
+                        (selected)="onSelect($event,'coverageCategory')" [clearUnselected]="true">
+                      </ng2-completer>
+                    </div>
+                    <show-errors [control]="addVisionServiceForm.controls.coverageCategory"></show-errors>
+                  </div>
+
+                  <div class="col-md-4 col-xs-12">
+                    <label>{{'feeGuide.dentalService.patientServiceId' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <div id="parentIdLoadOnScroll" [ngClass]="{'disableMultiselect': viewMode}">
+                      <ng2-completer formControlName="parentServiceId" [datasource]="visionParentServiceDataRemote"
+                        [minSearchLength]="0" [fillHighlighted]="false" [autoHighlight]="true" [selectOnFocus]="true"
+                        [placeholder]="'Search Parent Service ID'" [textSearching]="'Please wait...'"
+                        [inputClass]="'form-control'" (selected)="onSelect($event,'parentServiceId')"
+                        [clearUnselected]="true">
+                      </ng2-completer>
+                    </div>
+                    <show-errors [control]="addVisionServiceForm.controls.parentServiceId"></show-errors>
+                  </div>
+
+                  <div class="col-md-4 col-xs-12">
+                    <label>{{'feeGuide.dentalService.serviceId' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <input id="visionServiceId" type="text" class="form-control" name="serviceId"
+                      formControlName="serviceId" maxlength="5"
+                      placeholder="{{'feeGuide.dentalService.serviceId' | translate}}" />
+                    <show-errors [control]="addVisionServiceForm.controls.serviceId"></show-errors>
+                  </div>
+
+                  <div class="col-md-4 col-xs-12 txtarea-height">
+                    <label>{{'feeGuide.dentalService.descriptionShort' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <textarea id="visionDescriptionShort" class="form-control" name="descriptionShort"
+                      formControlName="descriptionShort"
+                      placeholder="{{'feeGuide.dentalService.descriptionShort' | translate}}"></textarea>
+                    <show-errors [control]="addVisionServiceForm.controls.descriptionShort"></show-errors>
+                  </div>
+                  <div class="col-md-8 col-xs-12 txtarea-height">
+                    <label>{{'feeGuide.dentalService.descriptionLong' | translate}}</label>
+                    <textarea id="visionDescriptionLong" class="form-control" name="descriptionLong"
+                      formControlName="descriptionLong"
+                      placeholder="{{'feeGuide.dentalService.descriptionLong' | translate}}"></textarea>
+                  </div>
+                  <div class="col-md-4 col-xs-12 txtarea-height">
+                    <label>{{'feeGuide.dentalService.effectiveDate' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <div class="calender-field">
+                      <my-date-picker [ngClass]="(viewMode == true) ? 'removeCross':''" id="visionEffectiveDate"
+                        [options]="myDatePickerOptions" name="effectiveOn" formControlName="effectiveOn"
+                        (inputFocusBlur)="changeDateFormatAddForm($event, 'effectiveOn','addVisionServiceForm', true)"
+                        placeholder="{{'common.date-placeholder' | translate}}">
+                      </my-date-picker>
+                      <show-errors [control]="addVisionServiceForm.controls.effectiveOn"></show-errors>
+                    </div>
+                  </div>
+                  <div class="col-md-4 col-xs-12 txtarea-height">
+                    <label>{{'feeGuide.dentalService.expiryDate' | translate}}</label>
+                    <div class="calender-field">
+                      <my-date-picker
+                        [ngClass]="[expired  ? 'expired' : 'notExpired', (viewMode == true) ? 'removeCross':'']"
+                        id="visionExpiryDate" [options]="myDatePickerOptions" name="expiredOn"
+                        formControlName="expiredOn"
+                        (inputFocusBlur)="changeDateFormatAddForm($event, 'expiredOn','addVisionServiceForm')"
+                        placeholder="{{'common.date-placeholder' | translate}}">
+                      </my-date-picker>
+                      <show-errors [control]="addVisionServiceForm.controls.expiredOn"></show-errors>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- INLINE VISION PROC TABLE START -->
+              <div class="form-row">
+                <label>&nbsp;</label>
+                <div class="pull-right">
+                  <button id="maskAddNew" class="green-btn-add btn" [disabled]="viewMode" (click)="enableAddProc()">
+                    <i class="fa fa-plus"></i>Add Procedure</button>
+                </div>
+                <div class="row">
+                  <div class="col-md-12 col-xs-12 table-col">
+                    <div class="table-responsive search-table">
+                      <div style="color: red" class="alert alert-danger"
+                        *ngIf="(newProcId.invalid && (newProcId.dirty || newProcId.touched))">
+                        <div *ngIf="newProcId.invalid && (newProcId.dirty || newProcId.touched)">
+                          <div *ngIf="newProcId.errors.required">
+                            Procedure ID is required
+                          </div>
+                          <div *ngIf="!newProcId.errors.required && newProcId.errors.maxlength">
+                            {{ 'rules.errors.max5Numbers' | translate }}
+                          </div>
+                          <div *ngIf="!newProcId.errors.required && newProcId.errors.minlength">
+                            {{ 'rules.errors.min3Numbers' | translate }}
+                          </div>
+                          <div *ngIf="!newProcId.errors.required && newProcId.errors.alreadyExist">
+                            {{ 'feeGuide.toaster.procCodeAlreadyExists' | translate }}
+                          </div>
+                        </div>
+                      </div>
+                      <table class="table table-bordered table-stripped" id="planInfoTable">
+                        <thead>
+                          <tr>
+                            <th width="">{{'feeGuide.procedureCode.proc-code-listing.proc-id'|translate}}</th>
+                            <th width="" class="text-right">Procedure Description</th>
+                            <th width="" class="text-right">Procedure Long Description</th>
+                            <th width="" class="text-right">{{'rules.addEditViewRule.action' | translate}}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngIf="addProcMode">
+                            <td>
+                              <input [formControl]="newProcId" class="fm-txt form-control" type="input"
+                                OnlyNumber="true" (blur)="validateProcId($event)" placeholder="Procedure ID"
+                                (keydown)="isNumberKey($event)">
+                            </td>
+                            <td>
+                              <input [formControl]="procShortDesc" class="fm-txt form-control text-right notInCaps"
+                                type="input" placeholder="Procedure Description">
+                            </td>
+                            <td>
+                              <input [formControl]="procLongDesc" class="fm-txt form-control text-right notInCaps"
+                                type="input" placeholder="Procedure Long Description">
+                            </td>
+                            <td class="text-right">
+                              <button type="button" (click)="addNewProc(newProc)" class="table-action-btn save-ico "
+                                title="{{'common.save' | translate}}">
+                                <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                              </button>
+                              <button id="planInfoDelete" type="button" (click)="resetNewProcRow()"
+                                title="{{'common.cancel' | translate}}" class="table-action-btn cancel-ico">
+                                <i class="fa fa-times" aria-hidden="true"></i>
+                              </button>
+                            </td>
+                          </tr>
+                          <div *ngIf="procList.length > 0 || addProcMode; then procRecordFound else procRecordNotFound">
+                          </div>
+                          <ng-template #procRecordNotFound>
+                            <tr>
+                              <td colspan="4" class="text-center">{{'rules.addEditViewRule.noData' | translate}}</td>
+                            </tr>
+                          </ng-template>
+                          <ng-template #procRecordFound>
+                            <tr *ngFor="let proc of procList; let rowIndex = index">
+                              <td>
+                                <span *ngIf="rowIndex != selectedProc.rowIndex">{{proc.visionProcedureId}}</span>
+                                <input class="fm-txt form-control" type="text" [formControl]="newProcId"
+                                  *ngIf="editProcMode && rowIndex == selectedProc.rowIndex"
+                                  [(ngModel)]="selectedProc.visionProcedureId">
+                              </td>
+                              <td class="text-right">
+                                <span *ngIf="rowIndex != selectedProc.rowIndex">{{proc.visionProcedureDesc}}</span>
+                                <input [formControl]="procShortDesc" class="fm-txt form-control text-right notInCaps"
+                                  type="input" placeholder="Proc Short Desc"
+                                  *ngIf="editProcMode && rowIndex == selectedProc.rowIndex"
+                                  [(ngModel)]="selectedProc.visionProcedureDesc">
+                              </td>
+                              <td class="text-right">
+                                <span *ngIf="rowIndex != selectedProc.rowIndex">{{proc.visionProcedureLongDesc}}</span>
+                                <input [formControl]="procLongDesc" class="fm-txt form-control text-right notInCaps"
+                                  type="input" placeholder="Proc Long Desc"
+                                  *ngIf="editProcMode && rowIndex == selectedProc.rowIndex"
+                                  [(ngModel)]="selectedProc.visionProcedureLongDesc">
+                              </td>
+                              <td class="text-right">
+                                <button id="procEdit" *ngIf="rowIndex != selectedProc.rowIndex" [disabled]="viewMode"
+                                  title="{{'common.edit' | translate}}" type="button" class="table-action-btn edit-ico"
+                                  (click)="enableEditProc(proc, rowIndex)">
+                                  <i class="fa fa-pencil"></i>
+                                </button>
+
+                                <button id="procDelete" *ngIf="rowIndex != selectedProc.rowIndex" [disabled]="viewMode"
+                                  title="{{'common.delete' | translate}}" type="button" class="table-action-btn del-ico"
+                                  (click)="deleteProd(rowIndex)">
+                                  <i class="fa fa-trash"></i>
+                                </button>
+
+                                <button id="procUpdate" *ngIf="editProcMode && rowIndex == selectedProc.rowIndex"
+                                  type="button" class="table-action-btn save-ico" title="{{'common.save' | translate}}"
+                                  (click)="updateProc(rowIndex)">
+                                  <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                </button>
+                                <button id="procEdit1" *ngIf="editProcMode && rowIndex == selectedProc.rowIndex"
+                                  type="button" class="table-action-btn cancel-ico "
+                                  title="{{'common.cancel' | translate}}" (click)="resetProcInfo()">
+                                  <i class="fa fa-times" aria-hidden="true"></i>
+                                </button>
+                              </td>
+                            </tr>
+                          </ng-template>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- INLINE VISION PROC TABLE END -->
+            </form>
+            <!-- Form Row ENds -->
+          </div>
+        </div>
+        <!-- Grid Box Ends -->
+        <div *ngIf="viewMode" class="grid-box">
+          <div class="grid-heading">
+            <h3>{{'feeGuide.dentalService.attachedProcedureCode' | translate}}</h3>
+          </div>
+          <!-- Grid Heading Ends -->
+          <div class="grid-inner">
+            <div class="form-row">
+              <div class="row">
+                <div class="col-md-12 col-xs-12 table-col">
+                  <div class="table-responsive">
+                    <table id="visionProcCodeList" class="table table-bordered table-stripped">
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Form Row ENds -->
+          </div>
+        </div>
+        <!-- Grid Box Ends -->
+      </div>
+      <!-- Modal Body End-->
+
+      <!-- Modal Body End-->
+      <div class="modal-footer">
+        <label>&nbsp;</label>
+        <button id="visionSaveBtn" *ngIf="addMode" class="green-btn btn" type="submit"
+          (keyup.arrowLeft)="focusNextEle($event,'closeVisionServiceForm')"
+          (keyup.arrowRight)="focusNextEle($event,'closeVisionServiceForm')"
+          (click)="submitVisionServiceForm(addVisionServiceForm)">
+          {{'button.save' | translate}}</button>
+        <button id="closeVisionServiceForm" *ngIf="addMode" type="button" class="btn grey-btn"
+          (keyup.arrowLeft)="focusNextEle($event,'visionSaveBtn')"
+          (keyup.arrowRight)="focusNextEle($event,'visionSaveBtn')" data-dismiss="modal"
+          (click)="clearAddVisionServiceForm()">{{'button.close' | translate}}</button>
+
+        <button id="visionEditBtn" *ngIf="viewMode" class="green-btn btn"
+          (keyup.arrowLeft)="focusNextEle($event,'closeVisionServiceForm')"
+          (keyup.arrowRight)="focusNextEle($event,'closeVisionServiceForm')" (click)="enableEditMode()">
+          {{'button.edit' | translate}}</button>
+        <button id="closeVisionServiceForm" *ngIf="viewMode" type="button" class="btn grey-btn"
+          (keyup.arrowLeft)="focusNextEle($event,'visionEditBtn')"
+          (keyup.arrowRight)="focusNextEle($event,'visionEditBtn')" data-dismiss="modal"
+          (click)="clearAddVisionServiceForm()">{{'button.close' | translate}}</button>
+
+        <button id="visionUpdateBtn" *ngIf="editMode" class="green-btn btn" type="submit"
+          (keyup.arrowLeft)="focusNextEle($event,'closeVisionServiceForm')"
+          (keyup.arrowRight)="focusNextEle($event,'closeVisionServiceForm')"
+          (click)="submitVisionServiceForm(addVisionServiceForm)">
+          {{'button.update' | translate}}</button>
+        <button id="closeVisionServiceForm" *ngIf="editMode" type="button" class="btn grey-btn"
+          (keyup.arrowLeft)="focusNextEle($event,'visionUpdateBtn')"
+          (keyup.arrowRight)="focusNextEle($event,'visionUpdateBtn')" data-dismiss="modal"
+          (click)="clearAddVisionServiceForm()">{{'button.close' | translate}}</button>
+      </div>
+      <!-- Modal  Footer Ends -->
+    </div>
+  </div>
+</div>
+<!-- Add New Fee Guide Modal-->

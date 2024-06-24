@@ -1,0 +1,361 @@
+<div class="grid-box">
+  <div class="grid-heading">
+    <h3>{{'uft.dashboard.bankReconciliation.bankReconciliation' | translate }}</h3>
+    <div class="web-reg">
+      <h3 class="lst-updated"></h3>
+      <button class="claim-status btn status-btn" style="cursor: pointer" (click)='fileUpload()'>
+        {{'uft.dashboard.bankReconciliation.auto' | translate }}
+      </button>
+      <button class="claim-status btn status-btn" style="cursor: pointer" (click)='getList()' data-toggle="modal"
+        id="ListPopUpNew" data-target="#PopUpNewView">
+        {{'uft.dashboard.bankReconciliation.manual' | translate }}
+      </button>
+      <button class="claim-status btn status-btn" style="cursor: pointer"  data-toggle="modal"
+       data-target="#stopChq">
+      {{'uft.dashboard.bankReconciliation.stopCheque' | translate }}
+    </button>
+
+      <button class="claim-status btn status-btn" style="cursor: pointer; display: none;" (click)='getList("Auto")' data-toggle="modal"
+      id="ListPopUpNewAuto" data-target="#PopUpNewView">
+     {{'uft.dashboard.bankReconciliation.autoThenManual' | translate }}
+    </button>
+    </div>
+  </div>
+  <!-- Grid Heading Ends -->
+  <div class="grid-inner">
+    <div class="form-row">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-row">
+            <form [formGroup]="uftContinuityData">
+              <div class="row min-ht-sf">
+
+                <div class="col-md-6 col-xs-12 min-ht-half paddingRight">
+                  <div class="col-md-12 col-xs-12">
+                    <!-- 20 jan 2020 feedback -->
+                    <!-- Till Date -->
+                    <label>{{'uft.dashboard.bankReconciliation.reconciliationDate' | translate }}<span class="required">*</span></label>
+                    <div class="calender-field">
+                      <my-date-picker id="uft_dashboardToDate" placeholder="Reconciliation Date" [options]="myDatePickerOptionsTill"
+                        name="toDate" (inputFocusBlur)="changeDateFormat($event, 'toDate' ,'uftContinuityData')"
+                        formControlName="toDate" #mydpToDate="mydatepicker">
+                      </my-date-picker>
+                      <show-errors [control]="uftContinuityData.controls.toDate"></show-errors>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6 col-xs-12 min-ht-half " style="padding-top: 17px;">
+                  <div class="col-md-9 col-xs-12" style="padding: 0px;" >
+                    <ng2-completer formControlName="bType" [datasource]="dateRangeData" [minSearchLength]="0"
+                      [openOnFocus]="true" [selectOnFocus]="true" (opened)="onOpened($event)" [fillHighlighted]="false"
+                      [placeholder]="'Business Type'" [textSearching]="'Please wait...'"
+                      [inputClass]="'form-control bType'" [clearUnselected]="true" [autoHighlight]="true"
+                      (selected)="onDateRangeSelected($event)" (blur)="onBlurDateRange($event)" [inputId]="'dateRange'">
+                    </ng2-completer>
+                  </div>
+                  <div class="col-md-3 col-xs-12" style="padding: 0px;" >
+                    <button style="margin-left: 4px;" id="procSearchFilter" type="submit" class="btn green-btn bnew" (click)="getOpeningClosingBalance(true)"
+                    title="{{'common.search' | translate}}">
+                    <i class="fa fa-search"></i></button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <!-- Form Row ENds -->
+          <div class="form-row">
+            <div class="balance-main">
+              <div class="row">
+                <div class="col-sm-6" id="uft_opening_balance">
+                  <div class="balance-box cheque heightCss">
+                    <button class="btn green-btn-add " style="padding: 6px 10px" (click)="uftContinuityReport('OPENINGCLOSING')"> {{'uft.dashboard.bankReconciliation.reports' | translate }}</button>
+                    <h4>{{'uft.dashboard.bankReconciliation.openingUncleared' | translate }} </h4>
+                    <h4>{{'uft.dashboard.bankReconciliation.chequesAmount' | translate }}</h4>
+                    <span *ngIf=showOpeningClosingBalLoader class="dash-loader">
+                      <span class="dash-loader-inner"></span>
+                    </span>
+                    <span *ngIf=!showOpeningClosingBalLoader style="font-size: 30px;">{{openingBalance}}</span>
+                  </div>
+                </div>
+                <div class="col-sm-6" id="uft_closing_balance">
+                  <div class="balance-box bg-dark heightCss">
+                    <button class="btn green-btn-add " style="padding: 6px 10px" (click)="uftContinuityReport('UNCLEAREDCLOSING')"> {{'uft.dashboard.bankReconciliation.reports' | translate }}</button>
+                    <h4>{{'uft.dashboard.bankReconciliation.closingUncleared' | translate }} </h4>
+                    <h4>{{'uft.dashboard.bankReconciliation.chequesAmount' | translate }}</h4>
+                    <span *ngIf=showOpeningClosingBalLoader class="dash-loader">
+                      <span class="dash-loader-inner"></span>
+                    </span>
+                    <span *ngIf=!showOpeningClosingBalLoader style="font-size: 30px;">{{closingBalance}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Balance Main Ends -->
+          </div>
+          <!-- Form Row Ends -->
+        </div>
+
+        <div class="col-md-6 reports">
+          <div class="form-row fn-tabs">
+            <div class="panel-group" id="accordion">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#Funding" class="p-title cashInflow"
+                      aria-expanded="false">
+                      <span>{{'uft.dashboard.bankReconciliation.oldChequesCleared' | translate }}</span>
+                      <span *ngIf=showOpeningClosingBalLoader class="dash-loader amount">
+                        <span class="dash-loader-inner"></span>
+                      </span>
+                      <button class="btn green-btn-add" (click)="uftContinuityReport('BANKFUNDING')">
+                        {{'uft.dashboard.uft-continuity.Report'|translate}}
+                      </button>
+                      <span class="amount" style="margin-right: 13px"
+                        *ngIf=!showOpeningClosingBalLoader>{{oldChqClrAmt}}</span>
+                    </a>
+                  </h4>
+                  <div id="Funding" class="panel-collapse collapse">
+                    <div class="panel-body">
+                      <div class="table-responsive">
+                        <table class="table table-bordered">
+                          <thead>
+                            <tr>
+                              <th width="30%">{{'uft.dashboard.uft-continuity.Funding'|translate}}</th>
+                              <th width="30%" class="amount_right_grid">
+                                {{'uft.dashboard.uft-continuity.Amount'|translate}}</th>
+                              <th width="40%" class="amount_right_grid">
+                                {{'uft.dashboard.uft-continuity.Action'|translate}}</th>
+                            </tr>
+                          </thead>
+                          <tbody *ngIf="!showTabListLoader">
+                            <tr *ngFor="let funds of fundingList let last=last let first=first;">
+                              <td>{{funds.data}}</td>
+                              <td class="amount_right_grid">
+                                <span>$</span>{{funds.amount}}</td>
+                              <td class="amount_right_grid">
+                                <button *ngIf="!last && !first" data-toggle="modal" data-target="#oneTimePayment"
+                                  type="button" class="btn green-btn-add"
+                                  (click)="addOtpForm(funds,'FUNDING')">{{'uft.dashboard.uft-continuity.Add'|translate}}</button>
+                                <button *ngIf="!last" class="btn green-btn-add" data-toggle="modal"
+                                  data-target="#reversePopup"
+                                  (click)="reverseForm(funds,'FUNDING')">{{'uft.dashboard.uft-continuity.Reverse'|translate}}</button>
+                                <button class="btn green-btn-add"
+                                  (click)="uftContinuitySubTypeReport(funds)">{{'uft.dashboard.uft-continuity.Report'|translate}}</button>
+                              </td>
+                            </tr>
+                          </tbody>
+                          <tbody *ngIf="showTabListLoader">
+                            <tr>
+                              <td colspan="3">{{'common.loading' | translate}}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a class="p-title">
+                      <span>{{'uft.dashboard.bankReconciliation.newChequesIssued' | translate }}</span>
+                      <span *ngIf=showOpeningClosingBalLoader class="dash-loader amount">
+                        <span class="dash-loader-inner"></span>
+                      </span>
+                      <button class="btn green-btn-add" (click)="uftContinuityReport('NEWBANKFUNDING')">
+                        {{'uft.dashboard.uft-continuity.Report'|translate}}
+                      </button>
+                      <span class="amount" style="margin-right: 13px;
+                      " *ngIf=!showOpeningClosingBalLoader>{{newChqIssuedAmt}}</span>
+                    </a>
+                  </h4>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a class="p-title">
+                      <span class="">{{'uft.dashboard.bankReconciliation.chequesAdjusted' | translate }}</span>
+                      <span *ngIf=showOpeningClosingBalLoader class="dash-loader amount">
+                        <span class="dash-loader-inner"></span>
+                      </span>
+                      <button class="btn green-btn-add" (click)="uftContinuityReport('ADJUSTBANKFUNDING')">
+                        {{'uft.dashboard.uft-continuity.Report'|translate}}
+                      </button>
+                      <span class="amount" style="margin-right: 13px"
+                        *ngIf=!showOpeningClosingBalLoader>{{chqAdjustAmt}}</span>
+                    </a>
+                  </h4>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- form Row Ends  -->
+        </div>
+      </div>
+    </div>
+    <!-- Form Row Ends -->
+  </div>
+  <!-- Grid Inner Ends -->
+</div>
+
+<div [hidden]="!showPageLoader" class="loader-outer">
+  <div class="cube-wrapper">
+    <div class="cube-folding">
+      <span class="leaf1"></span>
+      <span class="leaf2"></span>
+      <span class="leaf3"></span>
+      <span class="leaf4"></span>
+    </div>
+    <span class="loading" data-name="Loading">{{'company.plan.benefits.pleaseWait'|translate}}</span>
+  </div>
+</div>
+
+<!--Report List Modal New-->
+<div id="stopChq" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog" style="
+  width: 90%;
+">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header" style="text-align: center;">
+        <button type="button" (click)='reSetData()' class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">{{'uft.dashboard.bankReconciliation.stopCheque' | translate }}</h4>
+      </div>
+      <div class="container">
+        <app-refund-cheque></app-refund-cheque>
+        </div>
+</div>
+</div>
+</div>
+
+<!--Report List Modal New-->
+<div id="PopUpNewView" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog" style="
+  width: 90%;
+">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header" style="text-align: center;">
+        <button type="button" (click)='reSetData()' class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">{{'uft.dashboard.bankReconciliation.misMatchedItems' | translate }}</h4>
+      </div>
+      <div class="container" style='display:none'>
+        <div class="col-md-8 popupMid">
+        </div>
+        <div class="col-md-4 popupMid">
+          <select class="fm-txt form-control" placeholder="Select" name="plan" id="plan" (change)='typeChange($event)'>
+            <option [value]="''" selected> </option>
+            <option [value]="'OP'"> {{'uft.dashboard.bankReconciliation.openingUnclearCheques' | translate }}</option>
+            <option [value]="'CI'"> {{'uft.dashboard.bankReconciliation.newChequesIssued' | translate }}</option>
+            <option [value]="'CA'"> {{'uft.dashboard.bankReconciliation.chequesAdjusts' | translate }}</option>
+            <option [value]="'CL'"> {{'uft.dashboard.bankReconciliation.closingUnclearCheques' | translate }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <!-- Manual Filter changes -->
+        <div class="grid-box">
+          <div class="col-md-12 col-xs-12 table-col" style="margin-top: 2%;  height: 400px;
+         overflow-x: hidden; border-bottom: 3px solid #f1f2f5;">
+            <div class="table-responsive">
+              <table id="bank-history" class="display table table-bordered table-stripped">
+              </table>
+            </div>
+          </div>
+          <button (click)="updateManual()" [disabled]="changedArray.length==0"
+            style="float: right; margin-right: 19px;margin-top: 10px;padding-right: 15px;padding-left: 15px;" class="btn green-btn-add">{{'uft.dashboard.bankReconciliation.run' | translate }}</button>
+        </div>
+      </div>
+      <!--[End Download Dropdown]-->
+      <!-- Table Ends -->
+    </div>
+  </div>
+</div>
+<!-- Form Row ENds -->
+
+<!--[Start File Upload Pop Up]-->
+<button class="green-btn-add btn" data-toggle="modal" id="uploadPopUp" data-target="#openUploadPopUp"
+  style="display:none"></button>
+
+<div id="openUploadPopUp" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" (click)="resetGovEligFileForm()">&times;</button>
+        <h4 class="modal-title">{{'uft.dashboard.bankReconciliation.qsiBankReconciliationFilesList' | translate }}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="grid-box">
+          <!-- Grid Heading Ends -->
+          <div class="grid-inner">
+            <form [formGroup]="uploadFormGroup">
+              <div class="grid-inner">
+                <div class="form-row">
+                  <div class="row min-ht-sf">
+                    <div class="col-md-3 col-xs-12">
+                      <label>{{'uft.dashboard.bankReconciliation.fileName' | translate }}</label>
+                      <input style="display: none" type="file" (click)="crFileInput.value = null"
+                        (change)="onFileChanged($event)" #crFileInput>
+                      <input formControlName="selectedFileName" name="selectedFileName" disabled
+                        class="fm-txt form-control datepicker" type="text">
+                      <show-errors [control]="uploadFormGroup.controls.selectedFileName"></show-errors>
+                      <ul *ngIf="error.isError==true" class="validation-errors">
+                        <li style="color: red">{{error.errorMessage}}</li>
+                      </ul>
+                      <ul *ngIf="error3.isError==true" class="validation-errors">
+                        <li style="color: red">{{error3.errorMessage}}</li>
+                      </ul>
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                      <label>&nbsp;</label>
+                      <button class="btn green-btn" (click)="crFileInput.click()">{{'button.selectFile' | translate }}</button>
+                      <button *ngIf="this.selectedFileName" click)="removeExtension()"
+                        class="btn red-btn ">{{'button.remove' | translate }}</button>
+                      <button (click)="onSubmitUploadGovEligFileForm()" class="btn green-btn">{{'button.upload' | translate }}</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+            <!--[Start Files Grid]-->
+            <div class="form-row">
+              <div class="table-responsive">
+                <table id="bank-doc-upload-list" class="table table-bordered table-stripped text-left col-lt-search"
+                  style="width: 100%"></table>
+              </div>
+            </div>
+            <!--[End Files Grid]-->
+          </div>
+        </div>
+      </div>
+      <!-- Modal Body End-->
+      <div class="modal-footer">
+        <button id="ReportResetFooterButton" type="button" class="btn grey-btn" data-dismiss="modal"
+          (click)="resetGovEligFileForm()">{{ 'button.close' | translate }}</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--[End File Upload Pop ]-->
+
+<style>
+  .form-row div {
+    min-height: 34px !important;
+  }
+</style>
+
+<div *ngIf="showLoader" class="loader-outer">
+  <div class="cube-wrapper">
+    <div class="cube-folding">
+      <span class="leaf1"></span>
+      <span class="leaf2"></span>
+      <span class="leaf3"></span>
+      <span class="leaf4"></span>
+    </div>
+    <span class="loading" data-name="Loading">{{loaderPlaceHolder}}</span>
+  </div>
+</div>

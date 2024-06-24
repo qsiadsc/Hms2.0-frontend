@@ -1,0 +1,219 @@
+<div class="section-heading">
+  <h2>{{ 'company.search-broker.broker' | translate }} -
+    <span>{{ 'button.search' | translate }}</span>
+  </h2>
+</div>
+<!-- Section Heading Ends -->
+<div class="grid-box">
+  <div class="grid-heading">
+    <h3>{{ 'company.search-broker.search-broker' | translate }}</h3>
+    <div class="web-reg">
+      <a *ngIf="searchBrokerAuthCheck[0].addBroker == 'T'" id="brokerSearchAddBroker"
+        [routerLink]="['/company/broker/add']" class="green-btn-add btn">
+        <i class="fa fa-plus"></i>{{ 'company.search-broker.add-broker' | translate }}</a>
+      <a *ngIf="searchBrokerAuthCheck[0].addCompany == 'T'" id="brokerSearchAddCompany" [routerLink]="['/company/add']"
+        class="green-btn-add btn">
+        <i class="fa fa-plus"></i>{{ 'company.search-broker.add-company' | translate }}</a>
+    </div>
+  </div>
+  <!-- Grid Heading Ends -->
+  <div class="grid-inner">
+    <form [formGroup]="searchBrokerForm" (ngSubmit)="searchBroker()">
+      <div class="form-row">
+        <div class="row min-ht-sf">
+          <!-- Search Field Ends -->
+          <div class="col-md-3 col-xs-12">
+            <label>{{ 'company.search-broker.broker-name-id' | translate }}</label>
+            <div class="search-field">
+              <input type="text" autofocus placeholder="{{ 'company.search-broker.broker-name-id' | translate }}"
+                name="broker_name_id" id="broker-search_broker_id" formControlName="broker_name_id"
+                class="fm-txt form-control searchInput" (keyup)="onKeyPress($event)">
+            </div>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{ 'company.search-broker.city' | translate }}</label>
+            <ng2-completer [inputName]="'cityName'" formControlName="city" class="predictiveSearchLower inputSearch"
+              [datasource]="cityDataRemote" [minSearchLength]="2" [placeholder]="'Search City'"
+              [textSearching]="'Please wait...'" [inputClass]="'form-control'" data-type="predective"
+              [clearUnselected]="true" (keyup)="onKeyPress($event)">
+            </ng2-completer>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{ 'company.search-broker.province' | translate }}</label>
+            <ng2-completer [inputName]="'provinceName'" formControlName="province"
+              class="predictiveSearchLower inputSearch" [datasource]="provinceDataRemote" [minSearchLength]="2"
+              [placeholder]="'Search Province'" [textSearching]="'Please wait...'" [inputClass]="'form-control'"
+              data-type="predective" [clearUnselected]="true" (keyup)="onKeyPress($event)">
+            </ng2-completer>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{ 'company.search-broker.effected-date' | translate }}</label>
+            <div class="calender-field">
+              <my-date-picker id="broker-search_ce_effectedDate" [options]="myDatePickerOptions" name="effected_date"
+                formControlName="effected_date" [placeholder]="myDatePlaceholder"
+                (inputFocusBlur)="changeDateFormat($event, 'effected_date', 'searchBrokerForm', false)"
+                (keyup)="onKeyPress($event)">
+              </my-date-picker>
+              <show-errors [control]="searchBrokerForm.controls.effected_date"></show-errors>
+              <ul *ngIf="error.isError==true" class="validation-errors">
+                <li style="color: red">{{error.errorMessage}}</li>
+              </ul>
+            </div>
+            <!-- Calendar Field Ends -->
+          </div>
+          <div class="col-md-3 col-xs-12">
+      
+            <label>{{ 'company.search-broker.expired-date' | translate }}</label>
+            <div class="calender-field">
+              <my-date-picker   id="broker-serach_ce_expired_Date" [options]="myDatePickerOptions" name="expired_date"
+                formControlName="expired_date" [placeholder]="myDatePlaceholder"
+                (inputFocusBlur)="changeDateFormat($event, 'expired_date', 'searchBrokerForm')"
+                [ngClass]="expired ? 'expired' : 'notExpired'" 
+                (keyup)="onKeyPress($event)">
+              </my-date-picker>
+              <show-errors [control]="searchBrokerForm.controls.expired_date"></show-errors>
+              <ul *ngIf="error.isError==true" class="validation-errors">
+                <li style="color: red">{{error.errorMessage}}</li>
+              </ul>
+            </div>
+            <!-- Calendar Field Ends -->
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{ 'company.search-broker.status' | translate }}</label>
+            <select name="status" id="broker-search_broker_status" formControlName="status"
+              class="fm-txt form-control searchInput" (keyup)="onKeyPress($event)">
+              <option [ngValue]="null" disabled hidden>{{ 'common.select' | translate }}</option>
+              <option value="all">{{ 'company.search-broker.all' | translate }}</option>
+              <option value="active">{{ 'company.search-broker.active' | translate }}</option>
+              <option value="inactive">{{ 'company.search-broker.inactive' | translate }}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <!-- Form Row ENds -->
+      <div class="form-row">
+        <div class="row">
+          <div class="col-md-12 col-xs-12 min-ht-half">
+            <button *ngIf="searchBrokerAuthCheck[0].searchBroker == 'T'" id="broker-search_search" class="btn green-btn"
+              type="button" (click)="searchBroker()">{{ 'button.search' | translate }}</button>
+            <button id="broker-search_serach_broker_clear" class="grey-btn btn" type="button"
+              (click)="resetSearchBrokerForm()">{{ 'button.clear' | translate }}</button>
+          </div>
+        </div>
+      </div>
+      <!-- Grid Inner Ends -->
+    </form>
+  </div>
+</div>
+<!-- Grid Box Ends -->
+
+<div [hidden]="!showBrokerList">
+  <div class="grid-box">
+    <div class="grid-heading">
+      <h3>{{ 'company.broker-list.list-of-brokers' | translate }}</h3>
+    </div>
+    <!-- Grid Heading Ends -->
+    <div class="grid-inner">
+      <div class="form-row">
+        <div class="row">
+          <div class="col-md-12 col-xs-12 table-col">
+            <div class="table-responsive">
+              <!-- to stop identical multiple[8(4 without optional)] APIs hitting on server -->
+              <form>
+                <div class="form-row text-right search-top">
+                  <button type="submit" id="broker-search_filter_broker_serach" class="btn green-btn searchreset"
+                    (click)="filterBrokerSearch('brokerListTable')" title="{{ 'button.search' | translate }}">
+                    <span class="glyphicon glyphicon-search"></span>
+                  </button>
+                  <button id="broker-search_reset_filter_clear" class="btn grey-btn searchreset"
+                    (click)="searchBroker()" title="{{ 'button.clear' | translate }}">
+                    <span class="glyphicon glyphicon-repeat"></span>
+                  </button>
+                </div>
+                <table id="brokerListTable" class="www table table-bordered table-stripped">
+                  <tfoot>
+                    <tr>
+                      <td width="151px">
+                        <input placeholder="{{ 'company.search-broker.broker-name-id' | translate }}"
+                          class="fm-txt form-control tFootInput inputSearch" name="brokerIdAndName"
+                          id="broker-list_broker_broker_name" type="text" [(ngModel)]="brokerNameId" />
+                      </td>
+                      <td width="134px">
+                        <ng2-completer class="predictiveSearchLower" name="cityName" id="brokerCity1Search"
+                          [datasource]="cityDataRemoteLower" [minSearchLength]="2" [placeholder]="'Search City'"
+                          [textSearching]="'Please wait...'" [inputClass]="'form-control inputSearch amount_right_grid'"
+                          [inputName]="'cityName'" data-type="predective" [clearUnselected]="true"
+                          [(ngModel)]="brokerCity">
+                        </ng2-completer>
+                      </td>
+                      <td width="188px">
+                        <ng2-completer class="predictiveSearchLower" name="provinceName" id="brokerProvince1Search"
+                          [datasource]="provinceDataRemoteLower" [minSearchLength]="2" [placeholder]="'Search Province'"
+                          [textSearching]="'Please wait...'" [inputClass]="'form-control inputSearch amount_right_grid'"
+                          [inputName]="'provinceName'" data-type="predective" [clearUnselected]="true"
+                          [(ngModel)]="brokerProvince">
+                        </ng2-completer>
+                      </td>
+                      <td width="156px" class="alignDpRight">
+                        <div class="calender-field">
+                          <my-date-picker id="filterEffectiveOn" class="inputSearch" name="brokerEffectiveOn"
+                            data-type="date" [options]="myDatePickerOptions" [placeholder]="myDatePlaceholder"
+                            [selDate]="dateNameArray['brokerEffectiveOn']"
+                            (inputFocusBlur)="changeFilterDateFormat($event, 'brokerEffectiveOn')">
+                          </my-date-picker>
+                        </div>
+                      </td>
+                      <td width="129px" class="alignDpRight">
+                        <div class="calender-field">
+                          <my-date-picker id="filterExpired_date" class="inputSearch" name="brokerExpiredOn"
+                            data-type="date" [options]="myDatePickerOptions" [placeholder]="myDatePlaceholder"
+                            [selDate]="dateNameArray['brokerExpiredOn']"
+                            [ngClass]="expired  ? 'expired' : 'notExpired'"
+                            (inputFocusBlur)="changeFilterDateFormat($event, 'brokerExpiredOn')">
+                          </my-date-picker>
+                        </div>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </form>
+            </div>
+            <ul class="color-list">
+              <li>
+                <span class="color-des green-color"></span>
+                <h5>{{ 'common.active' | translate}}</h5>
+              </li>
+              <li>
+                <span class="color-des red-color"></span>
+                <h5>{{'common.inactive' | translate}}</h5>
+              </li>
+            </ul>
+            <!-- Table Ends -->
+          </div>
+        </div>
+
+      </div>
+      <!-- Form Row ENds -->
+      <div class="form-row text-center">
+        <div class="row">
+          <div class="col-md-12 col-xs-12">
+            <div class="dropdown pull-right">
+              <button id="brokerSearchExport" class="btn green-btn dropdown-toggle hideGPRunButton" type="button"
+                data-toggle="dropdown">Export
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu">
+                <li>
+                  <a href="javascript:void(0)" (click)="exportBrokerList()">Excel</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <!-- Grid Inner Ends -->
+  </div>
+  <!-- Grid Box Ends -->
+</div>

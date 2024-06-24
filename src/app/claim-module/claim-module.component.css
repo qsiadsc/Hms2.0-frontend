@@ -1,0 +1,79 @@
+.revers-label{
+  margin: 0 0 17px 0 !important; font-weight: bold; font-size: 14px;
+}
+.blue {
+  background-color:#d4e8fc !important;
+}
+table#reverse-claim-items-table tr.blue td,
+table#reverse-claim-items-table.table-stripped tr.blue td {
+    background: #d4e8fc !important;
+}
+
+table#reverse-claim-items-table tr.blue:hover td {
+    background: #d4e8fc !important;
+}
+
+#showClaimItemSection {
+  overflow: scroll;
+  height: 200px;
+  overflow-x: hidden;
+}
+#showClaimItemSection table th{
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+#showClaimItemSection table tr{
+  cursor: pointer;
+}
+.refer-claim-heading{
+  display: flex;
+  align-items: center;
+}
+.refer-claim-heading-right{
+  display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+.web-reg{
+  float: right;
+}
+.web-regg{
+  float: none;
+}
+.claim-reffered{
+  margin-right: 20px;
+}
+.refer-claim-heading-right2 {
+  padding-right: 47px;
+}
+.refer-claim-heading-right2 .status-btn {
+  margin-bottom: 15px !important;
+}
+div.modal-dialog > div.modal-content {
+  position: relative;
+  background-color: #fff;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  border: unset !important;
+  border: unset !important;
+  border-radius: 6px;
+  outline: 0;
+  -webkit-box-shadow: 0 3px 9px rgba(0,0,0,.5);
+  box-shadow: 0 3px 9px rgba(0,0,0,.5);
+  margin-top: 150px !important;
+}
+
+#showClaimHistoryItemSection {
+  overflow: scroll;
+  height: 200px;
+  overflow-x: hidden;
+}
+#showClaimHistoryItemSection table th{
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+#showClaimHistoryItemSection table tr{
+  cursor: pointer;
+}

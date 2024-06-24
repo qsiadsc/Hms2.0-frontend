@@ -1,0 +1,1113 @@
+<div style="font-family: 'Montserrat', sans-serif;">
+  <!-- NEW DESIGN OF PRINT -->
+  <div style="float: left;font-size: 13px !important;" class="form-row">
+    <div class="tab-hdr-inner">
+      <h3>{{'company.plan.preview.planlayout-structure' | translate}}</h3>
+    </div>
+    <!-- Plan Section -->
+    <div *ngIf="isPlanSection" class="grid-box">
+      <div
+        style="min-width: 1060px; width: 100%; font-weight: bold; background: #c6c9d0; padding: 5px 10px; min-height: 0; float: left">
+        <h3 style="margin: 5px;">Plan Section</h3>
+      </div>
+      <div class="grid-inner">
+        <div class="form-row">
+          <div class="row min-ht-st">
+            <div *ngIf="isPlanNo" class="col-md-3 col-xs-12" style="width: 33%; float:left; margin-top: 15px;">
+              <strong>
+                <label>{{'company.plan.preview.plan-no' | translate}}</label>
+              </strong>
+              <p>{{plansId}}</p>
+            </div>
+            <div *ngIf="isYearType" class="col-md-3 col-xs-12" style="width: 33%; float:left; margin-top: 15px;">
+              <strong>
+                <label>{{'company.plan.typeof-year' | translate}}</label>
+              </strong>
+              <p>{{yrTypeDesc}}</p>
+            </div>
+            <div *ngIf="isEffectiveOn" class="col-md-3 col-xs-12" style="width: 33%; float:left; margin-top: 15px;">
+              <strong>
+                <label>{{'company.plan.effective-date' | translate}}</label>
+              </strong>
+              <p>{{effectiveOn | dateFormate}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Plan Section Ends -->
+
+    <!-- Division Section -->
+    <div *ngIf="isDivisionSection" class="grid-box">
+      <div
+        style="min-width: 1060px; width: 100%; font-weight: bold; background: #c6c9d0; padding: 5px 10px; min-height: 0; float: left">
+        <h3 style="margin: 5px;">Division Section</h3>
+      </div>
+      <div class="grid-inner">
+        <div class="form-row">
+          <div class="row min-ht-st">
+            <div *ngIf="isdivisionNo" class="col-md-3 col-xs-12" style="width: 33%; float:left; margin-top: 15px;">
+              <strong>
+                <label>{{'company.plan.division-no' | translate}}</label>
+              </strong>
+              <p>{{divisionId}}</p>
+            </div>
+            <div *ngIf="isdivisionName" class="col-md-3 col-xs-12" style="width: 33%; float:left; margin-top: 15px;">
+              <strong>
+                <label>{{'company.plan.division-name' | translate}}</label>
+              </strong>
+              <p>{{divisionName}}</p>
+            </div>
+            <div *ngIf="isDivisionEffectiveOn" class="col-md-3 col-xs-12"
+              style="width: 33%; float:left; margin-top: 15px;">
+              <strong>
+                <label>{{'company.plan.effective-date' | translate}}</label>
+              </strong>
+              <p>{{effectiveOn_division | dateFormate}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Division Section Ends -->
+
+    <!-- Division Details Section -->
+    <div *ngIf="isDivisionDetailsSection" class="grid-box">
+      <div
+        style="min-width: 1060px; width: 100%; font-weight: bold; background: #c6c9d0; padding: 5px 10px; min-height: 0; float: left">
+        <h3 style="margin: 5px;">Division Details Section</h3>
+      </div>
+      <div class="grid-inner">
+        <div class="form-row">
+          <div class="row min-ht-st">
+            <div *ngIf="isPlansDependAge1Num || isPlansDependAge2Num" class="col-md-3 col-xs-12"
+              style="width: 33%; float:left; margin-top: 15px;">
+              <strong>
+                <label>{{'company.plan.preview.dependant-age1/2' | translate}}</label>
+              </strong>
+              <p>
+                <span *ngIf="isPlansDependAge1Num">
+                  {{divisionDependAge1Num}}
+                </span>
+                <span>/</span>
+                <span *ngIf="isPlansDependAge2Num">
+                  {{divisionDependAge2Num}}
+                </span>
+              </p>
+            </div>
+            <div *ngIf="isdivisionName" class="col-md-3 col-xs-12" style="width: 33%; float:left; margin-top: 15px;">
+              <strong>
+                <label>{{'company.plan.extra-benefits' | translate}}</label>
+              </strong>
+              <p>{{extraBenefits}}</p>
+            </div>
+            <div *ngIf="isEffectiveOnDivisionDetails" class="col-md-3 col-xs-12"
+              style="width: 33%; float:left; margin-top: 15px;">
+              <strong>
+                <label>{{'company.plan.effective-date' | translate}}</label>
+              </strong>
+              <p>{{effectiveOnDivisionDetails | dateFormate}}</p>
+            </div>
+            <div *ngIf="isExpiredOnDivisionDetails" class="col-md-3 col-xs-12"
+              style="width: 33%; float:left; margin-top: 15px;">
+              <strong>
+                <label>{{'company.plan.expiry-date' | translate}}</label>
+              </strong>
+              <p>{{expiredOnDivisionDetails | dateFormate}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Division Details Section Ends -->
+
+    <!-- Prorating Section -->
+    <div *ngIf="isProratingSection" class="grid-box">
+      <div
+        style="min-width: 1060px; width: 100%; font-weight: bold; background: #c6c9d0; padding: 5px 10px; min-height: 0; float: left">
+        <h3 style="margin: 5px;">Prorating Section</h3>
+      </div>
+      <div class="grid-inner">
+        <div class="form-row">
+          <div class="row min-ht-st">
+            <div *ngIf="isProrateTypeKey" class="col-md-3 col-xs-12" style="width: 33%; float:left; margin-top: 15px;">
+              <strong>
+                <label>{{'company.plan.prorating' | translate}}</label>
+              </strong>
+              <p>{{proratingTypeDesc}}</p>
+            </div>
+            <div *ngIf="isProratingEffectiveOn" class="col-md-3 col-xs-12"
+              style="width: 33%; float:left; margin-top: 15px;">
+              <strong>
+                <label>{{'company.plan.effective-date' | translate}}</label>
+              </strong>
+              <p>{{proratingEffectiveOn | dateFormate}}</p>
+            </div>
+            <div *ngIf="isExpiredOnProratingType" class="col-md-3 col-xs-12 expiryDate"
+              style="width: 33%; float:left; margin-top: 15px;">
+              <strong>
+                <label>{{'company.plan.expiry-date' | translate}}</label>
+              </strong>
+              <p>{{proratingExpiredOn | dateFormate}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Prorating Section Ends -->
+
+    <!-- Deductible Section -->
+    <div *ngIf="isDeductibleSection" class="grid-box">
+      <div
+        style="min-width: 1060px; width: 100%; font-weight: bold; background: #c6c9d0; padding: 5px 10px; min-height: 0; float: left">
+        <h3 style="margin: 5px;">Deductible Section</h3>
+      </div>
+      <div class="grid-inner">
+        <div class="form-row">
+          <div class="row min-ht-st">
+            <div *ngIf="isDeductTypeKey" class="col-md-3 col-xs-12" style="width: 33%; float:left; margin-top: 15px;">
+              <strong>
+                <label>{{'company.plan.preview.deductible-type' | translate}}</label>
+              </strong>
+              <p>{{deductibleTypeDesc}}</p>
+            </div>
+            <div *ngIf="isPlansFamilyDeductAmt" class="col-md-3 col-xs-12"
+              style="width: 33%; float:left; margin-top: 15px;">
+              <strong>
+                <label>{{'company.plan.preview.family-deductible-amount' | translate}}</label>
+              </strong>
+              <p> {{plansFamilyDeductAmt}} </p>
+            </div>
+            <div *ngIf="isPlansSingleDeductAmt" class="col-md-3 col-xs-12"
+              style="width: 33%; float:left; margin-top: 15px;">
+              <strong>
+                <label>{{'company.plan.preview.single-deductible-amount' | translate}}</label>
+              </strong>
+              <p> {{plansSingleDeductAmt}} </p>
+            </div>
+            <div *ngIf="isDeductibleEffectiveOn" class="col-md-3 col-xs-12"
+              style="width: 33%; float:left; margin-top: 15px;">
+              <strong>
+                <label>{{'company.plan.effective-date' | translate}}</label>
+              </strong>
+              <p> {{deductibleEffectiveOn | dateFormate}} </p>
+            </div>
+            <div *ngIf="isExpiredOnDeductibleType" class="col-md-3 col-xs-12"
+              style="width: 33%; float:left; margin-top: 15px;">
+              <strong>
+                <label>{{'company.plan.expiry-date' | translate}}</label>
+              </strong>
+              <p> {{deductibleExpiredOn | dateFormate}} </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Deductible Section Ends -->
+
+  </div>
+  <br>
+  <!-- NEW DESIGN OF PRINT ENDS -->
+
+  <div style="float: left;" class="form-row" *ngIf="isUnitData">
+    <div class="tab-hdr-inner">
+      <h3>{{'company.plan.preview.unit' | translate}}</h3>
+    </div>
+    <div class="table-responsive clear">
+      <table id="planPreviewtable" style="min-width: 1060px;" cellpadding="0" cellspacing="0"
+        class="table table-bordered table-stripped">
+        <thead>
+          <tr>
+            <th
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff; border:1px solid #cccccc">
+              {{'company.plan.preview.unit-id' | translate}}</th>
+            <th class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff; border:1px solid #cccccc">
+              {{'company.plan.preview.unit-name' | translate}}</th>
+            <th class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff; border:1px solid #cccccc">
+              {{'company.plan.effective-date' | translate}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let val of unitDataArray">
+            <td style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc;">{{val.unitId}}</td>
+            <td style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc;"
+              class="amount_right_grid">{{val.unitDesc}}</td>
+            <td style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc;"
+              class="amount_right_grid">{{val.effectiveOn | dateFormate}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <br>
+
+  <div style="float: left;" class="form-row" *ngIf="isDivisonMaxData">
+    <div class="table-hdr">
+      <h3>{{'company.plan.preview.division-maximum' | translate}}</h3>
+    </div>
+    <div class="table-responsive clear">
+      <table id="planPreviewtable1" style="min-width: 1060px;" cellpadding="0" cellspacing="0"
+        class="table table-bordered table-stripped">
+        <thead>
+          <tr>
+            <th
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff; border:1px solid #cccccc">
+              {{'company.plan.preview.maximum-amount' | translate}}</th>
+            <th class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff; border:1px solid #cccccc">
+              {{'company.plan.preview.maximum-type' | translate}}</th>
+            <th class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff; border:1px solid #cccccc">
+              {{'company.plan.preview.maximum-period-type' | translate}}</th>
+            <th class="amount_right_grid" *ngIf="benefits.dentalSlug"
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff; border:1px solid #cccccc">
+              {{'company.plan.preview.dental' | translate}}</th>
+            <th class="amount_right_grid" *ngIf="benefits.visionSlug"
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff; border:1px solid #cccccc">
+              {{'company.plan.preview.vision' | translate}}</th>
+            <th class="amount_right_grid" *ngIf="benefits.healthSlug"
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff; border:1px solid #cccccc">
+              {{'company.plan.preview.health' | translate}}</th>
+            <th class="amount_right_grid" *ngIf="benefits.drugSlug"
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff; border:1px solid #cccccc">
+              {{'company.plan.preview.drug' | translate}}</th>
+            <th class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff; border:1px solid #cccccc">
+              {{'company.plan.preview.carry-forward-years' | translate}}</th>
+            <th class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff; border:1px solid #cccccc">
+              {{'company.plan.effective-date' | translate}}</th>
+            <th class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff; border:1px solid #cccccc">
+              {{'company.plan.expiry-date' | translate}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let val of divMaxDataArray">
+            <td style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc;">{{val.divMaxAmt}}
+            </td>
+            <ng-container *ngFor="let maxType of  MaximumTypeList">
+              <td class="amount_right_grid"
+                style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc;"
+                *ngIf="maxType.maxTypeKey == val.maxTypeKey">{{ maxType.maxTypeDesc }}</td>
+            </ng-container>
+            <ng-container *ngFor="let maxPeriod of  MaximumPeriodTypeList">
+              <td class="amount_right_grid"
+                style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc;"
+                *ngIf="maxPeriod.maxPeriodTypeKey == val.maxPeriodTypeKey">{{ maxPeriod.maxPeriodTypeCd }}</td>
+            </ng-container>
+            <td class="amount_right_grid" *ngIf="benefits.dentalSlug && val.dentalInd == 'F'"
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc;">
+              {{'company.plan.no' | translate}}</td>
+            <td class="amount_right_grid" *ngIf="benefits.dentalSlug && val.dentalInd == 'T'"
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc;">
+              {{'company.plan.yes' | translate}}</td>
+            <td class="amount_right_grid" *ngIf="benefits.visionSlug && val.visionInd == 'F'"
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc;">
+              {{'company.plan.no' | translate}}</td>
+            <td class="amount_right_grid" *ngIf="benefits.visionSlug && val.visionInd == 'T'"
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc;">
+              {{'company.plan.yes' | translate}}</td>
+            <td class="amount_right_grid" *ngIf="benefits.healthSlug && val.healthInd == 'F'"
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc;">
+              {{'company.plan.no' | translate}}</td>
+            <td class="amount_right_grid" *ngIf="benefits.healthSlug && val.healthInd == 'T'"
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc;">
+              {{'company.plan.yes' | translate}}</td>
+            <td class="amount_right_grid" *ngIf="benefits.drugSlug && val.drugInd == 'F'"
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc;">
+              {{'company.plan.no' | translate}}</td>
+            <td class="amount_right_grid" *ngIf="benefits.drugSlug && val.drugInd == 'T'"
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc;">
+              {{'company.plan.yes' | translate}}</td>
+            <td class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc;">{{val.carryFrwdYrs}}
+            </td>
+            <td class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc;">
+              {{val.effectiveOn ? (val.effectiveOn | dateFormate) : '--'}}</td>
+            <td class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc">
+              {{val.expiredOn ? (val.expiredOn | dateFormate) : '--'}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <br>
+
+  <div style="float: left;" *ngIf="isDentalData == true || isDentalCombineMaxData == true" class="form-row">
+    <div *ngIf="isDentalData == true" class="table-hdr">
+      <h3>{{'company.plan.preview.dental-care' | translate}}</h3>
+    </div>
+    <div *ngIf="isDentalCoverageCategoriesData == true">
+      <table id="planPreviewtable2" style="min-width: 1060px;" cellpadding="0" cellspacing="0"
+        class="table table-bordered table-stripped">
+        <thead>
+          <tr>
+            <th
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff; ">
+              {{'company.plan.preview.coverage-category' | translate}}</th>
+            <th class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff; ">
+              {{'company.plan.preview.adult%' | translate}}</th>
+            <th class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff; ">
+              {{'company.plan.preview.adult-lab%' | translate}}</th>
+            <th class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff; ">
+              {{'company.plan.preview.dependant%' | translate}}</th>
+            <th class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff; ">
+              {{'company.plan.preview.dependant-lab%' | translate}}</th>
+            <th class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff; ">
+              {{'company.plan.preview.pay-lab' | translate}}</th>
+            <th class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff; ">
+              {{'company.plan.preview.pay-claim' | translate}}</th>
+            <th class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff; ">
+              {{'company.plan.effective-date' | translate}}</th>
+            <th class="amount_right_grid"
+              style="font-weight: bold; font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff; ">
+              {{'company.plan.expiry-date' | translate}}</th>
+          </tr>
+          <tr>
+        </thead>
+        <tbody *ngFor="let val of dentalCareDataArray">
+          <tr>
+            <td
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc !important;background: #e8e8e8;">
+              {{val.covCatDesc}}</td>
+            <td class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc !important;background: #e8e8e8;">
+              {{val.adult}}</td>
+            <td class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc !important;background: #e8e8e8;">
+              {{val.adultLab}}</td>
+            <td class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc !important;background: #e8e8e8;">
+              {{val.dept}}</td>
+            <td class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc !important;background: #e8e8e8;">
+              {{val.deptLab}}</td>
+            <td class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc !important;background: #e8e8e8;"
+              *ngIf="val.payLab == 'F'">{{'company.plan.no' | translate}}</td>
+            <td class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc !important;background: #e8e8e8;"
+              *ngIf="val.payLab == 'T'">{{'company.plan.yes' | translate}}</td>
+            <td class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc !important;background: #e8e8e8;"
+              *ngIf="val.payClaim == 'F'">{{'company.plan.no' | translate}}</td>
+            <td class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc !important;background: #e8e8e8;"
+              *ngIf="val.payClaim == 'T'">{{'company.plan.yes' | translate}}</td>
+            <td class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc !important;background: #e8e8e8;">
+              {{val.effectiveOn ? (val.effectiveOn | dateFormate) : '--'}}</td>
+            <td class="amount_right_grid"
+              style=" font-weight:bold;font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc !important;background: #e8e8e8;">
+              {{val.expiredOn ? (val.expiredOn | dateFormate) : '--'}}</td>
+          </tr>
+          <tr *ngIf="val.coverageMax != '' && val.coverageMax != null ">
+            <td colspan="9"
+              style="border: 1px solid #cccccc;background: #ffffff !important;padding: 0 20px 0 20px !important;">
+              <table cellpadding="0" cellspacing="0">
+                <thead>
+                  <tr
+                    style="margin:0; font-weight:normal; text-align:left; font-size:13px; color:#303030; padding: 0 0 6px; font-weight: bold;">
+                    <th
+                      style="font-size: 13px !important; border-bottom: 1px solid #cccccc;width: 450px;padding:5px 0 5px 5px; text-align:left;background: none !important;color: #000000;">
+                      {{'company.plan.preview.coveragemaxamt' | translate}}</th>
+                    <th
+                      style="font-size: 13px !important; border-bottom: 1px solid #cccccc;width: 450px;padding:5px 0 5px 5px; text-align:left;background: none !important;color: #000000;">
+                      {{'company.plan.preview.coveragemaxtype' | translate}}</th>
+                    <th
+                      style="font-size: 13px !important; border-bottom: 1px solid #cccccc;width: 450px;padding:5px 0 5px 5px; text-align:left;background: none !important;color: #000000;">
+                      {{'company.plan.preview.coveragemaxperiodtype' | translate}}</th>
+                    <th
+                      style="font-size: 13px !important; border-bottom: 1px solid #cccccc;width: 450px;padding:5px 0 5px 5px; text-align:left;background: none !important;color: #000000;">
+                      {{'company.plan.effective-date' | translate}}</th>
+                    <th
+                      style="font-size: 13px !important; border-bottom: 1px solid #cccccc;width: 450px;padding:5px 0 5px 5px; text-align:left;background: none !important;color: #000000;">
+                      {{'company.plan.expiry-date' | translate}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let val1 of val.coverageMax">
+                    <td style="font-size: 13px !important; background:#ffffff !important;padding: 5px 0 5px 5px;">
+                      {{val1.maximumAmt}}</td>
+                    <ng-container *ngFor="let maxType of  MaximumTypeList">
+                      <td *ngIf="maxType.maxTypeKey == val1.maximumTypeKey"
+                        style="font-size: 13px !important; background:#ffffff !important;padding: 5px 0 5px 5px;">
+                        {{ maxType.maxTypeDesc }}</td>
+                    </ng-container>
+                    <ng-container *ngFor="let maxPeriod of  MaximumPeriodTypeList">
+                      <td style="font-size: 13px !important; background:#ffffff !important;padding: 5px 0 5px 5px;"
+                        *ngIf="maxPeriod.maxPeriodTypeKey == val1.maximumPeroidKey">{{ maxPeriod.maxPeriodTypeCd }}</td>
+                    </ng-container>
+                    <td style="font-size: 13px !important; background:#ffffff !important;padding: 5px 0 5px 5px;">
+                      {{val1.effectiveOn ? (val1.effectiveOn | dateFormate) : '--'}}</td>
+                    <td
+                      style="font-weight:bold;font-size: 13px!important;background:#ffffff !important;padding: 5px 0 5px 5px;">
+                      {{val1.expiredOn ? (val1.expiredOn | dateFormate) : '--'}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div *ngIf="isDentalCombineMaxData" class="table-responsive clear">
+      <div class="table-hdr">
+        <h3>{{'company.plan.preview.dental_combine_max' | translate}}</h3>
+      </div>
+      <table id="planPreviewtable3" style="min-width: 1060px;" cellpadding="0" cellspacing="0"
+        class="table table-bordered table-stripped">
+        <thead>
+          <tr>
+            <th
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff; border:1px solid #cccccc">
+              {{'company.plan.preview.maxamt' | translate}}</th>
+            <th
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff; border:1px solid #cccccc">
+              {{'company.plan.preview.max_type' | translate}}</th>
+            <th
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff; border:1px solid #cccccc">
+              {{'company.plan.preview.max_period_type' | translate}}</th>
+            <th
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff; border:1px solid #cccccc">
+              {{'company.plan.preview.combine_max_type' | translate}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let val of dentalCombineMaxDataArray">
+            <td style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc;">${{val.maximumAmt}}
+            </td>
+            <ng-container *ngFor="let maxType of  MaximumTypeList">
+              <td style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc;"
+                *ngIf="maxType.maxTypeKey == val.maximumTypeKey">{{ maxType.maxTypeDesc }}</td>
+            </ng-container>
+            <ng-container *ngFor="let maxPeriod of  MaximumPeriodTypeList">
+              <td style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc;"
+                *ngIf="maxPeriod.maxPeriodTypeKey == val.maximumPeroidKey">{{ maxPeriod.maxPeriodTypeCd }}</td>
+            </ng-container>
+            <ng-container *ngFor="let combineMaxTypeList of  CombineMaximumTypeList">
+              <td style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc;"
+                *ngIf="combineMaxTypeList.key == val.combineMaximunTypeKey">{{ combineMaxTypeList.desc }}</td>
+            </ng-container>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <br>
+
+  <div style="float: left;" class="form-row" *ngIf="isVisionData == true">
+    <div class="table-hdr">
+      <h3>{{'company.plan.preview.vision' | translate}}</h3>
+    </div>
+    <div class="table-responsive clear">
+      <table id="planPreviewtable4" style="min-width: 1060px;" cellpadding="0" cellspacing="0"
+        class="table table-bordered table-stripped">
+        <thead>
+          <tr>
+            <th
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff;">
+              {{'company.plan.preview.coverage-category' | translate}}</th>
+            <th class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff;">
+              {{'company.plan.preview.adult%' | translate}}</th>
+            <th class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff;">
+              {{'company.plan.preview.adultTimeFrame' | translate}}</th>
+            <th class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff;">
+              {{'company.plan.preview.dependant%' | translate}}</th>
+            <th class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff;">
+              {{'company.plan.preview.dependantTimeFrame' | translate}}</th>
+            <th class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff;">
+              {{'company.plan.preview.pay-claim' | translate}}</th>
+            <th class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff;">
+              {{'company.plan.effective-date' | translate}}</th>
+            <th class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff;">
+              {{'company.plan.expiry-date' | translate}}</th>
+          </tr>
+        </thead>
+        <tbody *ngFor="let val of visionCareDataArray">
+          <tr>
+            <td
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc !important;background: #e8e8e8;">
+              {{val.covCatDesc}}</td>
+
+            <td class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc !important;background: #e8e8e8;">
+              {{val.adult}}</td>
+
+            <ng-container *ngFor="let covTimeFrame of  CoverageTimeFrameList">
+              <td class="amount_right_grid"
+                style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc !important;background: #e8e8e8;"
+                *ngIf="covTimeFrame.coverageTimeframeKey == val.covCoverageTimeFrameKey">
+                {{ covTimeFrame.coverageTimeframeDescription }}</td>
+            </ng-container>
+            <!-- to resolve design issues and wrong value display in preview section of plan -->
+            <td *ngIf="(val.covCoverageTimeFrameKey == null) || (val.covCoverageTimeFrameKey == '')" class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc !important;background: #e8e8e8;"></td>
+
+            <td class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc !important;background: #e8e8e8;">
+              {{val.dept}}</td>
+
+            <ng-container *ngFor="let covTimeFrame of  CoverageTimeFrameList">
+              <td class="amount_right_grid"
+                style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc !important;background: #e8e8e8;"
+                *ngIf="covTimeFrame.coverageTimeframeKey == val.coverageTimeFrameKey">
+                {{ covTimeFrame.coverageTimeframeDescription }}</td>
+            </ng-container>
+            <!-- to resolve design issues and wrong value display in preview section of plan -->
+            <td *ngIf="(val.coverageTimeFrameKey == null) || (val.coverageTimeFrameKey == '')" class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc !important;background: #e8e8e8;"></td>
+
+            <td class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc !important;background: #e8e8e8;"
+              *ngIf="val.payClaim == 'F'">{{'company.plan.no' | translate}}</td>
+
+            <td class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc !important;background: #e8e8e8;"
+              *ngIf="val.payClaim == 'T'">{{'company.plan.yes' | translate}}</td>
+
+            <td class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc !important;background: #e8e8e8;"
+              *ngIf="val.payClaim == null">{{'company.plan.no' | translate}}</td>
+
+            <td class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc !important;background: #e8e8e8;">
+              {{val.effectiveOn ? (val.effectiveOn | dateFormate) : '--'}}</td>
+
+            <td class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc !important;background: #e8e8e8;">
+              {{val.expiredOn ? (val.expiredOn | dateFormate) : '--'}}</td>
+          </tr>
+          <tr *ngIf="val.coverageMax != '' && val.coverageMax != null ">
+            <td colspan="8"
+              style="border: 1px solid #cccccc;background: #ffffff !important;padding: 0 20px 0 20px !important;">
+              <table cellpadding="0" cellspacing="0">
+                <thead>
+                  <tr
+                    style="margin:0; font-weight:normal; text-align:left; font-size:13px; color:#303030; padding: 0 0 6px; font-weight: bold;">
+                    <th
+                      style="font-size: 13px !important; border-bottom: 1px solid #cccccc;width: 450px;padding:5px 0 5px 5px; text-align:left;background: none !important;color: #000000;">
+                      {{'company.plan.preview.coveragemaxamt' | translate}}</th>
+                    <th class="amount_right_grid"
+                      style="font-size: 13px !important; border-bottom: 1px solid #cccccc;width: 450px;padding:5px 0 5px 5px; text-align:left;background: none !important;color: #000000;">
+                      {{'company.plan.preview.coveragemaxtype' | translate}}</th>
+                    <th class="amount_right_grid"
+                      style="font-size: 13px !important; border-bottom: 1px solid #cccccc;width: 450px;padding:5px 0 5px 5px; text-align:left;background: none !important;color: #000000;">
+                      {{'company.plan.preview.coveragemaxperiodtype' | translate}}</th>
+                    <th class="amount_right_grid"
+                      style="font-size: 13px !important; border-bottom: 1px solid #cccccc;width: 450px;padding:5px 0 5px 5px; text-align:left;background: none !important;color: #000000;">
+                      {{'company.plan.effective-date' | translate}}</th>
+                    <th class="amount_right_grid"
+                      style="font-size: 13px !important; border-bottom: 1px solid #cccccc;width: 450px;padding:5px 0 5px 5px; text-align:left;background: none !important;color: #000000;">
+                      {{'company.plan.expiry-date' | translate}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let val1 of val.coverageMax">
+                    <td style="font-size: 13px !important; background:#ffffff !important;padding: 5px 0 5px 5px;">
+                      {{val1.maximumAmt}}</td>
+                    <ng-container *ngFor="let maxType of  MaximumTypeList">
+                      <td class="amount_right_grid" *ngIf="maxType.maxTypeKey == val1.maximumTypeKey"
+                        style="font-size: 13px !important; background:#ffffff !important;padding: 5px 0 5px 5px;">
+                        {{ maxType.maxTypeDesc }}</td>
+                    </ng-container>
+                    <ng-container *ngFor="let maxPeriod of  MaximumPeriodTypeList">
+                      <td class="amount_right_grid"
+                        style="font-size: 13px !important; background:#ffffff !important;padding: 5px 0 5px 5px;"
+                        *ngIf="maxPeriod.maxPeriodTypeKey == val1.maximumPeroidKey">{{ maxPeriod.maxPeriodTypeCd }}</td>
+                    </ng-container>
+                    <td class="amount_right_grid"
+                      style="font-size: 13px !important; background:#ffffff !important;padding: 5px 0 5px 5px;">
+                      {{val1.effectiveOn ? (val1.effectiveOn | dateFormate) : '--'}}</td>
+                    <td class="amount_right_grid"
+                      style="font-size: 13px !important; background:#ffffff !important;padding: 5px 0 5px 5px;">
+                      {{val1.expiredOn ? (val1.expiredOn | dateFormate) : '--'}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <br>
+
+  <div style="float: left;" class="form-row" *ngIf="isHealthData">
+    <div class="table-hdr">
+      <h3>{{'company.plan.preview.health' | translate}}</h3>
+    </div>
+    <div class="table-responsive clear">
+      <table id="planPreviewtable5" style="min-width: 1060px;" cellpadding="0" cellspacing="0"
+        class="table table-bordered table-stripped">
+        <thead>
+          <tr>
+            <th
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff;">
+              {{'company.plan.preview.coverage-category' | translate}}</th>
+            <th class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff;">
+              {{'company.plan.preview.adult%' | translate}}</th>
+            <th class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff;">
+              {{'company.plan.preview.dependant%'| translate}}</th>
+            <th class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff;">
+              {{'company.plan.preview.pay-claim'| translate}}</th>
+            <th class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff;">
+              {{'company.plan.effective-date' | translate}}</th>
+            <th class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff;">
+              {{'company.plan.expiry-date' | translate}}</th>
+          </tr>
+        </thead>
+        <tbody *ngFor="let val of healthCareDataArray">
+          <tr>
+            <td
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc !important;background: #e8e8e8;">
+              {{val.covCatDesc}}</td>
+            <td class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc !important;background: #e8e8e8;">
+              {{val.adult}}</td>
+            <td class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc !important;background: #e8e8e8;">
+              {{val.dept}}</td>
+            <td class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc !important;background: #e8e8e8;"
+              *ngIf="val.payClaim == 'F'">{{'company.plan.no' | translate}}</td>
+            <td class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc !important;background: #e8e8e8;"
+              *ngIf="val.payClaim == 'T'">{{'company.plan.yes' | translate}}</td>
+            <td class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc !important;background: #e8e8e8;"
+              *ngIf="val.payClaim == null">{{'company.plan.no' | translate}}</td>
+            <td class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc !important;background: #e8e8e8;">
+              {{val.effectiveOn ? (val.effectiveOn | dateFormate) : '--'}}</td>
+            <td class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc !important;background: #e8e8e8;">
+              {{val.expiredOn ? (val.expiredOn | dateFormate) : '--'}}</td>
+          </tr>
+          <tr *ngIf="val.coverageMax != '' && val.coverageMax != null ">
+            <td colspan="8"
+              style="border: 1px solid #cccccc;background: #ffffff !important;padding: 0 20px 0 20px !important;">
+              <table cellpadding="0" cellspacing="0">
+                <thead>
+                  <tr
+                    style="margin:0; font-weight:normal; text-align:left; font-size:13px; color:#303030; padding: 0 0 6px; font-weight: bold;">
+                    <th
+                      style="font-size: 13px !important; border-bottom: 1px solid #cccccc;width: 450px;padding:5px 0 5px 5px; text-align:left;background: none !important;color: #000000;">
+                      {{'company.plan.preview.coveragemaxamt' | translate}}</th>
+                    <th class="amount_right_grid"
+                      style="font-size: 13px !important; border-bottom: 1px solid #cccccc;width: 450px;padding:5px 0 5px 5px; text-align:left;background: none !important;color: #000000;">
+                      {{'company.plan.preview.coveragemaxtype' | translate}}</th>
+                    <th class="amount_right_grid"
+                      style="font-size: 13px !important; border-bottom: 1px solid #cccccc;width: 450px;padding:5px 0 5px 5px; text-align:left;background: none !important;color: #000000;">
+                      {{'company.plan.preview.coveragemaxperiodtype' | translate}}</th>
+                    <th class="amount_right_grid"
+                      style="font-size: 13px !important; border-bottom: 1px solid #cccccc;width: 450px;padding:5px 0 5px 5px; text-align:left;background: none !important;color: #000000;">
+                      {{'company.plan.effective-date' | translate}}</th>
+                    <th class="amount_right_grid"
+                      style="font-size: 13px !important; border-bottom: 1px solid #cccccc;width: 450px;padding:5px 0 5px 5px; text-align:left;background: none !important;color: #000000;">
+                      {{'company.plan.expiry-date' | translate}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let val1 of val.coverageMax">
+                    <td style="font-size: 13px !important; background:#ffffff !important;padding: 5px 0 5px 5px;">
+                      {{val1.maximumAmt}}</td>
+                    <ng-container *ngFor="let maxType of  MaximumTypeList">
+                      <td class="amount_right_grid" *ngIf="maxType.maxTypeKey == val1.maximumTypeKey"
+                        style="font-size: 13px !important; background:#ffffff !important;padding: 5px 0 5px 5px;">
+                        {{ maxType.maxTypeDesc }}</td>
+                    </ng-container>
+                    <ng-container *ngFor="let maxPeriod of  MaximumPeriodTypeList">
+                      <td class="amount_right_grid"
+                        style="font-size: 13px !important; background:#ffffff !important;padding: 5px 0 5px 5px;"
+                        *ngIf="maxPeriod.maxPeriodTypeKey == val1.maximumPeroidKey">{{ maxPeriod.maxPeriodTypeCd }}</td>
+                    </ng-container>
+                    <td class="amount_right_grid"
+                      style="font-size: 13px !important; background:#ffffff !important;padding: 5px 0 5px 5px;">
+                      {{val1.effectiveOn ? (val1.effectiveOn | dateFormate) : '--'}}</td>
+                    <td class="amount_right_grid"
+                      style="font-size: 13px !important; background:#ffffff !important;padding: 5px 0 5px 5px;">
+                      {{val1.expiredOn ? (val1.expiredOn | dateFormate) : '--'}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <br>
+
+  <div style="float: left;" class="form-row" *ngIf="isDrugData">
+    <div class="table-hdr">
+      <h3>Drug</h3>
+    </div>
+    <div class="table-responsive clear">
+      <table id="planPreviewtable5" style="min-width: 1060px;" cellpadding="0" cellspacing="0"
+        class="table table-bordered table-stripped">
+        <thead>
+          <tr>
+            <th
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff;">
+              {{'company.plan.preview.coverage-category' | translate}}</th>
+            <th class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff;">
+              {{'company.plan.preview.adult%' | translate}}</th>
+            <th class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff;">
+              {{'company.plan.preview.dependant%' | translate}}</th>
+            <th class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff;">
+              {{'company.plan.preview.pay-claim' | translate}}</th>
+            <th class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff;">
+              {{'company.plan.effective-date' | translate}}</th>
+            <th class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff;">
+              {{'company.plan.expiry-date' | translate}}</th>
+          </tr>
+        </thead>
+        <tbody *ngFor="let val of drugCareDataArray">
+          <tr>
+            <td
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc !important;background: #e8e8e8;">
+              {{val.covCatDesc}}</td>
+            <td class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc !important;background: #e8e8e8;">
+              {{val.adult}}</td>
+            <td class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc !important;background: #e8e8e8;">
+              {{val.dept}}</td>
+            <td class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc !important;background: #e8e8e8;"
+              *ngIf="val.payClaim == 'F'">{{'company.plan.no' | translate}}</td>
+            <td class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc !important;background: #e8e8e8;"
+              *ngIf="val.payClaim == 'T'">{{'company.plan.yes' | translate}}</td>
+            <td class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc !important;background: #e8e8e8;">
+              {{val.effectiveOn ? (val.effectiveOn | dateFormate) : '--'}}</td>
+            <td class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc !important;background: #e8e8e8;">
+              {{val.expiredOn ? (val.expiredOn | dateFormate) : '--'}}</td>
+          </tr>
+          <tr *ngIf="val.coverageMax != '' && val.coverageMax != null ">
+            <td colspan="8"
+              style="border: 1px solid #cccccc;background: #ffffff !important;padding: 0 20px 0 20px !important;">
+              <table cellpadding="0" cellspacing="0">
+                <thead>
+                  <tr
+                    style="margin:0; font-weight:normal; text-align:left; font-size:13px; color:#303030; padding: 0 0 6px; font-weight: bold;">
+                    <th
+                      style="font-size: 13px !important; border-bottom: 1px solid #cccccc;width: 450px;padding:5px 0 5px 5px; text-align:left;background: none !important;color: #000000;">
+                      {{'company.plan.preview.coveragemaxamt' | translate}}</th>
+                    <th class="amount_right_grid"
+                      style="font-size: 13px !important; border-bottom: 1px solid #cccccc;width: 450px;padding:5px 0 5px 5px; text-align:left;background: none !important;color: #000000;">
+                      {{'company.plan.preview.coveragemaxtype' | translate}}</th>
+                    <th class="amount_right_grid"
+                      style="font-size: 13px !important; border-bottom: 1px solid #cccccc;width: 450px;padding:5px 0 5px 5px; text-align:left;background: none !important;color: #000000;">
+                      {{'company.plan.preview.coveragemaxperiodtype' | translate}}</th>
+                    <th class="amount_right_grid"
+                      style="font-size: 13px !important; border-bottom: 1px solid #cccccc;width: 450px;padding:5px 0 5px 5px; text-align:left;background: none !important;color: #000000;">
+                      {{'company.plan.effective-date' | translate}}</th>
+                    <th class="amount_right_grid"
+                      style="font-size: 13px !important; border-bottom: 1px solid #cccccc;width: 450px;padding:5px 0 5px 5px; text-align:left;background: none !important;color: #000000;">
+                      {{'company.plan.expiry-date' | translate}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let val1 of val.coverageMax">
+                    <td style="font-size: 13px !important; background:#ffffff !important;padding: 5px 0 5px 5px;">
+                      {{val1.maximumAmt}}</td>
+                    <ng-container *ngFor="let maxType of  MaximumTypeList">
+                      <td class="amount_right_grid" *ngIf="maxType.maxTypeKey == val1.maximumTypeKey"
+                        style="font-size: 13px !important; background:#ffffff !important;padding: 5px 0 5px 5px;">
+                        {{ maxType.maxTypeDesc }}</td>
+                    </ng-container>
+                    <ng-container *ngFor="let maxPeriod of  MaximumPeriodTypeList">
+                      <td class="amount_right_grid"
+                        style="font-size: 13px !important; background:#ffffff !important;padding: 5px 0 5px 5px;"
+                        *ngIf="maxPeriod.maxPeriodTypeKey == val1.maximumPeroidKey">{{ maxPeriod.maxPeriodTypeCd }}</td>
+                    </ng-container>
+                    <td class="amount_right_grid"
+                      style="font-size: 13px !important; background:#ffffff !important;padding: 5px 0 5px 5px;">
+                      {{val1.effectiveOn ? (val1.effectiveOn | dateFormate) : '--'}}</td>
+                    <td class="amount_right_grid"
+                      style="font-size: 13px !important; background:#ffffff !important;padding: 5px 0 5px 5px;">
+                      {{val1.expiredOn ? (val1.expiredOn | dateFormate) : '--'}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <br>
+
+  <div style="float: left;" class="form-row" *ngIf="isSupplementData">
+    <div class="table-hdr">
+      <h3>{{'company.plan.preview.supplement' | translate}}</h3>
+    </div>
+    <div class="table-responsive clear">
+      <table id="planPreviewtable6" style="min-width: 1060px;" cellpadding="0" cellspacing="0"
+        class="table table-bordered table-stripped">
+        <thead>
+          <tr>
+            <th
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff;">
+              {{'company.plan.preview.coverage-category' | translate}}</th>
+            <th class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff;">
+              {{'company.plan.effective-date' | translate}}</th>
+            <th class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff;">
+              {{'company.plan.expiry-date' | translate}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let val of supplimentCareDataArray">
+            <td
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc !important;background: #e8e8e8;">
+              {{val.covCatDesc}}</td>
+            <td class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc !important;background: #e8e8e8;">
+              {{val.effectiveOn ? (val.effectiveOn | dateFormate) : '--'}}</td>
+            <td class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc !important;background: #e8e8e8;">
+              {{val.expiredOn ? (val.expiredOn | dateFormate) : '--'}}</td>
+          </tr>
+          <!-- Supplemental Coverage Maximum -->
+          <tr *ngIf="isSupplementCoverageData == true">
+            <td colspan="3"
+              style="border: 1px solid #cccccc;background: #ffffff !important;padding: 0 20px 0 20px !important;">
+              <table cellpadding="0" cellspacing="0">
+                <thead>
+                  <tr
+                    style="margin:0; font-weight:normal; text-align:left; font-size:13px; color:#303030; padding: 0 0 6px; font-weight: bold;">
+                    <th
+                      style="font-size: 13px !important; border-bottom: 1px solid #cccccc;width: 450px;padding:5px 0 5px 5px; text-align:left;background: none !important;color: #000000;">
+                      Amount</th>
+                    <th class="amount_right_grid"
+                      style="font-size: 13px !important; border-bottom: 1px solid #cccccc;width: 450px;padding:5px 0 5px 5px; text-align:left;background: none !important;color: #000000;">
+                      Type</th>
+                    <th class="amount_right_grid"
+                      style="font-size: 13px !important; border-bottom: 1px solid #cccccc;width: 450px;padding:5px 0 5px 5px; text-align:left;background: none !important;color: #000000;">
+                      Period Type</th>
+                    <th class="amount_right_grid"
+                      style="font-size: 13px !important; border-bottom: 1px solid #cccccc;width: 450px;padding:5px 0 5px 5px; text-align:left;background: none !important;color: #000000;">
+                      Effective Date</th>
+                    <th class="amount_right_grid"
+                      style="font-size: 13px !important; border-bottom: 1px solid #cccccc;width: 450px;padding:5px 0 5px 5px; text-align:left;background: none !important;color: #000000;">
+                      Expiry Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let val of supplementCoverageDataArray">
+                    <td style="font-size: 13px !important; background:#ffffff !important;padding: 5px 0 5px 5px;">
+                      {{val.maximumAmt}}</td>
+                    <ng-container *ngFor="let maxType of  HSAMaximumTypeList">
+                      <td class="amount_right_grid"
+                        style="font-size: 13px !important; background:#ffffff !important;padding: 5px 0 5px 5px;"
+                        *ngIf="maxType.hsaMaxTypeKey == val.maximumTypeKey">{{ maxType.hsaMaxTypeDesc }}</td>
+                    </ng-container>
+                    <ng-container *ngFor="let maxPeriod of  HSAMaximumPeriodTypeList">
+                      <td class="amount_right_grid"
+                        style="font-size: 13px !important; background:#ffffff !important;padding: 5px 0 5px 5px;"
+                        *ngIf="maxPeriod.hsaMaxPeriodTypeKey == val.maximumPeroidKey">
+                        {{ maxPeriod.hsaMaxPeriodTypeDesc }}</td>
+                    </ng-container>
+                    <td class="amount_right_grid"
+                      style="font-size: 13px !important; background:#ffffff !important;padding: 5px 0 5px 5px;">
+                      {{val.effectiveOn ? (val.effectiveOn | dateFormate) : '--'}}</td>
+                    <td class="amount_right_grid"
+                      style="font-size: 13px !important; background:#ffffff !important;padding: 5px 0 5px 5px;">
+                      {{val.expiredOn ? (val.expiredOn | dateFormate) : '--'}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+          <!-- Supplemental Coverage Maximum Ends -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <br>
+
+ 
+
+  <div style="float: left;" *ngIf="isWellnessData == true || isWellnessCombineMaxData == true" class="form-row">
+    <div *ngIf="isWellnessData == true" class="table-hdr">
+      <h3>{{'company.plan.preview.wellness' | translate}}</h3>
+    </div>
+    <div *ngIf="isWellnessCoverageCategoriesData == true">
+      <table id="planPreviewtable2" style="min-width: 1060px;" cellpadding="0" cellspacing="0"
+        class="table table-bordered table-stripped">
+        <thead>
+          <tr>
+            <th
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff; ">
+              {{'company.plan.preview.coverage-category' | translate}}</th>
+            <th class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff; ">
+              {{'company.plan.preview.adult%' | translate}}</th>
+            <th class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff; ">
+              {{'company.plan.preview.pay-claim' | translate}}</th>
+            <th class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff; ">
+              {{'company.plan.effective-date' | translate}}</th>
+            <th class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff; ">
+              {{'company.plan.expiry-date' | translate}}</th>
+          </tr>
+          <tr>
+        </thead>
+        <tbody *ngFor="let val of wellnessCareDataArray">
+          <tr>
+            <td
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc !important;background: #e8e8e8;">
+              {{val.covCatDesc}}</td>
+            <td class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc !important;background: #e8e8e8;">
+              {{val.adult}}</td>
+            <td class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc !important;background: #e8e8e8;"
+              *ngIf="val.payClaim == 'F'">{{'company.plan.no' | translate}}</td>
+            <td class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc !important;background: #e8e8e8;"
+              *ngIf="val.payClaim == 'T'">{{'company.plan.yes' | translate}}</td>
+            <td class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc !important;background: #e8e8e8;">
+              {{val.effectiveOn ? (val.effectiveOn | dateFormate) : '--'}}</td>
+            <td class="amount_right_grid"
+              style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc !important;background: #e8e8e8;">
+              {{val.expiredOn ? (val.expiredOn | dateFormate) : '--'}}</td>
+          </tr>
+          <tr *ngIf="val.coverageMax != '' && val.coverageMax != null ">
+            <td colspan="9"
+              style="border: 1px solid #cccccc;background: #ffffff !important;padding: 0 20px 0 20px !important;">
+              <table cellpadding="0" cellspacing="0">
+                <thead>
+                  <tr
+                    style="margin:0; font-weight:normal; text-align:left; font-size:13px; color:#303030; padding: 0 0 6px; font-weight: bold;">
+                    <th
+                      style="font-size: 13px !important; border-bottom: 1px solid #cccccc;width: 450px;padding:5px 0 5px 5px; text-align:left;background: none !important;color: #000000;">
+                      {{'company.plan.preview.coveragemaxamt' | translate}}</th>
+                    <th
+                      style="font-size: 13px !important; border-bottom: 1px solid #cccccc;width: 450px;padding:5px 0 5px 5px; text-align:left;background: none !important;color: #000000;">
+                      {{'company.plan.preview.coveragemaxtype' | translate}}</th>
+                    <th
+                      style="font-size: 13px !important; border-bottom: 1px solid #cccccc;width: 450px;padding:5px 0 5px 5px; text-align:left;background: none !important;color: #000000;">
+                      {{'company.plan.preview.coveragemaxperiodtype' | translate}}</th>
+                    <th
+                      style="font-size: 13px !important; border-bottom: 1px solid #cccccc;width: 450px;padding:5px 0 5px 5px; text-align:left;background: none !important;color: #000000;">
+                      {{'company.plan.effective-date' | translate}}</th>
+                    <th
+                      style="font-size: 13px !important; border-bottom: 1px solid #cccccc;width: 450px;padding:5px 0 5px 5px; text-align:left;background: none !important;color: #000000;">
+                      {{'company.plan.expiry-date' | translate}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let val1 of val.coverageMax">
+                    <td style="font-size: 13px !important; background:#ffffff !important;padding: 5px 0 5px 5px;">
+                      {{val1.maximumAmt}}</td>
+                    <ng-container *ngFor="let maxType of  MaximumTypeList">
+                      <td *ngIf="maxType.maxTypeKey == val1.maximumTypeKey"
+                        style="font-size: 13px !important; background:#ffffff !important;padding: 5px 0 5px 5px;">
+                        {{ maxType.maxTypeDesc }}</td>
+                    </ng-container>
+                    <ng-container *ngFor="let maxPeriod of  MaximumPeriodTypeList">
+                      <td style="font-size: 13px !important; background:#ffffff !important;padding: 5px 0 5px 5px;"
+                        *ngIf="maxPeriod.maxPeriodTypeKey == val1.maximumPeroidKey">{{ maxPeriod.maxPeriodTypeCd }}</td>
+                    </ng-container>
+                    <td style="font-size: 13px !important; background:#ffffff !important;padding: 5px 0 5px 5px;">
+                      {{val1.effectiveOn ? (val1.effectiveOn | dateFormate) : '--'}}</td>
+                    <td style="font-size: 13px !important; background:#ffffff !important;padding: 5px 0 5px 5px;">
+                      {{val1.expiredOn ? (val1.expiredOn | dateFormate) : '--'}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div *ngIf="isWellnessCombineMaxData" class="table-responsive clear">
+      <div class="table-hdr">
+        <h3>{{'company.plan.preview.wellness_combine_max' | translate}}</h3>
+      </div>
+      <table id="planPreviewtable3" style="min-width: 1060px;" cellpadding="0" cellspacing="0"
+        class="table table-bordered table-stripped">
+        <thead>
+          <tr>
+            <th
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff; border:1px solid #cccccc">
+              {{'company.plan.preview.maxamt' | translate}}</th>
+            <th
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff; border:1px solid #cccccc">
+              {{'company.plan.preview.max_type' | translate}}</th>
+            <th
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff; border:1px solid #cccccc">
+              {{'company.plan.preview.max_period_type' | translate}}</th>
+            <th
+              style="font-size: 13px !important; padding:5px 0 5px 5px; text-align:left; background:#1a2942; color:#ffffff; border:1px solid #cccccc">
+              {{'company.plan.preview.combine_max_type' | translate}}</th>
+          </tr>
+        </thead>
+        <tbody>
+        
+        <!-- Changes made in every <td> below to show data in table -->
+          <tr *ngFor="let val of wellnessCombineMaxDataArray">
+            <td style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc;">
+              ${{val.maximumAmt}}
+            </td>
+            <ng-container *ngFor="let maxType of  wellnessCombineMaxDataArray">
+              <td style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc;">
+                {{ maxType.maximumTypeDesc }}</td>
+            </ng-container>
+            <ng-container *ngFor="let maxPeriod of  wellnessCombineMaxDataArray">
+              <td style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc;">
+                {{ maxPeriod.maximumPeroidDesc }}</td>
+            </ng-container>
+            <ng-container *ngFor="let combineMaxTypeList of  CombineMaximumTypeList">
+              <td style="font-size: 13px !important; padding:5px 0 5px 5px;border: 1px solid #cccccc;"
+                *ngIf="combineMaxTypeList.key == val.combineMaximunTypeKey">{{ combineMaxTypeList.desc }}</td>
+            </ng-container>
+            <!-- Below td added to complete the table -->
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <br>
+
+</div>

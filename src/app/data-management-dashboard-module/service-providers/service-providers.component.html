@@ -1,0 +1,97 @@
+<!-- Mantis issue_id 0179402 --> 
+<div class="form-row">
+  <div class="section-heading">
+  </div>
+  <div class="row">
+    <div class="col-md-12 col-xs-12">
+      <div class="grid-box">
+        <div class="grid-heading">
+          <h3>{{'dataManagementDashboard.serviceProvider.serviceProviderNoBanList' | translate }}</h3>
+        </div>
+        <!-- Grid Heading Ends -->
+        <div class="grid-inner">
+          <div class="form-row">
+            <div class="row">
+              <div class="col-md-12 col-xs-12">
+                <div class="table-responsive ">
+                  <table id="serviceProviderList" class="display table table-bordered table-stripped">
+                    <tfoot>
+                      <tr>
+                        <td>
+                          <input id="providerLicenseNum"
+                            class="fm-txt form-control tFootInput inputSearch" type="text"
+                            placeholder="{{'dataManagementDashboard.serviceProvider.licenseNo' | translate }}" name="providerLicenseNum" />
+                        </td>
+                        <td>
+                          <input id="providerName" class="fm-txt form-control tFootInput inputSearch amount_right_grid" type="text"
+                            placeholder="{{'dataManagementDashboard.serviceProvider.name' | translate }}" name="providerName" />
+                        </td>
+                        <td>
+                          <input id="providerAddress"
+                            class="fm-txt form-control tFootInput inputSearch amount_right_grid" type="text"
+                            placeholder="{{'dataManagementDashboard.serviceProvider.address' | translate }}" name="billingAdd1" />
+                        </td>
+                        <td>
+                          <input id="postalCode" class="fm-txt form-control tFootInput inputSearch amount_right_grid"
+                            type="text" placeholder="{{'dataManagementDashboard.serviceProvider.postalCode' | translate }}" name="postalCd" />
+                        </td>
+                        <td>
+                          <input id="providerAmount" class="fm-txt form-control tFootInput inputSearch amount_right_grid" type="text" placeholder="{{'dataManagementDashboard.serviceProvider.amount' | translate }}"
+                            name="sumamount" />
+                        </td>
+                        <td>
+                          <button style="margin-top: -2px;" id="serviceProviderSearch" type="submit"
+                            title="{{'common.search' | translate}}" class="btn green-btn searchreset"
+                            (click)="searchServiceProvider('serviceProviderList')">
+                            <span class="glyphicon glyphicon-search"></span>
+                          </button>
+                          <button style="margin-top: -2px;" id="serviceProviderReset"
+                            title="{{'common.reset' | translate}}" class="btn grey-btn searchreset"
+                            (click)="resetServiceProviderSearch()">
+                            <span class="glyphicon glyphicon-repeat"></span>
+                          </button>
+                        </td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Grid Inner Ends -->
+      </div>
+    </div>
+  </div>
+  <!-- Row Ends -->
+</div>
+
+<div id="exportContent" align="justify" style="display: none">
+
+  <p>{{ today | date }}</p>
+  <p>Dr. {{letterProviderName1}} <br>
+    {{billingAdd1}} <br>
+    {{letterAddress2}}&nbsp;{{postalCd}} </p>
+      
+
+    <p style="margin:60px 35px 0 0;">RE: HELD PAYMENT FROM ADSC </p>
+   
+  <p>Dear &nbsp;Dr. {{letterProviderName}}:</p>
+
+  <p>
+    ADSC has a payment in the amount of {{letterAmount}} for services submitted by your office. However, we do not have current 
+    banking information on file to issue this payment. All claim payments to dental providers from Government of Alberta 
+    sponsored dental programs must be paid through electronic payment.
+  </p>
+  <p>
+    Please complete the enclosed form and return it to ADSC. The form can be mailed to the address below, emailed 
+    to admin@quikcard.com, or faxed to 780-425-1625. 
+  </p>
+  <p>Once received, ADSC will update the banking information on your file and issue payment to you on our next 
+    scheduled payment run.
+  </p>
+  <p>
+    Our Administration Team can be contacted at 1-800-232-1997 (Queue Options 2 then 2) if you have any questions. 
+  </p>
+ 
+</div>

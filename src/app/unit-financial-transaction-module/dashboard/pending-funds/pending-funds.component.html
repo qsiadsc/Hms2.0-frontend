@@ -1,0 +1,1060 @@
+<div>
+  <div class="form-row">
+    <div class="row">
+      <div class="col-md-12 col-xs-12">
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{'uft.dashboard.pending-funds.ReportEb'|translate}}</h3>
+            <div *ngIf="showLastUpdated" class="web-reg">
+              <h3 class="lst-updated">{{'uft.dashboard.pending-funds.lastUpdated' | translate}} {{dateTime}}</h3>
+              <button [disabled]="barChartData && barChartData.length == 0" (click)="ngOnInit()"
+                class="claim-status btn status-btn" style="cursor: pointer"><i class="fa fa-refresh"
+                  aria-hidden="true"></i></button>
+            </div>
+          </div>
+          <!-- Grid Heading Ends -->
+          <div class="grid-inner">
+            <div class="form-row text-center">
+              <div class="row min-ht-sf">
+                <div [ngClass]="{'tableLoader': showtableLoader}" style="z-index: auto !important">
+                  <div *ngIf="barChartData && barChartData.length > 0 && !showtableLoader">
+                    <div style="display: block;padding: 15px 90px 15px 90px" class="col-sm-9">
+                      <canvas baseChart height="50" id="pendingClaimBarChart" [datasets]="barChartData"
+                        [labels]="barChartLabels" [options]="barChartOptions" [legend]="barChartLegend"
+                        [chartType]="barChartType" [colors]="barChartColors" (chartHover)="chartHovered($event)"
+                        (chartClick)="chartClicked($event)">
+                      </canvas>
+
+                    </div>
+                    <div class="col-sm-3 map-oterrightdata" style="top:10%">
+                      <div class="map-newouter right">
+                        <button class="mapn-newourtleftbutton" style="background-color: #00BAB5"
+                          (click)="legendBtnClick('newOCLClaims')"></button>
+                        <p (click)="legendBtnClick('newOCLClaims')">
+                          {{'uft.dashboard.pending-funds.newOCLClaims' | translate}}</p>
+                      </div>
+                      <div class="map-newouter right">
+                        <button class="mapn-newourtleftbutton" style="background-color: #88724c"
+                          (click)="legendBtnClick('newEBClaims')"></button>
+                        <p (click)="legendBtnClick('newEBClaims')">
+                          {{'uft.dashboard.pending-funds.newEBClaims' | translate}}</p>
+                      </div>
+                      <div class="map-newouter right">
+                        <button class="mapn-newourtleftbutton" style="background-color: #D36726"
+                          (click)="legendBtnClick('notificationsGenerated')"></button>
+                        <p (click)="legendBtnClick('notificationsGenerated')">
+                          {{'uft.dashboard.pending-funds.notificationsGenerated' | translate}}</p>
+                      </div>
+                      <div class="map-newouter right">
+                        <button class="mapn-newourtleftbutton" style="background-color: #3B3B3B"
+                          (click)="legendBtnClick('eBOCLClaimAboutToExpire')"></button>
+                        <p (click)="legendBtnClick('eBOCLClaimAboutToExpire')">
+                          {{'uft.dashboard.pending-funds.eBOCLClaimAboutToExpire' | translate}}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <span *ngIf="showtableLoader" class="loading" data-name="Loading"
+                    style="z-index: auto !important">{{'common.processing' | translate }}</span>
+                </div>
+              </div>
+            </div>
+            <!-- Form Row ENds -->
+          </div>
+          <!-- Grid Inner Ends -->
+        </div>
+      </div>
+    </div>
+    <!-- Row Ends -->
+  </div>
+  <!-- Form Row Ends -->
+
+  <div class="form-row">
+    <div class="row">
+      <div [hidden]="!showPendingClaimList">
+        <div class="col-md-12 col-xs-12">
+          <div class="grid-box">
+            <div class="grid-heading">
+              <h3>{{'uft.dashboard.pending-funds.Notification'|translate}}</h3>
+              <div class="web-reg" style="margin-right: 10px;">
+                <button  class="green-btn-add btn" title="{{showNotificationActionTable == false ?'Select Any Company':''}}" (click)="newGetMailMerged('B')">{{'button.mailMerge' | translate}}</button>
+              </div>
+            </div>
+            <!-- Grid Heading Ends -->
+            <div class="grid-inner">
+              <form (submit)="filterPendingClaimsCompanyList('uftDashboard_notification')">
+                <div class="form-row text-right search-top">
+                  <button type="submit" id="companySearchFilterSearch" class="btn green-btn searchreset"
+                    (click)="filterPendingClaimsCompanyList('uftDashboard_notification')" title="{{'common.search' | translate }}">
+                    <span class="glyphicon glyphicon-search"></span>
+                  </button>
+                  <button id="companySearchFilterReset" class="btn grey-btn searchreset"
+                    (click)="resetPendingClaimsCompanyList('uftDashboard_notification')">
+                    <span class="glyphicon glyphicon-repeat" title="{{'common.clear' | translate }}"></span>
+                  </button>
+                </div>
+                <div class="form-row">
+                  <div class="row">
+                    <div class="col-md-12 col-xs-12">
+                      <div class="table-responsive ">
+                        <table id="uftDashboard_notification" class="display table table-bordered table-stripped">
+                          <thead>
+                          </thead>
+                          <!--[Start Grid1 Column Filter]-->
+                          <tfoot>
+                            <tr>
+                              <td width="50px">
+                                <input id="filterCompanyName" class="fm-txt form-control tFootInput inputSearch"
+                                  type="text" placeholder="{{'uft.dashboard.pending-funds.companyNoName' | translate }}" name="company" />
+                              </td>
+                              <td width="143px">
+                                <input id="filterCompBalAmt"
+                                  class="fm-txt form-control tFootInput inputSearch in-number" type="text"
+                                  placeholder="{{'uft.dashboard.pending-funds.companyBalanceAmount' | translate }}" name="companyBalance" />
+                              </td>
+                              <!-- // issue no 709 start-->
+                              <td width="50px">
+                                <input id="pendingAmount" class="fm-txt form-control tFootInput inputSearch in-number"
+                                  type="text" placeholder="{{'uft.dashboard.pending-funds.paidAmount' | translate }}" name="paidAmt" />
+                              </td>
+                              <td width="50px">
+                                <input id="filterPendingClaimsAmt" class="fm-txt form-control tFootInput inputSearch in-number"
+                                  type="text" placeholder="{{'uft.dashboard.pending-funds.pendingClaimsAmount' | translate }}" name="pendingFund" />
+                              </td>
+                              <!-- // issue no 709 end -->
+                              <td width="143px">
+                                <input id="filterCompCreditLimit"
+                                  class="fm-txt form-control tFootInput inputSearch in-number" type="text"
+                                  placeholder="{{'uft.dashboard.pending-funds.companyCreditLimit' | translate }}" name="creditLimitMultiplier" />
+                              </td>
+                              <td width="143px">
+                                <input id="filterAvailBal" class="fm-txt form-control tFootInput inputSearch in-number"
+                                  type="text" placeholder="{{'uft.dashboard.pending-funds.availableBalance' | translate }}" name="availFund" />
+                              </td>
+                            </tr>
+                          </tfoot>
+                          <!--[End Grid1 Column Filter]-->
+                        </table>
+                      </div>
+                      <div  class="form-row text-center disable-export-button" id="uftDashboard_notification_exportsPdfButton"
+                      >
+                      <div class="row" >
+                        <div class="col-md-12 col-xs-12">
+                          <div class="dropdown pull-right">
+                            <button class="btn green-btn dropdown-toggle" type="button"
+                              data-toggle="dropdown">{{'common.export' | translate}}
+                              <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu financeExportPdfExcel">
+                              <li>
+                                <a href="javascript:void(0)"
+                                  (click)="dowloadPDFReport('uftDashboard_notification')">{{ 'common.pdf' | translate }}</a>
+                              </li>
+                              <li>
+                                <a href="javascript:void(0)" 
+                                  (click)="exportReportList('uftDashboard_notification')">{{ 'common.excel' | translate }}</a>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Form Row Ends -->
+                <div [hidden]="!showNotificationActionTable">
+                  <div class="grid-heading">
+                    <h3>{{'uft.dashboard.pending-funds.notificationActionList'|translate}}</h3>
+                  </div>
+                  <div class="grid-inner">
+                    <form (submit)="filterPendingClaimsList('uftDashboard_notificationAction')">
+                      <div class="form-row text-right search-top">
+                        <button type="submit" id="companySearchFilterSearch" class="btn green-btn searchreset"
+                          (click)="filterPendingClaimsList('uftDashboard_notificationAction')" title="{{'common.search' | translate }}">
+                          <span class="glyphicon glyphicon-search"></span>
+                        </button>
+                        <button id="companySearchFilterReset" class="btn grey-btn searchreset"
+                          (click)="resetPendingClaimsList('uftDashboard_notificationAction')">
+                          <span class="glyphicon glyphicon-repeat" title="{{'common.clear' | translate }}"></span>
+                        </button>
+                      </div>
+                      <div class="form-row">
+                        <div class="row">
+                          <div class="col-md-12 col-xs-12">
+                            <div class="table-responsive ">
+                              <table id="uftDashboard_notificationAction"
+                                class="display table table-bordered table-stripped">
+                                <thead>
+                                </thead>
+                                <!--[Start Column Filters For Pending Claims List]-->
+                                <tfoot>
+                                  <tr>
+                                    <td width="50px"></td>
+                                    <td width="50px">
+                                      <input id="filterCompanyName" class="fm-txt form-control tFootInput inputSearch"
+                                        type="text" placeholder="{{'uft.dashboard.pending-funds.companyNoName' | translate }}" name="company" />
+                                    </td>
+                                    <td width="143px">
+                                      <input id="filterdiscipline"
+                                        class="fm-txt form-control tFootInput inputSearch in-number" type="text"
+                                        placeholder="{{'uft.dashboard.pending-funds.discipline' | translate }}" name="discipline" />
+                                    </td>
+                                    <td width="50px">
+                                      <input id="filterCardNum" class="fm-txt form-control tFootInput inputSearch"
+                                        type="text" placeholder="{{'uft.dashboard.pending-funds.cardNo' | translate }}" name="cardNum" />
+                                    </td>
+                                    <td width="143px">
+                                      <input id="filterRefNo."
+                                        class="fm-txt form-control tFootInput inputSearch in-number" type="text"
+                                        placeholder="{{'uft.dashboard.pending-funds.referenceNo' | translate }}" name="referenceNumber" />
+                                    </td>
+                                    <td width="143px" class="alignDpRight">
+                                      <div class="calender-field">
+                                        <my-date-picker id="claimEntryDate" class="inputSearch" name="claimEntryDate"
+                                          data-type="date" [options]="myDatePickerOptions"
+                                          [selDate]="dateNameArray['claimEntryDate']"
+                                          (inputFocusBlur)="changeFilterDateFormat($event, 'claimEntryDate')"
+                                          placeholder="{{'common.date-placeholder' | translate }}">
+                                        </my-date-picker>
+                                      </div>
+                                    </td>
+                                    <td width="143px">
+                                      <input id="filterPayeeType"
+                                        class="fm-txt form-control tFootInput inputSearch in-number" type="text"
+                                        placeholder="{{'uft.dashboard.pending-funds.payeeType' | translate }}" name="payeeType" />
+                                    </td>
+                                    <!-- Log #1250 replaced OCL with paidAmount  -->
+
+                                    <td width="143px">
+                                      <input id="pendingAmount" class="fm-txt form-control tFootInput inputSearch in-number"
+                                        type="text" placeholder="{{'uft.dashboard.pending-funds.paidAmount' | translate }}" name="paidAmt" />
+                                    </td>
+                                    <td width="143px">
+                                      <input id="filterEBAmount"
+                                        class="fm-txt form-control tFootInput inputSearch in-number" type="text"
+                                        placeholder="{{'uft.dashboard.pending-funds.ebAmount' | translate }}"  name="ebAmt" />
+                                    </td>
+                                    <td width="143px">
+                                      <input id="filterClaimStatus"
+                                        class="fm-txt form-control tFootInput inputSearch in-number" type="text"
+                                        placeholder="{{'uft.dashboard.pending-funds.claimStatus' | translate }}" name="claimStatusDesc" />
+                                    </td>
+                                    <td width="143px" class="alignDpRight">
+                                        <div class="calender-field">
+                                            <my-date-picker id="filternotificationDate" class="inputSearch" name="notificationDate"
+                                              data-type="date" [options]="myDatePickerOptions"
+                                              [selDate]="dateNameArray['notificationDate']"
+                                              (inputFocusBlur)="changeFilterDateFormat($event, 'notificationDate')"
+                                              placeholder="{{'common.date-placeholder' | translate }}">
+                                            </my-date-picker>
+                                        </div>
+                                    </td>
+                                  </tr>
+                                </tfoot>
+                                <!--[End Column Filters For Pending Claims List]-->
+                              </table>
+                            </div>
+                            <div  class="form-row text-center disable-export-button" id="uftDashboard_notificationAction_exportsPdfButton"
+                            >
+                            <div class="row" >
+                              <div class="col-md-12 col-xs-12">
+                                <div class="dropdown pull-right">
+                                  <button class="btn green-btn dropdown-toggle" type="button"
+                                    data-toggle="dropdown">{{'common.export' | translate}}
+                                    <span class="caret"></span>
+                                  </button>
+                                  <ul class="dropdown-menu financeExportPdfExcel">
+                                    <li>
+                                      <a href="javascript:void(0)"
+                                        (click)="dowloadPDFReport('uftDashboard_notificationAction')">{{ 'common.pdf' | translate }}</a>
+                                    </li>
+                                    <li>
+                                      <a href="javascript:void(0)" 
+                                        (click)="exportReportList('uftDashboard_notificationAction')">{{ 'common.excel' | translate }}</a>
+                                    </li>
+                                  </ul>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+                <!-- Form Row Ends -->
+              </form>
+            </div>
+            <!-- Grid Inner Ends -->
+          </div>
+        </div>
+      </div>
+      <div [hidden]="!showReleaseClaimList">
+        <div class="col-md-12 col-xs-12">
+          <div class="grid-box">
+            <div class="grid-heading">
+              <h3>{{'uft.dashboard.pending-funds.ReleaseClaim'|translate}}</h3>
+              <div  class="web-reg">
+                <button class="green-btn-add btn" data-toggle="modal" data-target="#finalNoticeModal"
+                (click)="finalNoticeList()">Final Notice</button>
+              </div>
+            </div>
+            <!-- Grid Heading Ends -->
+            <div class="grid-inner">
+              <form (submit)="filterReleaseClaimsCompanyList('uftDashboard_releaseClaims')">
+                <div class="form-row text-right search-top">
+                  <button type="submit" id="companySearchFilterSearch" class="btn green-btn searchreset"
+                    (click)="filterReleaseClaimsCompanyList('uftDashboard_releaseClaims')" title="{{'common.search' | translate }}">
+                    <span class="glyphicon glyphicon-search"></span>
+                  </button>
+                  <button id="companySearchFilterReset" class="btn grey-btn searchreset"
+                    (click)="resetReleaseClaimsCompanyList('uftDashboard_releaseClaims')">
+                    <span class="glyphicon glyphicon-repeat" title="{{'common.clear' | translate }}"></span>
+                  </button>
+                </div>
+                <div class="form-row">
+                  <div class="row">
+                    <div class="col-md-12 col-xs-12">
+                      <div class="table-responsive ">
+                        <table id="uftDashboard_releaseClaims" class="display table table-bordered table-stripped">
+                          <thead>
+                          </thead>
+                          <!--[Start Grid2 Column Filter]-->
+                          <tfoot>
+                            <tr>
+                              <td width="50px">
+                                <input id="filterCompanyName" class="fm-txt form-control tFootInput inputSearch"
+                                  type="text" placeholder="{{'uft.dashboard.pending-funds.companyNoName' | translate }}" name="company" />
+                              </td>
+                              <td width="143px">
+                                <input id="filterCompBalAmt"
+                                  class="fm-txt form-control tFootInput inputSearch in-number" type="text"
+                                  placeholder="{{'uft.dashboard.pending-funds.companyBalanceAmount' | translate }}" name="companyBalance" />
+                              </td>
+                               <td width="50px">
+                                <input id="pendingAmount" class="fm-txt form-control tFootInput inputSearch in-number"
+                                  type="text" placeholder="{{'uft.dashboard.pending-funds.paidAmount' | translate }}" name="paidAmt" />
+                              </td>
+                              <td width="50px">
+                                <input id="filterPendingClaimsAmt" class="fm-txt form-control tFootInput inputSearch in-number"
+                                  type="text" placeholder="{{'uft.dashboard.pending-funds.pendingClaimsAmount' | translate }}" name="pendingFund" />
+                              </td>
+                              <td width="143px">
+                                <input id="filterCompCreditLimit"
+                                  class="fm-txt form-control tFootInput inputSearch in-number" type="text"
+                                  placeholder="{{'uft.dashboard.pending-funds.companyCreditLimit' | translate }}" name="creditLimitMultiplier" />
+                              </td>
+                              <td width="143px">
+                                <input id="filterAvailBal" class="fm-txt form-control tFootInput inputSearch in-number"
+                                  type="text" placeholder="{{'uft.dashboard.pending-funds.availableBalance' | translate }}" name="availFund" />
+                              </td>
+                              <!--general feedback new parameter added@Anisha 'start' -->
+                              <td width="50px">
+                                <select [(ngModel)]='claimStatus' id="filterClaimStatus" class="fm-txt form-control tFootInput inputSearch in-number" dir="rtl"
+                                  name="claimStatusCd" data-type="select">
+                                  <option [ngValue]=null disabled hidden selected>{{'claims.claims-search.claims-claim-date.select' | translate}}</option>
+                                  <option *ngFor="let claimStatus of arrClaimStatus" [value]="claimStatus.claimStatusCd">
+                                    {{claimStatus.claimStatusDesc}}
+                                  </option>
+                                </select>
+                              </td>
+                              <!--general feedback new parameter added@Anisha 'end' -->
+                            </tr>
+                          </tfoot>
+                          <!--[End Grid2 Column Filter]-->
+                        </table> 
+                      </div>
+                      <div  class="form-row text-center disable-export-button" id="uftDashboard_releaseClaims_exportsPdfButton"
+                      >
+                      <div class="row" >
+                        <div class="col-md-12 col-xs-12">
+                          <div class="dropdown pull-right">
+                            <button class="btn green-btn dropdown-toggle" type="button"
+                              data-toggle="dropdown">{{'common.export' | translate}}
+                              <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu financeExportPdfExcel">
+                              <li>
+                                <a href="javascript:void(0)"
+                                  (click)="dowloadPDFReport('uftDashboard_releaseClaims')">{{ 'common.pdf' | translate }}</a>
+                              </li>
+                              <li>
+                                <a href="javascript:void(0)" 
+                                  (click)="exportReportList('uftDashboard_releaseClaims')">{{ 'common.excel' | translate }}</a>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                      <!-- jagveer -->
+                    </div>
+                  </div>
+                </div>
+                <!-- Form Row Ends -->
+                <div [hidden]="!showReleaseActionTable">
+                  <div class="grid-heading">
+                    <h3>{{'uft.dashboard.pending-funds.releaseClaimActionList'|translate}}</h3>
+                    <div  class="web-reg">
+                      <button class="green-btn-add btn" data-toggle="modal" data-target="#resetNotificationModal"
+                        (click)="dataTableInitializeMailMergeListing()">{{'button.resendNotifiaction' | translate}}</button>
+                      <button *ngIf="claimStatusDesc == 'C' " class="green-btn-add btn" data-toggle="modal" data-target="#onDemandModal"
+                      (click)="onDemandList('uftDashboard_releaseClaimsAction')">On Demand</button>
+                    </div>
+                  </div>
+                  <div class="grid-inner">
+                    <form (submit)="filterReleaseClaimsActionList('uftDashboard_releaseClaimsAction')">
+                      <div class="form-row text-right search-top">
+                        <button type="button" id="companySearchFilterSearch" class="btn green-btn searchreset"
+                          (click)="filterReleaseClaimsActionList('uftDashboard_releaseClaimsAction')" title="{{'common.search' | translate }}">
+                          <span class="glyphicon glyphicon-search"></span>
+                        </button>
+                        <button type="button" id="companySearchFilterReset" class="btn grey-btn searchreset"
+                          (click)="resetReleaseClaimsActionList('uftDashboard_releaseClaimsAction')">
+                          <span class="glyphicon glyphicon-repeat" title="{{'common.clear' | translate }}"></span>
+                        </button>
+                      </div>
+                      <div class="form-row">
+                        <div class="row">
+                          <div class="col-md-12 col-xs-12">
+                            <div class="table-responsive ">
+                              <table id="uftDashboard_releaseClaimsAction"
+                                class="display table table-bordered table-stripped">
+                                <thead>
+                                </thead>
+                                <!--[Start Column Filters For Release Claims Action List]-->
+                                <tfoot>
+                                  <tr>
+                                    <td width="50px"></td>
+                                    <td width="50px">
+                                      <input id="filterCompanyName" class="fm-txt form-control tFootInput inputSearch"
+                                        type="text" placeholder="{{'uft.dashboard.pending-funds.companyNoName' | translate }}" name="company" />
+                                    </td>
+                                    <td width="143px">
+                                      <input id="filterdiscipline"
+                                        class="fm-txt form-control tFootInput inputSearch in-number" type="text"
+                                        placeholder="{{'uft.dashboard.pending-funds.discipline' | translate }}" name="discipline" />
+                                    </td>
+                                    <td width="50px">
+                                      <input id="filterCardHolderName" class="fm-txt form-control tFootInput inputSearch"
+                                        type="text" placeholder="{{'uft.dashboard.pending-funds.cardholderName' | translate }}" name="cardHolderName" />
+                                    </td>
+                                    <td width="143px">
+                                      <input id="filterRefNo."
+                                        class="fm-txt form-control tFootInput inputSearch in-number" type="text"
+                                        placeholder="{{'uft.dashboard.pending-funds.referenceNo' | translate }}" name="referenceNumber" />
+                                    </td>
+                                    <td width="143px" class="alignDpRight">
+                                      <div class="calender-field">
+                                        <my-date-picker id="claimEntryDate" class="inputSearch" name="claimEntryDate"
+                                          data-type="date" [options]="myDatePickerOptions"
+                                          [selDate]="dateNameArray['claimEntryDate']"
+                                          (inputFocusBlur)="changeFilterDateFormat($event, 'claimEntryDate')"
+                                          placeholder="{{'common.date-placeholder' | translate }}">
+                                        </my-date-picker>
+                                      </div>
+                                    </td>
+                                    <td width="143px">
+                                      <input id="filterPayeeType"
+                                        class="fm-txt form-control tFootInput inputSearch in-number" type="text"
+                                        placeholder="{{'uft.dashboard.pending-funds.payeeType' | translate }}" name="payeeType" />
+                                    </td>
+                                    <!-- Log #1250 replaced OCL with paidAmount  -->
+                                    <td width="143px">
+                                      <input id="pendingAmount" class="fm-txt form-control tFootInput inputSearch in-number"
+                                        type="text" placeholder="{{'uft.dashboard.pending-funds.paidAmount' | translate }}" name="paidAmt" />
+                                    </td>
+                                    <td width="143px">
+                                      <input id="filterEBAmount"
+                                        class="fm-txt form-control tFootInput inputSearch in-number" type="text"
+                                        placeholder="{{'uft.dashboard.pending-funds.ebAmount' | translate }}" name="ebAmt" />
+                                    </td>
+                                    <td width="143px">
+                                      <input id="filterClaimStatus"
+                                        class="fm-txt form-control tFootInput inputSearch in-number" type="text"
+                                        placeholder="{{'uft.dashboard.pending-funds.claimStatus' | translate }}" name="claimStatusDesc" />
+                                    </td>
+                                    <td width="143px" class="alignDpRight">
+                                          <div class="calender-field">
+                                              <my-date-picker id="notificationDate" class="inputSearch" name="notificationDate"
+                                                data-type="date" [options]="myDatePickerOptions"
+                                                [selDate]="dateNameArray['notificationDate']"
+                                                (inputFocusBlur)="changeFilterDateFormat($event, 'notificationDate')"
+                                                placeholder="{{'common.date-placeholder' | translate }}">
+                                              </my-date-picker>
+                                          </div>
+                                      </td>
+                                  </tr>
+                                </tfoot>
+                                <!--[End Column Filters For Release Claims Action List]-->
+                              </table>
+                            </div>
+                            <div  class="form-row text-center disable-export-button" id="uftDashboard_releaseClaimsAction_exportsPdfButton"
+                            >
+                            <div class="row" >
+                              <div class="col-md-12 col-xs-12">
+                                <div class="dropdown pull-right">
+                                  <button class="btn green-btn dropdown-toggle" type="button"
+                                    data-toggle="dropdown">{{'common.export' | translate}}
+                                    <span class="caret"></span>
+                                  </button>
+                                  <ul class="dropdown-menu financeExportPdfExcel">
+                                    <li>
+                                      <a href="javascript:void(0)"
+                                        (click)="dowloadPDFReport('uftDashboard_releaseClaimsAction')">{{ 'common.pdf' | translate }}</a>
+                                    </li>
+                                    <li>
+                                      <a href="javascript:void(0)" 
+                                        (click)="exportReportList('uftDashboard_releaseClaimsAction')">{{ 'common.excel' | translate }}</a>
+                                    </li>
+                                  </ul>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                  <!-- Form Row Ends -->
+                </div>
+              </form>
+            </div>
+            <!-- Grid Inner Ends -->
+          </div>
+        </div>
+      </div>
+      <div [hidden]="!showClaimAboutToExpireList">
+        <div class="col-md-12 col-xs-12">
+          <div class="grid-box">
+            <div class="grid-heading">
+              <h3>{{'uft.dashboard.pending-funds.eBOCLClaimAboutToExpire'|translate}}</h3>
+              <div  class="web-reg">
+                <button class="green-btn-add btn" data-toggle="modal" data-target="#expireClaimModal"
+                (click)="expireClaimList()">Expire</button>
+              </div>
+            </div>
+            <!-- Grid Heading Ends -->
+            <div class="grid-inner">
+              <form (submit)="filterClaimAboutToExpireList('uftDashboard_claimAboutToExpire')">
+                <div class="form-row text-right search-top">
+                  <button type="submit" id="companySearchFilterSearch" class="btn green-btn searchreset"
+                    (click)="filterClaimAboutToExpireList('uftDashboard_claimAboutToExpire')" title="{{'common.search' | translate }}">
+                    <span class="glyphicon glyphicon-search"></span>
+                  </button>
+                  <button id="companySearchFilterReset" class="btn grey-btn searchreset"
+                    (click)="resetClaimAboutToExpireList('uftDashboard_claimAboutToExpire')">
+                    <span class="glyphicon glyphicon-repeat" title="{{'common.clear' | translate }}"></span>
+                  </button>
+                </div>
+                <div class="form-row">
+                  <div class="row">
+                    <div class="col-md-12 col-xs-12">
+                      <div class="table-responsive ">
+                        <table id="uftDashboard_claimAboutToExpire" class="display table table-bordered table-stripped">
+                          <thead>
+                          </thead>
+                          <!--[Start Grid3 Column Filter]-->
+                          <tfoot>
+                            <tr>
+                              <td width="50px">
+                                <input id="filterCompanyName" class="fm-txt form-control tFootInput inputSearch"
+                                  type="text" placeholder="{{'uft.dashboard.pending-funds.companyNoName' | translate }}" name="company" />
+                              </td>
+                              <td width="143px">
+                                <input id="filterCompBalAmt"
+                                  class="fm-txt form-control tFootInput inputSearch in-number" type="text"
+                                  placeholder="{{'uft.dashboard.pending-funds.companyBalanceAmount' | translate }}" name="companyBalance" />
+                              </td>
+                              <td width="50px">
+                                <input id="pendingAmount" class="fm-txt form-control tFootInput inputSearch in-number"
+                                  type="text" placeholder="{{'uft.dashboard.pending-funds.paidAmount' | translate }}" name="paidAmt" />
+                              </td>
+                              <td width="50px">
+                                <input id="filterPendingClaimsAmt" class="fm-txt form-control tFootInput inputSearch in-number"
+                                  type="text" placeholder="{{'uft.dashboard.pending-funds.pendingClaimsAmount' | translate }}" name="pendingFund" />
+                              </td>
+                              <td width="143px">
+                                <input id="filterCompCreditLimit"
+                                  class="fm-txt form-control tFootInput inputSearch in-number" type="text"
+                                  placeholder="{{'uft.dashboard.pending-funds.companyCreditLimit' | translate }}" name="creditLimitMultiplier" />
+                              </td>
+                              <td width="143px">
+                                <input id="filterAvailBal" class="fm-txt form-control tFootInput inputSearch in-number"
+                                  type="text" placeholder="{{'uft.dashboard.pending-funds.availableBalance' | translate }}" name="availFund" />
+                              </td>
+                              <td width="50px">
+                                <select [(ngModel)]='claimStatus' id="filterClaimStatus" class="fm-txt form-control tFootInput inputSearch in-number" dir="rtl"
+                                  name="claimStatusCd" data-type="select">
+                                  <option [ngValue]=null disabled hidden selected>{{'claims.claims-search.claims-claim-date.select' | translate}}</option>
+                                  <option *ngFor="let claimStatus of arrClaimStatus" [value]="claimStatus.claimStatusCd">
+                                    {{claimStatus.claimStatusDesc}}
+                                  </option>
+                                </select>
+                              </td>
+                            </tr>
+                          </tfoot>
+                          <!--[End Grid3 Column Filter]-->
+                        </table>
+                      </div>
+
+                      <div  class="form-row text-center disable-export-button" id="uftDashboard_claimAboutToExpire_exportsPdfButton"
+                      >
+                      <div class="row" >
+                        <div class="col-md-12 col-xs-12">
+                          <div class="dropdown pull-right">
+                            <button class="btn green-btn dropdown-toggle" type="button"
+                              data-toggle="dropdown">{{'common.export' | translate}}
+                              <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu financeExportPdfExcel">
+                              <li>
+                                <a href="javascript:void(0)"
+                                  (click)="dowloadPDFReport('uftDashboard_claimAboutToExpire')">{{ 'common.pdf' | translate }}</a>
+                              </li>
+                              <li>
+                                <a href="javascript:void(0)" 
+                                  (click)="exportReportList('uftDashboard_claimAboutToExpire')">{{ 'common.excel' | translate }}</a>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    </div>
+                  </div>
+                </div>
+                <div [hidden]="!showReleaseActionTable_Expire">
+                  <div class="grid-heading">
+                    <h3>{{'uft.dashboard.pending-funds.releaseClaimActionList'|translate}}</h3>
+                    <div  class="web-reg">
+                      <button *ngIf="expireClaimStatusDesc == 'C' " class="green-btn-add btn" data-toggle="modal" data-target="#onDemandModal"
+                      (click)="onDemandList('uftDashboard_releaseClaimsAction_Expire')">On Demand</button>
+                    </div>
+                  </div>
+                  <div class="grid-inner">
+                    <form (submit)="filterReleaseClaimsActionList('uftDashboard_releaseClaimsAction_Expire')">
+                      <!--general feedback changes@Anisha *start-->
+
+                      <div class="form-row text-right search-top">
+                          <button type="button" id="companySearchFilterSearch" class="btn green-btn searchreset"
+                            (click)="filterReleaseClaimsActionList('uftDashboard_releaseClaimsAction_Expire')" title="{{'common.search' | translate }}">
+                            <span class="glyphicon glyphicon-search"></span>
+                          </button>
+                          <button type="button" id="companySearchFilterReset" class="btn grey-btn searchreset"
+                            (click)="resetReleaseClaimsActionList('uftDashboard_releaseClaimsAction_Expire')">
+                            <span class="glyphicon glyphicon-repeat" title="{{'common.clear' | translate }}"></span>
+                          </button>
+                        </div>
+                        <div class="form-row">
+                          <div class="row">
+                            <div class="col-md-12 col-xs-12">
+                              <div class="table-responsive ">
+                                <table id="uftDashboard_releaseClaimsAction_Expire"
+                                  class="display table table-bordered table-stripped">
+                                  <thead>
+                                  </thead>
+                                  <!--[Start Column Filters For Release Claims Action List]-->
+                                  <tfoot>
+                                    <tr>
+                                      <td width="50px"></td>
+                                      <td width="50px">
+                                        <input id="filterCompanyNameReleaseClaims" class="fm-txt form-control tFootInput inputSearch"
+                                          type="text" placeholder="{{'uft.dashboard.pending-funds.companyNoName' | translate }}" name="company" />
+                                      </td>
+                                      <td width="143px">
+                                        <input id="filterdisciplineReleaseClaims"
+                                          class="fm-txt form-control tFootInput inputSearch in-number" type="text"
+                                          placeholder="{{'uft.dashboard.pending-funds.discipline' | translate }}" name="discipline" />
+                                      </td>
+                                      <td width="50px">
+                                        <input id="filterCardHolderNameReleaseClaims" class="fm-txt form-control tFootInput inputSearch"
+                                          type="text" placeholder="{{'uft.dashboard.pending-funds.cardholderName' | translate }}" name="cardHolderName" />
+                                      </td>
+                                      <td width="143px">
+                                        <input id="filterRefNoReleaseClaims"
+                                          class="fm-txt form-control tFootInput inputSearch in-number" type="text"
+                                          placeholder="{{'uft.dashboard.pending-funds.referenceNo' | translate }}" name="referenceNumber" />
+                                      </td>
+                                      <td width="143px" class="alignDpRight">
+                                        <div class="calender-field">
+                                          <my-date-picker id="claimEntryDateReleaseClaims" class="inputSearch" name="claimEntryDate"
+                                            data-type="date" [options]="myDatePickerOptions"
+                                            [selDate]="dateNameArray['claimEntryDate']"
+                                            (inputFocusBlur)="changeFilterDateFormat($event, 'claimEntryDate')"
+                                            placeholder="{{'common.date-placeholder' | translate }}">
+                                          </my-date-picker>
+                                        </div>
+                                      </td>
+                                      <td width="143px">
+                                        <input id="filterPayeeTypeReleaseClaims"
+                                          class="fm-txt form-control tFootInput inputSearch in-number" type="text"
+                                          placeholder="{{'uft.dashboard.pending-funds.payeeType' | translate }}" name="payeeType" />
+                                      </td>
+                                      <!-- Log #1250 replaced OCL with paidAmount  -->
+
+                                    <td width="143px">
+                                      <input id="pendingAmount" class="fm-txt form-control tFootInput inputSearch in-number"
+                                        type="text" placeholder="{{'uft.dashboard.pending-funds.paidAmount' | translate }}" name="paidAmt" />
+                                    </td>
+                                      <td width="143px">
+                                        <input id="filterEBAmountReleaseClaims"
+                                          class="fm-txt form-control tFootInput inputSearch in-number" type="text"
+                                          placeholder="{{'uft.dashboard.pending-funds.ebAmount' | translate }}" name="ebAmt" />
+                                      </td>
+                                      <td width="143px">
+                                        <input id="filterClaimStatusReleaseClaims"
+                                          class="fm-txt form-control tFootInput inputSearch in-number" type="text"
+                                          placeholder="{{'uft.dashboard.pending-funds.claimStatus' | translate }}" name="claimStatusDesc" />
+                                      </td>
+                                      <td width="143px" class="alignDpRight">
+                                            <div class="calender-field">
+                                                <my-date-picker id="notificationDateReleaseClaims" class="inputSearch" name="notificationDate"
+                                                  data-type="date" [options]="myDatePickerOptions"
+                                                  [selDate]="dateNameArray['notificationDate']"
+                                                  (inputFocusBlur)="changeFilterDateFormat($event, 'notificationDate')"
+                                                  placeholder="{{'common.date-placeholder' | translate }}">
+                                                </my-date-picker>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                  </tfoot>
+                                  <!--[End Column Filters For Release Claims Action List]-->
+                                </table>
+                              </div>
+                              <div  class="form-row text-center disable-export-button" id="uftDashboard_releaseClaimsAction_Expire_exportsPdfButton"
+                              >
+                              <div class="row" >
+                                <div class="col-md-12 col-xs-12">
+                                  <div class="dropdown pull-right">
+                                    <button class="btn green-btn dropdown-toggle" type="button"
+                                      data-toggle="dropdown">{{'common.export' | translate}}
+                                      <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu financeExportPdfExcel">
+                                      <li>
+                                        <a href="javascript:void(0)"
+                                          (click)="dowloadPDFReport('uftDashboard_releaseClaimsAction_Expire')">{{ 'common.pdf' | translate }}</a>
+                                      </li>
+                                      <li>
+                                        <a href="javascript:void(0)" 
+                                          (click)="exportReportList('uftDashboard_releaseClaimsAction_Expire')">{{ 'common.excel' | translate }}</a>
+                                      </li>
+                                    </ul>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            </div>
+                          </div>
+                        </div>
+                      <!--general feedback changes@Anisha discussed with Arun Sir *end-->
+                    </form>
+                  </div>
+                  <!-- Form Row Ends -->
+                </div>
+              </form>
+            </div>
+            <!-- Grid Inner Ends -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Row Ends -->
+  </div>
+  <!-- Form Row Ends -->
+</div>
+<!-- Tab Ends -->
+
+<div id="resetNotificationModal" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{'uft.dashboard.pending-funds.resendNotification' | translate}}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{'uft.dashboard.pending-funds.notifications' | translate}}</h3>
+            <div class="web-reg">
+              <button class="green-btn-add btn"
+                (click)="aboutToExp()">{{'uft.dashboard.pending-funds.showAboutToExpireList' | translate}}</button>
+            </div>
+          </div>
+          <!-- Grid Heading Ends -->
+          <div class="grid-inner">
+            <div class="form-row">
+              <div class="row">
+                <div class="col-md-12 col-xs-12 table-col">
+                  <div class="table-responsive">
+                    <table id="mailMergedFile" class="display table table-bordered table-stripped ">
+                      <tfoot>
+                        <tr>
+                          <td>
+                            <ng2-completer [inputName]="'coName'" [(ngModel)]="coName" name="coName" class="predictiveSearchLower" [datasource]="companyListData"
+                              [minSearchLength]="1" [openOnFocus]="false" [fillHighlighted]="false"
+                              [placeholder]="'Search Company List'" [textSearching]="'Please wait...'" [inputClass]="'form-control inputSearch'"
+                              (selected)="onCompanyNameSelectedSearch($event)" data-type="predective" [clearUnselected]="true" [autoHighlight]="true">
+                            </ng2-completer>
+                          </td>
+                          <td></td>
+                          <td>
+                            <div class="form-row text-right search-top" style="margin:-5px 5px -40px 0px;">
+                                <button type="submit" id="resetNotificationFilterSearch" class="btn green-btn searchreset"
+                                  (click)="searchResendNotification()" title="{{'common.search' | translate }}">
+                                  <span class="glyphicon glyphicon-search"></span>
+                                </button>
+                                <button id="resetNotificationFilterReset" class="btn grey-btn searchreset"
+                                  (click)="resetResendNotification()">
+                                  <span class="glyphicon glyphicon-repeat" title="{{'common.clear' | translate }}"></span>
+                                </button>
+                            </div>
+                          </td>
+                        </tr>
+                      </tfoot>    
+                    </table>
+                  </div>
+                  <!-- Table Ends -->
+                </div>
+              </div>
+            </div>
+            <!-- Form Row ENds -->
+          </div>
+          <!-- Grid Inner Ends -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button data-dismiss="modal" class="btn grey-btn" (click)="closeModal()">{{'button.close' | translate}}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="showLoader" class="loader-outer" style="text-align: left !important">
+  <div class="cube-wrapper">
+    <div class="cube-folding">
+      <span class="leaf1"></span>
+      <span class="leaf2"></span>
+      <span class="leaf3"></span>
+      <span class="leaf4"></span>
+    </div>
+    <span class="loading" data-name="Loading">{{loaderText}}</span>
+  </div>
+</div>
+
+<!-- #1145 - Final Notice button popup start -->
+<div id="finalNoticeModal" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="resetFinalNotice" type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">{{'uft.dashboard.pending-funds.finalNotice' | translate}}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{'uft.dashboard.pending-funds.finalNotice' | translate}}</h3>
+          </div>
+          <div class="grid-inner">
+            <div class="form-row text-right search-top">
+              <button type="submit" id="filterSearchFinalNotice" class="btn green-btn searchreset"
+                (click)="filterFinalNoticeList('finalNoticeList')" title="{{'common.search' | translate }}">
+                <span class="glyphicon glyphicon-search"></span>
+              </button>
+              <button id="filterResetFinalNotice" class="btn grey-btn searchreset"
+                (click)="resetFinalNoticeList('finalNoticeList')">
+                <span class="glyphicon glyphicon-repeat" title="{{'common.clear' | translate }}"></span>
+              </button>
+            </div>
+            <div class="form-row">
+              <div class="row">
+                <div class="col-md-12 col-xs-12 table-col">
+                  <div class="table-responsive">
+                    <table id="finalNoticeList" class="display table table-bordered table-stripped">
+                      <thead>
+                      </thead>
+                      <tfoot>
+                        <tr>
+                          <td width="50px">
+                            <input id="filterCompanyNameFNL" class="fm-txt form-control tFootInput inputSearch"
+                              type="text" placeholder="{{'uft.dashboard.pending-funds.companyNoName' | translate }}" name="company" />
+                          </td>
+                          <td width="143px">
+                            <input id="filterCompBalAmtFNL"
+                              class="fm-txt form-control tFootInput inputSearch in-number" type="text"
+                              placeholder="{{'uft.dashboard.pending-funds.companyBalanceAmount' | translate }}" name="companyBalance" />
+                          </td>
+                           <td width="50px">
+                            <input id="pendingAmountFNL" class="fm-txt form-control tFootInput inputSearch in-number"
+                              type="text" placeholder="{{'uft.dashboard.pending-funds.paidAmount' | translate }}" name="paidAmt" />
+                          </td>
+                          <td width="50px">
+                            <input id="filterPendingClaimsAmtFNL" class="fm-txt form-control tFootInput inputSearch in-number"
+                              type="text" placeholder="{{'uft.dashboard.pending-funds.pendingClaimsAmount' | translate }}" name="pendingFund" />
+                          </td>
+                          <td width="143px">
+                            <input id="filterCompCreditLimitFNL"
+                              class="fm-txt form-control tFootInput inputSearch in-number" type="text"
+                              placeholder="{{'uft.dashboard.pending-funds.companyCreditLimit' | translate }}" name="creditLimitMultiplier" />
+                          </td>
+                          <td width="143px">
+                            <input id="filterAvailBalFNL" class="fm-txt form-control tFootInput inputSearch in-number"
+                              type="text" placeholder="{{'uft.dashboard.pending-funds.availableBalance' | translate }}" name="availFund" />
+                          </td>
+                          <td width="50px">
+                            <select [(ngModel)]='claimStatus' id="filterClaimStatusFNL" class="fm-txt form-control tFootInput inputSearch in-number" dir="rtl"
+                              name="claimStatusCd" data-type="select">
+                              <option [ngValue]=null disabled hidden selected>{{'claims.claims-search.claims-claim-date.select' | translate}}</option>
+                              <option *ngFor="let claimStatus of arrClaimStatus" [value]="claimStatus.claimStatusCd">
+                                {{claimStatus.claimStatusDesc}}
+                              </option>
+                            </select>
+                          </td>
+                        </tr>
+                      </tfoot>
+                    </table> 
+                  </div>
+                  <div  class="form-row text-center disable-export-button" id="finalNoticeList_exportsPdfButton">
+                  <div class="row" >
+                    <div class="col-md-12 col-xs-12">
+                      <div class="dropdown pull-right">
+                        <button class="btn green-btn dropdown-toggle" type="button"
+                          data-toggle="dropdown">{{'common.export' | translate}}
+                          <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                          <li>
+                            <a href="javascript:void(0)"
+                              (click)="downloadFinalNoticeAndExpirePdfReport('finalNoticeList')">{{ 'common.pdf' | translate }}</a>
+                          </li>
+                          <li>
+                            <a href="javascript:void(0)" 
+                              (click)="exportFinalNoticeAndExpireExcel('finalNoticeList')">{{ 'common.excel' | translate }}</a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button data-dismiss="modal" class="btn grey-btn">{{'button.close' | translate}}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- #1145 - Expire button popup start -->
+<div id="expireClaimModal" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="resetExpireClaim" type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">{{'uft.dashboard.pending-funds.expire' | translate}}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{'uft.dashboard.pending-funds.expire' | translate}}</h3>
+          </div>
+          <div class="grid-inner">
+            <div class="form-row text-right search-top">
+              <button type="submit" id="filterSearchExpire" class="btn green-btn searchreset"
+                (click)="filterExpireClaimList('expireClaimList')" title="{{'common.search' | translate }}">
+                <span class="glyphicon glyphicon-search"></span>
+              </button>
+              <button id="filterResetExpire" class="btn grey-btn searchreset"
+                (click)="resetExpireClaimList('expireClaimList')">
+                <span class="glyphicon glyphicon-repeat" title="{{'common.clear' | translate }}"></span>
+              </button>
+            </div>
+            <div class="form-row">
+              <div class="row">
+                <div class="col-md-12 col-xs-12 table-col">
+                  <div class="table-responsive">
+                    <table id="expireClaimList" class="display table table-bordered table-stripped">
+                      <thead>
+                      </thead>
+                      <tfoot>
+                        <tr>
+                          <td width="50px">
+                            <input id="filterCompanyNameExp" class="fm-txt form-control tFootInput inputSearch"
+                              type="text" placeholder="{{'uft.dashboard.pending-funds.companyNoName' | translate }}" name="company" />
+                          </td>
+                          <td width="143px">
+                            <input id="filterCompBalAmtExp"
+                              class="fm-txt form-control tFootInput inputSearch in-number" type="text"
+                              placeholder="{{'uft.dashboard.pending-funds.companyBalanceAmount' | translate }}" name="companyBalance" />
+                          </td>
+                          <td width="50px">
+                            <input id="pendingAmountExp" class="fm-txt form-control tFootInput inputSearch in-number"
+                              type="text" placeholder="{{'uft.dashboard.pending-funds.paidAmount' | translate }}" name="paidAmt" />
+                          </td>
+                          <td width="50px">
+                            <input id="filterPendingClaimsAmtExp" class="fm-txt form-control tFootInput inputSearch in-number"
+                              type="text" placeholder="{{'uft.dashboard.pending-funds.pendingClaimsAmount' | translate }}" name="pendingFund" />
+                          </td>
+                          <td width="143px">
+                            <input id="filterCompCreditLimitExp"
+                              class="fm-txt form-control tFootInput inputSearch in-number" type="text"
+                              placeholder="{{'uft.dashboard.pending-funds.companyCreditLimit' | translate }}" name="creditLimitMultiplier" />
+                          </td>
+                          <td width="143px">
+                            <input id="filterAvailBalExp" class="fm-txt form-control tFootInput inputSearch in-number"
+                              type="text" placeholder="{{'uft.dashboard.pending-funds.availableBalance' | translate }}" name="availFund" />
+                          </td>
+                          <td width="50px">
+                            <select [(ngModel)]='claimStatus' id="filterClaimStatusExp" class="fm-txt form-control tFootInput inputSearch in-number" dir="rtl"
+                              name="claimStatusCd" data-type="select">
+                              <option [ngValue]=null disabled hidden selected>{{'claims.claims-search.claims-claim-date.select' | translate}}</option>
+                              <option *ngFor="let claimStatus of arrClaimStatus" [value]="claimStatus.claimStatusCd">
+                                {{claimStatus.claimStatusDesc}}
+                              </option>
+                            </select>
+                          </td>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </div>
+                  <div  class="form-row text-center disable-export-button" id="expireClaimList_exportsPdfButton">
+                    <div class="row" >
+                      <div class="col-md-12 col-xs-12">
+                        <div class="dropdown pull-right">
+                          <button class="btn green-btn dropdown-toggle" type="button"
+                            data-toggle="dropdown">{{'common.export' | translate}}
+                            <span class="caret"></span>
+                          </button>
+                          <ul class="dropdown-menu">
+                            <li>
+                              <a href="javascript:void(0)"
+                                (click)="downloadFinalNoticeAndExpirePdfReport('expireClaimList')">{{ 'common.pdf' | translate }}</a>
+                            </li>
+                            <li>
+                              <a href="javascript:void(0)" 
+                                (click)="exportFinalNoticeAndExpireExcel('expireClaimList')">{{ 'common.excel' | translate }}</a>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button data-dismiss="modal" class="btn grey-btn">{{'button.close' | translate}}</button>
+      </div>
+    </div>
+  </div>
+</div>

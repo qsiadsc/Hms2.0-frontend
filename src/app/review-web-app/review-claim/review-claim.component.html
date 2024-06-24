@@ -1,0 +1,568 @@
+<div class="section-heading">
+  <h2>{{'header.claims' | translate }} -
+    <span>{{'claims.search' | translate }}</span>
+  </h2>
+</div>
+<!-- Section Heading Ends -->
+
+<div class="grid-box">
+  <div class="grid-heading grid-hdr-btn">
+    <h3>{{'claims.claims-search.claims-claim.claim' | translate}}</h3>
+  </div>
+  <!-- Grid Heading Ends -->
+
+  <div class="grid-inner">
+    <form [formGroup]="FormGroup">
+      <div class="form-row reviewformmargin">
+        <div class="row min-ht-sf">
+
+          <div class="col-md-3 col-xs-12">
+            <label>{{'reviewApp.claim-search.review' | translate}}</label>
+            <select class="fm-txt form-control" #autofocusDisciplineType name="review" id="rsc_review" formControlName="review">
+              <option [ngValue]="null" disabled hidden selected>{{'claims.claims-search.claims-plan.select' | translate}}</option>
+              <option value="n">{{'company.plan.no' | translate}}</option>
+              <option value="y">{{'company.plan.yes' | translate}}</option>
+            </select>
+          </div>
+
+          <div class="col-md-3 col-xs-12">
+            <label>{{'reviewApp.claim-search.generate' | translate}}</label>
+            <select class="fm-txt form-control" #autofocusDisciplineType name="generate" id="rsc_generate" formControlName="generate">
+              <option [ngValue]="null" disabled hidden selected>{{'claims.claims-search.claims-plan.select' | translate}}</option>
+              <option value="n">{{'company.plan.no' | translate}}</option>
+              <option value="y">{{'company.plan.yes' | translate}}</option>
+            </select>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{'claims-history.claimtype' | translate}}</label>
+            <ng2-completer formControlName="claimType" [ngClass]="{'disableCompliter':editClaimType}" name="type" [datasource]="arrClaimTypeData"
+              [minSearchLength]="0" [openOnFocus]="true" (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Search Claim Type'"
+              [textSearching]="'Please wait...'" [inputClass]="'form-control'" data-type="predective" [inputId]="'claimType'"
+              (selected)="onSelectedClaimType($event)" [clearUnselected]="false" [autoHighlight]="true" [selectOnFocus]="true"
+              [autofocus]="setClaimTypeFocus">
+            </ng2-completer>
+          </div>
+
+          <div class="col-md-3 col-xs-12">
+            <label>{{'reviewApp.claim-search.created-between' | translate}}</label>
+
+            <div class="input-half">
+              <div class="calender-field">
+                <my-date-picker id="ce_entryDate" [options]="myDatePickerOptions" placeholder="{{'common.date-placeholder' | translate}}"
+                  name="start_date" formControlName="start_date" (inputFocusBlur)="changeDateFormat($event, 'start_date' ,'FormGroup')">
+                </my-date-picker>
+                <show-errors [control]="FormGroup.controls.start_date"></show-errors>
+              </div>
+              <!-- Calendar Field Ends -->
+            </div>
+            <!-- Input Half Ends -->
+
+            <div class="input-half">
+              <div class="calender-field set-dropdown">
+                <my-date-picker id="ce_entryDate" [options]="myDatePickerOptions" placeholder="{{'common.date-placeholder' | translate}}"
+                  name="end_date" formControlName="end_date" (inputFocusBlur)="changeDateFormat($event, 'end_date' ,'FormGroup')">
+                </my-date-picker>
+                <show-errors [control]="FormGroup.controls.end_date"></show-errors>
+              </div>
+              <!-- Calendar Field Ends -->
+            </div>
+            <!-- Input Half Ends -->
+          </div>
+
+          <div class="col-md-3 col-xs-12">
+            <label>{{'reviewApp.claim-search.DASPStatus' | translate}}</label>
+            <select id="rsc_DASPStatus" class="fm-txt form-control" formControlName="DASPStatus">
+              <option [ngValue]="null" disabled hidden selected>{{'claims.claims-search.claims-plan.select' | translate}}</option>
+              <option *ngFor="let DASPStatus of DASPStatusList" value="{{DASPStatus.DASPStatusDesc}}">{{DASPStatus.DASPStatusDesc}}</option>
+            </select>
+          </div>
+
+          <div class="col-md-3 col-xs-12">
+            <label>{{'reviewApp.claim-search.iTransStatus' | translate}}</label>
+            <select id="rsc_iTransStatus" class="fm-txt form-control" formControlName="iTransStatus">
+              <option [ngValue]="null" disabled hidden selected>{{'claims.claims-search.claims-plan.select' | translate}}</option>
+              <option *ngFor="let iTransStatus of iTransStatusList" value="{{iTransStatus.iTransStatusDesc}}">{{iTransStatus.iTransStatusDesc}}</option>
+            </select>
+          </div>
+
+          <div class="col-md-3 col-xs-12">
+            <label>{{'reviewApp.claim-search.fileNo' | translate}}</label>
+            <input id="rsc_fileNo" placeholder="{{'reviewApp.claim-search.fileNo' | translate }}" type="text" class="fm-txt form-control"
+              formControlName="fileNo">
+          </div>
+
+          <div class="col-md-3 col-xs-12">
+            <label>{{'reviewApp.claim-search.claimantFirstName' | translate}}</label>
+            <input id="rsc_claimantLastName" placeholder="{{'reviewApp.claim-search.claimantFirstName' | translate }}" type="text" class="fm-txt form-control"
+              formControlName="claimantFirstName">
+          </div>
+
+          <div class="col-md-3 col-xs-12">
+            <label>{{'reviewApp.claim-search.claimantLastName' | translate}}</label>
+            <input id="rsc_claimantLastName" placeholder="{{'reviewApp.claim-search.claimantLastName' | translate }}" type="text" class="fm-txt form-control"
+              formControlName="claimantLastName">
+          </div>
+
+          <div class="col-md-3 col-xs-12">
+            <label>{{'reviewApp.claim-search.claimNo' | translate}}</label>
+            <input id="rsc_claimNo" placeholder="{{'reviewApp.claim-search.claimNo' | translate}}" type="text" class="fm-txt form-control"
+              formControlName="claimNo">
+          </div>
+
+          <div class="col-md-3 col-xs-12" *ngIf='!showMultiple'>
+            <label>{{'reviewApp.claim-search-table.reviewStatus' | translate}}</label>
+            <select id="rsc_claimStatus" class="fm-txt form-control " formControlName="reviewStatus">
+              <option hidden value="null">{{'claims.claims-edit.service-provider.select' | translate}}</option>
+              <option *ngFor="let status of doctorStatusList" [value]="status.claimReviewStatusDesc">{{status.claimReviewStatusDesc}}</option>
+            </select>
+          </div>
+          <div class="col-md-3 col-xs-12" *ngIf='showMultiple'>
+            <label>{{'reviewApp.claim-search-table.reviewStatus' | translate}}</label>
+            <div>
+              <angular2-multiselect id="ccm_customCommentTxt" [data]="reviewDropDown" [(ngModel)]="selectedItems" (onSelect)="onSelectDropDown($event)"
+                [ngModelOptions]="{standalone: true}" (onDeSelect)="onDeSelectDropDown($event)" [settings]="dropdownSettings"></angular2-multiselect>
+            </div>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>&nbsp;</label>
+            <button id="rsc_search" (click)="getClaimList()" class="btn green-btn">{{'button.search' | translate}}</button>
+            <button id="rsc_reset" (click)="resetClaimSearch()" class="grey-btn btn" data-toggle="modal" data-target="">{{'button.clear' | translate}}</button>
+          </div>
+        </div>
+      </div>
+    </form>
+    <!-- Form Row ENds -->
+  </div>
+  <!-- Grid Inner Ends -->
+</div>
+<!-- Grid Box Ends -->
+
+
+<div [hidden]="!showSearchTable">
+  <div class="grid-box">
+    <div class="grid-heading">
+      <h3>{{'claims.claims-search.claims-claim-date.claim-date' | translate}}</h3>
+    </div>
+    <div class="grid-inner">
+      <form>
+        <div class="form-row text-right search-top">
+          <button id="rscg_btnSearchClaimTable" class="btn green-btn searchreset" type="submit" (click)="getClaimListByGridFilteration('searchReviewClaim')">
+            <span class="glyphicon glyphicon-search"></span>
+          </button>
+          <button id="rscg_btnResettableSearch" class="btn grey-btn searchreset" (click)="getClaimList()">
+            <span class="glyphicon glyphicon-repeat"></span>
+          </button>
+        </div>
+        <!-- Form Row Ends -->
+
+        <div class="form-row">
+          <div class="row">
+            <div class="col-md-12 col-xs-12 table-col">
+              <div class="table-responsive">
+                <table id="searchReviewClaim" class="display table table-bordered table-stripped">
+                  <thead></thead>
+                  <tfoot>
+                    <tr>
+                      <td dir="rtl" width="10%">
+                        <select id="rscg_reviewStatus" (keydown)="filterSearchOnEnter($event,'searchReviewClaim')" class="fm-txt form-control inputSearch"
+                          name="reviewStatus" data-type="select" [(ngModel)]="referReviewStatus">
+                          <option hidden value="">{{'claims.claims-edit.service-provider.select' | translate}}</option>
+                          <option *ngFor="let status of doctorStatusList" [value]="status.claimReviewStatusDesc">{{status.claimReviewStatusDesc}}</option>
+                        </select>
+                      </td>
+                      <td dir="rtl" class="amount_right" width="10%">
+                        <select id="rscg_generate" (keydown)="filterSearchOnEnter($event,'searchReviewClaim')" class="fm-txt form-control inputSearch"
+                          name="generated" data-type="select" [(ngModel)]="reviewGenerated">
+                          <option [ngValue]="null" disabled hidden selected>{{'claims.claims-edit.service-provider.select' | translate}}</option>
+                          <option value="y">{{'company.plan.yes' | translate}}</option>
+                          <option value="n">{{'company.plan.no' | translate}}</option>
+                        </select>
+                      </td>
+                      <td dir="rtl" class="amount_right" width="10%">
+                      </td>
+                      <td dir="rtl" class="amount_right" width="10%">
+                      </td>
+                      <td width="10%">
+                        <input id="rscg_claimNo" name="claimNumber" placeholder="{{'reviewApp.claim-search.refNo'|translate}}" class="fm-txt form-control inputSearch amount_right"
+                          type="text" [(ngModel)]="reviewClaimNumber">
+                      </td>
+
+                      <td class="amount_right" width="10%">
+                        <ng2-completer id="rscg_claimType" [inputName]="'claimTypeCd'"  [datasource]="arrClaimTypeData" class="predictiveSearchLower" 
+                        [minSearchLength]="0" [openOnFocus]="true" (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Search Claim Type'"
+                        [textSearching]="'Please wait...'" [inputClass]="'form-control inputSearch amount_right'" data-type="predective" [inputId]="'rscg_claimType'"
+                        (selected)="onSelectedClaimTypeFooter($event)" [clearUnselected]="false" [autoHighlight]="true" [selectOnFocus]="true"
+                        [(ngModel)]="reviewSelectedClaimType"[ngModelOptions]="{standalone: true}">
+                        </ng2-completer>
+                      </td>
+
+                      <td width="10%">
+                        <input id="rscg_fileNo" placeholder="{{'reviewApp.claim-search.fileNo' | translate }}" type="text" class="fm-txt form-control inputSearch amount_right"
+                          name="fileNumber" [(ngModel)]="reviewFileNo">
+                      </td>
+                      <td class="alignDpRight" width="10%">
+                        <div class="calender-field">
+                          <my-date-picker id="rscg_createdDate" placeholder="{{ 'common.date-placeholder' | translate }}" class="inputSearch" name="createdDate"
+                            data-type="date" [options]="myDatePickerOptions" [selDate]="dateNameArray['createdDate']" (inputFocusBlur)="changeDateFormat1($event, 'createdDate','FormGroup')">
+                          </my-date-picker>
+                        </div>
+                      </td>
+                      <td width="10%">
+                        <input id="rscg_claimantFirstName" name="firstName" placeholder="{{'reviewApp.claim-search.claimantFirstName' | translate }}"
+                          class="fm-txt form-control inputSearch amount_right" type="text" [(ngModel)]="reviewclaimantFirstName">
+                      </td>
+                      <td width="10%">
+                        <input id="rscg_claimantLastName" name="lastName" placeholder="{{'reviewApp.claim-search.claimantLastName' | translate }}"
+                          type="text" class="fm-txt form-control inputSearch amount_right" [(ngModel)]="reviewclaimantLastName">
+                      </td>
+                      <td width="10%">
+                        &nbsp;
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+              <!-- Table Ends -->
+            </div>
+          </div>
+        </div>
+        <!-- Form Row ENds -->
+
+        <div class="form-row text-center">
+          <div class="row">
+            <div class="col-md-12 col-xs-12">
+              <button class="btn green-btn" (click)="print('printClaimList')">{{'button.printList' | translate}}</button>
+              <button class="btn green-btn" id="btnOpenModalLetter" style="display: none" data-toggle="modal" data-target="#printPreAuthLtr"></button>
+              <div class="dropdown pull-right" style="display: none">
+                <button class="btn green-btn dropdown-toggle" type="button" data-toggle="dropdown">{{'button.export' | translate}}
+                  <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <a href="#">{{'common.csv' | translate}}</a>
+                  </li>
+                  <li>
+                    <a href="#">{{'common.excel' | translate}}</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+      <!-- Form Row ENds -->
+    </div>
+    <!-- Grid Inner Ends -->
+  </div>
+  <!-- Grid Box Ends -->
+</div>
+<div id="printClaimList" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-body text-center" id="PrintClaimListingForm">
+        <table width="700" align="center" cellpadding="0" cellspacing="0" style="border:1px solid #d5d5d5; padding: 0px; font-family:sans-serif;">
+          <tbody>
+            <tr>
+              <td style="padding:15px 15px; border-bottom: 1px solid #d5d5d5">
+                <table width="100%" align="center" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td width="70%">
+                      <a href="#">
+                        <img src="{{imgUrl}}" />
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="padding:10px 10px; border-bottom: 1px solid #d5d5d5">
+                <table width="100%" align="center" cellpadding="0" cellspacing="0">
+                  <tbody>
+                    <tr style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:15px; color:#303030; padding: 0 0 6px; font-weight: bold;">
+                      <th width="6%" style="padding: 0 2px 10px 2px; border-bottom: 1px solid #666; font-size: 13px;">{{'reviewApp.reviewClaim.cardNumber' | translate}}</th>
+                      <th width="10%" style="padding: 0 2px 10px 2px; border-bottom: 1px solid #666; font-size: 13px;">{{'reviewApp.reviewClaim.treatment' | translate}}</th>
+                      <th width="15%" style="padding: 0 2px 10px 2px; border-bottom: 1px solid #666; font-size: 13px;">{{'reviewApp.reviewClaim.reviewStatus' | translate}}</th>
+                      <th width="10%" style="padding: 0 2px 10px 2px; border-bottom: 1px solid #666; font-size: 13px;"> {{'reviewApp.reviewClaim.fileNumber' | translate}}</th>
+                      <th width="14%" style="padding: 0 2px 10px 2px; border-bottom: 1px solid #666; font-size: 13px;">{{'reviewApp.reviewClaim.claimantName' | translate}}</th>
+                      <th width="30%" style="padding: 0 2px 10px 2px; border-bottom: 1px solid #666; font-size: 13px;">{{'reviewApp.reviewClaim.internalComments' | translate}}</th>
+                    </tr>
+                    <tr *ngFor="let dataRow of details;let i = index" style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:15px; color:#303030; padding: 0 0 6px; ">
+                      <td style="padding: 5px 2px 10px 2px; font-size: 12px;">{{dataRow.claimNumber}}</td>
+                      <td style="padding: 5px 2px 10px 2px; font-size: 12px;">{{dataRow.treatmentCategory}}</td>
+                      <td style="padding: 5px 2px 10px 2px; font-size: 12px;">{{dataRow.reviewStatus}}</td>
+                      <td style="padding: 5px 2px 10px 2px; font-size: 12px;">{{dataRow.fileNumber}}</td>
+                      <td style="padding: 5px 2px 10px 2px; font-size: 12px;">{{dataRow.firstName+" "+dataRow.lastName}}</td>
+                      <td style="padding: 5px 2px 10px 2px; font-size: 12px;">{{dataRow.internalComments}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="printPreAuthLtr" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button title="Close" (click)="getClaimList()" type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 *ngIf="!showPaperHeading" class="modal-title">{{'reviewApp.reviewClaim.preAuthLetters' | translate}}</h4>
+        <h4 *ngIf="showPaperHeading" class="modal-title">{{'reviewApp.reviewClaim.paperLetters' | translate}}</h4>
+      </div>
+      <div class="modal-body" id="printPreAuthModal">
+        <table #printPreAuth width="100%" align="center" cellpadding="0" cellspacing="0" style="border:1px solid #d5d5d5; font-family:tahoma, arial; text-align:left; background: #fff; padding: 0px; font-size: 12px;">
+          <tbody>
+            <tr>
+              <td valign="top">
+                <table id="PrintPreAuth1" width="100%" cellpadding="0" cellspacing="0" style=" border-bottom: 1px solid #d5d5d5">
+                  <tr>
+                    <td width="15px"></td>
+                    <td valign="top" style="vertical-align: top;">
+                      <img src="{{imgUrl}}" style="padding:15px 0;" />
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="padding:10px 0px; border-bottom: 1px solid #d5d5d5;">
+                <table id="PrintPreAuth2" width="100%" align="center" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td width="70%">
+                      <table width="100%" align="center" cellpadding="0" cellspacing="0">
+                        <tr *ngIf="ltrDate">
+                          <td style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:12px; color:#303030; padding: 0 0 6px 15px;">
+                            <span style="font-weight: bold;">{{ltrDate}}</span>
+                          </td>
+                        </tr>
+                        <tr *ngIf="provider">
+                          <td style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:12px; color:#303030; padding: 0 0 6px 15px;">
+                            <span>{{provider}}</span>
+                          </td>
+                        </tr>
+                        <tr *ngIf="provider && providerLttrAdrs[0]">
+                          <td style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:12px; color:#303030; padding: 0 0 6px 15px;">
+                            <span>{{providerLttrAdrs[0]}}</span>
+                          </td>
+                        </tr>
+                        <tr *ngIf="provider && providerLttrAdrs[1]">
+                          <td style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:12px; color:#303030; padding: 0 0 6px 15px;">
+                            <span>{{providerLttrAdrs[1]}}</span>
+                          </td>
+                        </tr>
+                        <tr *ngIf="provider && providerLttrAdrs[5]">
+                          <td style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:12px; color:#303030; padding: 0 0 6px 15px;">
+                            <span>{{providerLttrAdrs[2]}},{{providerLttrAdrs[3]}},{{providerLttrAdrs[4]}} ({{providerLttrAdrs[5]}})</span>
+                          </td>
+                        </tr>
+                        <tr *ngIf="provider && !providerLttrAdrs[5]">
+                          <td style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:12px; color:#303030; padding: 0 0 6px 15px;">
+                            <span>{{providerLttrAdrs[2]}},{{providerLttrAdrs[3]}},({{providerLttrAdrs[4]}})</span>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:12px; color:#303030; padding: 0 0 3px 15px;">
+                      <span style="font-weight: bold;">{{'claims.claims-view.print-button.adjudicate-claims.reference' | translate}}:</span> {{ltrReference}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="70%">
+                      <table width="100%" align="center" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:12px; color:#303030; padding: 8px 0 3px 15px;">
+                            <span style="font-weight: bold;">{{'claims.claims-view.print-button.adjudicate-claims.patient' | translate}}:</span>
+                            {{ltrPatientName}}
+                          </td>
+                          <td style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:12px; color:#303030; padding: 8px 0 3px 15px;">
+                            <span style="font-weight: bold;">{{'common.date-of-birth' | translate}}:</span>
+                            {{ltrDateOfBirth | dateFormate}}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:12px; color:#303030; padding: 8px 0 3px 15px;">
+                            <span style="font-weight: bold;">{{'reviewApp.claim-search.claimNo' | translate}}:</span>
+                            {{ltrCrdNum}}
+                          </td>
+                          <td style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:12px; color:#303030; padding: 8px 0 3px 15px;">
+                            {{daspContent}}
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:12px; color:#303030; padding: 8px 0 3px 15px;">
+                {{ltrContntLine1}}
+              </td>
+            </tr>
+            <tr>
+              <td *ngIf="ltrContntLine4" style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:12px; color:#303030; padding: 8px 0 3px 15px;">
+                {{ltrContntLine4}}
+              </td>
+            </tr>
+            <tr>
+              <td *ngIf="ltrContntLine2" style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:12px; color:#303030; padding: 8px 0 3px 15px;">
+                {{ltrContntLine2}}
+              </td>
+            </tr>
+            <tr>
+              <td *ngIf="ltrContntLine3" style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:12px; color:#303030; padding: 8px 0 3px 15px;">
+                {{ltrContntLine3}}
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:0 0 10px 0px; border-bottom: 1px solid #d5d5d5">
+                <table id="PrintPreAuth5" width="100%" cellpadding="0" cellspacing="0">
+                  <tbody>
+                    <tr>
+                      <th style="padding:10px 5px 10px 15px; text-align:left; background: #fff; border-bottom:1px solid #d5d5d5; color:#333; border-top:1px solid #d5d5d5;font-size: 12px;">{{'claims.claims-view.print-button.adjudicate-claims.service-date' | translate}}</th>
+                      <th style="padding:10px 5px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333; border-top:1px solid #d5d5d5;font-size: 12px;">{{'claims.claims-view.print-button.adjudicate-claims.proc-#' | translate}}</th>
+                      <th style="padding:10px 5px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333; border-top:1px solid #d5d5d5;font-size: 12px;">{{'claims.claims-view.print-button.adjudicate-claims.msg-#' | translate}}</th>
+                      <th style="padding:10px 5px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333; border-top:1px solid #d5d5d5;font-size: 12px;">{{'claims.claims-view.print-button.adjudicate-claims.to' | translate}}</th>
+                      <th style="padding:10px 5px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333; border-top:1px solid #d5d5d5;font-size: 12px;">{{'claims.claims-view.print-button.adjudicate-claims.su' | translate}}</th>
+                      <th style="padding:10px 5px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333;text-align: right; border-top:1px solid #d5d5d5;font-size: 12px;">{{'claims.claims-view.print-button.adjudicate-claims.fee-claimed' | translate}}</th>
+                      <th style="padding:10px 5px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333;text-align: right; border-top:1px solid #d5d5d5;font-size: 12px;">{{'claims.claims-view.print-button.adjudicate-claims.elig-amount' | translate}}</th>
+                      <th style="padding:10px 5px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333;text-align: right; border-top:1px solid #d5d5d5;font-size: 12px;">{{'claims.claims-view.print-button.adjudicate-claims.allowed' | translate}}</th>
+                      <th style="padding:10px 5px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333;text-align: right; border-top:1px solid #d5d5d5;font-size: 12px;">{{'claims.claims-view.print-button.adjudicate-claims.payable' | translate}}</th>
+                      <th style="padding:10px 5px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333;text-align: right; border-top:1px solid #d5d5d5;font-size: 12px;">{{'claims.claims-view.print-button.adjudicate-claims.lab-fee-claimed' | translate}}</th>
+                      <th style="padding:10px 5px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333;text-align: right; border-top:1px solid #d5d5d5;font-size: 12px;">{{'claims.claims-view.print-button.adjudicate-claims.allowed' | translate}}</th>
+                      <th style="padding:10px 5px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333;text-align: right; border-top:1px solid #d5d5d5;font-size: 12px;">{{'claims.claims-view.print-button.adjudicate-claims.payable' | translate}}</th>
+                    </tr>
+                    <tr id="{{'row_'+i}}" *ngFor="let dataRow of serviceData; let i = index">
+                      <td style="padding:5px 5px 5px 15px; text-align: left; font-size: 12px;">{{dataRow.itemServiceDt | dateFormate}}</td>
+                      <td style="padding:5px; text-align: left; font-size: 12px;">{{dataRow.itemProcedureCd}}</td>
+                      <td style="padding:5px; text-align: left; font-size: 12px;">{{dataRow.itemMessageCount}}</td>
+                      <td style="padding:5px; text-align: left; font-size: 12px;">{{dataRow.itemToothId}}</td>
+                      <td style="padding:5px; text-align: left; font-size: 12px;">{{dataRow.itemToothSurfaceTxt}}</td>
+                      <td style="padding:5px; text-align: right; font-size: 12px;">{{dataRow.itemFeeClaimAmt | currency}}</td>
+                      <td style="padding:5px; text-align: right; font-size: 12px;">{{dataRow.itemFeeEligAmt | currency}}</td>
+                      <td style="padding:5px; text-align: right; font-size: 12px;">{{dataRow.itemFeeAllowAmt | currency}}</td>
+                      <td style="padding:5px; text-align: right; font-size: 12px;">{{dataRow.itemFeePaidAmt | currency}}</td>
+                      <td style="padding:5px; text-align: right; font-size: 12px;">{{dataRow.itemLabClaimAmt | currency}}</td>
+                      <td style="padding:5px; text-align: right; font-size: 12px;">{{dataRow.itemLabAllowAmt | currency}}</td>
+                      <td style="padding:5px; text-align: right; font-size: 12px;">{{dataRow.itemLabPaidAmt | currency}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="padding:0 0 10px 0px; border-bottom: 1px solid #d5d5d5">
+                <table id="PrintPreAuth4" width="100%" cellpadding="0" cellspacing="0">
+                  <tbody>
+                    <tr style="margin:0; font-weight:normal; text-align:left; font-size:12px; color:#303030; padding: 0 0 6px; font-weight: bold;">
+                      <th style="padding:10px 5px 10px 15px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333;text-align: right; font-size: 12px;">{{'claims.claims-view.print-button.adjudicate-claims.claim-total' | translate}}</th>
+                      <th style="padding:10px 5px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333;text-align: right; font-size: 12px;">{{'claims.claims-view.print-button.adjudicate-claims.allowed-total' | translate}}</th>
+                      <th style="padding:10px 5px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333;text-align: right; font-size: 12px;">{{'claims.claims-view.print-button.adjudicate-claims.paid-carrier' | translate}}</th>
+                      <th style="padding:10px 5px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333;text-align: right; font-size: 12px;">
+                        {{'claims.claims-view.print-button.adjudicate-claims.not-covered' | translate}}</th>
+                      <th style="padding:10px 5px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333;text-align: right; font-size: 12px;">{{'claims.claims-view.print-button.adjudicate-claims.deductible' | translate}}</th>
+                      <th style="padding:10px 5px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333;text-align: right; font-size: 12px;">{{'claims.claims-view.print-button.adjudicate-claims.total-payable' | translate}}</th>
+                      <th style="padding:10px 5px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333;text-align: right; font-size: 12px;"></th>
+                    </tr>
+                    <tr id="{{'row_'+i}}" *ngFor="let dataRow of providerTotals; let i = index">
+                      <td style="padding:5px 5px 5px 15px; text-align: right; font-size: 12px;">{{dataRow.ClaimTotal | currency}}</td>
+                      <td style="padding:5px; text-align: right; font-size: 12px;">{{dataRow.AllowedTotal | currency}}</td>
+                      <td style="padding:5px; text-align: right; font-size: 12px;">{{dataRow.PaidCarrier | currency}}</td>
+                      <td style="padding:5px; text-align: right; font-size: 12px;">{{dataRow.NotCovered | currency}}</td>
+                      <td style="padding:5px; text-align: right; font-size: 12px;">{{dataRow.Deductible | currency}}</td>
+                      <td style="padding:5px; text-align: right; font-size: 12px;">{{dataRow.TotalPayable | currency}}</td>
+                      <td style="padding:5px; text-align: right; font-size: 12px;"></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+            <tr *ngIf="reviewStatus == 'PARTIALLY APPROVED' || reviewStatus == 'DENIED' ">
+              <td style="padding:0 0 10px 0px; border-bottom: 1px solid #d5d5d5">
+                <table id="PrintPreAuth7" width="100%" cellpadding="0" cellspacing="0">
+                  <tbody>
+                    <tr>
+                      <th width="10%" style="padding:10px 5px 10px 15px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333; text-align:left; font-size: 12px;">{{'claims.claims-view.print-button.adjudicate-claims.msg-#' | translate}}</th>
+                      <th style="padding:10px 5px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333; text-align:left; font-size: 12px;">{{'claims.claims-view.print-button.adjudicate-claims.system-message' | translate}}</th>
+                    </tr>
+                    <tr id="{{'row_'+i}}" *ngFor="let dataRow of CustomeMessageData; let i = index">
+                      <td style="padding:5px 5px 5px 15px; text-align: left; font-size: 12px;">{{ i + 1 }}</td>
+                      <td style="padding:5px 5px 8px 5px; text-align: left; font-size: 12px;">{{dataRow.messageCom}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:12px; color:#303030; padding: 15px 0 6px 15px;">
+                If you have any questions about this matter, please contact the ADSC claims department.
+              </td>
+            </tr>
+
+            <tr>
+              <td style="padding-bottom: 15px">
+                <table width="100%" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:12px; color:#303030; font-weight: normal; padding: 0 0 8px 15px;">Sincerely,</td>
+                  </tr>
+                  <tr>
+                    <td style="padding:10px 0 10px 15px">
+                      <img width="142" src="{{signImage}}" alt="" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:12px; color:#303030; font-weight: normal; padding: 0 0 6px 15px;">Lyle R. Best C.M., A.L.H.C.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:12px; color:#303030; font-weight: normal; padding: 0 0 6px 15px;">Chairman of Dental Exceptions</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:0 0 8px 15px;">
+                <p style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:13px; color:black; padding: 0 0 1px; font-style: italic;">
+                  The review is based on the benefits presently available and subject to the Schedule of Benefits in place at the time of treatment,
+                  coverage maximums, frequencies, and age restrictions present in the terms of the Agreement. Payment of
+                  these benefits will be subject to the patient being covered under the program and eligible for these benefits
+                  at the time of the treatment.
+                </p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button id="btnPrintPreAuthLtr" class="btn red-btn" data-dismiss="modal" (click)="print('printPreAuthModal')">{{'button.print'|translate}}</button>
+        <button id="btnCloseLetterModal" (click) = "getClaimListByGridFilteration('searchReviewClaim')" title="{{'button.close' | translate}}" class="btn grey-btn" data-dismiss="modal">{{'button.close' | translate}}</button>
+        <button (click)="exportLetter(printPreAuth)" class="btn green-btn">{{'button.exportPdf' | translate}}</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div [hidden]="!showLoader" class="loader-outer">
+  <div class="cube-wrapper">
+    <div class="cube-folding">
+      <span class="leaf1"></span>
+      <span class="leaf2"></span>
+      <span class="leaf3"></span>
+      <span class="leaf4"></span>
+    </div>
+    <span class="loading" data-name="Loading">{{'company.plan.benefits.pleaseWait'|translate}}</span>
+  </div>
+</div>

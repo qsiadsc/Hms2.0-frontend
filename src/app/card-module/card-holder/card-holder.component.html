@@ -1,0 +1,1511 @@
+<div class="grid-box">
+  <div class="accordion" id="accordion1">
+    <div class="accordion-group">
+      <div class="grid-heading collapse-heading "  [ngClass]="cardAddMode  ? 'hideAccodion' : 'showAccodion'" id="datachk1" aria-expanded="false" data-toggle="collapse in"
+        data-parent="#accordion1" data-target="#cardHolderDiv">
+        <h3 *ngIf="!alberta" style="width: 90%" id="datachk2" aria-expanded="true" data-toggle="collapse"
+          data-target="#cardHolderDiv">
+          {{'common.card_holder' | translate}}</h3>
+        <h3 *ngIf="alberta" style="width: 90%" id="datachk3" aria-expanded="true" data-toggle="collapse"
+          data-target="#cardHolderDiv">
+          {{'common.clients' | translate}} </h3>
+        <div class="web-reg">
+          <button *ngIf="userAuthCheck[0].addCardHolder == 'T'" id="btnOpenCardHolder" title="Add New"
+            style="display:none" class="green-btn-add btn" data-toggle="modal" data-target="#cardHolderAddNew"
+            (click)="OpenCardHolder()">
+            <i class="fa fa-plus"></i> {{'button.addnew' | translate}}</button>
+          <button id="btnOpenCardHolderAdd" title="Add New" *ngIf="!cardAddMode" class="green-btn-add btn"n-an
+            data-toggle="modal" style="float:right;background-color: #656569; margin-right: 20px;"
+            data-target="#cardHolderAddNew" (click)="OpenNewCardHolder()">
+            <i  class="fa fa-plus"></i> {{'button.addnew' | translate}}</button>
+          <button id="btnOpenCardHolderAdd" title="Add New" *ngIf="cardAddMode" class="green-btn-add hideAccodionbtn btn"
+            data-toggle="modal" style="float:right;background-color: #656569; margin-right: 20px;"
+            data-target="#cardHolderAddNew" (click)="OpenNewCardHolder()">
+            <i *ngIf="!cardAddMode" class="fa fa-plus"></i> {{'button.addnew' | translate}}</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="cardHolderDiv" [ngClass]="(alberta == true || alberta == false) ? 'collapse in' : 'collapse'">
+      <div class="accordion-inner ">
+        <!-- Grid Heading Ends -->
+        <div *ngIf="!cardAddMode" class="grid-inner">
+          <div class="form-row">
+            <div class="row">
+              <div class="col-md-12 col-xs-12">
+                <div class="table-responsive">
+                  <table id="SearchedCards" datatable [dtOptions]="dtOptions['SearchedCards']"
+                    [dtTrigger]="dtTrigger['SearchedCards']" class="table table-bordered table-stripped">
+                    <thead>
+                      <tr>
+                        <th width="2%">{{'common.select' | translate}}</th>
+                        <th width="5%" class="amount_right">{{'common.last-name' | translate}}</th>
+                        <th width="5%" class="amount_right">{{'common.first-name' | translate}}</th>
+                        <th width="3%" class="amount_right">{{'common.gender' | translate}}</th>
+                        <th width="5%" class="amount_right">{{'common.date-of-birth' | translate}}</th>
+                        <th width="3%" class="amount_right">{{'common.role' | translate}}</th>
+                        <th width="3%" class="amount_right">{{'common.status' | translate}}</th>
+                        <th width="4%" class="amount_right">{{'common.effectivedate' | translate}}</th>
+                        <th width="7%" class="amount_right">{{'common.claim' | translate}}</th>
+                        <th width="5%" class="amount_right">{{'button.totals' | translate}}</th>
+                        <th width="12%" class="amount_right">{{'common.action' | translate}}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        [ngClass]="{ 'active': searchRes.terminated,'hterminated-row': searchRes.status == 'INACTIVE','hactive-row':searchRes.status == 'ACTIVE'}"
+                        *ngFor="let searchRes of searchedCards; let idx= index">
+                        <td [ngClass]="{'amount_right':isShowCardHolderLIst}">
+                          <input id="{{searchRes.cardHolderKey}}" class="cardHolderCheck" type="checkbox"
+                            (click)="onCardHolderSelect(searchRes,$event)">
+                        </td>
+                        <td class="amount_right">{{searchRes.personLastName}}</td>
+                        <td class="amount_right">{{searchRes.personFirstName}}</td>
+                        <td class="amount_right">
+                          <span *ngIf="searchRes.personGenderCD =='M'">{{'common.male' | translate}}</span>
+                          <span *ngIf="searchRes.personGenderCD =='F'">{{'common.female' | translate}}</span>
+                          <span *ngIf="searchRes.personGenderCD !='F' &&  searchRes.personGenderCD !='M'">
+                            {{'common.other' | translate}}</span>
+                        </td>
+                        <td class="amount_right">{{searchRes.personDtOfBirth | dateFormate}}</td>
+                        <td class="amount_right">{{searchRes.chRoleDesc}}</td>
+                        <td class="amount_right">{{searchRes.status}}</td>
+                        <td class="amount_right">{{searchRes.eligibilityEffectiveOn | dateFormate}}</td>
+                        <td class="amount_right">
+                          <a class="btn green-btn-add" id="initiateButton"  [routerLink]="['/claim']"
+                            [queryParams]="{'cardHolderKey':searchRes.cardHolderKey,'cardId':searchRes.chCardKey,'unitKey':unitKey,'chCardKey':chCardKey, 'iniClaim':'T'}"
+                            >
+                            {{ 'button.initiate' | translate }}
+                          </a>
+                          <a class="btn green-btn-add" target="_blank" 
+                            id="GetClaimItemsByIdCardHolderKey" title="View" (click)="GetClaimItemsByIdCardHolderKey(searchRes.cardHolderKey)"> 
+                            {{'claims.claims-view.claims' | translate}}
+                          </a>
+                          <button class="btn green-btn-add" [id] ="searchRes.cardHolderKey+'button'" style="display: none;" (click)="GetClaimItemsByIdCardHolderKey(searchRes.cardHolderKey)"
+                            data-toggle="modal" data-target="#showClaimItems" 
+                            title="View">
+                            {{'claims.claims-view.claims' | translate}}
+                          </button>
+                        </td>
+                        <td class="amount_right">
+                          <a class="btn green-btn-add" data-toggle="modal" data-target="#"
+                            (click)="GetTotalForCardHolder(searchRes.cardHolderKey)">
+                            {{'button.totals'|translate}}
+                          </a>
+                          <button id="ModalCCMaxTotalBtn" class="btn red-btn pull-right" data-toggle="modal"
+                            data-target="#ModalCCMaxTotal" title="Total Claims"
+                            style="display:none">{{'button.total' | translate}}</button>
+                        </td>
+                        <td class="amount_right"
+                          *ngIf="userAuthCheck[0].viewCardHolder == 'T' ||userAuthCheck[0].editCardHolder == 'T' || userAuthCheck[0].deleteCardHolder == 'T'">
+                          <!--Log #1008 Changes for Person Comment Start-->
+                          <span class="comment-fm" *ngIf="searchRes.dispCommentInd=='T'">
+                            <i class="fa fa-flag" data-toggle="modal" aria-hidden="true"
+                              style="cursor: pointer;color:red"></i>
+                            <div class="comment-top">
+                              <p>{{searchRes.personComTxt}}</p>
+                            </div>
+                          </span>
+                          <span class="comment-fm" *ngIf="searchRes.dispCommentInd=='F'">
+                            <i class="fa fa-flag" data-toggle="modal" aria-hidden="true"
+                              style="cursor: pointer;color:grey"></i>
+                          </span>
+                          <a class="btn green-btn-add" (click)="showMaximumOverride(searchRes)">
+                            Maximum
+                          </a>
+                          <a *ngIf="userAuthCheck[0].viewCardHolder == 'T'" class="table-action-btn view-ico"
+                            (click)="GetCardHolderById(idx,searchRes.cardHolderKey,'view',searchRes.personKey)"
+                            [attr.disabled]="hasCompanyFieldValue != true ? true : null" data-toggle="modal"
+                            data-target="#showCardModal" title="View">
+                            <i class="fa fa-eye"></i>
+                          </a>
+                          <a *ngIf="userAuthCheck[0].editCardHolder == 'T'" class="table-action-btn edit-ico"
+                            (click)="GetCardHolderById(idx,searchRes.cardHolderKey,'edit',searchRes.personKey)"
+                            [attr.disabled]="hasCompanyFieldValue != true ? true : null" data-toggle="modal"
+                            data-target="#addCardModal" title="Edit">
+                            <i class="fa fa-pencil"></i>
+                          </a>
+                          <a *ngIf="userAuthCheck[0].deleteCardHolder == 'T'" class="table-action-btn del-ico"
+                            (click)="DeleteCardHolderById(searchRes.cardHolderKey)"
+                            [attr.disabled]="hasCompanyFieldValue != true ? true : null" data-toggle="modal"
+                            data-target="" title="Delete"><i class="fa fa-trash-o"></i>
+                          </a>
+                        </td>
+                      </tr>
+                      <tr *ngIf="searchedCards.length == 0" class="odd">
+                        <td valign="top" colspan="11" class="dataTables_empty">
+                          {{'card.card-holder.data-tables.datamsg' | translate}}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <button id="PendingClaimsBtn" class="btn red-btn pull-right" data-toggle="modal"
+                    data-target="#PendingClaims" title="Pending Claims"
+                    style="display:none">{{'button.cl' | translate}}</button>
+                  <button id="terminateCardBtn" class="btn red-btn pull-right" data-toggle="modal"
+                    data-target="#Terminate" style="display:none">{{'button.cl' | translate}}</button>
+                  <button id="checkCrdClaim" class="btn red-btn pull-right" data-toggle="modal"
+                    data-target="#TerminateCard" style="display:none">{{'button.cl' | translate}}</button>
+                </div>
+                <ul class="color-list">
+                  <li>
+                    <span class="color-des green-color"></span>
+                    <h5>Active</h5>
+                  </li>
+                  <li>
+                    <span class="color-des red-color"></span>
+                    <h5>Inactive</h5>
+                  </li>
+                </ul>
+                <!-- Form Row ENds -->
+                <div class="form-row text-right col-md-6">
+                  <button id="btnPrintCard" *ngIf="userAuthCheck[0].printCardHolder == 'T'" (click)="printCard()"
+                    class="btn green-btn">{{'button.print'|translate}}</button>
+                  <button id="btnTerminate"
+                    *ngIf="userAuthCheck[0].terminateCardHolder == 'T' && (this.cardActiveStatus == 'Active' || this.cardActiveStatus == 'ACTIVE') && activeCardholders && activeCardholders.length > 1"
+                    class="btn red-btn" (click)="openTerminationModel('cardholder','')" [disabled]="!enableTerminateBtn">
+                    {{'button.terminate' | translate}}</button>
+
+                  <button id="btnCardTerminate"
+                    *ngIf="(this.cardActiveStatus == 'Active'|| this.cardActiveStatus == 'ACTIVE') && activeCardholders && activeCardholders.length <= 1"
+                    class="btn red-btn" data-toggle="modal" (click)="getterminateCardHolderKey('card', 'mainCard')"
+                    title="Terminate Card" [disabled]="cardExpiryDate"> {{'button.terminate' | translate}} Card</button>
+
+                  <button id="btnUndoCardHolderTerminate"
+                    *ngIf="(this.cardActiveStatus == 'Active'|| this.cardActiveStatus == 'ACTIVE') && inActiveCardHolder.length && inActiveCardHolder.length > 0"
+                    [disabled]="!enableActivateBtn" (click)="chdetails()" class="btn green-btn"
+                    title="Undo CardHolder">Undo
+                    CardHolder</button>
+
+                  <button id="btnUndoCardTerminate"
+                    *ngIf="(this.cardActiveStatus == 'Inactive' || this.cardActiveStatus == 'InActive' || this.cardActiveStatus == 'INACTIVE')"
+                    (click)="openUndoCardTerminate()" class="btn green-btn" title="Undo Card">Undo Card</button>
+                  <button id="btnActivateCard" (click)="openActivatedCardPopup()"  [disabled]="inActiveCardHolder.length<=0"
+                    *ngIf="cardStatus == false || cardExpiryDate != ''" class="btn green-btn" data-toggle="modal"
+                    data-target="#activateCard" title="Reactivate">Reactivate</button>
+                </div>
+              </div>
+              <!-- Grid Inner Ends -->
+            </div>
+            <!-- Grid Box Ends -->
+          </div>
+        </div>
+        <div *ngIf="cardAddMode" style="display: none;">
+          <form [formGroup]="cardHolderAddModeFormGroup">
+            <div class="form-row">
+              <div class="row">
+                <div class="grid-inner">
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'common.last-name' | translate}} <span class="required">*</span></label>
+                    <input type="text" id="addFormLastName" name="last_name"
+                      placeholder="{{'common.last-name' | translate}}" formControlName="last_name"
+                      class="fm-txt form-control" (blur)="cardholderDataForSave()" />
+                    <show-errors [control]="cardHolderAddModeFormGroup.controls.last_name"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'common.first-name' | translate}} <span class="required">*</span></label>
+                    <input type="text" id="addFormFirstName" name="first_name"
+                      placeholder="{{'common.first-name' | translate}}" formControlName="first_name"
+                      class="fm-txt form-control" (blur)="cardholderDataForSave()" />
+                    <show-errors [control]="cardHolderAddModeFormGroup.controls.first_name"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'common.gender' | translate}} <span class="required">*</span></label>
+                    <select name="gender" id="addFormGender" placeholder="Gender" formControlName="gender"
+                      class="fm-txt form-control" (blur)="cardholderDataForSave()">
+                      <option hidden value="">{{'common.select' | translate}}</option>
+                      <option *ngFor="let gender of arrGenderList" [value]="gender.genderName">
+                        {{gender.genderDescription}}
+                      </option>
+                    </select>
+                    <show-errors [control]="cardHolderAddModeFormGroup.controls.gender"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'common.date-of-birth' | translate}}<span class="required">*</span></label>
+                    <div class="calender-field">
+                      <my-date-picker id="addFormDatepicker" [options]="myDatePickerOptions"
+                        placeholder="{{'common.date-placeholder' | translate}}" name="date_of_birth"
+                        formControlName="date_of_birth"
+                        (inputFocusBlur)="changeDateFormat($event, 'date_of_birth' ,'cardHolderAddModeFormGroup')">
+                      </my-date-picker>
+                      <span id="lblCardHolderAge" style="display:none">{{cardHolderAge}}</span>
+                      <show-errors [control]="cardHolderAddModeFormGroup.controls.date_of_birth"></show-errors>
+                    </div><!-- Calendar Field Ends -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="cardHolderAddNew" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="btnCloseCardHolder" style="display:none;" type="button" class="close" data-dismiss="modal"
+          (click)="reset()">&times;</button>
+          <button id="btnCloseCardHolderr" type="button" class="close" 
+          (click)="reset()">&times;</button>
+        <h4 class="modal-title" *ngIf="!alberta"> {{'common.card_holder' | translate}}
+          <span class="comment-fm" *ngIf="cardCommentImportance">
+            <i class="fa fa-flag" (click)="getClaimCommentListReload()" data-toggle="modal"
+              data-target="#ModalCardHolderImportantComment" aria-hidden="true" style="cursor: pointer;color:red"></i>
+            <div class="comment-top">
+              <p>{{commentText}}</p>
+            </div>
+          </span>
+        </h4>
+        <h4 class="modal-title" *ngIf="alberta">{{'common.clients' | translate}}
+          <span class="comment-fm" *ngIf="cardCommentImportance">
+            <i class="fa fa-flag" (click)="getClaimCommentListReload()" data-toggle="modal"
+              data-target="#ModalCardHolderImportantComment" aria-hidden="true" style="cursor: pointer;color:red"></i>
+            <div class="comment-top">
+              <p>{{commentText}}</p>
+            </div>
+          </span>
+        </h4>
+      </div>
+      <!-- model body section -->
+      <div class="modal-body">
+
+        <card-holder-general-information [ageObject]="ageObject" [alberta]="alberta" [editMode]="editMode"
+          [CardHolderGeneralInformationFormGroup]="cardholderMainForm.controls.CardHolderGeneralInformationFormGroup">
+        </card-holder-general-information>
+        <card-holder-role-assigned [chCardKey]="chCardKey" [cardHolderKey]="cardHolderKey"
+          [chRoleAssignKey]="chRoleAssignKey" [alberta]="alberta" [ageObject]="ageObject" [addMode]="addMode"
+          [viewMode]="viewMode" [editMode]="editMode" [isModify]="isModify"
+          [CardHolderRoleAssignedFormGroup]="cardholderMainForm.controls.CardHolderRoleAssignedFormGroup">
+        </card-holder-role-assigned>
+        <!-- Student History -->
+
+         <!-- card holder listing -->
+        <div class="grid-box" id="cardholderList" *ngIf="addCardholderArray.length != 0">
+          <div class="grid-heading">
+            <h3>{{'cardHolderComments.Title' | translate}}</h3>
+            <div class="web-reg">
+
+            </div>
+          </div>
+          <div class="grid-inner">
+            <div class="form-row">
+              <div class="row">
+                <div class="col-md-12 col-xs-12 table-col">
+                  <div class="table-responsive">
+                    <span id="cardhoderList" style="display:none">{{tableData.length}}</span>
+
+                    <table id='cardholder-list-table' class="table table-bordered table-stripped dataTable">
+                      <thead>
+                        <tr>
+                          <th width="20%">{{'common.last-name' | translate}}</th>
+                          <th class="amount_right" width="10%">{{'common.first-name'| translate}}
+                          </th>
+                          <th class="amount_right" width="10%">{{'user.userRoles.role' | translate}}
+                          </th>
+                          <th class="amount_right" width="20%">{{'card.card-holder.data-tables.action' | translate}}
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="tableRow" *ngFor="let dataRow of addCardholderArray; let i = index"
+                          id="{{'row_'+i}}">
+                          <td>
+                            {{dataRow.personLastName}}
+                           
+                          </td>
+                          <td class="alignDpRight amount_right">
+                            {{dataRow.personFirstName}}
+                          </td>
+                          <td class="alignDpRight amount_right">
+                            
+                            {{custDate(dataRow.chRoleKey)}}
+                          </td>
+                          
+                          <td class=" aling tb-actions-right">
+                            <a title="Edit"   (click)="editCardholder(dataRow)" class="table-action-btn edit-ico" href="javascript:void(0)" ><i class="fa fa-pencil"></i></a>
+                            <a title="delete" (click)="deleteCardholder(dataRow)"class="table-action-btn del-ico" href="javascript:void(0)"><i class="fa fa-trash"></i></a></td>
+                        </tr>
+                        <tr *ngIf="addCardholderArray.length == 0" class="odd">
+                          <td valign="top" colspan="4" class="dataTables_empty">
+                            {{'card.card-holder.data-tables.datamsg' | translate}}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- log 850 position change with student history and eligibilty section start -->
+       <card-holder-eligibility [isModify]="isModify" [alberta]="alberta" [addMode]="addMode" [viewMode]="viewMode"
+        [editMode]="editMode"
+        [CardHolderEligibilityFormGroup]="cardholderMainForm.controls.CardHolderEligibilityFormGroup">
+      </card-holder-eligibility>
+
+        <!-- Grid Box Ends -->
+        <card-holder-cob [isModify]="isModify" [addMode]="addMode" [viewMode]="viewMode" [editMode]="editMode"
+          [alberta]="alberta" [CardHolderCobFormGroup]="cardholderMainForm.controls.CardHolderCobFormGroup"
+          (cardholderCobEmittier)="setCardHolderCobVal($event)"></card-holder-cob>
+        <!-- contact history Datatble ends -->
+
+        <!-- log 850 position change with student history and eligibilty section start -->
+        <div *ngIf="!alberta" class="grid-box" id="divStudentHistory">
+          <div class="grid-heading">
+            <h3>{{'card.card-holder.studenthistory' | translate}}</h3>
+            <div class="web-reg">
+              <button id="btnAddNewStudentHis" class="green-btn-add btn" title="Add New" *ngIf="!viewMode"
+                (click)="addFieldValue()"><i class="fa fa-plus"></i>{{'button.addnew' | translate}} </button>
+            </div>
+            <!-- Web Reg Ends -->
+          </div>
+          <div class="grid-inner">
+            <div class="form-row">
+              <div class="row">
+                <div class="col-md-12 col-xs-12 table-col">
+                  <div class="table-responsive">
+                    <span id="lblStudentHistory" style="display:none">{{tableData.length}}</span>
+                    <div *ngIf="errorArray.length > 0" style="color: red" class="alert alert-danger">
+                      <div *ngFor="let eachError of errorArray; let i = index">
+                        {{eachError}}
+                      </div>
+                    </div>
+
+                    <table id='student-table' class="table table-bordered table-stripped dataTable">
+                      <thead>
+                        <tr>
+                          <th width="20%">{{'card.card-holder.data-tables.schoolname' | translate}}</th>
+                          <th class="amount_right" width="10%">{{'card.card-holder.data-tables.startdate' | translate}}
+                          </th>
+                          <th class="amount_right" width="10%">{{'card.card-holder.data-tables.enddate' | translate}}
+                          </th>
+                          <th class="amount_right" width="20%">{{'card.card-holder.data-tables.action' | translate}}
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="tableRow" *ngFor="let dataRow of tableData; let i = index" id="{{'row_'+i}}">
+                          <td>
+                            <label class='editableLabel'>{{dataRow['schoolName']}}</label>
+
+                            <input placeholder="{{'card.card-holder.data-tables.schoolname' | translate}}"
+                              id="{{'student-table'+i+'schoolName'}}" maxlength="50" data-updateid="schoolName"
+                              class="editableInput fm-txt form-control required caps_on" name="schoolName"
+                              data-errortext="School Name is required" type="text" value="{{dataRow['schoolName']}}">
+                          </td>
+                          <td class="alignDpRight amount_right">
+                            <label class='editableLabel'>{{dataRow['startDate'] | dateFormate}}</label>
+
+                            <my-date-picker placeholder="{{'common.date-placeholder' | translate}}"
+                              id="{{'student-table'+i+'startDate'}}"
+                              [ngClass]="{'editableInput':true,'required':true,'dateField':true}" data-type="date"
+                              data-rowIndex="1" data-updateid="startDate" data-errortext="Start Date is required"
+                              [options]="myDatePickerOptions"
+                              [selDate]="studentDateNameArray['student-table'+i+'startDate']"
+                              (inputFocusBlur)="changeDateFormatWithoutCompare($event, 'student-table'+i+'startDate','student')">
+                            </my-date-picker>
+                          </td>
+                          <td class="alignDpRight amount_right">
+                            <label class='editableLabel'>{{dataRow['endDate'] | dateFormate}}</label>
+                            <my-date-picker placeholder="{{'common.date-placeholder' | translate}}"
+                              id="{{'student-table'+i+'endDate'}}"
+                              [ngClass]="{'editableInput':true,'required':false,'dateField':true}" data-type="date"
+                              data-rowIndex="1" data-updateid="endDate" [options]="myDatePickerOptions"
+                              [selDate]="studentDateNameArray['student-table'+i+'endDate']"
+                              (inputFocusBlur)="studentDateFormat($event, 'student-table'+i+'endDate', 'student-table'+i+'startDate', 'startDate')">
+                            </my-date-picker>
+                          </td>
+                          <td class="amount_right amount_right">
+                            <div class="tb-actions tb-actions-right">
+                              <input id="{{'student-table'+i+'schoolKey'}}" class='editableInput' type='hidden'
+                                data-updateid="schoolKey" value="{{dataRow['schoolKey']}}" name="schoolKey">
+                              <a href="javascript:void(0)" class="delete_row table-action-btn del-ico">
+                                <i class="fa fa-trash"></i>
+                              </a>
+
+                              <a *ngIf="editMode" href="javascript:void(0)" class="edit_row table-action-btn edit-ico">
+                                <i class="fa fa-pencil"></i>
+                              </a>
+
+                              <a href="javascript:void(0)" class="save_row table-action-btn save-ico">
+                                <i class="fa fa-save"></i>
+                              </a>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr *ngIf="tableData.length == 0" class="odd">
+                          <td valign="top" colspan="4" class="dataTables_empty">
+                            {{'card.card-holder.data-tables.datamsg' | translate}}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Person's Comments Section Start Here -->
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>Person {{'common.comment' | translate}}</h3>
+          </div>
+          <app-comment-model *ngIf="addMode" [commentFormEditMode]=true></app-comment-model>
+          <div class="grid-inner" *ngIf="editMode || viewMode">
+            <form [formGroup]="cardHodercommentForm">
+              <div class="form-row">
+                <label>{{'common.addcomment' | translate}}</label>
+                <div class="add-comments">
+                  <div class="row">
+                    <div class="col-sm-4">
+                      <textarea id="cch_addComments" class="notInCaps fm-txt form-control"
+                        formControlName="commentTxt"></textarea>
+                      <show-errors [control]="cardHodercommentForm.controls.commentTxt"></show-errors>
+                    </div>
+                    <div class="col-sm-2">
+                      <label class="check-lb">
+                        <input id="cch_importance" type="checkbox" formControlName="isImportant" />
+                        <span class="check-flag">
+                          <i class="fa fa-flag" aria- hidden="true"></i>
+                        </span>{{'common.importance' | translate}}</label>
+                    </div>
+                    <div class="col-sm-2 text-right">
+                      <button id="updatePersonCommentBtn" *ngIf="editCommentMode" class="green-btn-add btn"
+                        (click)="addUpdatePersonComment(cardHodercommentForm,'update')">
+                       {{'button.update' | translate}} </button>
+                       <button id="btncancelComment" *ngIf="editCommentMode" class="red-btn-add btn"
+                        (click)="cancelComment(cardHodercommentForm)">
+                       {{'button.cancel' | translate}} </button>
+                        <button id="addPersonCommentBtn" style="float: left" *ngIf="!editCommentMode" class="green-btn-add btn"
+                        (click)="addUpdatePersonComment(cardHodercommentForm,'save')">
+                        <i class="fa fa-plus"></i> {{'button.add' | translate}} </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+            <div class="form-row">
+              <div class="row">
+                <div class="col-md-12 col-xs-12 table-col">
+                  <div class="table-responsive">
+                    <table id="cardholderPersonComment" class="display table table-bordered table-stripped"></table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Person's Comments Section End Here (10-Feb-2022) -->
+      </div>
+
+      <!-- Main form for Card Holder Sections -->
+      <form [formGroup]="cardholderMainForm">
+        <div class="modal-footer"><button id="btnSaveCardHolderMainForm" [disabled]="disableSave" class="btn green-btn" type="submit"
+        *ngIf="addCardholder " (click)="addCardHolderInfo(cardholderMainForm)">{{'button.save' | translate}}</button>
+          <div *ngIf="!addCardholder">
+            <button id="btnSaveCardHolderMainForm" [disabled]="disableSave" class="btn green-btn" type="submit"
+              *ngIf="addMode || editMode" (click)="SaveUpdateCardHolderInfo(cardholderMainForm)">{{'button.save' | translate}}</button>
+          </div>
+          <button id="btnEditCardHolderMainForm" type="button" title="Edit" class="green-btn btn" *ngIf="viewMode"
+            (click)="EditCardHolder()">{{'button.edit' | translate}}</button>
+          <button id="btnCloseCardHolderMainForm" type="button" title="Close" class="btn grey-btn" (click)="reset()">
+            {{'button.close' | translate}}</button>
+          <button id="btnExpenseAdjustCardHolderMainForm" title="Expense Adjustment" class="green-btn btn"
+            *ngIf="editMode" data-toggle="modal"
+            (click)="GetAdjustmentHistory()">{{'button.expense-adjustment' | translate}}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Pending Claims -->
+<div id="PendingClaims" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="btnClosePendingClaims" type="button" title="Close" class="close"
+          data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">{{'common.terminate-cardholders' | translate}}</h4>
+      </div>
+      <form [formGroup]="cardHolderTerminate">
+        <div class="modal-body">
+          <div class="grid-box">
+            <div class="grid-heading">
+              <h3>{{'common.openclaims' | translate}}</h3>
+            </div>
+            <!-- Grid Heading Ends -->
+
+            <div class="grid-inner">
+              <div class="form-row">
+                <div class="row">
+                  <div class="col-md-12 col-xs-12 table-col">
+                    <div class="table-responsive">
+                      <table id="cch_pendingClaims"
+                        class="row-border hover cardholder-table table-striped table-bordered dataTable">
+                        <thead>
+                          <tr>
+                            <th>{{'common.servicedate' | translate}} </th>
+                            <th class="amount_right_grid-padding">{{'common.last-name' | translate}}</th>
+                            <th class="amount_right_grid-padding">{{'common.first-name' | translate}}</th>
+                            <th class="amount_right_grid-padding">{{'common.date-of-birth' | translate}}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let claimsData of claimData; let idx= index">
+                            <td>{{claimsData.serviceDate | dateFormate}}</td>
+                            <td class="amount_right_grid">{{claimsData.lastname}}</td>
+                            <td class="amount_right_grid">{{claimsData.firstName}}</td>
+                            <td class="amount_right_grid">{{claimsData.personDtOfBirth | dateFormate}}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <!-- Table Ends -->
+                  </div>
+                </div>
+              </div>
+              <!-- Form Row ENds -->
+            </div>
+            <!-- Grid Inner Ends -->
+
+          </div>
+          <!-- Grid Box Ends -->
+        </div>
+        <!-- Modal Body End-->
+        <div class="modal-footer">
+          <!-- Log #1083 for terminate button-->
+            <button id="btnTerminate"
+            *ngIf="userAuthCheck[0].terminateCardHolder == 'T' && (this.cardActiveStatus == 'Active' || this.cardActiveStatus == 'ACTIVE') && activeCardholders && activeCardholders.length > 1"
+            class="btn red-btn" (click)="openTerminationModel('cardholder','insideBtn')">
+            {{'button.terminate' | translate}}</button>
+          <button id="closePendingClaimsForm" class="btn grey-btn" title="Close"
+            (click)="resetForm('termianteCardHolder')" data-dismiss="modal">{{'button.close' | translate}}</button>
+          <button *ngIf="showConfirmationBtn" id="terminateConfirmationBtn" class="btn green-btn" title="Confirm"
+          (click)="terminateConfirmation()">{{'button.ok' | translate}}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Terminate CardHolders-->
+<div id="Terminate" style="top: 80px !important;" class="modal fade" role="dialog" data-keyboard="false"
+  data-backdrop="static">
+  <div class="modal-dialog" style="width: 100% !important;">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="btnCloseTerminate" type="button" title="Close" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title" *ngIf="disableReActDate == false">{{'common.terminate-cardholders' | translate}}</h4>
+        <h4 class="modal-title" *ngIf="disableReActDate">Reactivate Card</h4>
+      </div>
+      <form [formGroup]="cardHolderTerminate">
+        <div class="modal-body">
+          <div class="grid-inner">
+            <div class="form-row">
+              <div class="row min-ht-sf">
+                <div class="col-md-3 col-xs-12">
+                  <label class="revers-label" style="padding: 0px 0px 0px 182px">{{termActTitle}}</label>
+                </div>
+                <div class="col-md-6 col-xs-12">
+                  <div class="calender-field">
+                    <my-date-picker placeholder="{{'common.date-placeholder' | translate}}"
+                      (dateChanged)="changeDateMethod($event)" id="terminateDate"
+                      [options]="myDatePickerOptions" name="terminateDate" formControlName="terminateDate"
+                      (inputFocusBlur)="changeDateFormat($event, 'terminateDate' ,'cardHolderTerminate')">
+                    </my-date-picker>
+                    <show-errors [control]="cardHolderTerminate.controls.terminateDate"></show-errors>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Modal Body End-->
+        <div class="modal-footer">
+           <button id="disableReActDate ? terminateSaveButton : ReActivateCardButton"
+            [attr.disabled]="hasPendingValues ? true : null" type="submit" title="Save" style="margin-bottom:0px;"
+            class="btn red-btn" (click)="disableReActDate ? undoCardTerminate() : getterminateCardHolderKey('cardholder', '')">
+            {{'button.save' | translate}}</button>
+           <button id="terminateCloseButton" class="btn green-btn" title="Close"
+            (click)="resetForm('termianteCardHolder')" data-dismiss="modal">{{'button.close' | translate}}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Terminate Card-->
+<div id="TerminateCard" style="top: 80px !important; z-index: 1049 !important;" class="modal fade" role="dialog" data-keyboard="false"
+  data-backdrop="static">
+  <div class="modal-dialog" style="width: 100% !important;">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="btnCloseCardTerminate" type="button" title="Close" class="close"
+          (click)="resetForm('termianteCard')" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Terminate Card</h4>
+      </div>
+      <form [formGroup]="cardTerminate">
+        <div class="modal-body">
+          <div class="grid-inner">
+            <div class="form-row">
+              <div class="row min-ht-sf">
+                <div class="col-md-2 col-xs-2">
+                  <label class="revers-label">Termination Date</label>
+                </div>
+                <div class="col-md-6 col-xs-12">
+                  <div class="calender-field">
+                    <my-date-picker placeholder="{{'common.date-placeholder' | translate}}"
+                      (dateChanged)="changeDateMethod($event)" id="terminateCardDate" [options]="myDatePickerOptions"
+                      name="terminateCardDate" formControlName="terminateCardDate"
+                      (inputFocusBlur)="changeDateFormat($event, 'terminateCardDate' ,'cardTerminate')">
+                    </my-date-picker>
+                    <show-errors [control]="cardTerminate.controls.terminateCardDate"></show-errors>
+                  </div>
+                  <!-- Calendar Field Ends -->
+                </div>
+              </div>
+            </div>
+            <!-- Form Row ENds -->
+          </div>
+          <!-- </div> -->
+        </div>
+        <!-- Modal Body End-->
+        <div class="modal-footer">
+          <button id="terminateSaveButton" [attr.disabled]="hasPendingValues ? true : null" type="submit" title="Save"
+            style="margin-bottom:0px;" class="btn red-btn" (click)="terminateCardForSingleCH()">{{'button.save' | translate}}</button>
+          <button id="terminateCardCloseButton" class="btn green-btn" title="Close" (click)="resetForm('termianteCard')"
+            data-dismiss="modal">{{'button.close' | translate}}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div id="activateCardHolder" style="top: 80px !important;" *ngIf="isActivateModalOpen" class="modal fade" role="dialog"
+  data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog" style="width: 700px !important;">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="cch_activateCardHolder" type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">{{'common.activate-cardholders' | translate}}</h4>
+      </div>
+      <form [formGroup]="cardHolderActivate">
+        <div class="modal-body">
+          <div class="grid-box">
+            <div class="grid-heading">
+              <h3>{{'common.activation-date' | translate}}</h3>
+            </div>
+            <!-- Grid Heading Ends -->
+
+            <div class="grid-inner">
+              <div class="form-row">
+                <div class="row min-ht-sf">
+                  <div class="col-md-3 col-xs-12"></div>
+                  <div class="col-md-6 col-xs-12">
+                    <div class="calender-field">
+                      <my-date-picker id="activateDate" [options]="myDatePickerOptions" name="activateDate"
+                        placeholder="{{'common.date-placeholder' | translate}}" formControlName="activateDate"
+                        (inputFocusBlur)="changeDateFormat($event, 'activateDate' ,'cardHolderActivate')">
+                      </my-date-picker>
+                      <show-errors [control]="cardHolderActivate.controls.activateDate"></show-errors>
+                    </div>
+                    <!-- Calendar Field Ends -->
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Form Row ENds -->
+          </div>
+        </div>
+        <!-- Grid Box Ends -->
+        <!-- Modal Body End-->
+        <div class="modal-footer">
+          <button id="btnSaveActivateCardHolder" type="submit" class="btn green-btn" title="Save"
+            (click)="activateCardHolder()">{{'button.save' | translate}}</button>
+          <button id="activateCardHolderButton" class="btn grey-btn" (click)="resetForm('activateCardHolder')"
+            title="Close" data-dismiss="modal">{{'button.close' | translate}}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div id="activateCard" style="top: 80px !important;" *ngIf="activateCardModal" class="modal fade" role="dialog"
+  data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog" style="width: 100% !important;">
+  <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="cch_activateCard" type="button" class="close" (click)="resetForm('activateCard')"
+          data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Activate Card</h4>
+      </div>
+      <form [formGroup]="cardActivate">
+        <div class="modal-body">
+          <div class="grid-box">
+            <div class="grid-inner">
+              <div class="form-row">
+                <div class="row min-ht-sf">
+                  <div class="col-md-3 col-xs-12 " *ngIf="!addModeCard">
+                    <label>{{'common.activation-date' | translate}}</label>
+                    <div class="calender-field">
+                      <my-date-picker id="cardActivateDate" [options]="myDatePickerOptions" name="cardActivateDate"
+                        placeholder="{{'common.date-placeholder' | translate}}" formControlName="cardActivateDate"
+                        (inputFocusBlur)="compareDate($event, 'cardActivateDate','cardActivate')">
+                      </my-date-picker>
+                      <show-errors [control]="cardActivate.controls.cardActivateDate"></show-errors>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-xs-12 " >
+                    <label>{{'common.effectivedate' | translate}}</label>
+                      <div class="calender-field">
+                        <my-date-picker id="effectivedate" [options]="myDatePickerOptions" name="effectivedate"
+                          placeholder="{{'common.date-placeholder' | translate}}" formControlName="effectivedate"
+                          (inputFocusBlur)="compareDate($event, 'effectivedate','cardActivate')">
+                        </my-date-picker>
+                        <show-errors [control]="cardActivate.controls.effectivedate"></show-errors>
+                      </div>
+                  </div>
+                  <div class="col-md-3 col-xs-12 ">
+                    <label>{{'common.expirydate' | translate}}</label>
+                      <div class="calender-field">
+                        <my-date-picker id="expirydate" [options]="myDatePickerOptions" name="expirydate"
+                          placeholder="{{'common.date-placeholder' | translate}}" formControlName="expirydate"
+                          (inputFocusBlur)="compareDate($event, 'expirydate','cardActivate')">
+                        </my-date-picker>
+                        <show-errors [control]="cardActivate.controls.expirydate"></show-errors>
+                      </div>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{ 'card.card-eligibility.plan-div-unit' | translate }} <span class="required">*</span></label>	
+                    <select class="fm-txt form-control" title=Plan placeholder="Plan" name="plan" id="ce_plan" formControlName="plan" (change)="getPlanValue($event)">
+                      <option [ngValue]="null" disabled hidden>{{'common.select' | translate}}</option>
+                      <option *ngFor="let plan of plans" [value]="plan.unitKey">{{plan.plansName.replace('/null', '')}}</option>
+                    </select>
+                    <show-errors [control]="cardActivate.controls.plan"></show-errors>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Grid Box Ends -->
+        <!-- Modal Body End-->
+        <div class="modal-footer">
+          <button id="btnSaveActivateCard" type="submit" class="btn green-btn" title="Save" (click)="activateCard()">
+            {{'button.save'| translate}}</button>
+          <button id="btnResetActivateCard" class="btn grey-btn" (click)="resetForm('activateCard')" title="Close"
+            data-dismiss="modal">{{'button.close' | translate}}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<input type="hidden" value="{{chCardKey}}" id="hndChCardKey">
+<input type="hidden" value="{{chRoleAssignKey}}" id="hndChRoleAssignKey">
+
+<app-eligibility-history-popup (emitOnSave)="emitOnSaveEligibilityHistory($event)" [addMode]="addMode"
+  [viewMode]="viewMode" [editMode]="editMode" [cardHolderData]="cardHolderData"
+  [CardHolderGeneralInfo]="CardHolderGeneralInfo" [companyKey]="companyKey" [cardHolderKey]="cardHolderKey">
+</app-eligibility-history-popup>
+
+<app-card-holder-history-popup (emitOnSave)="emitOnSaveRole($event)" [alberta]="alberta" [ageObject]="ageObject"
+  [chCardKey]="chCardKey" [cardHolderKey]="cardHolderKey"></app-card-holder-history-popup>
+
+<app-card-holder-cobhistory-popup (emitOnSave)="emitOnSaveCOBHistory($event)" [cardHolderKey]="cardHolderKey"
+  [alberta]="alberta"></app-card-holder-cobhistory-popup>
+
+<app-card-holder-expense-history-popup [cardHolderKey]="cardHolderKey"></app-card-holder-expense-history-popup>
+<app-card-holder-voucher-history-popup [cardHolderKey]="cardHolderKey"></app-card-holder-voucher-history-popup>
+
+<div id="showClaimItems" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="btnCloseShowClaimItems" type="button" title="Close" class="close"
+          data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">{{'claims.claims-view.claims' | translate}}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{'claims.claims-view.claims' | translate}}</h3>
+          </div>
+          <!-- Grid Heading Ends -->
+
+          <div class="grid-inner">
+            <div class="form-row">
+              <div class="row">
+                <div class="col-md-12 col-xs-12 table-col">
+                  <div class="table-responsive">
+                    <table id="claimItemsTable" datatable [dtOptions]="dtOptions['claimItemsTable']"
+                      [dtTrigger]="dtTrigger['claimItemsTable']"
+                      class="row-border hover cardholder-table table-striped table-bordered dataTable">
+                      <thead>
+                        <tr>
+                          <th>{{'claims-history.discipline' | translate}}</th>
+                          <th>{{'claims.claims-add.claims-general-information.reference_no' | translate}}</th>
+                          <th>{{'claims-history.claimtype' | translate}}</th>
+                          <th>{{'common.date' | translate}} </th>
+                          <th>{{'claims-history.proc' | translate}}</th>
+                          <th>{{'claims-history.tooth' | translate}}</th>
+                          <th>{{'claims-history.surf' | translate}}</th>
+                          <th>{{'claims-history.freeclaim' | translate}}</th>
+                          <th>{{'claims-history.freepaid' | translate}}</th>
+                          <th>{{'claims-history.labclaim' | translate}}</th>
+                          <th>{{'claims-history.labpaid' | translate}}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let claimItem of claimItems; let idx= index" [ngClass]="{'hPreAuthReview-row': (claimItem.claimType == 'Pre-Authorized By Review' && alberta),
+                          'hactive-row': (claimItem.claimType == 'Pre-Authorization - Paper' && alberta),
+                          'hsuspended-row': (claimItem.claimType == 'Pre-Authorization - Phone-In' && alberta),
+                          'dental-row': (claimItem.disciplineKey == 1 && !alberta),
+                          'vision-row': (claimItem.disciplineKey == 2 && !alberta),
+                          'health-row': (claimItem.disciplineKey == 3 && !alberta),
+                          'drug-row': (claimItem.disciplineKey == 4 && !alberta),
+                          'supplement-row': (claimItem.disciplineKey == 5 && !alberta)
+                        }" (click)="openClaim(claimItem.claimKey,claimItem.disciplineKey, claimItem.dcpKey,claimItem)">
+                          <td>{{claimItem.discipline}}</td>
+                          <td class="amount_right_grid">{{claimItem.refId}}</td>
+                          <td class="amount_right_grid">{{claimItem.claimType}}</td>
+                          <td class="amount_right_grid">{{claimItem.itemServiceDt}}</td>
+                          <td class="amount_right_grid">{{claimItem.itemProcedureCd}}</td>
+                          <td class="amount_right_grid" *ngIf="claimItem.itemToothId == -1"></td>
+                          <td class="amount_right_grid" *ngIf="claimItem.itemToothId >= 0">{{claimItem.itemToothId}}
+                          </td>
+                          <td class="amount_right_grid">{{claimItem.itemToothSurfaceTxt}}</td>
+                          <td class="amount_right_grid"><span>$</span>{{claimItem.itemFeeClaimAmt | number: '1.2'}}</td>
+                          <td class="amount_right_grid"><span>$</span>{{claimItem.itemFeePaidAmt | number: '1.2'}}</td>
+                          <td class="amount_right_grid"><span>$</span>{{claimItem.itemLabClaimAmt||0 | number: '1.2'}}</td>
+                          <td class="amount_right_grid"><span>$</span>{{claimItem.itemLabPaidAmt||0 | number: '1.2'}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <!-- Table Ends -->
+                </div>
+              </div>
+            </div>
+            <!-- Form Row ENds -->
+            <ul class="color-list" *ngIf="alberta">
+              <li>
+                <span class="color-des violet-color"></span>
+                <h5>Pre-Authorized By Review</h5>
+              </li>
+              <li>
+                <span class="color-des green-color"></span>
+                <h5>Pre-Authorization-Paper</h5>
+              </li>
+              <li>
+                <span class="color-des yellow-color"></span>
+                <h5>Pre-Authorization-Phone-In</h5>
+              </li>
+            </ul>
+          </div>
+          <!-- Grid Inner Ends -->
+
+        </div>
+        <!-- Grid Box Ends -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="ModalCardHolderImportantComment" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="btnCloseCommentWindow" type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">{{'common.card-holder' | translate}} {{'common.comments' | translate}}
+          <span class="comment-fm">
+            <i class="fa fa-flag" style="color:red;" aria-hidden="true"></i>
+          </span>
+        </h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12 col-xs-12 table-col">
+            <div class="table-responsive">
+              <table id="CH-Important-Comment" class="table table-bordered table-stripped">
+                <thead>
+                </thead>
+                <tfoot>
+                </tfoot>
+                <tfoot></tfoot>
+              </table>
+            </div>
+            <!-- Table Ends -->
+          </div>
+        </div>
+      </div>
+      <!-- Modal Body Ends -->
+      <div class="modal-footer">
+        <button id="closeModalCardHolderImportantComment" type="button" class="btn grey-btn" data-dismiss="modal">{{'button.close'
+            |translate}}</button>
+      </div>
+    </div>
+    <!-- Modal Content Ends -->
+  </div>
+</div>
+
+<div id="ModalCCMaxTotal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="closeModalCCMaxTotal" (click)="totalsPopupClose()" type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">{{'claims.claims-add.claims-totals.totals-button.totals.total' | translate}}</h4> <!-- Task 646 HMS Issues-->
+      </div>
+
+      <div class="modal-body">
+        <div class="grid-inner">
+          <div class="form-row">
+            <div class="row">
+              <div class="col-md-12 col-xs-12 table-col">
+
+                <div class="table-responsive">
+                  <!--Coverage Maximum-->
+                  <div [hidden]="!getCovMaxValue">
+                    <div class="grid-box">
+                      <!-- id given by designer to resolve issue where dropdowns used to be un clickable if we reach dashboard screen and come back to any component. (03-01-2023) -->
+                      <div class="grid-heading" id="hideSelect">
+                        <div class="col-md-3">
+                          <h3>{{'common.coverageMax' |translate}}</h3>
+                        </div>
+                        <div class="col-md-9 selectedBoxMargin">
+                          <select class="fm-txt form-control selectHeight" [(ngModel)]="coverageMaxYear"
+                            (change)="onChangeYear($event,'noOfYearsCovMax')">
+                            <option value="null" selected>Select Year</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="grid-inner">
+                        <table id='ClaimTotalCOVMax' datatable [dtOptions]="dtOptions['ClaimTotalCOVMax']"
+                          [dtTrigger]="dtTrigger['ClaimTotalCOVMax']"
+                          class="inlinePopupTable table table-bordered table-stripped alignRightText">
+                          <thead>
+                            <tr>
+                              <th>{{'common.category' | translate}}</th>
+                              <th>{{'common.max-type' | translate}}</th>
+                              <th>{{'common.max_amount' | translate}}</th>
+                              <th>{{'common.prorated_max' | translate}}</th>
+                              <th>{{'common.paid_to_date' | translate}}</th>
+                              <th>{{'common.avail_amt' | translate}}</th>
+                              <th>{{'common.cfwd_amt' | translate}}</th>
+                              <th>{{'common.period_type' | translate}}</th>
+                              <th *ngIf="!alberta">{{'common.year_type' | translate}}</th>
+                              <th>{{'common.period_start' | translate}}</th>
+                              <th>{{'common.period_end' | translate}}</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr class="tableRow" id="{{'row_'+i}}" *ngFor="let dataRow of arrCovMax; let i = index">
+                              <td>{{dataRow.covCat}}</td>
+                              <td>{{dataRow.maxType}}</td>
+                              <td class="amount_right_grid"><span>$</span>{{dataRow.maxAmount | number: '1.2'}}</td>
+                              <td class="amount_right_grid"><span>$</span>{{dataRow.proratedAmount | number:'1.2'}}</td>
+                              <td class="amount_right_grid"><span>$</span>{{dataRow.totalExpense | number:'1.2'}}</td>
+                              <td class="amount_right_grid"><span>$</span>{{dataRow.availableAmount | number:'1.2'}}
+                              </td>
+                              <td class="amount_right_grid"><span>$</span>{{dataRow.cfwdamount | number:'1.2'}}</td>
+                              <td>{{dataRow.periodType}}</td>
+                              <td *ngIf="!alberta">{{(dataRow.typeOfYear == 'C') ? 'Calendar Year' :'Contract Year'}}
+                              </td>
+                              <td>{{dataRow.periodStart}}</td>
+                              <td>{{dataRow.periodEnd}}</td>
+                            </tr>
+                            <tr *ngIf="arrCovMax.length == 0" class="odd">
+                              <td valign="top" colspan="10" class="dataTables_empty">
+                                {{'card.card-holder.data-tables.datamsg' | translate}}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div [hidden]="!getCcMaxValue">
+                    <!--Coverage Combined Maximum-->
+                    <div class="grid-box">
+                      <div class="grid-heading">
+                        <div class="col-md-3">
+                          <h3>{{'common.coverage_combined_maximum' | translate}} </h3>
+                        </div>
+                        <div class="col-md-9 selectedBoxMargin">
+                          <select class="fm-txt form-control selectHeight" [(ngModel)]="noOfYearsCcMaxYear"
+                            (change)="onChangeYear($event,'noOfYearsCcMax')">
+                            <option value="null" selected>Select Year</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="grid-inner">
+
+                        <table id='ClaimTotalCCMax'
+                          class="inlinePopupTable table table-bordered table-stripped alignRightText">
+                          <thead>
+                            <tr>
+                              <th>{{'common.category' | translate}}</th>
+                              <th>{{'common.max-type' | translate}}</th>
+                              <th>{{'common.max_amount' | translate}}</th>
+                              <th>{{'common.prorated_max' | translate}}</th>
+                              <th>{{'common.paid_to_date' | translate}}</th>
+                              <th>{{'common.avail_amt' | translate}}</th>
+                              <th>{{'common.cfwd_amt' | translate}}</th>
+                              <th>{{'common.period_type' | translate}}</th>
+                              <th *ngIf="!alberta">{{'common.year_type' | translate}}</th>
+                              <th>{{'common.period_start' | translate}}</th>
+                              <th>{{'common.period_end' | translate}}</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr class="tableRow" id="{{'row_'+i}}" *ngFor="let dataRow of arrCCMax; let i = index">
+                              <td>{{dataRow.covCat}}</td>
+                              <td>{{dataRow.maxType}}</td>
+                              <td class="amount_right_grid"><span>$</span>{{dataRow.maxAmount | number: '1.2'}}</td>
+                              <td class="amount_right_grid"><span>$</span>{{dataRow.proratedAmount |number: '1.2'}}</td>
+                              <td class="amount_right_grid"><span>$</span>{{dataRow.totalExpense | number: '1.2'}}</td>
+                              <td class="amount_right_grid"><span>$</span>{{dataRow.availableAmount | number: '1.2'}}
+                              </td>
+                              <td class="amount_right_grid"><span>$</span>{{dataRow.cfwdamount | number: '1.2'}}</td>
+                              <td>{{dataRow.periodType}}</td>
+                              <td *ngIf="!alberta"> {{(dataRow.typeOfYear == 'C') ? 'Calendar Year' : 'Contract Year'}}
+                              </td>
+                              <td>{{dataRow.periodStart}}</td>
+                              <td>{{dataRow.periodEnd}}</td>
+                            </tr>
+                            <tr *ngIf="arrCCMax.length == 0" class="odd">
+                              <td valign="top" colspan="10" class="dataTables_empty">
+                                {{'card.card-holder.data-tables.datamsg' | translate}}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!--HSA Maximum-->
+                  <div [hidden]="!getHsaMaxValue">
+                    <div class="grid-box">
+                      <div class="grid-heading">
+                        <div class="col-md-3">
+                          <h3>{{'common.HSA_maximum' | translate}} </h3>
+                        </div>
+                        <div class="col-md-9 selectedBoxMargin">
+                          <select class="fm-txt form-control selectHeight" [(ngModel)]="noOfYearsHsaMaxYear"
+                            (change)="onChangeYear($event,'noOfYearsHsaMax')">
+                            <option value="null" selected>Select Year</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="grid-inner">
+                        <table id='ClaimTotalHSAMax'
+                          class="inlinePopupTable table table-bordered table-stripped alignRightText">
+                          <thead>
+                            <tr>
+                              <th>{{'common.max-type' | translate}}</th>
+                              <th>{{'common.period_type' | translate}}</th>
+                              <th>{{'common.cfwd_amt' | translate}}</th>
+                              <th>{{'common.max_amount' | translate}}</th>
+                              <th>{{'common.prorated_max' | translate}}</th>
+                              <th>{{'common.paid_to_date' | translate}}</th>
+                              <th>{{'common.avail_amt' | translate}}</th>
+                              <th *ngIf="!alberta">{{'common.year_type' | translate}}</th>
+                              <th>{{'common.period_start' | translate}}</th>
+                              <th>{{'common.period_end' | translate}}</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr class="tableRow" id="{{'row_'+i}}" *ngFor="let dataRow of arrHSAMax; let i = index">
+                              <td>{{dataRow.maxType}}</td>
+                              <td>{{dataRow.periodType}}</td>
+                              <td class="amount_right_grid"><span>$</span>{{dataRow.cfwdamount | number: '1.2'}}</td>
+                              <td class="amount_right_grid"><span>$</span>{{dataRow.maxAmount | number: '1.2'}}</td>
+                              <td class="amount_right_grid"><span>$</span>{{dataRow.proratedAmount | number: '1.2'}}
+                              </td>
+                              <td class="amount_right_grid"><span>$</span>{{dataRow.totalExpense | number: '1.2'}}</td>
+                              <td class="amount_right_grid"><span>$</span>{{dataRow.availableAmount | number: '1.2'}}
+                              </td>
+                              <td *ngIf="!alberta"> {{(dataRow.typeOfYear == 'C') ? 'Calendar Year' :'Contract Year'}}
+                              </td>
+                              <td>{{dataRow.periodStart}}</td>
+                              <td>{{dataRow.periodEnd}}</td>
+                            </tr>
+                            <tr *ngIf="arrHSAMax.length == 0" class="odd">
+                              <td valign="top" colspan="10" class="dataTables_empty">
+                                {{'card.card-holder.data-tables.datamsg' | translate}}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Wellness Maximum Section added as per Arun Sir-->
+                  <div [hidden]="!getWellMaxValue">
+                      <div class="grid-box">
+                        <div class="grid-heading">
+                          <div class="col-md-3">
+                            <h3>{{'common.wellnessMaximum' | translate}} </h3>
+                          </div>
+                          <div class="col-md-9 selectedBoxMargin">
+                            <select class="fm-txt form-control selectHeight" [(ngModel)]="noOfYearsWellMaxYear"
+                              (change)="onChangeYear($event,'noOfYearsWellMax')">
+                              <option value="null" selected>Select Year</option>
+                              <option value="1">1</option>
+                              <option value="2">2</option>
+                              <option value="3">3</option>
+                              <option value="4">4</option>
+                              <option value="5">5</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="grid-inner">
+                          <table id='ClaimTotalWellMax'
+                            class="inlinePopupTable table table-bordered table-stripped alignRightText">
+                            <thead>
+                              <tr>
+                                <th>{{'common.max-type' | translate}}</th>
+                                <th>{{'common.period_type' | translate}}</th>
+                                <th>{{'common.cfwd_amt' | translate}}</th>
+                                <th>{{'common.max_amount' | translate}}</th>
+                                <th>{{'common.prorated_max' | translate}}</th>
+                                <th>{{'common.paid_to_date' | translate}}</th>
+                                <th>{{'common.avail_amt' | translate}}</th>
+                                <th *ngIf="!alberta">{{'common.year_type' | translate}}</th>
+                                <th>{{'common.period_start' | translate}}</th>
+                                <th>{{'common.period_end' | translate}}</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr class="tableRow" id="{{'row_'+i}}" *ngFor="let dataRow of arrWellMax; let i = index">
+                                <td>{{dataRow.maxType}}</td>
+                                <td>{{dataRow.periodType}}</td>
+                                <td class="amount_right_grid"><span>$</span>{{dataRow.cfwdamount | number: '1.2'}}</td>
+                                <td class="amount_right_grid"><span>$</span>{{dataRow.maxAmount | number: '1.2'}}</td>
+                                <td class="amount_right_grid"><span>$</span>{{dataRow.proratedAmount | number: '1.2'}}
+                                </td>
+                                <td class="amount_right_grid"><span>$</span>{{dataRow.totalExpense | number: '1.2'}}</td>
+                                <td class="amount_right_grid"><span>$</span>{{dataRow.availableAmount | number: '1.2'}}
+                                </td>
+                                <td *ngIf="!alberta"> {{(dataRow.typeOfYear == 'C') ? 'Calendar Year' :'Contract Year'}}
+                                </td>
+                                <td>{{dataRow.periodStart}}</td>
+                                <td>{{dataRow.periodEnd}}</td>
+                              </tr>
+                              <tr *ngIf="arrWellMax.length == 0" class="odd">
+                                <td valign="top" colspan="10" class="dataTables_empty">
+                                  {{'card.card-holder.data-tables.datamsg' | translate}}</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+
+                  <!--Plan Combined Maximum-->
+                  <div [hidden]="!getDivMaxValue">
+                    <div class="grid-box">
+                      <div class="grid-heading">
+                        <div class="col-md-3">
+                          <h3>{{'common.plan_combined_max' | translate}} </h3>
+                        </div>
+                        <div class="col-md-9 selectedBoxMargin">
+                          <select class="fm-txt form-control selectHeight" [(ngModel)]="noOfYearsDivMaxYear"
+                            (change)="onChangeYear($event,'noOfYearsDivMax')">
+                            <option value="null" selected>Select Year</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                          </select>
+                        </div>
+                      </div>
+                      <form style="overflow: scroll;">
+                        <div class="grid-inner">
+                          <table id='ClaimTotalCOVMax'
+                            class="inlinePopupTable table table-bordered table-stripped smallFont alignRightText">
+                            <thead>
+                              <tr>
+                                <th>{{'common.max-type' | translate}}</th>
+                                <th>{{'common.period_type' | translate}}</th>
+                                <th>{{'common.cfwd_amt' | translate}}</th>
+                                <th>{{'common.max_amount' | translate}}</th>
+                                <th *ngIf="companyId == '08'">{{'common.future_amount' | translate}}</th>
+                                <th style="white-space: nowrap">{{'common.prorated' | translate}}
+                                  <br>{{'common.max' | translate}}</th>
+                                <th *ngIf="alberta" style="white-space: nowrap">{{'common.cfed' | translate}}
+                                  <br>{{'common.expense' | translate}}
+                                </th>
+                                <th *ngIf="alberta" style="white-space: nowrap">{{'common.preauth' | translate}}
+                                  <br>{{'common.amt' | translate}}
+                                </th>
+                                <th *ngIf="alberta">{{'common.expense' | translate}}
+                                  <br>{{'common.adj' | translate}}
+                                </th>
+                                <th>{{'common.paid_to_date' | translate}}</th>
+                                <th>{{'common.wellnessMaxAmt' | translate}}</th>
+                                <th>{{'common.wellnessAvail' | translate}}</th>
+                                <th>{{'common.wellnessMaxPer' | translate}}</th>
+                                <th>{{'common.avail_amt' | translate}}</th>
+                                <!-- <th *ngIf="!alberta">{{'common.year_type' | translate}}</th> -->
+                                <th>{{'common.period_start' | translate}}</th>
+                                <th>{{'common.period_end' | translate}}</th>
+                                <th>{{'common.dental' | translate}}</th>
+                                <th *ngIf="!alberta">{{'common.vision' | translate}}</th>
+                                <th *ngIf="!alberta">{{'common.health' | translate}}</th>
+                                <th *ngIf="!alberta">{{'common.drug' | translate}}</th>
+                                <th *ngIf="!alberta">{{'common.wellness' | translate}}</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr class="tableRow" id="{{'row_'+i}}" *ngFor="let dataRow of arrDivMax; let i = index">
+                                <td>{{dataRow.maxType}}</td>
+                                <td>{{dataRow.periodType}}</td>
+                                <td style="white-space: nowrap" class="amount_right_grid">
+                                  <span>$</span>{{dataRow.cfwdamount | number: '1.2'}}</td>
+                                <td style="white-space: nowrap" class="amount_right_grid">
+                                  <span>$</span>{{dataRow.maxAmount | number: '1.2'}}</td>
+                                <td *ngIf="companyId == '08'" style="white-space: nowrap" class="amount_right_grid">
+                                  <span>$</span>{{dataRow.maximumFromFuture | number: '1.2'}}</td>
+                                <td *ngIf="alberta" style="white-space: nowrap" class="amount_right_grid">
+                                  <span>$</span>{{dataRow.proratedAmount | number: '1.2'}}</td>
+                                <td *ngIf="alberta" style="white-space: nowrap" class="amount_right_grid">
+                                  <span>$</span>{{dataRow.cfwdexpense | number: '1.2'}}</td>
+                                <td *ngIf="alberta"style="white-space: nowrap " class="amount_right_grid">
+                                  <span>$</span>{{dataRow.preauthAmount | number: '1.2'}}</td>
+                                <td style="white-space: nowrap" class="amount_right_grid">
+                                  <span>$</span>{{dataRow.expenseAdjustment | number: '1.2'}}</td>
+                                <td style="white-space: nowrap" class="amount_right_grid">
+                                  <span>$</span>{{dataRow.totalExpense | number: '1.2'}}</td>
+                                <td style="white-space: nowrap" class="amount_right_grid">
+                                  <span>$</span>{{dataRow.wellnessMaxAmt | number: '1.2'}}</td>
+                                  <td style="white-space: nowrap" class="amount_right_grid">
+                                    <span>$</span>{{dataRow.wlAvailable | number: '1.2'}}</td>
+                                <td style="white-space: nowrap" class="amount_right_grid">
+                                  <span>%</span>{{dataRow.wellnessMaxPer != null ? dataRow.wellnessMaxPer : '0'}}</td>
+                                <td style="white-space: nowrap" class="amount_right_grid">
+                                  <span>$</span>{{dataRow.availableAmount | number: '1.2'}}</td>
+                                <!-- <td *ngIf="!alberta"> {{(dataRow.typeOfYear == 'C') ? 'Calendar Year' : 'Contract Year'}}
+                                </td> -->
+                                <td>{{dataRow.periodStart}}</td>
+                                <td>{{dataRow.periodEnd}}</td>
+                                <td>{{(dataRow.dentalInd == 'T') ? 'Yes' : 'No'}}</td>
+                                <td *ngIf="!alberta">{{(dataRow.visionInd == 'T') ? 'Yes' : 'No'}}</td>
+                                <td *ngIf="!alberta">{{(dataRow.healthInd == 'T') ? 'Yes' : 'No'}}</td>
+                                <td *ngIf="!alberta">{{(dataRow.drugInd == 'T') ? 'Yes' : 'No'}}</td>
+                                <td *ngIf="!alberta">{{(dataRow.wellInd == 'T') ? 'Yes' : 'No'}}</td>
+                              </tr>
+                              <tr *ngIf="arrDivMax.length == 0" class="odd">
+                                <td valign="top" colspan="17" class="dataTables_empty">
+                                  {{'card.card-holder.data-tables.datamsg' | translate}}</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+
+                  <!--Claim Secure Maximum Grid--->
+                  <div [hidden]="!getClaimSecureMaxValue">
+                    <div class="grid-box">
+                      <div class="grid-heading">
+                        <div class="col-md-3">
+                          <h3>{{'common.claim-secure-max' | translate}} </h3>
+                        </div>
+                        <div class="col-md-9 selectedBoxMargin">
+                          <select class="fm-txt form-control selectHeight" [(ngModel)]="noOfYearsCSYear"
+                            (change)="onChangeYear($event,'noOfYearsCS')">
+                            <option value="null" selected>Select Year</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                          </select>
+                        </div>
+                      </div>
+                      <form style="overflow: scroll;">
+                        <div class="grid-inner">
+                          <table id='ClaimTotalCOVMax'
+                            class="inlinePopupTable table table-bordered table-stripped smallFont alignRightText">
+                            <thead>
+                              <tr>
+                                <th>{{'common.max-type' | translate}}</th>
+                                <th>{{'common.period_type' | translate}}</th>
+                                <th>{{'common.cfwd_amt' | translate}}</th>
+                                <th>{{'common.max_amount' | translate}}</th>
+                                <th *ngIf="companyId == '08'">{{'common.future_amount' | translate}}</th>
+                                <th style="white-space: nowrap">{{'common.prorated' | translate}}
+                                  <br>{{'common.max' | translate}}</th>
+                                <th style="white-space: nowrap">{{'common.cfed' | translate}}
+                                  <br>{{'common.expense' | translate}}
+                                </th>
+                                <th style="white-space: nowrap">{{'common.preauth' | translate}}
+                                  <br>{{'common.amt' | translate}}
+                                </th>
+                                <th>{{'common.expense' | translate}}
+                                  <br>{{'common.adj' | translate}}
+                                </th>
+                                <th>{{'common.paid_to_date' | translate}}</th>
+                                <th>{{'common.wellnessMaxAmt' | translate}}</th>
+                                <th>{{'common.wellnessMaxPer' | translate}}</th>
+                                <th>{{'common.avail_amt' | translate}}</th>
+                                <th *ngIf="!alberta">{{'common.year_type' | translate}}</th>
+                                <th>{{'common.period_start' | translate}}</th>
+                                <th>{{'common.period_end' | translate}}</th>
+                                <th>{{'common.dental' | translate}}</th>
+                                <th *ngIf="!alberta">{{'common.vision' | translate}}</th>
+                                <th *ngIf="!alberta">{{'common.health' | translate}}</th>
+                                <th *ngIf="!alberta">{{'common.drug' | translate}}</th>
+                                <th *ngIf="!alberta">{{'common.wellness' | translate}}</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr class="tableRow" id="{{'row_'+i}}" *ngFor="let dataRow of arrClaimSecureMax; let i = index">
+                                <td>{{dataRow.maxType}}</td>
+                                <td>{{dataRow.periodType}}</td>
+                                <td style="white-space: nowrap" class="amount_right_grid">
+                                  <span>$</span>{{dataRow.cfwdamount | number: '1.2'}}</td>
+                                <td style="white-space: nowrap" class="amount_right_grid">
+                                  <span>$</span>{{dataRow.maxAmount | number: '1.2'}}</td>
+                                <td *ngIf="companyId == '08'" style="white-space: nowrap" class="amount_right_grid">
+                                  <span>$</span>{{dataRow.maximumFromFuture | number: '1.2'}}</td>
+                                <td style="white-space: nowrap" class="amount_right_grid">
+                                  <span>$</span>{{dataRow.proratedAmount | number: '1.2'}}</td>
+                                <td style="white-space: nowrap" class="amount_right_grid">
+                                  <span>$</span>{{dataRow.cfwdexpense | number: '1.2'}}</td>
+                                <td style="white-space: nowrap " class="amount_right_grid">
+                                  <span>$</span>{{dataRow.preauthAmount | number: '1.2'}}</td>
+                                <td style="white-space: nowrap" class="amount_right_grid">
+                                  <span>$</span>{{dataRow.expenseAdjustment | number: '1.2'}}</td>
+                                <td style="white-space: nowrap" class="amount_right_grid">
+                                  <span>$</span>{{dataRow.totalExpense | number: '1.2'}}</td>
+                                <td style="white-space: nowrap" class="amount_right_grid">
+                                  <span>$</span>{{dataRow.wellnessMaxAmt | number: '1.2'}}</td>
+                                <td style="white-space: nowrap" class="amount_right_grid">
+                                  <span>%</span>{{dataRow.wellnessMaxPer != null ? dataRow.wellnessMaxPer : '0'}}</td>
+                                <td style="white-space: nowrap" class="amount_right_grid">
+                                  <span>$</span>{{dataRow.availableAmount | number: '1.2'}}</td>
+                                <td *ngIf="!alberta"> {{(dataRow.typeOfYear == 'C') ? 'Calendar Year' : 'Contract Year'}}
+                                </td>
+                                <td>{{dataRow.periodStart}}</td>
+                                <td>{{dataRow.periodEnd}}</td>
+                                <td>{{(dataRow.dentalInd == 'T') ? 'Yes' : 'No'}}</td>
+                                <td *ngIf="!alberta">{{(dataRow.visionInd == 'T') ? 'Yes' : 'No'}}</td>
+                                <td *ngIf="!alberta">{{(dataRow.healthInd == 'T') ? 'Yes' : 'No'}}</td>
+                                <td *ngIf="!alberta">{{(dataRow.drugInd == 'T') ? 'Yes' : 'No'}}</td>
+                                <td *ngIf="!alberta">{{(dataRow.wellInd == 'T') ? 'Yes' : 'No'}}</td>
+                              </tr>
+                              <tr *ngIf="arrClaimSecureMax.length == 0" class="odd">
+                                <td valign="top" colspan="20" class="dataTables_empty">
+                                  {{'card.card-holder.data-tables.datamsg' | translate}}</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Form Row ENds -->
+        </div>
+        <!-- Grid Box Ends -->
+      </div>
+      <!-- Modal Body End-->
+      <div class="modal-footer">
+        <button id="closeModalCCMaxTotalForm" (click)="totalsPopupClose()" class="btn grey-btn"
+          data-dismiss="modal">{{'button.close'|translate}}</button> <!-- Task 646 HMS Issues -->
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div id="PrintCardDetails" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-body text-center" id="PrintCard">
+        <table align="center" cellpadding="0" cellspacing="0" width="370" height="215" style=" padding: 10px 15px;  margin-top: 10px;
+          border-radius: 12px; background-color: #fff; border:1px solid grey;">
+          <!--main_table_start-->
+          <tbody>
+            <tr>
+              <td style="padding:12px 0;"></td>
+            </tr>
+
+            <tr>
+              <td style="padding:12px 0;"></td>
+            </tr>
+
+            <tr>
+              <td style="padding:12px 0;"></td>
+            </tr>
+            <tr>
+              <td align="left" style="padding:0 0;font-weight:bold;">{{cardHolderName}}</td>
+            </tr>
+            <tr>
+              <td align="left" style="padding:0 0;font-weight:bold;">Group: {{companyCoKey}}</td>
+            </tr>
+            <tr>
+              <td align="left" style="padding:0 0;font-weight:bold;">Card ID: {{cert}}</td>
+            </tr>
+            <tr>
+              <td style="padding:2px 0;"></td>
+            </tr>
+          </tbody>
+        </table>
+        <!--main_table_ends-->
+      </div>
+    </div>
+  </div>
+</div>
+
+<div [hidden]="!showLoader" class="loader-outer">
+  <div class="cube-wrapper">
+    <div class="cube-folding">
+      <span class="leaf1"></span>
+      <span class="leaf2"></span>
+      <span class="leaf3"></span>
+      <span class="leaf4"></span>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,34 @@
+<nav class="breadcrumb">
+    <span *ngIf="authCheck[0].searchAHCClaim == 'F'" class="serviceProviderParent">Claim  ></span>
+    <span *ngIf="authCheck[0].searchAHCClaim == 'T'" [routerLink]="['/dataEntry']">Claim  ></span>
+    <span *ngIf="addMode" class="active serviceProviderActive" href="javascript:void(0)">{{breadCrumbText}}</span>
+    <span  class="active serviceProviderActive" *ngIf="!addMode" href="javascript:void(0)">{{breadCrumbText}}</span>
+</nav>
+
+<div class="section-heading">
+    <h2>{{'dataEntry.headings.claim-heading'|translate}}<span>{{'dataEntry.headings.detail'|translate}}</span>
+        <div class="web-reg">     
+                <button id="btnEditClaim" style="cursor: pointer" *ngIf="viewMode  && authCheck[0].editClaims == 'T'" title="DataEntry - Edit Details" class="claim-status btn status-btn" type="button" (click)="enableEditMode()">{{'button.edit' | translate}}</button>
+                <button id="btnUpdateClaim" style="cursor: pointer" *ngIf="editMode && authCheck[0].editClaims == 'T'" [disabled] = "disableSaveButton" title="DataEntry - Update Details" class="claim-status btn status-btn"type="button" (click)="saveDataEntryClaim('edit')">{{'button.update' | translate}}</button>      
+                </div>
+            </h2>
+</div>
+
+<div class="uppercaseForm">
+    <!-- Section Heading Ends -->
+    <app-claim-information [ClaimInformationFormGroup]="DataEntryClaimFormGroup.controls.ClaimInformationFormGroup" 
+    [addMode] = "addMode" [editMode] = "editMode" [viewMode] = "viewMode" [claimInfoCheck] = "authCheck"></app-claim-information>
+    <app-claim-item [addMode] = "addMode" [editMode] = "editMode" [viewMode] = "viewMode" [claimItemCheck] = "authCheck" [disableSaveButton]= 'disableSaveButton' ></app-claim-item> 
+    <!-- Grid Box Ends -->
+    <form [formGroup]="DataEntryClaimFormGroup" style="display:none"> 
+            <div class="form-row text-center claim-btn  " [ngClass]="addNewClicked  ? ' is-cancelable' : ' is-NonCancelable'"  >
+            <button id="btnSaveClaim" *ngIf="addMode && authCheck[0].saveClaim == 'T'" title="SAVE" [disabled] = "disableSaveButton" class=" secondBtn btn green-btn btn-lg" type="submit" (click)="saveDataEntryClaim('add')">{{'button.save' | translate}}</button>
+           <button id="btnEditClaim" *ngIf="viewMode  && authCheck[0].editClaims == 'T'" title="DataEntry - Edit Details" class="secondBtn_2 btn green-btn btn-lg" type="button" (click)="enableEditMode()">{{'button.edit' | translate}}</button>
+           {{editMode}}
+            <button id="btnUpdateClaim" *ngIf="editMode && authCheck[0].editClaims == 'T'" [disabled] = "disableSaveButton" title="DataEntry - Update Details" class="secondBtn_2 btn green-btn btn-lg" type="button" (click)="saveDataEntryClaim('edit')">{{'button.update' | translate}}</button>
+            <button id="btndupClaim" *ngIf="addMode && authCheck[0].saveClaim == 'T'" title="ADD CLAIM" [disabled] = "disableSaveButton" class=" secondBtn btn green-btn btn-lg" type="submit" (click)="duplicate()"><i class="fa fa-plus"></i>ADD CLAIM </button>
+            <button id="btndelClaim" *ngIf="addMode && authCheck[0].saveClaim == 'T'" title="DELETE" [disabled] = "disableSaveButton" class=" secondBtnDel btn red-btn btn-lg" type="submit" (click)="delete()">{{'button.delete' | translate}}</button>
+        </div>
+    </form>
+</div>
+

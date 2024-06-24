@@ -1,0 +1,461 @@
+<div class="grid-box">
+	<div class="grid-heading">
+		<h3>{{ 'card.card-eligibility.cardelig' | translate }} </h3>
+		<button *ngIf="cardElgbEditMode || cardElgbViewMode" title="Card Eligibility History" href="#" (click)= 'getEligibilityHistoryDetails()'class="history-ico" alt="History" data-toggle="modal" data-target="#CardEligibilty"><i class="fa fa-history" aria-hidden="true"></i></button>
+	</div>
+	<div class="grid-inner">
+		<form  [formGroup]="CardEligibilityFormGroup">
+			<div class="form-row">
+				<div class="row min-ht-sf">
+					<div class="col-md-4 col-xs-12">
+						<label>{{ 'card.card-eligibility.plan-div-unit' | translate }} <span class="required">*</span></label>	
+						<select class="fm-txt form-control" title={{planTooltip}} placeholder="Plan" name="plan" id="ce_plan" formControlName="plan" (change)="getPlanValue($event)">
+							<option [ngValue]="null" disabled hidden>{{'common.select' | translate}}</option>
+							<option *ngFor="let plan of plans" [value]="plan.unitKey">{{plan.plansName.replace('/null', '')}}</option>
+						</select>
+						<show-errors [control]="CardEligibilityFormGroup.controls.plan"></show-errors>
+					</div>
+					<div class="col-md-2 col-xs-12">
+						<label>{{'card.card-eligibility.effectivedate' | translate}}<span class="required">*</span></label>	
+						<div class="calender-field">
+							<my-date-picker
+							[ngClass]="(cardElgbViewMode == true) ? 'removeCross':''" 
+							[disabled]="!setEffectiveDate" id="ce_effectiveDate"
+							[options]="myDatePickerOptions"
+							placeholder="{{'common.date-placeholder' | translate}}"
+							name="effective_date" 
+							formControlName="effective_date" 
+							(inputFocusBlur)="changeDateFormat($event, 'effective_date' ,'CardEligibilityFormGroup',true)">
+						</my-date-picker>
+						<show-errors [control]="CardEligibilityFormGroup.controls.effective_date"></show-errors> 
+						</div>
+					</div>
+				
+					<div class="col-md-2 col-xs-12">
+						<label>{{'card.card-eligibility.expirydate' | translate}}</label>	
+						<div class="calender-field">
+							<my-date-picker id="ce_expiryDate"
+							placeholder="{{'common.date-placeholder' | translate}}"
+							[options]="myDatePickerOptions"
+							name="expiry_date" [ngClass]="expired  ? 'expired' : 'notExpired'"
+							formControlName="expiry_date" 
+							(inputFocusBlur)="changeDateFormat($event, 'expiry_date' ,'CardEligibilityFormGroup')">
+						</my-date-picker>
+						<show-errors [control]="CardEligibilityFormGroup.controls.expiry_date"></show-errors>
+						</div>
+					</div>
+			
+					<div  class="col-md-4 col-xs-12 button-container" *ngIf="cardElgbEditMode || cardElgbViewMode">
+						<label>&nbsp;</label>
+						<button *ngIf="extraBenifitsButton" id="addExtraBenefitsButton" class="btn green-btn sm-width custom-btnwidth" data-toggle="modal" (click)="getExtraBenifitsDetails()" data-target="#AddExtraBenfits" title="Add Extra Benefits">{{'button.add-extra-benefits' | translate}}</button>
+						<button id="overridesButton" class="btn green-btn sm-width custom-btnwidth" (click)="GetOverideCardMaximumData(6)" data-toggle="modal" data-target="#Override">{{'button.overrides' | translate}}</button>
+						<button id="overridesMaximumsButton" class="btn green-btn sm-width custom-btnwidth" style="display: none;" data-toggle="modal" data-target="#ViewMaximums">Maximums</button>	
+						<button id="viewPlanDetailsButton" class="btn green-btn sm-width custom-btnwidth" (click)="viewPlanDetails()">{{'button.view-plan-details' | translate}}</button>
+					</div>
+				</div>
+			</div>
+		</form>	
+	</div>
+</div>
+
+<div *ngIf="cardElgbEditMode || cardElgbViewMode" id="Override" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button id="closeOverridesButton" type="button" title="Close" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">{{'button.overrides' | translate}}</h4>
+				</div>
+				<div class="modal-body">
+					<div class="grid-box">
+						<div class="grid-heading">
+							<h3>{{'common.generalinfo' | translate}}</h3>
+						</div>
+						<div class="grid-inner">
+							<form [formGroup]="CardOverridesPopupForm"  (ngSubmit)="submitOverrideFieldValue(CardOverridesPopupForm.value)">
+								<div class="form-row">
+									<div class="row min-ht-sf">
+										<div class="col-md-3 col-xs-12">
+											<label>{{'common.card-id' | translate}} </label>
+											<input type="text" disabled placeholder="{{'common.card-id' | translate}}"  
+											 id="ce_cardId" name="OverrideCardId" formControlName="OverrideCardId" 
+											value={{savedCardNumber}} class="fm-txt form-control" />
+										</div>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+					<div class="grid-box">
+						<div class="grid-heading">
+							<h3>{{ 'card.card-eligibility.card-maximums' | translate }}</h3>
+						</div>
+						<div class="grid-inner">
+							<div class="col-md-3 col-xs-12">
+								<div class="grid-box">
+									<div class="grid-heading">
+										<h3>{{'card.card-eligibility.maximum-type' | translate}}</h3>
+									</div>
+									<div class="grid-inner">
+										<span id="lbldisciplineKey" style="display:none">{{disciplineKey}}</span>
+										<ul class="link-list">
+											<li><a (click)="GetOverideCardMaximumData(6)" >{{'card.card-eligibility.card-maximums' | translate}}</a></li>
+											<li><a (click)="GetOverideTopupMaximumData(5)" >{{'card.card-eligibility.top-up-maximums' | translate}}</a></li>
+											<li><a (click)="GetOverideCoverage(1)" >{{'card.card-eligibility.dentalCoverageCatMax' | translate}}</a></li>
+											<li><a (click)="GetOverideData(1)" >{{'card.card-eligibility.benefitDentalCoverageCatMax' | translate}}</a></li>
+											<li><a (click)="GetOverideCoverage(3)" >{{'card.card-eligibility.healthCoverageCatMax' | translate}}</a></li>
+											<li><a (click)="GetOverideData(3)" >{{'card.card-eligibility.benefitHealthCoverageCatMax' | translate}}</a></li>
+											<li><a (click)="GetOverideCoverage(2)" >{{'card.card-eligibility.visionCoverageCatMax' | translate}}</a></li>
+											<li><a (click)="GetOverideData(2)" >{{'card.card-eligibility.benefitVisionCoverageCatMax' | translate}}</a></li>
+											<li><a (click)="GetOverideCoverage(4)" >{{'card.card-eligibility.drugCoverageCatMax' | translate}}</a></li>
+											<li><a (click)="GetOverideData(4)" >{{'card.card-eligibility.benefitDrugCoverageCatMax' | translate}}</a></li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-9 col-xs-12 table-col">
+								<div class="grid-box">
+									<div class="grid-heading">
+										<h3>{{GridTitle}}</h3>
+									</div>
+									<div class="grid-inner">
+										<div class="form-row">
+											<div class="row">
+												<div class="col-md-12 col-xs-12 table-col">
+													<app-benfiit-coverage-category-maximum *ngIf="maximumType == 'Benifit'" [disciplineKey]="disciplineKey" 
+													[cardKey]="savedCardKey" [currentUser]="currentUser"></app-benfiit-coverage-category-maximum>
+													
+													<app-coverage-category-maximum *ngIf="maximumType == 'Coverage'" [disciplineKey]="disciplineKey" 
+													[cardKey]="savedCardKey"></app-coverage-category-maximum>
+													
+													<app-top-up-maximums [disciplineKey]="disciplineKey"  *ngIf="maximumType == 'Top-Up-Maximums'" [cardKey]="savedCardKey"></app-top-up-maximums>
+													
+													<app-card-maximums [disciplineKey]="disciplineKey" *ngIf="maximumType == 'Card Maximums'" [cardKey]="savedCardKey"></app-card-maximums>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button id="closeOverridesForm" title="Close" class="btn grey-btn" data-dismiss="modal">{{'button.close' | translate}}</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div *ngIf="cardElgbEditMode || cardElgbViewMode" id="AddExtraBenfits" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button id="closeAddExtrabenefits" type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">{{ 'card.card-eligibility.card-extra-benefits' | translate }}</h4>
+				</div>
+				<div class="modal-body">
+					<div class="grid-box">
+						<div class="grid-heading">
+							<h3>{{'common.generalinfo' | translate}}</h3>
+						</div>
+						<div class="grid-inner">
+							<div class="form-row">
+								<div class="row min-ht-sf">
+									<div class="col-md-3 col-xs-12">
+										<label>{{'common.card-id' | translate}}</label>
+										<input type="text" id="ce_addExtraBenefitsCardId" disabled value="{{savedCardNumber}}" class="fm-txt form-control" />
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<div class="grid-box">
+						<div class="grid-heading">
+							<h3>{{ 'card.card-eligibility.card-extra-benefits' | translate }}</h3>
+								<div class="web-reg">
+								<a id="addNewCardExtraBenefits" class="green-btn-add btn" (click)="addFieldValue()">
+									<i class="fa fa-plus"></i>{{'button.addnew' | translate}}</a>
+								</div>
+							</div>
+							
+							<div class="grid-inner">
+								<div class="form-row">
+									<div class="row">
+										<div class="col-md-12 col-xs-12 table-col">
+											<div class="table-responsive">
+												<table  id='eligibility-history'  class="table table-bordered table-stripped rightAlignTable">
+													<thead>
+														<tr>
+															<th *ngFor="let title of tableColumns">{{title['title']}}</th>
+														</tr>
+													</thead>												
+													<tbody >		
+														<tr *ngIf="tableData && tableData.length == 0" class="odd">
+														<td valign="top" style = "text-align: center" colspan="4" class="dataTables_empty">{{'card.card-holder.data-tables.datamsg' | translate}}</td>
+														</tr>
+														<tr class="tableRow" *ngFor="let dataRow of tableData; let i = index" id="row_{{i}}">
+														<td *ngFor="let dataCol of elibigilityTableKeys; let j = index1">
+															<div class="tb-actions tb-actions-right" *ngIf="dataCol['type'] == 'action' && i == 0">
+                                  								<input type="hidden" data-updateid = "cardExtraBenefitHisKey" name="cardExtraBenefitHisKey" class="editableInput" value="{{dataRow['cardExtraBenefitHisKey']}}">
+																	<a *ngFor="let action of elibigilityTableActions;" class="{{action['class']}}" href="javascript:void(0)">{{action['val']}}
+																		<i *ngIf="action['hasIcon']" class="{{action['icon_class']}}"></i>
+																	</a>
+																</div>
+																<div *ngIf="dataCol['type'] == 'datepicker'">
+																	<label class='editableLabel amount_right'>{{dataRow[dataCol['column']]}}</label>
+																	<my-date-picker class="amount_right" placeholder="dd/mmm/yyyy" id="{{'eligibility-history'+i+dataCol['name']}}" [disabled]="dataCol['name'] == 'effectiveOn' && editExtraBenfit" [ngClass]="{'editableInput':true,'required':dataCol['required']}"
+																	data-type="date" data-rowIndex="1" [attr.data-updateid]="dataCol['name']" (change) = "checkString('eligibility-history'+i+dataCol['name'])" [options]="myDatePickerOptions" [selDate]="benifitsDateNameArray['eligibility-history'+i+dataCol['name']]"
+																	(inputFocusBlur)="validateFutureDate($event, 'eligibility-history'+i+dataCol['name'], 'eligibility-history'+i+dataCol['greater_than'], dataCol['greater_than'],'eligibility-history'+i)"></my-date-picker>
+																</div>
+																<div class="checkboxActions" *ngIf="dataCol['type'] != 'action' && dataCol['type'] != 'datepicker'">
+																	<label class='editableLabel checkboxLabel' *ngIf="dataRow[dataCol['column']] == 'T'">Yes</label>
+																	<label class='editableLabel checkboxLabel' *ngIf="dataRow[dataCol['column']] == 'F'">No</label>
+																	<input [attr.data-updateid]="dataCol['name']" [checked]="dataRow[dataCol['column']] == 'T'" id="{{extraBenifitsTableID+i+dataCol['name']}}" [ngClass]="{'editableInput':true,'fm-txt':true,'form-control':true,'changeCheck':true,'required':dataCol['required']}"
+																	name="{{dataCol['name']}}" type="{{dataCol['type']}}" value="{{dataRow[dataCol['column']]}}">
+																</div>													
+															</td>																							
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button id="closeAddExtraBenefitsForm" class="btn grey-btn" data-dismiss="modal">{{'button.close' | translate}}</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div *ngIf="cardElgbEditMode || cardElgbViewMode" id="ViewMaximums" class="modal fade" role="dialog"> <!-- View Maximum Modal-->
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button id="closeOverridesMaxButton" type="button" title="Close" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">{{'button.overrides' | translate}}</h4>
+					</div>
+					<div class="modal-body">
+						<div class="grid-box">
+							<div class="grid-heading">
+								<h3>{{'common.generalinfo' | translate}}</h3>
+							</div>
+							<div class="grid-inner">
+								<form [formGroup]="CardOverridesMaxPopupForm"  (ngSubmit)="submitOverrideFieldValue(CardOverridesMaxPopupForm.value)">
+									<div class="form-row">
+										<div class="row min-ht-sf">
+											<div class="col-md-3 col-xs-12">
+												<label>Last Name </label>
+												<input type="text" disabled placeholder="Last Name"  
+												 id="maximumLastName" name="maximumLastName" 
+												value={{cardholderLastName}} class="fm-txt form-control" />
+											</div>
+											<div class="col-md-3 col-xs-12">
+												<label>First Name </label>
+												<input type="text" disabled placeholder="First Name"  
+												 id="maximumFirstName" name="maximumFirstName" 
+												value={{cardholderFirstName}} class="fm-txt form-control" />
+											</div>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+						<div class="grid-box">
+							<div class="grid-heading">
+								<h3>Cardholder Maximums</h3>
+							</div>
+							<div class="grid-inner">
+								<div class="col-md-3 col-xs-12">
+									<div class="grid-box">
+										<div class="grid-heading">
+											<h3>{{'card.card-eligibility.maximum-type' | translate}}</h3>
+										</div>
+										<div class="grid-inner">
+											<ul class="link-list">
+													<li><a (click)="GetOverideCardMaximumData(12)" >Cardholder Maximum</a></li>
+													<li><a (click)="GetOverideTopupMaximumData(10)" >{{'card.card-eligibility.top-up-maximums' | translate}}</a></li>
+													<li><a (click)="GetOverideCoverage(1)" >{{'card.card-eligibility.dentalCoverageCatMax' | translate}}</a></li>
+													<li><a (click)="GetOverideData(1)" >{{'card.card-eligibility.benefitDentalCoverageCatMax' | translate}}</a></li>
+													<li><a (click)="GetOverideCoverage(3)" >{{'card.card-eligibility.healthCoverageCatMax' | translate}}</a></li>
+													<li><a (click)="GetOverideData(3)" >{{'card.card-eligibility.benefitHealthCoverageCatMax' | translate}}</a></li>
+													<li><a (click)="GetOverideCoverage(2)" >{{'card.card-eligibility.visionCoverageCatMax' | translate}}</a></li>
+													<li><a (click)="GetOverideData(2)" >{{'card.card-eligibility.benefitVisionCoverageCatMax' | translate}}</a></li>
+													<li><a (click)="GetOverideCoverage(4)" >{{'card.card-eligibility.drugCoverageCatMax' | translate}}</a></li>
+													<li><a (click)="GetOverideData(4)" >{{'card.card-eligibility.benefitDrugCoverageCatMax' | translate}}</a></li>
+											</ul>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-9 col-xs-12 table-col">
+									<div class="grid-box">
+										<div class="grid-heading">
+											<h3>{{GridTitle}}</h3>
+										</div>
+										<div class="grid-inner">
+											<div class="form-row">
+												<div class="row">
+													<div class="col-md-12 col-xs-12 table-col">
+														<app-benfiit-coverage-category-maximum *ngIf="maximumType == 'cardholderBenifit'" [disciplineKey]="disciplineKey" 
+														[cardKey]="savedCardKey" [currentUser]="currentUser" [cardHolderdetails]="cardholderDetails" [cardHolderMaximum]="cardHolderMaximum"></app-benfiit-coverage-category-maximum>
+														
+														<app-coverage-category-maximum *ngIf="maximumType == 'cardholderCoverage'" [disciplineKey]="disciplineKey" 
+														[cardKey]="savedCardKey" [cardHolderdetails]="cardholderDetails" [cardHolderMaximum]="cardHolderMaximum"></app-coverage-category-maximum>
+														
+														<app-top-up-maximums [disciplineKey]="disciplineKey"  *ngIf="maximumType == 'Cardholder-Top-Up-Maximums'" [cardKey]="savedCardKey" [cardHolderdetails]="cardholderDetails" [cardHolderMaximum]="cardHolderMaximum"></app-top-up-maximums>
+														
+														<app-card-maximums [disciplineKey]="disciplineKey"  *ngIf="maximumType == 'Cardholder Maximums'" [cardKey]="savedCardKey" [cardHolderdetails]="cardholderDetails" [cardHolderMaximum]="cardHolderMaximum"></app-card-maximums>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button id="closeOverridesMaxForm" title="Close" class="btn grey-btn" data-dismiss="modal">{{'button.close' | translate}}</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="CardEligibilty" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+			<div class="modal-dialog">		
+				<div class="modal-content">
+					<div class="modal-header">
+						<button id="closeCardEligibilityButton" type="button" title="Close" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">{{ 'card.card-eligibility.cardelig' | translate }}</h4>
+					</div>				
+					<div class="modal-body" >
+						<div class="grid-box">
+							<div class="grid-heading">
+								<h3>{{ 'card.card-eligibility.eligibility-detail' | translate }}</h3>
+							</div>				
+							<div class="grid-inner">
+								<div class="form-row">
+									<form [formGroup]="CardEligibilityPopupForm">
+										<div class="row min-ht-sf">										
+											<div class="col-md-3 col-xs-12">
+												<label>{{'common.card-id' | translate}} </label>
+												<input id="ce_cardEligibilityCardId" type="text" disabled value={{savedCardNumber}} class="fm-txt form-control" />
+											</div>
+											
+											<div class="col-md-3 col-xs-12">
+												<label>{{ 'card.card-eligibility.plan-div-unit' | translate }}<span class="required">*</span></label>
+												<select class="fm-txt form-control" placeholder="Plan" name="plan" id="eligibilityPlan" formControlName="eligibilityPlan">
+													<option [ngValue]="null" disabled hidden>{{'common.select' | translate}}</option>
+													<option *ngFor="let plan of plans" [value]="plan.unitKey">{{plan.plansName.replace('/null', '')}}</option>
+												</select>
+												<show-errors [control]="CardEligibilityPopupForm.controls.eligibilityPlan"></show-errors> 
+											</div>										
+											<div class="col-md-3 col-xs-12">
+												<label>{{ 'card.card-eligibility.effectivedate' | translate }} <span class="required">*</span></label>	
+												<div class="calender-field">
+													<my-date-picker id="effectiveDate"
+													placeholder="{{'common.date-placeholder' | translate}}"
+													[options]="myDatePickerOptions"
+													name="effective_date" 
+													formControlName="effectiveDate" 
+													(inputFocusBlur)="changeDateFormatEligibility($event, 'effectiveDate' ,'CardEligibilityPopupForm',true)">
+												</my-date-picker>
+												<show-errors [control]="CardEligibilityPopupForm.controls.effectiveDate"></show-errors>
+											</div>
+										</div>									
+										<div class="col-md-3 col-xs-12">
+											<label>{{ 'card.card-eligibility.expirydate' | translate }}</label>	
+											<div class="calender-field">
+												<my-date-picker id="expiryDate"
+												placeholder="{{'common.date-placeholder' | translate}}"
+												[options]="myDatePickerOptions"
+												name="expiry_date" 
+												formControlName="expiryDate"
+												[ngClass]="expired  ? 'expired' : 'notExpired'"
+												(inputFocusBlur)="changeDateFormatEligibility($event, 'expiryDate' ,'CardEligibilityPopupForm')">
+											</my-date-picker>
+											<show-errors [control]="CardEligibilityPopupForm.controls.expiryDate"></show-errors>
+										</div>
+									</div>
+									<div class="col-md-3 col-xs-12 min-ht-half">
+										<button id="updateCardEligibilityHis" title="Save Card Eligibility" class="btn green-btn btn-lg" type="submit" (click)="updateCardEligibiltyHistory()">{{buttonText}}</button>
+										<button id="closeCardEligibilityHis" title="Close" type="button" class="close" (click)="resetCardContactHistory()" data-dismiss="modal">{{'button.close' | translate}}</button>
+									</div> 						
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div class="grid-box">
+					<div class="grid-heading">
+						<h3>{{ 'card.card-eligibility.eligibility-history' | translate }}</h3>				
+					</div>
+					<div class="grid-inner">
+						<div class="form-row">
+							<div class="row">
+								<div class="col-md-12 col-xs-12 table-col">
+									<div class="table-responsive">
+										<table datatable [dtOptions]="dtOptions['eligibility-history-table']"  [dtTrigger]="dtTrigger['eligibility-history-table']" id="eligibility-history-table" class="inlinePopupTable table table-bordered table-stripped">
+											<thead>
+												<tr>
+													<th>
+														{{ 'card.card-eligibility.plan-div-unit' | translate }}
+													</th>
+													<th class="amount_right_grid">
+														{{ 'card.card-eligibility.effectivedate' | translate }}
+													</th>
+													<th class="amount_right_grid">
+														{{ 'card.card-eligibility.expireddate' | translate }}
+													</th>
+													<th class="amount_right_grid">
+														{{ 'card.card-eligibility.action' | translate }}
+													</th>
+												</tr>
+											</thead>
+											<tbody>
+												<ng-container *ngIf="showHistoryEditIcon">
+													<tr [ngClass]="{'hterminated-row': dataRow.expireOn != ''}" *ngFor="let dataRow of eligibilityHistorytableData; let i = index">
+														<td><span style="cursor: pointer;" (click)="redirectPlanview(dataRow)">{{dataRow.planName.replace('/null', '')}}</span></td>
+														<td class="amount_right_grid">{{dataRow.effectiveOn}}</td>
+														<td class="amount_right_grid">{{dataRow.expireOn}}</td>
+														<td class="amount_right_grid">
+															<button (click)="viewPlanDetailsHistory(dataRow)" class='form_edit_row table-action-btn view-ico'><i class='fa fa-eye'></i></button>
+															<button (click)="setEligibilityHistoryForm(dataRow)" class='form_edit_row table-action-btn edit-ico'><i class='fa fa-pencil'></i></button>
+														</td>
+													</tr>
+												</ng-container>
+												<ng-container *ngIf="!showHistoryEditIcon">
+													<tr [ngClass]="{'hterminated-row': dataRow.expireOn != ''}"*ngFor="let dataRow of eligibilityHistorytableData; let i = index">
+															<td><span style="cursor: pointer;" (click)="redirectPlanview(dataRow)">{{dataRow.planName.replace('/null', '')}}</span></td>
+															<td class="amount_right_grid">{{dataRow.effectiveOn}}</td>
+															<td class="amount_right_grid">{{dataRow.expireOn}}</td>
+															<td class="amount_right_grid"><!--*ngIf = " i == 0" removed for editable all list records functionality as per Arun sir-->
+																<button (click)="viewPlanDetailsHistory(dataRow)" class='form_edit_row table-action-btn view-ico'><i class='fa fa-eye'></i></button>
+																<button (click)="setEligibilityHistoryForm(dataRow)" class='form_edit_row table-action-btn edit-ico'><i class='fa fa-pencil'></i></button>
+															</td>
+													</tr>
+												</ng-container>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+							<ul class="color-list">
+								<li>
+								  <span class="color-des red-color"></span>
+								  <h5>Expired</h5>
+								</li>
+							  </ul>
+						</div>
+					</div>
+				</div>		
+				<div class="modal-footer">
+					<button id="closeCardEligibilityForm" type="button" title="Close" class="btn grey-btn" data-dismiss="modal">{{'button.close' | translate}}</button>
+				</div>
+			</div>
+		</div>
+	</div>

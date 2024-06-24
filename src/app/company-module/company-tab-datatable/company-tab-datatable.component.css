@@ -1,0 +1,29 @@
+#companySearchCardTable tr:hover { cursor: pointer !important; }
+
+:host ::ng-deep #companySearchCardTable .hactive-row .sorting_1 {
+    background: rgba(10, 243, 107, 0.2);
+    background-color: rgba(10, 243, 107, 0.2)
+}
+:host ::ng-deep #companySearchCardTable .reversal-row .sorting_1 {
+    background: rgba(208, 32, 47, .4);
+    background-color: rgba(208, 32, 47, .4);
+}
+
+/* For processor by designer. */
+.dataTables_processing.background-cd{
+    background-color: #00000080 !important;
+    z-index: 99;
+}
+
+.footerClass{
+    position: relative;
+    background-color: #fff;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    border: unset !important;
+    border: unset !important;
+    border-radius: 6px;
+    outline: 0;
+    -webkit-box-shadow: 0 3px 9px rgba(0,0,0,.5);
+    box-shadow: 0 3px 9px rgba(0,0,0,.5);
+}

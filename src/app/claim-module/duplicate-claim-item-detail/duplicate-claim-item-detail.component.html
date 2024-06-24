@@ -1,0 +1,323 @@
+<div class="modal-dialog">
+  <div class="modal-content ">
+    <div class="modal-header">
+      <button id="btnCloseShowClaimItems" type="button" title="Close" class="close"
+      (click)="cancel()" data-dismiss="modal">&times;</button>
+      <h4 class="modal-title">Duplicate Claim</h4>
+    </div>
+
+    <!-- General Information -->
+
+    <div class="grid-box">
+      <div class="grid-heading">
+        <h3>{{'claims.claims-add.claims-general-information.general-information' | translate}}</h3>
+        <div class="web-reg" *ngIf = "claimData"> <span 
+          class="claim-status btn status-btn">{{claimData.status}}</span></div>
+      </div>
+      <div class="grid-inner">
+        <div class="form-row">
+          <div class="row min-ht-sf">
+            <div class="col-xs-12 col-md-2">
+              <label>{{'claims.claims-add.claims-general-information.discipline-type' | translate}}</label>
+              <input *ngIf = "claimData" type="text" disabled class="fm-txt form-control" value = {{claimData.disciplineName}}/>
+            </div>
+            <div class="col-md-2 col-xs-12">
+              <label>{{'claims.claims-add.claims-general-information.entry-date' | translate}}</label>
+              <input *ngIf = "claimData" type="text" disabled class="fm-txt form-control" value = {{convertDate(claimData.entryDate)}}/>
+            </div>
+
+            <div class="col-md-2 col-xs-12">
+              <label>{{'claims.claims-add.claims-general-information.claim-type' | translate}}</label>
+              <input *ngIf = "claimData" type="text" disabled class="fm-txt form-control" value = {{claimData.claimType}}/>
+            </div>
+
+            <div class="col-md-3 col-xs-12">
+              <div class="input-half">
+                <label>{{'claims.claims-add.claims-general-information.operator_name' | translate}}</label>
+                <input *ngIf = "claimData" type="text" disabled class="fm-txt form-control" value = {{claimData.operator}}/>
+              </div>
+              <div class="input-half">
+                <label>{{'claims.claims-add.claims-general-information.reference_no' | translate}}</label>
+                <input *ngIf = "claimData" type="text" disabled class="fm-txt form-control" value = {{claimData.refId}}/>
+              </div>
+            </div>
+
+            <div class="col-md-3 col-xs-12">
+              <div class="input-half">
+                <label>{{'claims.claims-add.claims-general-information.modified_by' | translate}}</label>
+                <input *ngIf = "claimData" type="text" disabled class="fm-txt form-control" value = {{claimData.modifiedByUser}}/>
+              </div>
+              <div class="input-half">
+                <label>{{'claims.claims-add.claims-general-information.modified_on' | translate}}</label>
+                <input *ngIf = "claimData" type="text" disabled class="fm-txt form-control" value = {{convertDate(claimData.modifiedDate)}}/>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <!-- Cardholder Information -->
+    <div class="grid-box">
+      <div class="grid-heading">
+        <h3>{{'claims.claims-add.claims-card-holder.card-holder' | translate}}</h3>
+      </div>
+      <!-- Grid Heading Ends -->
+      <div class="grid-inner">
+
+        <!-- Form Row start -->
+        <div class="form-row">
+          <div class="row min-ht-sf">
+            <div class="col-md-2 custom-col col-xs-12">
+              <label>{{'claims.claims-add.claims-card-holder.received-date' | translate}}
+                <span class="required">*</span>
+              </label>
+
+              <input *ngIf = "claimData" type="text" disabled class="fm-txt form-control" value = {{convertDate(claimData.receivedOn)}}/>
+
+
+            </div>
+            <div class="col-md-2 custom-col col-xs-12">
+              <label>{{'claims.claims-add.claims-card-holder.card-id' | translate}}</label>
+
+              <input *ngIf = "claimData" type="text" disabled class="fm-txt form-control" value = {{claimData.cardNumber}}/>
+
+            </div>
+            <div class="col-md-2 custom-col col-xs-12">
+              <label>{{'claims.claims-add.claims-card-holder.claim-DOB' |
+                translate}}</label>
+
+                <input *ngIf = "claimData" type="text" disabled class="fm-txt form-control" value = {{convertDate(claimData.personDtOfBirth)}}/>
+            </div>
+            <div class="col-md-2 wd-tt col-xs-12">
+              <label>{{'claims.claims-add.claims-card-holder.cardholder' |
+                translate}}</label>
+                <input *ngIf = "claimData" type="text" disabled class="fm-txt form-control" value = '{{claimData.personFirstName}} {{claimData.personLastName}} - {{claimData.personDtOfBirth}}'/>
+            </div>
+            <div class="col-md-4 col-xs-12">
+              <label>{{'common.address' | translate }}
+
+              </label>
+              <input *ngIf = "claimData" type="text" disabled class="fm-txt form-control" value = {{claimData.cardFullAddress}}/>
+            </div>
+          </div>
+        </div>
+        <!-- Form Row ENds -->
+
+      </div>
+      <!-- Grid Inner Ends -->
+    </div>
+
+    <!-- Service provider -->
+    <div class="grid-box">
+      <div class="grid-heading">
+        <h3>{{'claims.claims-edit.service-provider.services-provider' | translate}}</h3>
+      </div>
+      <!-- Grid Heading Ends -->
+      <div class="grid-inner">
+        <div class="form-row">
+          <div class="row min-ht-sf">
+            <div class="col-md-2 col-xs-12">
+              <label>{{'claims.claims-edit.service-provider.payee' | translate}}</label>
+              <input *ngIf = "claimData" type="text" disabled class="fm-txt form-control" value = {{claimData.payeeTypeName}}/>
+            </div>
+            <div class="col-md-2 col-xs-12">
+              <label>{{'claims.claims-edit.service-provider.license-no.' | translate}}
+
+              </label>
+              <input *ngIf = "claimData" type="text" disabled class="fm-txt form-control" value = {{claimData.licenseNumber}}/>
+            </div>
+
+            <div class="col-md-2 col-xs-12" id="setFocus">
+              <label>{{'claim-service-provider.postal-add' | translate}}
+
+              </label>
+              <input *ngIf = "claimData" type="text" disabled class="fm-txt form-control" value = {{claimData.provPostalCode}}/>
+            </div>
+            <div class="col-md-6 col-xs-12">
+              <label>{{'claims.claims-edit.service-provider.pay-to-address' | translate}}
+
+              </label>
+              <input *ngIf = "claimData" type="text" disabled class="fm-txt form-control" value = {{claimData.provBillingFullAddress}}/>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- items -->
+    <div class="grid-inner">
+      <div class="form-row">
+        <div class="row">
+          <div class="col-md-12 col-xs-12 table-col">
+            <div class="table-responsive">
+              <table id="claimItemsTable"
+                class="row-border hover cardholder-table table-striped table-bordered dataTable">
+                <thead>
+                  <tr>
+                   
+                    <th>{{'common.date' | translate}} </th>
+                    <th>{{'claims-history.proc' | translate}}</th>
+                    <th *ngIf="discipline == 1">{{'claims-history.tooth' | translate}}</th>
+                    <th *ngIf="discipline == 1">{{'claims-history.surf' | translate}}</th>
+                    <th *ngIf="discipline == 1">{{'claims.claims-view.claim-items.count' | translate}}</th>
+
+                    <th>{{'claims-history.freeclaim' | translate}}</th>
+                    <th *ngIf="discipline == 1">{{'claims.claims-view.claim-items.fee' | translate}}
+                      <br>{{'claims.claims-view.claim-items.elig' | translate}}</th>
+                    <th *ngIf="discipline != 5">{{'claims.claims-view.claim-items.fee-allow' | translate}}</th>
+                    <th>{{'claims-history.freepaid' | translate}}</th>
+                    <th *ngIf="discipline == 5 || discipline == 1">{{'claims-history.labclaim' | translate}}</th>
+                    <th *ngIf="discipline == 1">{{'claims.claims-view.claim-items.lab' | translate}}
+                      <br>{{'claims.claims-view.claim-items.elig' | translate}}</th>
+                    <th *ngIf="discipline == 1">{{'claims.claims-view.claim-items.lab-allow' | translate}}</th>
+                    <th *ngIf="discipline == 5 || discipline == 1">{{'claims-history.labpaid' | translate}}</th>
+                    <th *ngIf="discipline != 6">{{'claims.claims-view.claim-items.cob1' | translate}}</th>
+                    <th *ngIf="discipline == 1">{{'claims.claims-view.claim-items.cob2' | translate}}</th>
+                    <th>{{'claims.claims-view.claim-items.deduct' | translate}}</th>
+                    <th>{{'claims.claims-view.claim-items.total' | translate}}
+                      <br>{{'claims.claims-view.claim-items.paid' | translate}}</th>
+                    <th>{{'claims.claims-view.claim-items.override' | translate}}</th>
+                   
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let claimItem of claimItems; let idx= index" [ngClass]="{
+                    'dental-row': (disciplineKey == 1),
+                    'vision-row': (disciplineKey == 2),
+                    'health-row': (disciplineKey == 3),
+                    'drug-row': (disciplineKey == 4),
+                    'supplement-row': (disciplineKey == 5),
+                    'pink':(claimItem.itemTotalPaidAmt==0	)
+                  }" (click)="openClaim(claimItem.claimKey,claimItem.disciplineKey, claimItem.dcpKey,claimItem.itemProcedureCd,claimItem.itemTotalPaidAmt)" (mouseenter) ="mouseEnter(claimItem.itemProcedureCd) ">
+                 
+                    <td class="amount_right_grid">{{claimItem.itemServiceDt}}</td>
+                    <td class="amount_right_grid">{{claimItem.itemProcedureCd}}</td>
+                    <td class="amount_right_grid" *ngIf="discipline == 1">{{claimItem.itemToothId}}</td>
+                    <td class="amount_right_grid" *ngIf="discipline == 1">{{claimItem.itemToothSurfaceTxt}}</td>
+                    <td class="amount_right_grid" *ngIf="discipline == 1">{{claimItem.itemUnitCount}}</td>
+                    <td class="amount_right_grid"><span>$</span>{{claimItem.itemFeeClaimAmt | number: '1.2'}}</td>
+                    <td class="amount_right_grid" *ngIf="discipline == 1">
+                      <span>$</span>{{claimItem.itemFeeEligAmt | number: '1.2'}}</td>
+                    <td class="amount_right_grid" *ngIf="discipline != 5">
+                      <span>$</span>{{claimItem.itemFeeAllowAmt | number: '1.2'}}</td>
+                    <td class="amount_right_grid"><span>$</span>{{claimItem.itemFeePaidAmt | number: '1.2'}}</td>
+                    <td *ngIf="discipline == 5 || discipline == 1" class="amount_right_grid">
+                      <span>$</span>{{claimItem.itemLabClaimAmt||0 | number: '1.2'}}
+                    </td>
+                    <td *ngIf="discipline == 1" class="amount_right_grid">
+                      <span>$</span>{{claimItem.itemLabEligAmt||0 | number: '1.2'}}
+                    </td>
+                    <td *ngIf="discipline == 1" class="amount_right_grid">
+                      <span>$</span>{{claimItem.itemLabAllowAmt||0 | number: '1.2'}}
+                    </td>
+                    <td *ngIf="discipline == 5 || discipline == 1" class="amount_right_grid">
+                      <span>$</span>{{claimItem.itemLabPaidAmt||0 | number: '1.2'}}
+                    </td>
+                    <td *ngIf="discipline != 6  && claimItem.itemCarrierAmt=='-1'" class="amount_right_grid">
+                     
+                    </td>
+                    <td *ngIf="discipline != 6 && claimItem.itemCarrierAmt!='-1'" class="amount_right_grid">
+                      <span>$</span>{{claimItem.itemCarrierAmt||0 | number: '1.2'}}
+                    </td>
+                    <td *ngIf="discipline == 1 && claimItem.itemCarrierAmt2=='-1'" class="amount_right_grid">
+                    </td>
+                    <td *ngIf="discipline == 1 && claimItem.itemCarrierAmt2!='-1'" class="amount_right_grid">
+                      <span>$</span>{{claimItem.itemCarrierAmt2||0 | number: '1.2'}}
+                    </td>
+                    <td class="amount_right_grid">
+                      <span>$</span>{{claimItem.itemDeductAmt||0 | number: '1.2'}}
+                    </td>
+
+                    <td class="amount_right_grid">
+                      <span>$</span>{{claimItem.itemTotalPaidAmt||0 | number: '1.2'}}
+                    </td>
+                    <td class="amount_right_grid">{{claimItem.overrideTypeDesc}}</td>
+                    
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- Table Ends -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Total -->
+    <div class="grid-box">
+      <div class="grid-heading">
+        <h3>{{'claims.claims-add.claims-totals.totals' | translate}}</h3>
+      </div>
+      <div class="grid-inner">
+       
+          <div class="form-row">
+            <div class="row min-ht-sf">
+             
+              <div class="col-xs-12 custom-coll ">
+                <label>{{'claims.claims-add.claims-totals.claimed' | translate}}</label>
+
+                <input *ngIf = "claimData" type="text" disabled class="fm-txt form-control" value = '{{convertToUsd(claimData.totalClaimedAmount)}}'/>
+
+              </div>
+              <div class="col-xs-12 custom-coll ">
+                <label>{{'claims.claims-add.claims-totals.allowed' | translate}}</label>
+                <input *ngIf = "claimData" type="text" disabled class="fm-txt form-control" value = ' {{convertToUsd(claimData.totalAllowedAmount)}} '/>
+              </div>
+              <div class="col-xs-12 custom-coll">
+                <label>{{'claims.claims-add.claims-totals.carrier' | translate}}</label>
+                <input *ngIf = "claimData" type="text" disabled class="fm-txt form-control" value = ' {{convertToUsd(claimData.totalCarrierAmount)}}'/>
+              </div>
+              <div class="col-xs-12 custom-coll">
+                <label>{{'claims.claims-add.claims-totals.not-covered' | translate}}</label>
+                <input *ngIf = "claimData" type="text" disabled class="fm-txt form-control" value = ' {{convertToUsd(claimData.totalNotCoveredAmount)}}'/>
+              </div>
+              <div class="col-xs-12 custom-coll">
+                <label>{{'claims.claims-add.claims-totals.deductible' | translate}}</label>
+                <div class="calender-field">
+                  <input *ngIf = "claimData" type="text" disabled class="fm-txt form-control" value = ' {{convertToUsd(claimData.totalDeductibleAmount)}}'/>
+                </div>
+              </div>
+              <div class="col-xs-12 custom-coll">
+                <label>{{'claims.claims-add.claims-totals.payable' | translate}}</label>
+                <div class="calender-field">
+                  <input *ngIf = "claimData" type="text" disabled class="fm-txt form-control" [ngModel]="convertToUsd(claimData.totalPayableAmount)" />
+                </div>
+              </div>
+              <div class="col-xs-12 custom-coll">
+                <label>{{'claims.claims-add.claims-general-information.reference_no' | translate}}</label>
+                <input *ngIf = "claimData" type="text" disabled class="fm-txt form-control" value = {{claimData.refId}}/>
+              </div>
+
+
+            </div>
+          </div>
+          <!-- Form Row ENds -->
+      
+      </div>
+      <!-- Grid Inner Ends -->
+    </div>
+
+  
+<app-duplicate-claim-item-listing></app-duplicate-claim-item-listing>
+<div class="grid-box">
+</div>
+
+    <div class="modal-footer">
+
+      <div class="form-row text-center" style="margin-top: 13px;">
+        <button class="btn green-btn" id="closeClaimDuplicate" (click)="continue()" data-dismiss="modal">Close</button> 
+        <!-- Cheque Claim Button-->
+    <button id="dcView_cheque"  class="btn green-btn"
+    (click)="onCheckCheque()">{{'button.cheque-claim'|translate}}</button>
+        <!-- log 833 feedbback -->
+      </div>
+
+    </div>
+  </div>
+
+</div>

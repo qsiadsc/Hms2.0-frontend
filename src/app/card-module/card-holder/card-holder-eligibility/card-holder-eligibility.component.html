@@ -1,0 +1,57 @@
+<form [formGroup]="CardHolderEligibilityFormGroup">
+  <div class="grid-box">
+    <div class="grid-heading collapse-heading" aria-expanded="false" data-toggle="collapse"
+      data-target="#cardHolderEligibilityForm">
+      <h3 aria-expanded="false" data-toggle="collapse" data-target="#cardHolderEligibilityForm">
+        {{'card.card-holder.eligibility.eligibility' | translate}}
+        <a href="javascript:;" title="Eligibility History" *ngIf="!addMode" class="history-ico" alt="History"
+          data-toggle="modal" (click)="getEligibilityHistory()"><!--For (Task 612 HMS Issue) data-target removed-->
+          <i class="fa fa-history" aria-hidden="true"></i>
+        </a>
+      </h3>
+      <div class="web-reg"> 
+        <button id="cch_eligibilityAddVoucher" class="green-btn-add btn" *ngIf="!addMode && alberta" data-toggle="modal"
+          (click)=" GetVoucherHistory()">
+          <i class="fa fa-plus"></i>{{'button.add-voucher' | translate}}</button>
+      </div>
+    </div>
+    <div class="collapse" id="cardHolderEligibilityForm">
+      <div class="grid-inner">
+        <div class="form-row">
+          <div class="row min-ht-sf">
+            <div class="col-md-3 col-xs-12">
+              <label>&nbsp;</label>
+              <div class="select-options">
+                <span><label> {{'card.card-holder.eligibility.plan' | translate}} <span class="custom-check"> 
+                  <input type="checkbox" id="cch_eligibilityIgnorePlan" name="chIgnorePlanAge"
+                    formControlName="chIgnorePlanAge"><span></span></span></label></span>
+              </div>
+            </div>
+            <div class="col-md-3 col-xs-12">
+              <label>{{'common.effectivedate' | translate}} <span class="required">*</span></label>
+              <div class="calender-field">
+                <my-date-picker id="cch_eligibilitydatepicker1" [ngClass]="(viewMode == true) ? 'removeCross':''"
+                  [options]="myDatePickerOptions" name="effective_date"
+                  placeholder="{{'common.date-placeholder' | translate}}" formControlName="effective_date"
+                  (inputFocusBlur)="changeDateFormat($event, 'effective_date' ,'CardHolderEligibilityFormGroup',true)">
+                </my-date-picker>
+                <show-errors [control]="CardHolderEligibilityFormGroup.controls.effective_date"></show-errors>
+              </div>
+            </div>
+            <div class="col-md-3 col-xs-12">
+              <label>{{'common.expirydate' | translate}}</label>
+              <div class="calender-field">
+                <my-date-picker id="cch_eligibilitydatepicker2" [ngClass]="[expired  ? 'expired' : 'notExpired', (viewMode == true) ? 'removeCross':'']"
+                  [options]="myDatePickerOptions" name="expiry_date"
+                  placeholder="{{'common.date-placeholder' | translate}}" formControlName="expiry_date"
+                  (inputFocusBlur)="changeDateFormat($event, 'expiry_date' ,'CardHolderEligibilityFormGroup')">
+                </my-date-picker>
+                <show-errors [control]="CardHolderEligibilityFormGroup.controls.expiry_date"></show-errors>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

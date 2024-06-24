@@ -1,0 +1,551 @@
+<nav class="breadcrumb">
+  <!-- code commented to stop showing company title in broker -->
+  
+  <span *ngIf="addBrokerAuthCheck[0].searchBroker == 'T'" class="breadcrumb-item" [routerLink]="['/company/broker']">{{
+    'company.add-broker.broker' | translate }} > </span>
+  <span *ngIf="addBrokerAuthCheck[0].searchBroker != 'T'" class="breadcrumb-item">{{ 'company.add-broker.broker' |
+    translate }} > </span>
+  <span class="breadcrumb-item active">{{ 'company.add-broker.add' | translate }}</span>
+</nav>
+<!-- Edit Section -->
+<div class="section-heading">
+  <h2 *ngIf="editMode == false">{{ 'company.add-broker.broker' | translate }} - <span>{{ 'company.add-broker.add' |
+      translate }}</span></h2>
+  <h2 *ngIf="(editMode == true && viewMode == false)">{{ 'company.edit-broker.broker' | translate }} - <span>{{
+      'company.edit-broker.view' | translate }}</span></h2>
+  <div class="web-reg">
+    <button type="button" style="cursor: pointer" class="claim-status btn status-btn" data-toggle="modal"
+      *ngIf="(editMode == true && viewMode == false) && addBrokerAuthCheck[0].editBroker == 'T'"
+      (click)="enableUpdateBroker()">{{ 'button.edit-broker' | translate }}</button>
+    <button type="button" style="cursor: pointer" class="claim-status btn status-btn" data-toggle="modal"
+      *ngIf="(editMode == true && viewMode == true)"
+      (click)="onSubmitbrokerForm()">{{ 'button.update' | translate }}</button>
+  </div>
+  <h2 *ngIf="(editMode == true && viewMode == true)">{{ 'company.edit-broker.broker' | translate }} - <span>{{
+      'company.edit-broker.edit' | translate }}</span></h2>
+</div>
+<!-- Section Heading Ends -->
+<div class="grid-box">
+  <div class="grid-heading">
+    <h3 *ngIf="(editMode == false && viewMode == false)">{{ 'company.add-broker.addbroker' | translate }}</h3>
+    <h3 *ngIf="(editMode == true && viewMode == false)">{{ 'company.edit-broker.broker-detail' | translate }}</h3>
+    <h3 *ngIf="(editMode == true && viewMode == true)">{{ 'company.edit-broker.edit-broker' | translate }}</h3>
+    <div class="web-reg">
+      <a *ngIf="(viewMode || editMode) && brokerSearchBtn" style="cursor: pointer" class="green-btn-add btn"
+        [routerLink]="['/company/broker']" (click)="backToSearch()"><i class="fa fa-share" aria-hidden="true"></i>{{
+        'common.backToSearch' | translate}}</a>
+    </div>
+  </div>
+  <!-- Grid Heading Ends -->
+  <!-- Broker Form Start Here-->
+  <div class="grid-inner" id="brokerMainForm">
+    <form [formGroup]="FormGroup" #brokerEditForm="ngForm" (ngSubmit)="onSubmitbrokerForm(FormGroup)">
+
+      <div class="form-row">
+        <div class="row min-ht-sf">
+          <div class="col-md-3 col-xs-12">
+            <label>{{ 'company.edit-broker.broker-id' | translate }}<span class="required">*</span></label>
+            <input class="fm-txt form-control" [attr.disabled]="true"
+              placeholder="{{ 'company.edit-broker.broker-id' | translate }}" #inputBrokerId name="broker_id"
+              id="broker_edit_broker_id" formControlName="broker_id" type="text" (blur)="validateBrokerId($event)">
+            <show-errors [control]="FormGroup.controls.broker_id"></show-errors>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{ 'company.edit-broker.broker-name' | translate }}<span class="required">*</span></label>
+            <input id="broker_name" class="fm-txt form-control" autofocus
+              placeholder="{{ 'company.edit-broker.broker-name' | translate }}" name="broker_name"
+              formControlName="broker_name" type="text" />
+            <show-errors [control]="FormGroup.controls.broker_name"></show-errors>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{ 'company.edit-broker.gst-registration' | translate }}</label>
+            <input class="fm-txt form-control" placeholder="{{ 'company.edit-broker.gst-registration' | translate }}"
+              name="gts_registration" id="broker_edit_broker_gts_registration" formControlName="gts_registration"
+              type="text" />
+            <show-errors [control]="FormGroup.controls.gts_registration"></show-errors>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{ 'company.edit-broker.address1' | translate }}<span class="required"> *</span></label>
+            <input class="fm-txt form-control" placeholder="{{ 'company.edit-broker.address1' | translate }}"
+              name="address1" id="broker_edit_broker_address_1" formControlName="address1" type="text" />
+            <show-errors [control]="FormGroup.controls.address1"></show-errors>
+          </div>
+
+          <div class="col-md-3 col-xs-12">
+            <label>{{ 'company.edit-broker.address2' | translate }}</label>
+            <input class="fm-txt form-control" name="address2"
+              placeholder="{{ 'company.edit-broker.address2' | translate }}" formControlName="address2"
+              id="broker_edit_broker_address_2" type="text" />
+            <show-errors [control]="FormGroup.controls.address2"></show-errors>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{ 'company.edit-broker.postal-code' | translate }}<span class="required">*</span></label>
+            <input (blur)="isBrokerContactPostalcodeValid($event)" class="upperCase fm-txt form-control"
+              placeholder="{{ 'company.edit-broker.postal-code' | translate }}" name="postalCode"
+              id="broker_edit_broker_postal_code" formControlName="postalCode" type="text" />
+            <show-errors [control]="FormGroup.controls.postalCode"></show-errors>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{ 'company.edit-broker.city' | translate }}<span class="required">*</span></label>
+            <input class="fm-txt form-control" (blur)="isCompanyPostalVerifyValid($event, 'city')"
+              placeholder="{{ 'company.edit-broker.city' | translate }}" name="city" id="broker_edit_broker_city"
+              formControlName="city" type="text" />
+            <show-errors [control]="FormGroup.controls.city"></show-errors>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{ 'company.edit-broker.province' | translate }}<span class="required">*</span></label>
+            <input class="fm-txt form-control" (blur)="isCompanyPostalVerifyValid($event, 'province')"
+              placeholder="{{ 'company.edit-broker.province' | translate }}" name="province"
+              id="broker_edit_broker_province" formControlName="province" type="text" />
+            <show-errors [control]="FormGroup.controls.province"></show-errors>
+          </div>
+
+          <div class="col-md-3 col-xs-12">
+            <label>{{ 'company.edit-broker.country' | translate }}<span class="required">*</span></label>
+            <input class="fm-txt form-control" (blur)="isCompanyPostalVerifyValid($event, 'country')"
+              placeholder="{{ 'company.edit-broker.country' | translate }}" name="country"
+              id="broker_edit_broker_country" formControlName="country" type="text" />
+            <show-errors [control]="FormGroup.controls.country"></show-errors>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{ 'company.edit-broker.email-address' | translate }}</label>
+            <input class="fm-txt form-control" placeholder="{{ 'company.edit-broker.email-address' | translate }}"
+              name="email" formControlName="email" id="broker_edit_broker_email" type="text" />
+            <show-errors [control]="FormGroup.controls.email"></show-errors>
+          </div>
+          <!--[Start]-->
+          <div class="col-md-3 col-xs-12">
+            <div class="row min-ht-sf">
+              <div class="col-md-5 col-xs-12">
+                <label>{{ 'common.extension' | translate }}</label>
+                <input class="fm-txt form-control" name="extension" placeholder="{{ 'common.extension' | translate }}"
+                  formControlName="extension" id="broker_edit_broker_extension" type="text" />
+                <show-errors [control]="FormGroup.controls.extension"></show-errors>
+              </div>
+              <div class="col-md-7 col-xs-12">
+                <label>{{ 'company.edit-broker.phone-no' | translate }}</label>
+                <input class="fm-txt form-control" [textMask]="{mask: phoneMask}" name="phone_no"
+                  placeholder="{{ 'company.edit-broker.phone-no' | translate }}" formControlName="phone_no"
+                  id="broker_edit_broker_phone_no" type="text" />
+                <show-errors [control]="FormGroup.controls.phone_no"></show-errors>
+              </div>
+            </div>
+          </div>
+          <!--[End]-->
+          <div class="col-md-3 col-xs-12">
+            <label>{{ 'company.edit-broker.fax-no' | translate }}</label>
+            <input class="fm-txt form-control" [textMask]="{mask: phoneMask}" name="fax_no"
+              placeholder="{{ 'company.edit-broker.fax-no' | translate }}" formControlName="fax_no"
+              id="broker_edit_broker_fax_no" type="text" />
+            <show-errors [control]="FormGroup.controls.fax_no"></show-errors>
+          </div>
+
+          <div class="col-md-3 col-xs-12">
+            <label>{{ 'company.edit-broker.effective-date' | translate }}<span class="required">*</span></label>
+            <div class="calender-field">
+              <my-date-picker id="testDate" [options]="myDatePickerOptionsViewMode" [placeholder]="myDatePlaceholder"
+                name="effective_date" formControlName="effective_date"
+                (inputFocusBlur)="changeDateFormat($event, 'effective_date', 'FormGroup', true)">
+              </my-date-picker>
+            </div>
+            <!-- Calendar Field Ends -->
+            <show-errors [control]="FormGroup.controls.effective_date"></show-errors>
+          </div>
+
+          <div [hidden]="!BrokerTerminationDate">
+            <div class="col-md-3 col-xs-12">
+              <label>{{ 'company.edit-broker.termination-date' | translate }}</label>
+              <input type="text" ng-disabled="BrokerTerminationDate" name="broker_termination_date"
+                formControlName="broker_termination_date" id="broker_edit_broker_termination_date"
+                class="fm-txt form-control" />
+            </div>
+            <div class="col-md-3 col-xs-12">
+              <label>{{ 'company.edit-broker.termination-reason' | translate }}</label>
+              <input type="text" ng-disabled="BrokerTerminationDate" name="broker_termination_reason"
+                formControlName="broker_termination_reason" id="broker_edit_broker_termination_reason"
+                class="fm-txt form-control" />
+            </div>
+          </div>
+
+          <!-- Form Row ENds -->
+          <div class="form-row">
+            <div class="col-md-12 col-xs-12 min-ht-half">
+              <div class="select-options">
+                <span>
+                  <label><span class="custom-check">
+                      <input type="checkbox" name="optoutCompanyEmailInd" formControlName="optoutCompanyEmailInd"> {{
+                      'company.edit-broker.opt_out_of_company_mail_email' | translate }}<span></span></span>
+                  </label>
+                </span>
+                <span>
+                  <label><span class="custom-check">
+                      <input type="checkbox" name="brokerMultiCommAgrInd" formControlName="brokerMultiCommAgrInd"> {{
+                      'company.edit-broker.multiple-commission' | translate }}<span></span></span>
+                  </label>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Form Row ENds -->
+
+    </form>
+  </div>
+  <!-- Grid Inner Ends -->
+  <div class="form-row text-center">
+    <button type="button" class="btn green-btn" *ngIf="editMode == false && addBrokerAuthCheck[0].saveBroker == 'T'"
+      (click)="onSubmitbrokerForm(FormGroup)">{{ 'button.save' | translate }}</button>
+    <button type="button" class="btn green-btn" data-toggle="modal" *ngIf="(editMode == true && viewMode == true)"
+      (click)="onSubmitbrokerForm()">{{ 'button.update' | translate }}</button>
+    <button type="button" class="btn green-btn" data-toggle="modal"
+      *ngIf="(editMode == true && viewMode == false) && addBrokerAuthCheck[0].editBroker == 'T'"
+      (click)="enableUpdateBroker()">{{ 'button.edit-broker' | translate }}</button>
+
+    <button id="broker-edit_reactivate_broker" type="button" class="btn green-btn" data-toggle="modal"
+      *ngIf="(editMode == true && BrokerTerminationDate == true) && addBrokerAuthCheck[0].reactivateBroker == 'T'"
+      (click)="getBrokerTerminateHistory()">{{ 'button.reactivate-broker' | translate }}</button>
+    <button id="broker-edit_terminate_broker" type="button" class="btn red-btn" data-toggle="modal"
+      *ngIf="(editMode == true && BrokerTerminationDate == false) && addBrokerAuthCheck[0].terminateBroker == 'T'"
+      (click)="getBrokerTerminateHistory()">{{ 'button.terminate-broker' | translate }}</button>
+
+    <button id="BtnTerminateBroker" [hidden]="true" data-toggle="modal" data-target="#TerminateBroker">{{
+      'button.openmodal' | translate }}</button>
+
+    <button *ngIf="addBrokerAuthCheck[0].addComment == 'T'" type="button" class="btn green-btn" data-toggle="modal"
+      data-target="#Comments" (click)="showCommentModal()">{{ 'button.comments' | translate }}</button>
+    <button type="button" class="btn green-btn" data-toggle="modal" data-target="#BrokerAddBankAccounts"
+      *ngIf="(editMode == true) && addBrokerAuthCheck[0].addBankAccount == 'T'"
+      (click)="getBankAccount()">{{ 'button.add-bank-aacount' | translate }}</button>
+  </div>
+  <!-- Broker Termination Form Start Here-->
+  <div id="TerminateBroker" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+    <!--Terminate Broker Modal-->
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button id="broker-edit_terminate_broker_form" type="button" class="close" data-dismiss="modal"
+            (click)="resetTerminateBrokerForm()">&times;</button>
+          <h4 *ngIf="!BrokerTerminationDate" class="modal-title">{{ 'button.terminate-broker' | translate }}
+            <span></span>
+          </h4>
+          <h4 *ngIf="BrokerTerminationDate" class="modal-title">{{ 'button.reactivate-broker' | translate }}
+            <span></span>
+          </h4>
+        </div>
+        <div class="modal-body">
+          <div class="grid-box">
+            <div class="grid-heading">
+              <h3 *ngIf="!BrokerTerminationDate">{{ 'button.terminate' | translate }}</h3>
+              <h3 *ngIf="BrokerTerminationDate">{{ 'button.reactivate' | translate }}</h3>
+            </div>
+            <div class="grid-inner">
+              <form id="terminateBrokerForm" [formGroup]="terminateBrokerForm" #brokerTerminateForm="ngForm"
+                (ngSubmit)="onSubmitTerminateBrokerForm(terminateBrokerForm)">
+                <div class="form-row">
+                  <div *ngIf="BrokerTerminationDate;else terminate_content">
+                    <div *ngIf="Broker.terminateDate > currentDate;else terminate_content">
+                    </div>
+                  </div>
+
+                  <ng-template #terminate_content>
+                    <div *ngIf="BrokerTerminationDate==false">
+                      <div class="row">
+
+                        <div class="col-md-3 col-xs-12">
+                          <label>{{ 'company.terminate-broker.termination-date' | translate }}<span
+                              class="required">*</span></label>
+                          <div class="calender-field" id="focusTerminationDateEl">
+                            <my-date-picker [options]="myDatePickerOptions" [placeholder]="myDatePlaceholder"
+                              name="termination_date" formControlName="termination_date"
+                              (inputFocusBlur)="changeDateFormat($event, 'termination_date', 'terminateBrokerForm', true)">
+                            </my-date-picker>
+                          </div>
+                          <!-- Calendar Field Ends -->
+                          <show-errors [control]="terminateBrokerForm.controls.termination_date"></show-errors>
+                          <ul *ngIf="error1.isError==true" class="validation-errors">
+                            <li style="color: red">{{error1.errorMessage}}</li>
+                          </ul>
+                        </div>
+                        <div class="col-md-3 col-xs-12">
+                          <label>{{ 'company.terminate-broker.termination-reason' | translate }} <span
+                              class="required">*</span></label>
+                          <select id="inputTerminationReason" #inputTerminationReason
+                            [attr.disabled]="BrokerTerminationDate == true ? true : null"
+                            (change)="setSelectTitle($event.target.value)" name="termination_reason"
+                            formControlName="termination_reason" title="{{selectBoxTitle}}" class="fm-txt form-control">
+                            <option [ngValue]="null" disabled hidden>{{'common.select' | translate}}</option>
+
+                            <ng-container *ngFor="let terminateReason of TerminationReasonList">
+                              <ng-container
+                                *ngIf="terminateReason.termCatCd === 'C' || terminateReason.termCatCd === 'O' || terminateReason.termCatCd === 'R'">
+                                <option value="{{terminateReason.termCatKey}}">{{
+                                  (terminateReason.termCatDesc.length>30)? (terminateReason.termCatDesc |
+                                  slice:0:30)+'..':(terminateReason.termCatDesc) }} </option>
+                              </ng-container>
+                            </ng-container>
+
+                          </select>
+                          <show-errors [control]="terminateBrokerForm.controls.termination_reason"></show-errors>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-template>
+
+                </div>
+                <!-- Form Row ENds -->
+                <div *ngIf="BrokerTerminationDate;else terminate_btn_content">
+                  <div *ngIf="Broker.terminateDate > currentDate;else terminate_btn_content">
+                    <div class="form-row text-center">
+                      <button id="broker-edit_re_activate_broker" type="button" class="green-btn btn"
+                        [attr.disabled]="true">{{
+                        'button.reactivate-broker' | translate }}</button>
+                    </div>
+                  </div>
+                </div>
+
+                <ng-template #terminate_btn_content>
+                  <div class="form-row text-center">
+                    <button id="broker-edit-Reactivate_broker" type="submit" class="green-btn btn"
+                      *ngIf="(editMode == true && BrokerTerminationDate == true)">{{
+                      'button.reactivate-broker' | translate }}</button>
+                    <button id="broker-edit_terminate" type="submit" class="red-btn btn"
+                      *ngIf="(editMode == true && BrokerTerminationDate == false)">{{
+                      'button.terminate' | translate }}</button>
+                  </div>
+                </ng-template>
+
+                <!-- Form Row ENds -->
+              </form>
+            </div>
+          </div>
+          <div class="grid-box">
+            <div class="grid-heading">
+              <h3>{{ 'company.terminate-broker.termination-history' | translate }}</h3>
+            </div>
+            <!-- Grid Heading Ends -->
+            <div class="grid-inner">
+              <div class="form-row">
+                <div class="row">
+                  <div class="col-md-12 col-xs-12 table-col">
+                    <div class="table-responsive">
+                      <table id="terminate-table" class="table table-bordered table-stripped">
+                      </table>
+
+                    </div>
+                    <!-- Table Ends -->
+                  </div>
+                </div>
+              </div>
+              <!-- Form Row ENds -->
+            </div>
+            <!-- Grid Inner Ends -->
+          </div>
+          <!-- Grid Box Ends -->
+        </div>
+        <!-- Modal Body End-->
+        <div class="modal-footer">
+          <button id="broker-edit_terminate_close" type="button" class="btn grey-btn" data-dismiss="modal"
+            (click)="resetTerminateBrokerForm()">{{
+            'button.close' | translate }}</button>
+        </div>
+        <!-- Modal  Footer Ends -->
+      </div>
+    </div>
+    <!--Terminate Broker Modal-->
+  </div>
+
+  <!-- Broker Comments Form Start Here-->
+  <div id="Comments" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button id="broker-edit_comment_form" type="button" class="close" data-dismiss="modal"
+            (click)="resetCommentForm()">&times;</button>
+          <h4 class="modal-title">{{'company.edit-broker.add-comments' | translate }}</h4>
+        </div>
+        <div class="modal-body">
+          <div class="grid-box">
+
+            <!-- Grid Heading Ends -->
+            <app-comment-model [enableAddButton]="addBrokerAuthCheck[0].saveBrokerComment" *ngIf="!editMode"
+              [commentFormEditMode]=true>
+            </app-comment-model>
+            <app-comment-edit-model [enableAddButton]="addBrokerAuthCheck[0].saveBrokerComment" *ngIf="editMode"
+              [commentsParams]="{  
+                            getCommentsListUrl: 'company-service/getBrokerCommentsByBrokerKey', 
+                            addCommentUrl: 'company-service/saveBrokerComments',
+                            coKey: parentBrokerKey,
+                            requestMode: 'post' 
+                          }" [commentColumns]="[
+                            {'title':'Date', 'data':'createdOn'},
+                            {'title':'User Name', 'data':'username'},
+                            {'title':'Department', 'data':'department'},
+                            {'title':'Comments', 'data':'brokerCoTxt'},
+					              		{'title':'Expiry Date', 'data':'expiredOn'},
+                            {'title':'Importance', 'data':'commentImportance'}
+                          ]" [getCommentJson]="{'key':'brokerKey', 'value':parentBrokerKey}"
+              [newCommentJson]="[ 'brokerKey','brokerCoTxt','commentImportance']">
+            </app-comment-edit-model>
+          </div>
+          <!-- Grid Box Ends -->
+        </div>
+        <!-- Modal Body End-->
+        <div class="modal-footer">
+          <button id="broker-edit_comment_form_close" type="button" class="btn grey-btn" data-dismiss="modal"
+            (click)="resetCommentForm()">{{
+            'button.close' | translate }}</button>
+        </div>
+        <!-- Modal Footer Ends -->
+      </div>
+
+    </div>
+  </div>
+  <!--Comments Modal-->
+
+  <!-- Broker Bank Account Form Start Here-->
+  <div id="BrokerAddBankAccounts" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+    <!--Broker Add Bank Accounts Modal-->
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button id="broker-edit_bank_account" type="button" (click)="bankAccountForm.reset()" class="close"
+            data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">{{ 'common.bank-account' | translate }}
+          </h4>
+        </div>
+        <div class="modal-body">
+          <div class="grid-box">
+            <div class="grid-heading">
+              <h3>{{ 'common.bank-account' | translate }}</h3>
+            </div>
+
+            <div class="grid-inner">
+              <form [formGroup]="bankAccountsForm" #bankAccountForm="ngForm"
+                (ngSubmit)="onSubmitBankAccountsForm(bankAccountsForm)">
+                <div class="form-row">
+                  <div class="row">
+                    <div class="col-md-3 col-xs-12">
+                      <label>{{ 'company.company-bank-account.bank-no' | translate }}<span
+                          class="required">*</span></label>
+                      <input #autoFocusBankNumber type="text" name="bank_number" formControlName="bank_number"
+                        id="broker_edit_broker_bank_number" class="fm-txt form-control"
+                        placeholder="{{ 'company.company-bank-account.bank-no' | translate }}"
+                        (blur)="bankFields(bankAccountsForm.controls.bank_number,bankAccountsForm.controls.branch)" />
+                      <show-errors [control]="bankAccountsForm.controls.bank_number"></show-errors>
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                      <label>{{ 'company.company-bank-account.branch-no.' | translate }}<span
+                          class="required">*</span></label>
+                      <input type="text" name="branch" formControlName="branch" id="broker_edit_broker_branch"
+                        class="fm-txt form-control"
+                        placeholder="{{ 'company.company-bank-account.branch-no.' | translate }}"
+                        (blur)="bankFields(bankAccountsForm.controls.bank_number,bankAccountsForm.controls.branch)" />
+                      <show-errors [control]="bankAccountsForm.controls.branch"></show-errors>
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                      <label>{{ 'company.company-bank-account.bank-name' | translate }}<span
+                          class="required">*</span></label>
+                      <input type="text" name="bank_name" formControlName="bank_name" class="fm-txt form-control"
+                        placeholder="{{ 'company.company-bank-account.bank-name' | translate }}" />
+                      <show-errors [control]="bankAccountsForm.controls.bank_name"></show-errors>
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                      <label>{{ 'company.company-bank-account.account-no.' | translate }}<span
+                          class="required">*</span></label>
+                      <input type="text" name="account_number" formControlName="account_number"
+                        id="broker_edit_broker_account_number" class="fm-txt form-control"
+                        placeholder="{{ 'company.company-bank-account.account-no.' | translate }}" />
+                      <show-errors [control]="bankAccountsForm.controls.account_number"></show-errors>
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                      <label>{{ 'company.company-bank-account.effective-date' | translate }}<span
+                          class="required">*</span></label>
+                      <div class="calender-field">
+                        <my-date-picker [ngClass]="(buttonText == 'Update') ? 'removeCross':''"
+                          [options]="myDatePickerOptions" [placeholder]="myDatePlaceholder" name="effective_date"
+                          id="broker_edit_broker_effective_date" formControlName="effective_date"
+                          (inputFocusBlur)="changeDateFormat($event, 'effective_date', 'bankAccountsForm', true)">
+                        </my-date-picker>
+                      </div>
+                      <!-- Calendar Field Ends -->
+                      <show-errors [control]="bankAccountsForm.controls.effective_date"></show-errors>
+
+                    </div>
+
+                    <div class="col-md-3 col-xs-12">
+
+                      <label>{{ 'company.company-bank-account.expiry-date' | translate }}</label>
+                      <div class="calender-field">
+                        <my-date-picker id="bank_expiry_date" [options]="myDatePickerOptions"
+                          [placeholder]="myDatePlaceholder" name="expiry_date" formControlName="expiry_date"
+                          [ngClass]="expired  ? 'expired' : 'notExpired'"
+                          (inputFocusBlur)="changeDateFormat($event, 'expiry_date', 'bankAccountsForm','currentDate')">
+                        </my-date-picker>
+                      </div>
+                      <!-- Calendar Field Ends -->
+                      <!-- After saving banks details on edit mode, save a bank account detail without expiry it is showing mandatory validation on expiry date(point no-215) -->
+                      <show-errors [control]="bankAccountsForm.controls.expiry_date"></show-errors>
+                      <ul *ngIf="error2.isError==true" class="validation-errors">
+                        <li style="color: red">{{error2.errorMessage}}</li>
+                      </ul>
+                    </div>
+                    <div class="col-sm-3 col-xs-12"> <label>&nbsp;</label>
+                      <button *ngIf="addBrokerAuthCheck[0].saveBankAccount == 'T'" type="submit" class="green-btn btn">{{
+                        buttonText }}</button>
+                    </div>
+                  </div>
+
+                </div>
+                <!-- Form Row ENds -->
+
+              </form>
+            </div>
+          </div>
+          <div class="grid-box">
+            <div class="grid-heading">
+              <h3>{{ 'company.company-bank-account.list-of-bank-accounts' | translate }}</h3>
+            </div>
+            <!-- Grid Heading Ends -->
+            <div class="grid-inner">
+              <div class="form-row">
+                <div class="row">
+                  <div class="col-md-12 col-xs-12 table-col">
+                    <div class="table-responsive">
+                      <table id="broker-bank-table" class="inlinePopupTable table table-bordered table-stripped">
+                      </table>
+                    </div>
+                    <!-- Table Ends -->
+                  </div>
+                </div>
+              </div>
+              <!-- Form Row ENds -->
+            </div>
+            <!-- Grid Inner Ends -->
+          </div>
+          <!-- Grid Box Ends -->
+        </div>
+        <!-- Modal Body End-->
+        <div class="modal-footer">
+          <button id="broker-edit_bank_account_close" type="button" (click)="bankAccountForm.reset()"
+            class="btn grey-btn" data-dismiss="modal">{{ 'button.close' | translate }}</button>
+        </div>
+        <!-- Modal  Footer Ends -->
+      </div>
+    </div>
+    <!--Broker Add Bank Accounts Modal-->
+  </div>
+
+</div>
+<!-- Edit section Ends -->
+
+<div *ngIf="editMode">
+  <!-- Broker Company section -->
+  <app-broker-company [parentBroker]='Broker' [parentBrokerKey]='parentBrokerKey'></app-broker-company>
+  <!-- Broker Company section Ends -->
+</div>
+
+<!-- Grid Box Ends -->

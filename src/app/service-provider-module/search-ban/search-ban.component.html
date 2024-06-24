@@ -1,0 +1,104 @@
+<div class="section-heading">
+    <h2>{{'serviceProvider.BAN-search.banNumber'|translate}}
+        <span>- {{'common.search'|translate}}</span>
+    </h2>
+</div>
+<!-- Section Heading Ends -->
+
+<div class="grid-box">
+    <div class="grid-heading">
+        <h3>{{'serviceProvider.BAN-search.search-ban-number'|translate}}</h3>
+        <!-- Web Reg Ends -->
+    </div>
+    <!-- Grid Heading Ends -->
+    <div class="grid-inner">
+        <div class="form-row">
+            <div class="row min-ht-sf">
+                <form [formGroup]="FormGroup">
+                    <div class="col-md-3 col-xs-12">
+                        <label>{{'serviceProvider.serviceProvider-search.discipline' | translate }}</label>
+                        <select class="fm-txt form-control"  name="disciplineType" id="sps_disciplineType" formControlName="disciplineType">
+                            <option *ngFor="let type of disciplineType" [value]="type.disciplineKey">{{type.disciplineName}}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                        <label>{{'serviceProvider.billing-address.ban-bank-account.buss-arr-number'|translate}}</label>
+                        <input id="sban_bussArrNo" placeholder="{{'serviceProvider.billing-address.ban-bank-account.buss-arr-number'|translate}}" type="text" class="fm-txt form-control" formControlName="bussArrNo">
+                    </div>
+                    
+                    <div class="col-md-3 col-xs-12">
+                        <label>{{'serviceProvider.billing-address.ban-bank-account.bank-account-number'|translate}}</label>
+                        <input id="sban_bankAccNo" placeholder="{{'serviceProvider.billing-address.ban-bank-account.bank-account-number'|translate}}" type="text" class="fm-txt form-control" formControlName="bankAccNo" maxlength="20" />
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                        <label>&nbsp;</label>
+                        <button title="Search" id="sban_search" *ngIf="searchBanChecks[0].searchBan == 'T'" (click)="getBANList(1)" class="btn green-btn">{{'button.search'|translate}}</button>
+                        <button title="Clear" id="sban_search" (click)="resetFormSearch()" class="btn grey-btn">{{'button.clear'|translate}}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- Form Row ENds -->
+    </div>
+    <!-- Grid Inner Ends -->
+</div>
+<!-- Grid Box Ends -->
+<div [hidden]="!showBANSearchTable">
+    <div class="grid-box">
+        <div class="grid-heading">
+            <h3>{{'serviceProvider.BAN-search.list'|translate}}</h3>
+        </div>
+        <div class="grid-inner">
+            <!-- Form Row Ends -->
+            <div class="form-row">
+                <div class="row">
+                    <div class="col-md-12 col-xs-12 table-col">
+                        <div class="table-responsive">
+                            <table id="search-BAN-table" class="display table table-bordered table-stripped">
+                                <thead></thead>
+                                <tfoot>
+                                    <tr>
+                                        <td width="20%">
+                                            <select class="fm-txt form-control inputSearch" [(ngModel)]="selectedDiscipline" name="disciplineKey" id="sbang_disciplineType" data-type="select">
+                                                <option *ngFor="let type of disciplineType" [value]="type.disciplineKey">{{type.disciplineName}}</option>
+                                            </select>
+                                        </td>
+                                        <td width="20%" class="amount_right_grid"><input  [(ngModel)]="bussArr" (keydown)="filterSearchOnEnter($event,'search-BAN-table')" type="text" placeholder="{{'serviceProvider.billing-address.ban-bank-account.buss-arr-number'| translate}}" class="fm-txt form-control inputSearch amount_right" id="sbang_bussArrNo" name="banId" /></td>
+                                        <td width="20%" class="amount_right_grid"><input [(ngModel)]="clientNameL" (keydown)="filterSearchOnEnter($event,'search-BAN-table')" type="text" placeholder="{{'serviceProvider.BAN-search.client-name' | translate}}" class="fm-txt form-control inputSearch amount_right" id="sbang_clientName" name="banClientName" /></td>
+                                        <td width="20%" class="amount_right_grid"><input [(ngModel)]="provBankAcctNum" (keydown)="filterSearchOnEnter($event,'search-BAN-table')" type="text" placeholder="{{'serviceProvider.BAN-search.bankAccNo' | translate}}" class="fm-txt form-control inputSearch amount_right" id="sbang_bankAccNo" name="provBankAcctNum" /></td>
+                                        <td width="20%">
+                                            <!-- Buttons added upperside of action. -->
+                                            <button title="{{'common.search' | translate}}" id="sps_gridSearch" class="btn green-btn searchreset" (click)="getBANByGridFilteration('search-BAN-table')">
+                                                <span class="glyphicon glyphicon-search"></span>
+                                            </button>
+                                            <button title="{{'common.reset' | translate}}" id="sps_resetGridSearch" class="btn grey-btn searchreset" (click)="getBANList(0)">
+                                                <span class="glyphicon glyphicon-repeat"></span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <!-- Table Ends -->
+                    </div>
+                </div>
+            </div>
+            <!-- Form Row ENds -->
+        </div>
+        <!-- Grid Inner Ends -->
+    </div>
+</div>
+        <div id="ModalSearchBanSetup" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">{{'serviceProvider.billing-address.ban-bank-account.bAN-setup-heading'|translate}}</h4>
+                </div>
+                <div class="modal-body">
+                   <app-ban-bank-account [serviceProviderAddMode] = "serviceProviderAddMode" [serviceProviderViewMode] = "serviceProviderViewMode"   [serviceProviderEditMode] = "serviceProviderEditMode" [disciplineKey]="disciplineKey" [provBillAddKey]="provBillAddKey"
+                        [banId]="banId" [provBillAddKey]= "provBillingAddressKey" [returnId] = "returnId"></app-ban-bank-account> 
+                </div>
+            </div>
+        </div>
+    </div>

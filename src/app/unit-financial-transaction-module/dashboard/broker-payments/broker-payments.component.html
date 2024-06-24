@@ -1,0 +1,803 @@
+<div class="grid-box">
+    <div class="grid-heading">
+        <h3>{{'uft.dashboard.heading.Payables'|translate}}</h3>
+    </div>
+    <!-- Grid Heading Ends -->
+    <div class="grid-inner">
+        <div class="form-row">
+            <ul class="nav company-tabs nav-pills">
+                <li class="active">
+                    <a data-toggle="pill" (click)=brokerScreen() href="#home">
+                        <span>{{'uft.dashboard.brokerPayments.broker'|translate}}</span>
+                    </a>
+                </li>
+                <li>
+                    <a data-toggle="pill" id="refundButton" (click)=refundScreen() href="#menu2">
+                        <span>{{'uft.dashboard.brokerPayments.refunds'|translate}}</span>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="uft-pb">
+                <div id="home" class="tab-pane fade in active">
+                    <div class="grid-inner">
+                        <div class="row">
+                            <div class="grid-inner">
+                                <div class="form-row">
+                                    <div class="row">
+                                        <form [formGroup]="brokerPaymentForm" (ngSubmit)="searchBroker()">
+                                            <div class="row min-ht-sf">
+                                                <div class="col-md-12 col-xs-12">
+                                                    <div class="col-sm-4">
+                                                        <div class="row min-ht-sf">
+                                                            <div class="col-sm-4">
+                                                                <label>{{'uft.dashboard.brokerPayments.payableAmt' | translate}}</label>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <div class="select-options">
+                                                                    <span>
+                                                                        <label>
+                                                                            <span class="custom-check">
+                                                                                <input id="brokerPayableMoreThan" name="moreThan" formControlName="moreThan" type="checkbox">{{'uft.dashboard.brokerPayments.moreFifty'
+                                                                                | translate}}
+                                                                                <span></span>
+                                                                            </span>
+                                                                        </label>
+                                                                    </span>
+                                                                </div>
+                                                                <div class="select-options">
+                                                                    <span>
+                                                                        <label>
+                                                                            <span class="custom-check">
+                                                                                <input id="brokerPayableLessThan" name="lessThan" formControlName="lessThan" type="checkbox">{{'uft.dashboard.brokerPayments.lessFifty'
+                                                                                | translate}}
+                                                                                <span></span>
+                                                                            </span>
+                                                                        </label>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6 col-xs-12">
+                                                        <div class="row min-ht-sf">
+                                                            <div style="width: 112px;" class="col-sm-3">
+                                                                <label>{{'uft.dashboard.brokerPayments.eftAvailable' |translate}}</label>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <select style="width: 68px;height: 32px;" class="fm-txt form-control inputSearch" id="hpc_userSurface" formControlName="eftAvail"
+                                                                    name="eftAvail" placeholder="Select">
+                                                                    <option hidden value="">{{'common.select'|translate}}</option>
+                                                                    <option value="T">{{'common.yes' | translate}}</option>
+                                                                    <option value="F">{{'common.no' | translate}}</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6 min-ht-half">
+                                                        <button type="submit" class="btn green-btn" (click)="searchBroker()" id="companySearchFilterSearch">{{'button.search'|translate}}</button>
+                                                        <button id="btnClearBroker" class="btn grey-btn" type="button" title="Clear" (click)="resetBrokerSearchForm()">{{ 'button.clear' | translate }}</button>
+                                                        <button class="btn green-btn" data-toggle="modal" data-target="#generateBrokerPaymentPopup" (click)="generateBrokerPaymentPopup()">{{'uft.dashboard.brokerPayments.generateBrokerPayment' | translate}}</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <!-- Cc Tabs Ends -->
+                                        <div [hidden]="!brokerPayableGrid">
+                                            <div class="grid-box">
+                                                <div class="grid-heading">
+                                                    <h3>{{'uft.dashboard.brokerPayments.brokerPayableList' | translate}}</h3>
+                                                </div>
+                                                <div class="grid-inner">
+                                                    <form (submit)="brokerListFilter('brokerPayableList')">
+                                                        <div class="form-row text-right search-top">
+                                                            <button id="finSearch" title="{{'common.search' | translate}}" class="btn green-btn searchreset" (click)="brokerListFilter('brokerPayableList')">
+                                                                <span class="glyphicon glyphicon-search"></span>
+                                                            </button>
+                                                            <button id="finReset" title="{{'common.reset' | translate}}" class="btn grey-btn searchreset" (click)="resetBrokerListFilter()">
+                                                                <span class="glyphicon glyphicon-repeat"></span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="form-row">
+                                                            <div class="row">
+                                                                <div class="col-md-12 col-xs-12 table-col">
+                                                                    <div class="table-responsive">
+                                                                        <table id="brokerPayableList" class="table table-bordered table-stripped">
+                                                                            <tfoot>
+                                                                                <tr>
+                                                                                    <td width="8%">
+                                                                                        <input class="fm-txt form-control tFootInput inputSearch" type="text" name="brokerName" placeholder="{{'uft.dashboard.brokerPayments.brokerName' | translate}}">
+                                                                                    </td>
+                                                                                    <td width="8%">
+                                                                                        <input class="fm-txt form-control tFootInput inputSearch amount_right" type="text" name="brokerId" placeholder="{{'uft.dashboard.brokerPayments.brokerID' | translate}}">
+                                                                                    </td>
+                                                                                    <td width="8%">
+                                                                                        <input class="fm-txt form-control tFootInput inputSearch amount_right" type="text" name="totalComm" placeholder="{{'uft.dashboard.brokerPayments.totalAmount' | translate}}">
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tfoot>
+                                                                        </table>
+                                                                    </div>
+                                                                    <!-- Table Ends -->
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                    <!-- Form Row ENds -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="menu1" class="tab-pane fade">
+                    <div class="grid-inner">
+                        <div class="form-row">
+                            <div class="row min-ht-half">
+                                <div class="table-responsive">
+                                    <form [formGroup]="claimSearchSubmit">
+                                        <div class="grid-inner">
+                                            <div class="form-row">
+                                                <div class="row min-ht-half">
+                                                    <div class="col-md-4 col-xs-12">
+                                                        <div class="calender-field">
+                                                            <div class="row min-ht-sf">
+                                                                <div class="col-sm-4">
+                                                                    <label class="rd-middle">{{'uft.dashboard.brokerPayments.transDate' | translate}}</label>
+                                                                </div>
+                                                                <div class="col-sm-2" style="padding:0; text-align: right;">
+                                                                    <label class="rd-middle">{{'uft.dashboard.brokerPayments.from' | translate}}</label>
+                                                                </div>
+                                                                <div class="col-sm-6">
+                                                                    <my-date-picker id="claimPayableFromDate" [options]="myDatePickerOptions" name="fromDate" formControlName="fromDate" (inputFocusBlur)="changeDateFormat($event, 'fromDate','claimSearchSubmit')"
+                                                                        placeholder="{{'common.date-placeholder' | translate}}">
+                                                                    </my-date-picker>
+                                                                    <show-errors [control]="claimSearchSubmit.controls.fromDate"></show-errors>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 col-xs-12">
+                                                        <div class="row min-ht-sf">
+                                                            <div class="col-sm-2" style="padding:0; text-align: right;">
+                                                                <label class="rd-middle">{{'uft.dashboard.brokerPayments.to' | translate}}</label>
+                                                            </div>
+                                                            <div class="col-sm-7">
+                                                                <div class="calender-field">
+                                                                    <my-date-picker id="claimPayableToDate" [options]="myDatePickerOptions" name="toDate" formControlName="toDate" (inputFocusBlur)="changeDateFormat($event, 'toDate','claimSearchSubmit')"
+                                                                        placeholder="{{'common.date-placeholder' | translate}}">
+                                                                    </my-date-picker>
+                                                                    <show-errors [control]="claimSearchSubmit.controls.toDate"></show-errors>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 col-xs-12">
+                                                        <div style="width:112px" class="col-sm-3">
+                                                            <label>{{'uft.dashboard.brokerPayments.eftAvailable' | translate}}</label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <select style="width: 68px;height: 32px;" class="fm-txt form-control inputSearch" id="hpc_userSurface" formControlName="claimEftAvail"
+                                                                name="claimEftAvail" placeholder="Select">
+                                                                <option hidden value="">{{'common.select'|translate}}</option>
+                                                                <option value="T">{{'common.yes' | translate}}</option>
+                                                                <option value="F">{{'common.no' | translate}}</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-4 min-ht-half">
+                                                        <button class="btn green-btn" (click)=searchClaim() id="searchClaim">{{'button.search'|translate}}</button>
+                                                        <button id="btnClearClaim" class="btn grey-btn" type="button" title="Clear" (click)="resetSearchClaim()">{{ 'button.clear' | translate }}</button>
+                                                    </div>
+                                                    <!-- Grid Box Ends -->
+                                                </div>
+                                            </div>
+                                            <!-- Form Row ENds -->
+                                        </div>
+                                        <!-- Grid Inner Ends -->
+                                    </form>
+                                    <div [hidden]="!claimGrid">
+                                        <div class="grid-box">
+                                            <div class="grid-heading">
+                                                <h3>{{'uft.dashboard.brokerPayments.claimList' | translate}}</h3>
+                                            </div>
+                                            <!-- Grid Heading Ends -->
+                                            <div class="grid-inner">
+                                                <form (submit)="claimListFilter('claimList')">
+                                                    <div class="form-row text-right search-top">
+                                                        <button id="claimSearch" type="submit" title="{{'common.search' | translate}}" class="btn green-btn searchreset" (click)="claimListFilter('claimList')">
+                                                            <span class="glyphicon glyphicon-search"></span>
+                                                        </button>
+                                                        <button id="claimReset" title="{{'common.reset' | translate}}" class="btn grey-btn searchreset" (click)="resetClaimListFilter()">
+                                                            <span class="glyphicon glyphicon-repeat"></span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="form-row">
+                                                        <div class="row">
+                                                            <div class="col-md-12 col-xs-12 table-col">
+                                                                <div class="table-responsive">
+                                                                    <table id="claimList" class="display table table-bordered table-stripped">
+                                                                        <thead>
+                                                                        </thead>
+                                                                        <tfoot>
+                                                                            <tr>
+                                                                                <td width="8%">
+                                                                                    <ng2-completer [inputName]="'coId'" [inputId]="'searchCompany'" id="searchCompany" name="coId" [datasource]="companyDataRemote"
+                                                                                        [minSearchLength]="2" [placeholder]="'Search Company'"
+                                                                                        [textSearching]="'Please wait...'" [inputClass]="'form-control inputSearch'"
+                                                                                        [fillHighlighted]="false" (selected)="onCompanyNameSelected($event)">
+                                                                                    </ng2-completer>
+                                                                                </td>
+                                                                                <td width="8%" class="alignDpRight">
+                                                                                    <div class="calender-field">
+                                                                                        <my-date-picker id="trans_date" placeholder="{{'common.date-placeholder' | translate}}" class="inputSearch" name="transDate"
+                                                                                            data-type="date" [options]="myDatePickerOptions"
+                                                                                            [selDate]="dateNameArray['trans_date']"
+                                                                                            (inputFocusBlur)="changeDateFormat1($event, 'trans_date')">
+                                                                                        </my-date-picker>
+                                                                                    </div>
+                                                                                </td>
+                                                                                <td width="8%">
+                                                                                    <input class="fm-txt form-control tFootInput amount_right inputSearch" type="text" name="payee" placeholder="{{'uft.dashboard.brokerPayments.payeeType' | translate}}">
+                                                                                </td>
+                                                                                <td width="8%">
+                                                                                    <input class="fm-txt form-control tFootInput amount_right inputSearch" type="text" name="provinceName" placeholder="{{'uft.dashboard.brokerPayments.province' | translate}}">
+                                                                                </td>
+                                                                                <td width="8%">
+                                                                                    <input class="fm-txt form-control tFootInput amount_right inputSearch" type="text" name="transactionRefNo" placeholder="{{'uft.dashboard.brokerPayments.transRef' | translate}}">
+                                                                                </td>
+                                                                                <td width="8%">
+                                                                                    <input class="fm-txt form-control tFootInput amount_right inputSearch" type="text" name="debitAmount" placeholder="{{'uft.dashboard.brokerPayments.transAmountBal' | translate}}">
+                                                                                </td>
+                                                                                <td width="8%">
+                                                                                    <input class="fm-txt form-control tFootInput amount_right inputSearch" type="text" name="claimKey" placeholder="{{'uft.dashboard.brokerPayments.claimNo' | translate}}">
+                                                                                </td>
+                                                                            </tr>
+                                                                        </tfoot>
+                                                                    </table>
+                                                                </div>
+                                                                <!-- Table Ends -->
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                                <!-- Form Row ENds -->
+                                            </div>
+                                            <!-- Grid Inner Ends -->
+                                        </div>
+                                        <!-- Grid Box Ends -->
+                                    </div>
+                                </div>
+                                <!-- Table Ends -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="menu2" class="tab-pane fade">
+                    <div class="grid-inner">
+                        <div class="form-row">
+                            <div class="row min-ht-half">
+                                <div class="table-responsive">
+                                    <form [formGroup]="companyRefundForm">
+                                        <div class="grid-inner">
+                                            <div class="form-row">
+                                                <div class="row min-ht-half">
+                                                    <div class="col-md-4 col-xs-12">
+                                                        <div class="calender-field">
+                                                            <div class="row min-ht-sf">
+                                                                <div class="col-sm-4">
+                                                                    <label class="rd-middle">{{'uft.dashboard.brokerPayments.transDate' | translate}}</label>
+                                                                </div>
+                                                                <div class="col-sm-2" style="padding:0; text-align: right;">
+                                                                    <label class="rd-middle">{{'uft.dashboard.brokerPayments.from' | translate}}</label>
+                                                                </div>
+                                                                <div class="col-sm-6">
+                                                                    <my-date-picker id="companyRefundFromDate" [options]="myDatePickerOptions" name="fromDate" formControlName="fromDate" (inputFocusBlur)="changeDateFormat($event, 'fromDate','companyRefundForm')"
+                                                                        placeholder="{{'common.date-placeholder' | translate}}">
+                                                                    </my-date-picker>
+                                                                    <show-errors [control]="companyRefundForm.controls.fromDate"></show-errors>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 col-xs-12">
+                                                        <div class="row min-ht-sf">
+                                                            <div class="col-sm-2" style="padding:0; text-align: right;">
+                                                                <label class="rd-middle">{{'uft.dashboard.brokerPayments.to' | translate}}</label>
+                                                            </div>
+                                                            <div class="col-sm-7">
+                                                                <div class="calender-field">
+                                                                    <my-date-picker id="companyRefundToDate" [options]="myDatePickerOptions" name="toDate" formControlName="toDate" (inputFocusBlur)="changeDateFormat($event, 'toDate','companyRefundForm')"
+                                                                        placeholder="{{'common.date-placeholder' | translate}}">
+                                                                    </my-date-picker>
+                                                                    <show-errors [control]="companyRefundForm.controls.toDate"></show-errors>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 col-xs-12">
+                                                        <div style="width:112px" class="col-sm-3">
+                                                            <label>{{'uft.dashboard.brokerPayments.eftAvailable' | translate}}</label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <select style="width: 68px;height: 32px;" class="fm-txt form-control inputSearch" id="hpc_userSurface" formControlName="refundEftAvail"
+                                                                name="refundEftAvail" placeholder="Select">
+                                                                <option hidden value="">{{'common.select'|translate}}</option>
+                                                                <option value="T">{{'common.yes' | translate}}</option>
+                                                                <option value="F">{{'common.no' | translate}}</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 col-xs-12 min-ht-half">
+                                                        <div class="select-options rd-middle">
+                                                            <span>
+                                                                <label>
+                                                                    <span>
+                                                                        <input type="radio" id="surplusRefund" formControlName="surplusRefund" value="surplusRefund"> {{'uft.dashboard.brokerPayments.surplusRefund' |
+                                                                        translate}}
+                                                                        <span></span>
+                                                                    </span>
+                                                                </label>
+                                                            </span>
+                                                            <span>
+                                                                <label>
+                                                                    <span>
+                                                                        <input type="radio" id="closure" formControlName="surplusRefund" value="closure"> {{'uft.dashboard.brokerPayments.accClosure' | translate}}
+                                                                        <span></span>
+                                                                    </span>
+                                                                </label>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-4 min-ht-half">
+                                                        <button class="btn green-btn" (click)=searchRefund() id="searchRefund">{{'button.search'|translate}}</button>
+                                                        <button id="btnClearRefund" class="btn grey-btn" type="button" title="Clear" (click)="resetRefundSearchForm()">{{ 'button.clear' | translate }}</button>
+                                                        <button class="btn green-btn" data-toggle="modal" data-target="#companyRefundEft" (click)="companyRefundEftPopUp()">Company Refund EFT</button>
+                                                    </div>
+                                                    <!-- Grid Box Ends -->
+                                                </div>
+                                            </div>
+                                            <!-- Form Row ENds -->
+                                        </div>
+                                        <!-- Grid Inner Ends -->
+                                    </form>
+                                    <div [hidden]="!companyRefundGrid">
+                                        <div class="grid-box">
+                                            <div class="grid-heading">
+                                                <h3>{{'uft.dashboard.brokerPayments.companyRefundList' | translate}}</h3>
+                                            </div>
+                                            <!-- Grid Heading Ends -->
+                                            <div class="grid-inner">
+                                                <form (submit)="refundListFilter('refundList')">
+                                                    <div class="form-row text-right search-top">
+                                                        <button id="finSearch" type="submit" title="{{'common.search' | translate}}" class="btn green-btn searchreset" (click)="refundListFilter('refundList')">
+                                                            <span class="glyphicon glyphicon-search"></span>
+                                                        </button>
+                                                        <button id="finReset" title="{{'common.reset' | translate}}" class="btn grey-btn searchreset" (click)="resetRefundListFilter()">
+                                                            <span class="glyphicon glyphicon-repeat"></span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="form-row">
+                                                        <div class="row">
+                                                            <form [formGroup]="refundListForm">
+                                                                <div class="col-md-12 col-xs-12 table-col">
+                                                                    <div class="table-responsive">
+                                                                        <table id="refundList" class="display table table-bordered table-stripped">
+                                                                            <thead>
+                                                                            </thead>
+                                                                            <tfoot>
+                                                                                <tr>
+                                                                                    <td width="8%">
+                                                                                        <input class="fm-txt form-control  tFootInput inputSearch" type="text" formControlName="coId" name="coId" placeholder="{{'uft.dashboard.brokerPayments.companyNo' | translate}}">
+                                                                                    </td>
+                                                                                    <td width="8%">
+                                                                                        <input class="fm-txt form-control amount_right tFootInput inputSearch" type="text" formControlName="coName" name="coName"
+                                                                                            placeholder="{{'uft.dashboard.brokerPayments.companyName' | translate}}">
+                                                                                    </td>
+                                                                                    <td width="8%" class="alignDpRight">
+                                                                                        <div class="calender-field">
+                                                                                            <my-date-picker id="coRefundTransDt" placeholder="{{'common.date-placeholder' | translate}}" class="inputSearch" formControlName="coRefundTransDt"
+                                                                                                name="coRefundTransDt" data-type="date"
+                                                                                                [options]="myDatePickerOptions"
+                                                                                                [selDate]="dateNameArray['coRefundTransDt']"
+                                                                                                (inputFocusBlur)="changeDateFormat1($event, 'coRefundTransDt')">
+                                                                                            </my-date-picker>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                    <td width="8%">
+                                                                                        <input class="fm-txt form-control amount_right tFootInput inputSearch" type="text" formControlName="tranCd" name="tranCd"
+                                                                                            placeholder="{{'uft.dashboard.brokerPayments.transCode' | translate}}">
+                                                                                    </td>
+                                                                                    <td width="8%">
+                                                                                        <input class="fm-txt form-control amount_right tFootInput inputSearch" type="text" formControlName="coRefundTotalAmt" name="coRefundTotalAmt"
+                                                                                            placeholder="{{'uft.dashboard.brokerPayments.amount' | translate}}"
+                                                                                            style="text-align:right">
+                                                                                    </td>
+                                                                                    <td width="8%">
+                                                                                        <input class="fm-txt form-control amount_right tFootInput inputSearch" type="text" formControlName="coRefundChqRefNum" name="coRefundChqRefNum"
+                                                                                            placeholder="{{'uft.dashboard.brokerPayments.chequeReferenceNum' | translate}}" style="text-align:right">
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tfoot>
+                                                                        </table>
+                                                                    </div>
+                                                                    <!-- Table Ends -->
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                                <div class="form-row text-center">
+                                                    <div class="row">
+                                                        <div class="col-md-12 col-xs-12">
+                                                            <button class="btn green-btn" data-toggle="modal" data-target="#refundCheque" (click)=openModal() id="openStopChequeModal">{{'uft.dashboard.brokerPayments.stopCheque' | translate}}</button>
+                                                            <button class="btn green-btn bgp hideGPRunButton" (click)=printCheque() id="printCheque">{{'uft.dashboard.brokerPayments.printCheque' | translate}}</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- Form Row ENds -->
+                                            </div>
+                                            <!-- Grid Inner Ends -->
+                                        </div>
+                                        <!-- Grid Box Ends -->
+                                    </div>
+                                </div>
+                                <!-- Table Ends -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Form Row ENds -->
+    </div>
+    <!-- Grid Inner Ends -->
+</div>
+
+<!-- Tab Ends -->
+
+<div id="generateBrokerPaymentPopup" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button id="closeGenerateBrokerPaymentForm" type="button" class="close" data-dismiss="modal" (click)="resetGenerateBrokerPaymentForm()">&times;</button>
+                <h4 class="modal-title">{{'uft.dashboard.brokerPayments.generateBrokerPayment' | translate}}</h4>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="generateBrokerPaymentForm">
+                    <div class="grid-box">
+                        <div class="grid-heading">
+                            <h3>{{'uft.dashboard.brokerPayments.generateBrokerPayment' | translate}}</h3>
+                        </div>
+                        <!-- Grid Heading Ends -->
+                        <div class="grid-inner">
+                            <div class="form-row">
+                                <div class="row min-ht-sf">
+                                    <div class="col-md-4 col-xs-12">
+                                        <div class="calender-field">
+                                            <label>{{'uft.dashboard.brokerPayments.eftDueDate' | translate}}
+                                                <span class="required">*</span>
+                                            </label>
+                                            <my-date-picker #generateBrokerPaymentEftDueDate="mydatepicker" [options]="myDatePickerOptions" name="eftDueDate" formControlName="eftDueDate"
+                                                (inputFocusBlur)="changeDateFormat($event, 'eftDueDate','generateBrokerPaymentForm')"
+                                                placeholder="{{'common.date-placeholder' | translate}}">
+                                            </my-date-picker>
+                                            <show-errors [control]="generateBrokerPaymentForm.controls.eftDueDate"></show-errors>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-xs-12">
+                                        <div class="calender-field">
+                                            <label>{{'uft.dashboard.brokerPayments.asOfDate' | translate}}
+                                                <span class="required">*</span>
+                                            </label>
+                                            <my-date-picker id="generateBrokerPaymentAsOfDate" [options]="myDatePickerOptions" name="asOfDate" formControlName="asOfDate"
+                                                (inputFocusBlur)="changeDateFormat($event, 'asOfDate','generateBrokerPaymentForm')"
+                                                placeholder="{{'common.date-placeholder' | translate}}">
+                                            </my-date-picker>
+                                            <show-errors [control]="generateBrokerPaymentForm.controls.asOfDate"></show-errors>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-xs-12">
+                                        <label>{{'uft.dashboard.brokerPayments.minChequeAmount' | translate}}
+                                            <span class="required">*</span>
+                                        </label>
+                                        <input type="text" name="chequeAmount" formControlName="chequeAmount" class="fm-txt form-control" placeholder="{{'uft.dashboard.brokerPayments.minChequeAmount' | translate}}">
+                                        <show-errors [control]="generateBrokerPaymentForm.controls.chequeAmount"></show-errors>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Form Row ENds -->
+                        </div>
+                        <!-- Grid Inner Ends -->
+                    </div>
+                    <!-- Grid Box Ends -->
+                </form>
+
+                <div class="grid-box">
+                    <div class="grid-heading">
+                        <h3>{{'finance.paymentGenerate.processingSteps' | translate}}</h3>
+                    </div>
+                    <!-- Grid Heading Ends -->
+                    <div class="grid-inner">
+                        <div class="form-row">
+                            <div class="row">
+                                <div class="col-md-12 col-xs-12 table-col">
+                                    <div class="table-responsive">
+                                        <table id="processingStepList" class="table table-bordered table-stripped">
+                                            <thead>
+                                                <tr>
+                                                    <th>{{'finance.transactionSearch.done' | translate}}</th>
+                                                    <th class="amount_right_grid">{{'finance.transactionSearch.steps' | translate}}</th>
+                                                    <th class="amount_right_grid">{{'finance.transactionSearch.processing' | translate}}</th>
+                                                    <th class="amount_right_grid">{{'finance.transactionSearch.result' | translate}}</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let field of fieldArray; let i = index">
+                                                    <td>
+                                                        <input type="checkbox" disabled [checked]="(field.done == 0)?false:true" value="field.done">
+                                                    </td>
+                                                    <td class="amount_right_grid">{{field.step}}</td>
+                                                    <td class="amount_right_grid">{{field.processing}}</td>
+                                                    <td class="amount_right_grid">
+                                                        <div [innerHTML]="field.result">
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <!-- Table Ends -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Form Row ENds -->
+                    </div>
+                    <!-- Grid Inner Ends -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button [disabled]="generateBrokerPaymentButtonDisable" id="GenerateBrokerPaymentbtn" class="btn green-btn" (click)="submitGenerateBrokerPaymentForm()">{{'uft.dashboard.brokerPayments.generatePayment' | translate}}</button>
+                <button id="GenerateBrokerPaymentClose" class="btn grey-btn" (click)="resetGenerateBrokerPaymentForm()">{{'button.close' | translate}}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="companyRefundEft" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button id="closeCompanyRefundEftForm" type="button" class="close" data-dismiss="modal" (click)="resetCompanyEftForm()">&times;</button>
+                    <h4 class="modal-title">Company Refund EFT</h4>
+                </div>
+                <div class="modal-body">
+                    <form [formGroup]="companyRefundEftForm">
+                        <div class="grid-box">
+                            <div class="grid-heading">
+                                <h3>Generate Company Refund EFT</h3>
+                            </div>
+                            <!-- Grid Heading Ends -->
+                            <div class="grid-inner">
+                                <div class="form-row">
+                                    <div class="row min-ht-sf">
+                                        <div class="col-md-4 col-xs-12">
+                                            <div class="calender-field">
+                                                <label>{{'uft.dashboard.brokerPayments.eftDueDate' | translate}}
+                                                    <span class="required">*</span>
+                                                </label>
+                                                <my-date-picker #generateBrokerPaymentEftDueDate="mydatepicker" [options]="myDatePickerOptions" name="eftDueDate" formControlName="eftDueDate"
+                                                    (inputFocusBlur)="changeDateFormat($event, 'eftDueDate','companyRefundEftForm')"
+                                                    placeholder="{{'common.date-placeholder' | translate}}">
+                                                </my-date-picker>
+                                                <show-errors [control]="companyRefundEftForm.controls.eftDueDate"></show-errors>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 col-xs-12">
+                                            <div class="calender-field">
+                                                <label>{{'uft.dashboard.brokerPayments.asOfDate' | translate}}
+                                                    <span class="required">*</span>
+                                                </label>
+                                                <my-date-picker id="companyRefundAsOfDate" [options]="myDatePickerOptions" name="asOfDate" formControlName="asOfDate"
+                                                    (inputFocusBlur)="changeDateFormat($event, 'asOfDate','companyRefundEftForm')"
+                                                    placeholder="{{'common.date-placeholder' | translate}}">
+                                                </my-date-picker>
+                                                <show-errors [control]="companyRefundEftForm.controls.asOfDate"></show-errors>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 col-xs-12">
+                                            <label>{{'uft.dashboard.brokerPayments.minChequeAmount' | translate}}
+                                                <span class="required">*</span>
+                                            </label>
+                                            <input type="text" name="chequeAmount" formControlName="chequeAmount" class="fm-txt form-control" placeholder="{{'uft.dashboard.brokerPayments.minChequeAmount' | translate}}">
+                                            <show-errors [control]="companyRefundEftForm.controls.chequeAmount"></show-errors>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Form Row ENds -->
+                            </div>
+                            <!-- Grid Inner Ends -->
+                        </div>
+                        <!-- Grid Box Ends -->
+                    </form>
+    
+                    <div class="grid-box">
+                        <div class="grid-heading">
+                            <h3>{{'finance.paymentGenerate.processingSteps' | translate}}</h3>
+                        </div>
+                        <!-- Grid Heading Ends -->
+                        <div class="grid-inner">
+                            <div class="form-row">
+                                <div class="row">
+                                    <div class="col-md-12 col-xs-12 table-col">
+                                        <div class="table-responsive">
+                                            <table id="companyRefundprocessingStepList" class="table table-bordered table-stripped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>{{'finance.transactionSearch.done' | translate}}</th>
+                                                        <th class="amount_right_grid">{{'finance.transactionSearch.steps' | translate}}</th>
+                                                        <th class="amount_right_grid">{{'finance.transactionSearch.processing' | translate}}</th>
+                                                        <th class="amount_right_grid">{{'finance.transactionSearch.result' | translate}}</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let field of fieldArray; let i = index">
+                                                        <td>
+                                                            <input type="checkbox" disabled [checked]="(field.done == 0)?false:true" value="field.done">
+                                                        </td>
+                                                        <td class="amount_right_grid">{{field.step}}</td>
+                                                        <td class="amount_right_grid">{{field.processing}}</td>
+                                                        <td class="amount_right_grid">
+                                                            <div [innerHTML]="field.result">
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <!-- Table Ends -->
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Form Row ENds -->
+                        </div>
+                        <!-- Grid Inner Ends -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button [disabled]="generateCompanyRefundButtonDisable" id="companyRefundEftGenerate" class="btn green-btn" (click)="CompanyRefundSteps()">{{'uft.dashboard.brokerPayments.generatePayment' | translate}}</button>
+                    <button id="companyREfundEftClose" data-dismiss="modal" class="btn grey-btn" (click)="resetCompanyEftForm()">{{'button.close' | translate}}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<div hidden>
+    <button id="brokerPaymentPdfPopup" class="green-btn-add btn" data-toggle="modal" data-target="#viewBrokerPaymentDoc">
+        <i class="fa fa-plus"></i>{{'uft.dashboard.brokerPayments.eftPopup' | translate}}</button>
+</div>
+
+<div id="viewBrokerPaymentDoc" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button id="closeEftPdfPopup" type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">{{pdfName}}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="grid-box">
+                    <!-- Grid Heading Ends -->
+                    <div class="grid-inner">
+                        <object width="100%" height="400" [data]="pdfUrl" type="application/pdf">
+                            <embed [src]="pdfUrl" type="application/pdf" />
+                        </object> 
+                    </div>
+                    <!-- Grid Inner Ends -->
+                </div>
+            </div>
+            <div *ngIf="generateBrokerPaymentButtonDisable" class="modal-footer">
+                <button id="okEftPdfPopupBtn" type="button" data-dismiss="modal" class="btn green-btn" (click)="BrokerPaymentSteps()">{{'button.ok' | translate}}</button>
+            </div>
+            <div *ngIf="generateCompanyRefundButtonDisable" class="modal-footer">
+                <button id="okEftPdfPopupBtn" type="button" data-dismiss="modal" class="btn green-btn" (click)="CompanyRefundSteps()">{{'button.ok' | translate}}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="refundCheque" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button id="broker-edit_comment_form" type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">{{'uft.dashboard.brokerPayments.refundCheque' | translate}}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="grid-box">
+                    <!-- Grid Heading Ends -->
+                    <app-refund-cheque></app-refund-cheque>
+                </div>
+                <!-- Grid Box Ends -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="companyRefundEft" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button id="closeCompanyRefundEftForm" type="button" class="close" data-dismiss="modal" (click)="resetCompanyEftForm()">&times;</button>
+                <h4 class="modal-title">{{'uft.dashboard.brokerPayments.companyRefundEft' | translate}}</h4>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="companyRefundEftForm">
+                    <div class="grid-box">
+                        <div class="grid-heading">
+                            <h3>{{'uft.dashboard.brokerPayments.generateCompanyRefundEft' | translate}}</h3>
+                        </div>
+                        <!-- Grid Heading Ends -->
+                        <div class="grid-inner">
+                            <div class="form-row">
+                                <div class="row min-ht-sf">
+                                    <div class="col-md-4 col-xs-12">
+                                        <div class="calender-field">
+                                            <label>{{'uft.dashboard.brokerPayments.eftDueDate' | translate}}
+                                                <span class="required">*</span>
+                                            </label>
+                                            <my-date-picker #generateBrokerPaymentEftDueDate="mydatepicker" [options]="myDatePickerOptions" name="eftDueDate" formControlName="eftDueDate"
+                                                (inputFocusBlur)="changeDateFormat($event, 'eftDueDate','companyRefundEftForm')"
+                                                placeholder="{{'common.date-placeholder' | translate}}">
+                                            </my-date-picker>
+                                            <show-errors [control]="companyRefundEftForm.controls.eftDueDate"></show-errors>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-xs-12">
+                                        <div class="calender-field">
+                                            <label>{{'uft.dashboard.brokerPayments.asOfDate' | translate}}
+                                                <span class="required">*</span>
+                                            </label>
+                                            <my-date-picker id="companyRefundAsOfDate" [options]="myDatePickerOptions" name="asOfDate" formControlName="asOfDate"
+                                                (inputFocusBlur)="changeDateFormat($event, 'asOfDate','companyRefundEftForm')"
+                                                placeholder="{{'common.date-placeholder' | translate}}">
+                                            </my-date-picker>
+                                            <show-errors [control]="companyRefundEftForm.controls.asOfDate"></show-errors>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-xs-12">
+                                        <label>{{'uft.dashboard.brokerPayments.minChequeAmount' | translate}}
+                                            <span class="required">*</span>
+                                        </label>
+                                        <input type="text" name="chequeAmount" formControlName="chequeAmount" class="fm-txt form-control" placeholder="{{'uft.dashboard.brokerPayments.minChequeAmount' | translate}}">
+                                        <show-errors [control]="companyRefundEftForm.controls.chequeAmount"></show-errors>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Form Row ENds -->
+                        </div>
+                        <!-- Grid Inner Ends -->
+                    </div>
+                    <!-- Grid Box Ends -->
+                </form>
+
+<!-- Form Row Ends -->
+<div [hidden]="!showLoader" class="loader-outer">
+    <div class="cube-wrapper">
+        <div class="cube-folding">
+            <span class="leaf1"></span>
+            <span class="leaf2"></span>
+            <span class="leaf3"></span>
+            <span class="leaf4"></span>
+        </div>
+        <span class="loading" data-name="Loading">{{'company.plan.benefits.pleaseWait'|translate}}</span>
+    </div>
+</div>

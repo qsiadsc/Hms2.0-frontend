@@ -1,0 +1,1647 @@
+<nav class="breadcrumb">
+  <span *ngIf="userRole =='' && claimChecks[0].search == 'F'"
+    class="serviceProviderActive active">{{'claims.claim' | translate}} > </span>
+  <span *ngIf="userRole =='' && claimChecks[0].search == 'T'" 
+    [routerLink]="['/claim/searchClaim']">{{'claims.claim' | translate}} > </span>
+  <span *ngIf="userRole == 'referReviwer' || userRole == 'reviewer' " class="breadcrumb-item"
+    [routerLink]="['/reviewer/searchClaim']">{{'claims.claim' | translate}} > </span>
+  <span *ngIf="addMode" class="serviceProviderActive active">{{'claims.add' | translate}}</span>
+  <span *ngIf="editMode" class="serviceProviderActive active">{{'claims.edit' | translate}}</span>
+  <span *ngIf="viewMode" class="serviceProviderActive active">{{'claims.view' | translate}}</span>
+</nav>
+<!--bread crumb nav Ends -->
+
+<div class="section-heading">
+  <h2>{{'claims.claims-view.claims' | translate}} -
+    <span>{{cardHeading}}</span>
+    <span class="comment-fm" *ngIf="claimCommentImportance">
+      <i class="fa fa-flag" data-toggle="modal" aria-hidden="true" data-target="#BindCommentData"
+        (click)="getClaimCommentListReload()" style="cursor:pointer"></i>
+      <div class="comment-top">
+        <p>{{commentText}}</p>
+      </div>
+    </span>
+    
+    <div class="web-reg" style = "display: inline-block;">
+      <h2 *ngIf="this.claimRefered == true && referToName !='' " style = " float: left; margin-top: 5px;" >Claim Referred -
+        <span>{{referToName}}</span>
+      </h2> 
+      <button id="btnEditClaim" style="cursor: pointer" [disabled]="itemEditMode || isReversedInd"
+        *ngIf="viewMode  && claimChecks[0].editClaim == 'T'" title="Claim - Edit Details"
+        class="claim-status btn status-btn" type="button"
+        (click)="enableEditMode($event)">{{'button.edit' | translate}}</button>
+      <button [disabled]="itemEditMode" style="cursor: pointer" id="btnUpdateClaim" *ngIf="editMode"
+        title="Claim - Update Details" class="claim-status btn status-btn" type="button"
+        (click)="submitClaimForm()">{{'button.update' | translate}}</button>
+    </div>
+  </h2>
+</div>
+<!-- Section Heading Ends -->
+
+<app-general-information [viewMode]="viewMode" [addMode]="addMode" [editMode]="editMode" [copyMode]="copyMode"
+  [hasPreAuth]="hasPreAuth" (disciplineKey)="getDisciplineKey($event)" [filePath]="filePath" 
+  [claimAuthChecks]='claimChecks' [claimStatus]="claimStatus" [reviewer]="reviewer" [isReverseClaim]="isReverseClaim"
+  [ClaimGeneralInformationFormGroup]="FormGroup.controls.ClaimGeneralInformationFormGroup"
+  [claimReleased]="claimReleased" [resetForm]="resetForm" [isReversedInd]="isReversedInd"></app-general-information>
+
+<app-card-holder [ClaimCardHolderFormGroup]="FormGroup.controls.ClaimCardHolderFormGroup" [viewMode]="viewMode"
+  [addMode]="addMode" (cardHolderdBusinessType)="cardHolderdBusinessType($event)" [reviewer]="reviewer"
+  [recieveDateTitle]="recieveDateTitle" [editModeClaim]="editMode" [resetForm]="resetForm">
+</app-card-holder>
+
+<app-service-providers (dentProvSpecAssgnKey)="setProvSpecAssgnKey($event)"
+  [ClaimServiceProvidersFormGroup]="FormGroup.controls.ClaimServiceProvidersFormGroup" [addMode]="addMode"
+  [viewMode]="viewMode" [editMode]="editMode" [reviewer]="reviewer" [resetForm]="resetForm"></app-service-providers>
+
+<pay-to-other [ClaimPayToOtherFormGroup]="FormGroup.controls.ClaimPayToOtherFormGroup"></pay-to-other>
+
+<app-claim-item [addMode]="addMode" [viewMode]="viewMode" [editMode]="editMode" [DisciplineKey]="disciplineKey"
+  [claimStatus]="claimStatus" [claimRefered]="claimRefered" [ClaimId]="claimId" [CHRecievedDate]="CH_RecievedDate"
+  [claimItemAuth]='claimChecks[0]' [reviewer]="reviewer" [preAuthReverseClaim]="preAuthReverseClaim"
+  [cardBusinessTypeKey]="cardBusinessTypeKey" [resetForm]="resetForm" [claimTypeKey] = "selectedClaimType">
+</app-claim-item>
+
+
+<!-- changed due to improper checks on 25 feb -->
+  <div id="adjudicateClaimBar"
+  *ngIf="hasClaimItems && !reviewer && !preAuthReverseClaim && claimChecks[0].adjudicateClaim == 'T' && claimRefered != true && (claimStatus != 'Paid' || claimStatus != 'Reversed')"
+  class="form-row">
+  <div class="grid-box">
+    <div class="col-md-12 col-xs-12 grid-inner min-ht-half">
+      <div class="row">
+        <div class="col-sm-10 min-ht-half">
+          <label>{{'claims.claims-view.claims-messages.messages.systems.data-table.adjudicated-claim' | translate}}</label>
+          <progress-bar [value]="adjudicatedPercent" [max]="100"></progress-bar>
+        </div>
+        <div class="col-sm-2 min-ht-half">
+          <!-- disable adj btn while claim item is in edit mode bcoz of Issue:354(overcrediit limit) -->
+          <button [disabled]="sendAdjudicate || itemEditMode || isReversedInd" id="adjudicatebutton" *ngIf="hasClaimItems"
+            (click)="adjudicateClaim()" class="btn green-btn ct-button">{{'button.adjudicate-claim'|translate}}</button>
+          <button [disabled]="sendAdjudicate || itemEditMode || isReversedInd" id="adjudicatebutton" *ngIf="!hasClaimItems"
+            (click)="adjudicateClaim()" class="btn green-btn ct-button">{{'button.adjudicate-claim'|translate}}</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-claim-total [claimTotalAddMode]="addMode" [claimTotalViewMode]="viewMode" [claimTotalEditMode]="editMode"
+  [resetForm]="resetForm">
+</app-claim-total>
+
+<app-claim-message [claimMsgAddMode]="addMode" [claimMsgViewMode]="viewMode" [claimMsgEditMode]="editMode"
+  [reviewer]="reviewer" [claimStatus]="claimStatus" [busKey]="key" [claimRefered]="claimRefered"
+  [cardHolderKey]="cardHolderKey" [resetForm]="resetForm">
+</app-claim-message>
+
+<app-review-claim [reviewStatus]="finalReviewStatus" [disableDctrBtn]="disableDctrBtn" [claimAuthChecks]='claimChecks'
+  [viewMode]="viewMode" [showAddReview]="showGovBtn" (onSaveReview)="disableSendReviewBtn()" [reviewKey]="reviewKey"
+  *ngIf="hasPreAuth && (viewMode || editMode)">
+</app-review-claim>
+
+
+<form [formGroup]="FormGroup">
+  <div class="form-row text-center">
+    <!-- Release Claim Button-->
+    <button id="release-claim"
+      *ngIf="claimStatus == 'Adjudicated' && claimChecks[0].releaseClaim == 'T' && viewMode && claimRefered == false"
+      [disabled]="disableDctrBtn || isReversedInd" class="btn green-btn pull-left" (click)="releaseClaim()">{{releaseBtnTxt}}</button>
+      
+    
+   
+    <button
+      *ngIf="hasPreAuth && (viewMode || editMode) && hasClaimItems && albertaCard && claimChecks[0].sendToDoctor == 'T' && !refToReview"
+      title="Send For Review"  id="sendPreAuth" class="first btn green-btn pull-left" type="button"
+      (click)="sendRequest()">{{'button.sendPreAuth' | translate}}</button>
+
+      <button id="sendPreAuth"  class="Secondary btn green-btn pull-left" data-toggle="modal" data-target="#ShowClaimModalReferToDoc"
+       *ngIf="hasPreAuth && (viewMode || editMode) && hasClaimItems && albertaCard && claimChecks[0].sendToDoctor == 'T' && refToReview" 
+     >{{'button.sendPreAuthConsultant' | translate}}</button>
+
+     
+    <button
+      *ngIf="hasPreAuth && (viewMode || editMode) && hasClaimItems && albertaCard && claimChecks[0].sendToDoctor == 'T' && refToReview" style="display: none;"
+       id="sendPreAuthhidden" class="btn green-btn pull-left" type="button"
+      (click)="sendRequest()">{{'button.sendPreAuthConsultant' | translate}}</button>
+
+    
+    <!-- Delete Claim Button-->
+    <button id="btnDeleteClaim" [disabled]="viewMode || disableDctrBtn"
+      *ngIf="!addMode && claimChecks[0].deleteClaim == 'T'" href="javascript:void(0)" (click)="deleteClaim()"
+      class="btn red-btn">{{'button.delete'|translate}}</button>
+
+    
+    <button id="btnCloseClaim" *ngIf = "releaseInd != 'T' && !copyMode && !reviewer" href="javascript:void(0)" (click)="closeClaim()"
+      class="btn red-btn">{{'button.close'|translate}}</button>
+
+    <!-- Save Claim Button-->
+    <button id="btnSaveClaim" [disabled]="itemEditMode" *ngIf="addMode && claimChecks[0].save == 'T'" title="SAVE"
+      class="btn green-btn btn-lg" type="submit" (click)="submitClaimForm()">{{'button.save' | translate}}</button>
+
+    <!-- Edit Claim Button-->
+    <button id="btnEditClaim" [disabled]="itemEditMode || isReversedInd" *ngIf="viewMode  && claimChecks[0].editClaim == 'T'"
+      title="Claim - Edit Details" class="btn green-btn btn-lg" type="button"
+      (click)="enableEditMode($event)">{{'button.edit' | translate}}</button>
+
+    <!-- Update Claim Button-->
+    <button id="btnUpdateClaim" [disabled]="itemEditMode" *ngIf="editMode && claimChecks[0].editClaim == 'T'"
+      title="Claim - Update Details" class="btn green-btn btn-lg" type="button"
+      (click)="submitClaimForm()">{{'button.update' | translate}}</button>
+
+    <!-- Refer Claim Button-->
+    <button id="btnReferClaim"
+      *ngIf="(viewMode || editMode) && claimChecks[0].referClaim == 'T' && this.claimRefered != true && !showLockedMsg"
+      class="btn green-btn pull-right" data-toggle="modal" [disabled]="viewMode || disableDctrBtn "
+      (click)="openReferClaim()" data-target="#ReferClaimModal">{{'button.refer-claim'|translate}}</button>
+    <!-- To restrict action of Refer Claim button, showLockedMsg check added as per lockProcessor functionality  -->
+    <button id="btnReferClaim"
+      *ngIf="(viewMode || editMode) && claimChecks[0].referClaim == 'T' && this.claimRefered != true && showLockedMsg"
+      class="btn green-btn pull-right" [disabled]="viewMode || disableDctrBtn"
+      (click)="openReferClaim()">{{'button.refer-claim'|translate}}</button>
+    
+    <!-- Cheque Claim Button-->
+    <button id="csc_cheque" *ngIf="(viewMode || editMode)" class="btn green-btn pull-right"
+      (click)="onCheckCheque()">{{'button.cheque-claim'|translate}}</button>
+
+    <!-- Refer to Review  Button no longer needed-->
+
+  
+    <!-- Print Claim Button-->
+    <button id="btnPrintClaim" *ngIf="(viewMode || editMode) && claimChecks[0].printClaim == 'T' && !showLockedMsg"
+      class="btn green-btn pull-right" data-toggle="modal" data-target="#PrintClaim"
+      (click)="fillDetailsForPrint()">{{'button.print'|translate}}</button>
+      <!-- To restrict action of Print button showLockedMsg check added as per lockProcessor functionality -->
+      <button id="btnPrintClaim" *ngIf="(viewMode || editMode) && claimChecks[0].printClaim == 'T' && showLockedMsg"
+      class="btn green-btn pull-right" (click)="fillDetailsForPrint()">{{'button.print'|translate}}</button>
+
+    <!-- Print PreAuth Ltr For Claim Button-->
+    <button id="btnPrintPreAuthLtr" *ngIf="(viewMode || editMode) && showGovBtn && claimChecks[0].printPreAuth == 'T' "
+      class="btn green-btn" (click)="printPreAuthLtr(PrintAuthLetter)">{{'button.printPreAuth'|translate}}</button>
+      
+    <!-- Reverse Claim Button-->
+    <button id="btnReverseClaim" *ngIf="editMode" class="btn green-btn pull-left" data-toggle="modal"
+      data-target="#reverseClaim">{{'button.reverseClaimItem'|translate}}</button>
+
+    <!-- Show Claim Button -->
+    <button id="showClaimBtn" *ngIf="!showLockedMsg" class="btn green-btn" data-toggle="modal" data-target="#ShowClaimModal"
+      (click)="showGridOrMsg()">{{'button.show-claim-button' | translate}}</button>
+    <!-- To restrict action of Show Claim button showLockedMsg check added as per lockProcessor functionality -->
+    <button *ngIf="showLockedMsg" id="showClaimBtn" class="btn green-btn"
+          (click)="showGridOrMsg()">{{'button.show-claim-button' | translate}}</button>
+      <!-- Track Claim button for log 866 -->
+    <button id="trackClaimBtn" *ngIf="hasPreAuth && hasClaimItems && albertaCard && !copyMode && !reviewer" class="btn green-btn" data-toggle="modal"
+      data-target="#trackClaimModal" (click)="showTrackClaim()">{{'button.track-claim' | translate}}</button>
+      <!-- Show claim history popup  -->
+    <button id="showClaimHistoryBtn" class="btn green-btn" data-toggle="modal" data-target="#showClaimHistoryModal"
+    (click)="showClaimHistoryGrid()">{{'button.showClaimHistory' | translate}}</button>
+
+  </div>
+  <div class="form-row text-center">
+  </div>
+</form>
+<!--Refer Claim Modal -->
+<div id="ReferClaimModal" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="btnCloseReferClaim" type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">{{'claims.claims-view.refer-claim-button.refer-claim.refer-claim' | translate}}</h4>
+      </div>
+
+      <div class="modal-body">
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{'claims.claims-add.claims-general-information.general-information' | translate}}</h3>
+            <!-- //style added for log 891 -->
+            <div class="web-reg" style="margin-top: -5px;">
+              <span class="claim-status btn status-btn">{{claimStatus}}</span>
+            </div>
+          </div>
+          <!-- Grid Heading Ends -->
+          <div *ngIf="referClaimGenralInfo && referClaimGenralInfo.type" class="grid-inner">
+            <div class="form-row">
+              <div class="row min-ht-sf">
+                <div class="col-md-4 col-xs-12">
+                  <label>{{'claims.claims-add.claims-general-information.entry-date' | translate}}</label>
+                  <div class="calender-field">
+                    <input id="refer_entryDate" type="text" disabled class="fm-txt form-control"
+                      placeholder="{{'claims.claims-add.claims-general-information.modified' | translate}}"
+                      value="{{referClaimGenralInfo.entryDate}}">
+                  </div>
+                </div>
+                <div class="col-md-4 col-xs-12">
+                  <label>{{'claims.claims-add.claims-general-information.claim-type' | translate}}</label>
+                  <input id="refer_type" type="text" disabled class="fm-txt form-control"
+                    placeholder="{{'claims.claims-add.claims-general-information.claim-type' | translate}}"
+                    value="{{referClaimGenralInfo.type}}">
+                </div>
+                <div class="col-md-4 col-xs-12">
+                  <label
+                    *ngIf="businessTypeCd == ConstantQuikcardCd">{{'claims.claims-add.claims-card-holder.cardholder'| translate}}
+                  </label>
+                  <label *ngIf="businessTypeCd == ConstantAlbertaCd">{{'common.clients' | translate}}
+                  </label>
+                  <input type="text" [disabled]="true" class="fm-txt form-control" id="cardholderName"
+                    name="cardholderName" [value]="cardholderName">
+                </div>
+                <div class="col-md-4 col-xs-12">
+                  <div class="input-half">
+                    <label>{{'claims.claims-add.claims-general-information.operator_name' | translate}}</label>
+                    <input id="refer_operator" type="text" disabled class="fm-txt form-control"
+                      placeholder="{{'claims.claims-add.claims-general-information.operator' | translate}}"
+                      value="{{referClaimGenralInfo.operator}}">
+                  </div>
+                  <div class="input-half">
+                    <label>{{'claims.claims-add.claims-general-information.reference_no' | translate}}</label>
+                    <input id="refer_reference" type="text" disabled class="fm-txt form-control"
+                      placeholder="{{'claims.claims-add.claims-general-information.reference' | translate}}"
+                      value="{{referClaimGenralInfo.reference}}">
+                  </div>
+                </div>
+
+                <div class="col-md-4 col-xs-12">
+                  <div class="input-half">
+                    <label>{{'claims.claims-add.claims-general-information.modified_by' | translate}}</label>
+                    <input id="refer_userId" type="text" disabled class="fm-txt form-control"
+                      placeholder="{{'claims.claims-add.claims-general-information.modified_by' | translate}}"
+                      value="{{referClaimGenralInfo.userId}}">
+                  </div>
+                  <div class="input-half">
+                    <label>{{'claims.claims-add.claims-general-information.modified_on' | translate}}</label>
+                    <input id="refer_modifiedDate" type="text" disabled class="fm-txt form-control"
+                      placeholder="{{'claims.claims-add.claims-general-information.modified' | translate}}"
+                      value="{{referClaimGenralInfo.modified_date}}">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Grid Inner Ends -->
+        </div>
+
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{'claims.claims-view.refer-claim-button.refer-claim.refer-claim' | translate}}</h3>
+          </div>
+          <!-- Grid Heading Ends -->
+
+          <div class="grid-inner">
+            <form [formGroup]="referClaim">
+              <div class="form-row">
+                <div class="row min-ht-sf">
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'claims.claims-view.refer-claim-button.refer-claim.select-user' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <select id="rfrClmUser" name="rfrClmUser" formControlName="rfrClmUser" class="fm-txt form-control"
+                      (click)="getSelectedUserId($event.target.value)">
+                      <option hidden value="">{{'claims.claims-view.refer-claim-button.refer-claim.select' |
+                        translate}}</option>
+                      <option *ngFor="let user of userList" [value]="user.userKey">
+                        {{user.fullName}}
+                      </option>
+                    </select>
+                    <show-errors [control]="referClaim.controls.rfrClmUser"></show-errors>
+                  </div>
+                  <!-- issue number 537 start  -->
+                  <div class="col-md-3 col-xs-12" *ngIf="supervisorValue != ''">
+                    <label>{{'claims.claims-view.refer-claim-button.refer-claim.select-supervisor' | translate}}
+                    </label>
+                    <input type="text" disabled name="supervisor" formControlName="supervisorKey" class="form-control"
+                      [(ngModel)]='supervisorValue'>
+                    <show-errors [control]="referClaim.controls.rfrClmUser"></show-errors>
+                  </div>
+                  <!--issue number 537 end   -->
+                </div>
+              </div>
+
+              <!-- Form Row ENds -->
+              <div class="form-row">
+                <label>{{'common.addcomment'|translate}}
+                  <span class="required">*</span>
+                </label>
+                <div class="add-comments">
+                  <div class="row">
+                    <div class="col-sm-8">
+                      <!-- class added for log 890 -->
+                      <textarea class="notInCaps fm-txt form-control notInCaps" id="rfrClaimCommentTxt" name="rfrClaimCommentTxt"
+                        formControlName="rfrClaimCommentTxt"></textarea>
+                      <show-errors [control]="referClaim.controls.rfrClaimCommentTxt"></show-errors>
+                    </div>
+                   
+                  </div>
+                </div>
+                <!-- Add Comments Ends -->
+              </div>
+            </form>
+            <!-- Form Ends -->
+          </div>
+          <!-- Grid Inner Ends -->
+        </div>
+        <!-- Grid Box Ends -->
+      </div>
+      <!-- Modal Body End-->
+      <div class="modal-footer">
+        <button class="btn grey-btn" id="CloseReferClaim" (click)="closeRefer()"
+          data-dismiss="modal">{{'button.close'|translate}}</button>
+        <button id="btnReferClaimSuccess" (click)="ReferSuccess()"
+          class="btn green-btn">{{'button.refer'|translate}}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Print Claim Modal-->
+<div id="PrintClaim" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="btnClosePrintClaim" type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <div class="modal-body text-center" id="PrintClaimForm">
+        <table id="print-claimForm" width="100%" align="center" cellpadding="0" cellspacing="0"
+          style="border:1px solid #d5d5d5; font-family:tahoma, arial; text-align:left; background: #fff; padding: 0px;">
+          <tbody>
+
+            <tr>
+              <td valign="top" style="padding:15px 0;">
+                <table id="printClaimForm1" width="100%" cellpadding="0" cellspacing="0"
+                  style=" border-bottom: 1px solid #d5d5d5">
+                  <tr>
+                    <td width="60%" valign="top" style="vertical-align: top;">
+                      <table width="100%" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td
+                            style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:12px; color:#303030; padding: 15px 0 6px 15px;">
+                            <span
+                              style="font-weight: bold;">{{'claims.claims-view.print-button.adjudicate-claims.patient' | translate}}:</span>
+                            {{patient}} </td>
+                        </tr>
+                        <tr>
+                          <td
+                            style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:12px; color:#303030; padding: 0 0 6px 15px;">
+                            <span
+                              style="font-weight: bold;">{{'claims.claims-view.print-button.adjudicate-claims.address' | translate}}:</span>
+                            {{address}}</td>
+                        </tr>
+                      </table>
+                    </td>
+                    <td width="40%" valign="top" style="vertical-align: top;">
+
+                      <img src="{{imgUrl}}" style="padding:0px 10px 10px 1px;" />
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="padding:10px 0px; border-bottom: 1px solid #d5d5d5;">
+                <table id="printClaimForm2" width="100%" align="center" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td width="70%">
+                      <table width="100%" align="center" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td
+                            style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:12px; color:#303030; padding: 0 0 6px 15px;">
+                            <span
+                              style="font-weight: bold;">{{'claims.claims-view.print-button.adjudicate-claims.provider' | translate}}:
+                            </span> {{provider}}</td>
+                        </tr>
+                        <tr>
+                          <td
+                            style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:12px; color:#303030; padding: 0 0 6px 15px;">
+                            <span
+                              style="font-weight: bold;">{{'claims.claims-view.print-button.adjudicate-claims.address' | translate}}:</span>
+                            {{providerAddress}}</td>
+                        </tr>
+                      </table>
+                    </td>
+                    <td width="30%"
+                      style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:12px; color:#303030; padding:0px 0;"
+                      valign="top">
+                      <span style="font-weight: bold;">ID: </span>{{providerId}}
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr>
+              <!-- log 681 table merge -->
+              <td style="padding:0 0 10px 0px; border-bottom: 1px solid #d5d5d5">
+                <table id="printClaimForm3" width="100%" cellpadding="0" cellspacing="0">
+                  <tbody style="width: 100%; display: inline-block;">
+                    <tr
+                      style="border-bottom:1px solid #d5d5d5; margin:0; font-weight:normal; text-align:left; font-size:12px; color:#303030; padding: 0 0 6px; font-weight: bold; display: flex;">
+                      
+                      <th
+                        style="width: 18%; padding:10px 5px 10px 25px; background: #fff; color:#333; text-align:left; font-size: 12px;">
+                        {{'claims.claims-view.print-button.adjudicate-claims.claim-type' | translate}}</th>
+                      
+                      <th
+                        style="width: 24%; padding:10px 5px 10px 14px; background: #fff; color:#333; text-align:left; font-size: 12px;">
+                        {{'claims.claims-view.print-button.adjudicate-claims.reference' | translate}} #
+                      </th>
+                      <th
+                        style="width: 25%; padding:10px 6px 10px 0px; background: #fff; color:#333; text-align:left; font-size: 12px;">
+                        {{'claims.claims-view.print-button.adjudicate-claims.recieved-date' | translate}}</th>
+                      <!-- new  -->
+                      <th
+                        style="width: 20%; padding: 10px 0px 10px 7px; background: #fff; color:#333;text-align: left; font-size: 12px;">
+                        {{'claims.claims-view.print-button.adjudicate-claims.claim-total' | translate}}</th>
+                     
+                      <th
+                        style="width: 23%; padding: 10px 0px 10px 0px; background: #fff; color:#333;text-align: left; font-size: 12px;">
+                        {{'claims.claims-view.print-button.adjudicate-claims.cob-paid' | translate}}</th>
+                     
+                      <th
+                        style="width: 20%; padding: 10px 10px 10px 0px; background: #fff;  color:#333;text-align: left; font-size: 12px;">
+                        {{'claims.claims-view.print-button.adjudicate-claims.deductible' | translate}}</th>
+                      <th
+                        style="width: 30%; padding: 10px 0px 10px 0px; background: #fff;  color:#333;text-align: left; font-size: 12px;">
+                        {{'claims.claims-view.print-button.adjudicate-claims.total-payable' | translate}}</th>
+                      <!-- new ends  -->
+                      
+                    </tr>
+
+                    <!-- heading row ends -->
+                    <tr id="{{'row_'+i}}" *ngFor="let dataRow of providerDetails; let i = index">
+                     
+                      <td style="width: 13%; padding:5px 5px 5px 25px; text-align: left; font-size: 12px;">
+                        {{dataRow.ClaimType}}</td>
+                     
+                      <td style="width: 16%; padding:10px 5px 5px 12px; text-align: left; font-size: 12px;">
+                        {{dataRow.Reference}}</td>
+                      <td style="width: 16%; padding:10px 6px 10px 0px; text-align: left; font-size: 12px;">
+                        {{dataRow.RecievedDate | dateFormate}}
+                      </td>
+
+                      <!-- new  -->
+                      <td style="width: 13%; padding:10px 0px 10px 20px; text-align: left; font-size: 12px;">
+                        {{dataRow.ClaimTotal | currency}}
+                      </td>
+                     
+                      <td style=" padding:10px 0px 10px 1px; text-align: left; font-size: 12px;">
+                        {{dataRow.PaidCarrier | currency}}
+                      </td>
+                     
+                      <td style="width: 20%; padding:10px 9px 10px 79px; text-align: left; font-size: 12px;">
+                        {{dataRow.Deductible | currency}}
+                      </td>
+                      <td style="width: 30%;padding:10px 0px 10px 23px; text-align: left; font-size: 12px;">
+                        {{dataRow.TotalPayable | currency}}
+                      </td>
+                      <!-- new ends  -->
+                      
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+
+
+            <tr>
+              <td style="padding:0 0 10px 0px; border-bottom: 1px solid #d5d5d5;">
+                <table id="printClaimForm5" width="100%" cellpadding="0" cellspacing="0">
+                  <tbody>
+                    <tr>
+                      <th
+                        style="padding:10px 5px 10px 15px; text-align:left; background: #fff; border-bottom:1px solid #d5d5d5; color:#333; border-top:1px solid #d5d5d5;font-size: 12px;">
+                        {{'claims.claims-view.print-button.adjudicate-claims.service-date' | translate}}</th>
+                      <th
+                        style="padding:10px 5px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333; border-top:1px solid #d5d5d5;font-size: 12px;">
+                        {{'claims.claims-view.print-button.adjudicate-claims.proc-#' | translate}}</th>
+                      <th *ngIf="systemMessageData && systemMessageData.length != 0"
+                        style="padding:10px 5px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333; border-top:1px solid #d5d5d5;font-size: 12px;">
+                        {{'claims.claims-view.print-button.adjudicate-claims.msg-#' | translate}}</th>
+                      <th
+                        style="padding:10px 5px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333; border-top:1px solid #d5d5d5;font-size: 12px;">
+                        {{'claims.claims-view.print-button.adjudicate-claims.to' | translate}}</th>
+                      <th
+                        style="padding:10px 5px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333; border-top:1px solid #d5d5d5;font-size: 12px;">
+                        {{'claims.claims-view.print-button.adjudicate-claims.su' | translate}}</th>
+                      <th
+                        style="padding:10px 5px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333;text-align: right; border-top:1px solid #d5d5d5;font-size: 12px;">
+                        {{'claims.claims-view.print-button.adjudicate-claims.fee-claimed' | translate}}</th>
+                      <th
+                        style="padding:10px 5px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333;text-align: right; border-top:1px solid #d5d5d5;font-size: 12px;">
+                        {{'claims.claims-view.print-button.adjudicate-claims.elig-amount' | translate}}</th>
+                      <th
+                        style="padding:10px 5px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333;text-align: right; border-top:1px solid #d5d5d5;font-size: 12px;">
+                        {{'claims.claims-view.print-button.adjudicate-claims.allowed' | translate}}</th>
+                      <th
+                        style="padding:10px 5px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333;text-align: right; border-top:1px solid #d5d5d5;font-size: 12px;">
+                        {{'claims.claims-view.print-button.adjudicate-claims.payable' | translate}}</th>
+                      <th
+                        style="padding:10px 5px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333;text-align: right; border-top:1px solid #d5d5d5;font-size: 12px;">
+                        {{'claims.claims-view.print-button.adjudicate-claims.lab-fee-claimed' | translate}}</th>
+                      <th
+                        style="padding:10px 5px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333;text-align: right; border-top:1px solid #d5d5d5;font-size: 12px;">
+                        {{'claims.claims-view.print-button.adjudicate-claims.allowed' | translate}}</th>
+                      <th
+                        style="padding:10px 5px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333;text-align: right; border-top:1px solid #d5d5d5;font-size: 12px;">
+                        {{'claims.claims-view.print-button.adjudicate-claims.payable' | translate}}</th>
+                    </tr>
+                    <tr id="{{'row_'+i}}" *ngFor="let dataRow of serviceData; let i = index">
+                      <td style="padding:5px 5px 5px 15px; text-align: left; font-size: 12px;">
+                        {{dataRow.itemServiceDt|dateFormate}}</td>
+                      <td style="padding:5px; text-align: left; font-size: 12px;">{{dataRow.itemProcedureCd}}</td>
+                      <td *ngIf="systemMessageData && systemMessageData.length != 0"
+                        style="padding:5px; text-align: left; font-size: 12px;">{{dataRow.messageRank}}</td>
+                      <td style="padding:5px; text-align: left; font-size: 12px;">{{dataRow.itemToothId}}</td>
+                      <td style="padding:5px; text-align: left; font-size: 12px;">{{dataRow.itemToothSurfaceTxt}}</td>
+                      <td style="padding:5px; text-align: right; font-size: 12px;">
+                        {{dataRow.itemFeeClaimAmt | currency}}
+                      </td>
+                      <td style="padding:5px; text-align: right; font-size: 12px;">{{dataRow.itemFeeEligAmt | currency}}
+                      </td>
+                      <td style="padding:5px; text-align: right; font-size: 12px;">
+                        {{dataRow.itemFeeAllowAmt | currency}}
+                      </td>
+                      <td style="padding:5px; text-align: right; font-size: 12px;">{{dataRow.itemPayable | currency}}
+                      </td>
+                      <td style="padding:5px; text-align: right; font-size: 12px;">
+                        {{dataRow.itemLabClaimAmt | currency}}
+                      </td>
+                      <td style="padding:5px; text-align: right; font-size: 12px;">
+                        {{dataRow.itemLabAllowAmt | currency}}
+                      </td>
+                      <td style="padding:5px; text-align: right; font-size: 12px;">{{dataRow.itemLabPaidAmt | currency}}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+
+           
+
+            <tr *ngIf="systemMessageData && systemMessageData.length != 0">
+              <td style="padding:0 0 10px 0px; border-bottom: 1px solid #d5d5d5">
+                <table id="printClaimForm7" width="100%" cellpadding="0" cellspacing="0">
+                  <tbody>
+                    <tr>
+                      <th width="10%"
+                        style="padding:10px 5px 10px 15px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333; text-align:left; font-size: 12px;">
+                        {{'claims.claims-view.print-button.adjudicate-claims.msg-#' | translate}}</th>
+                      <th
+                        style="padding:10px 5px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333; text-align:left; font-size: 12px;">
+                        {{'claims.claims-view.print-button.adjudicate-claims.system-message' | translate}}</th>
+                      <th
+                        style="padding:10px 5px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333; text-align:left; font-size: 12px;">
+                        {{'common.action'|translate}}</th>
+                    </tr>
+                    <tr id="{{'row_'+i}}" *ngFor="let dataRow of systemMessageData; let i = index">
+                      <td style="padding:5px 5px 5px 15px; text-align: left; font-size: 12px;">{{dataRow.messageNumber}}
+                      </td>
+                      <td style="padding:5px 5px 8px 5px; text-align: left; font-size: 12px;">{{dataRow.messageCom}}
+                      </td>
+                      <td style="padding:5px 5px 8px 5px; text-align: left; font-size: 12px;">{{dataRow.actionCom}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="padding:10px 15px; border-bottom: 1px solid #d5d5d5">
+                <table id="printClaimForm8" width="100%" cellpadding="0" cellspacing="0">
+                  <tbody>
+                    <tr>
+                      <td style="padding:0 0 8px 15px;">
+                        <p
+                          style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:13px; color:black; padding: 0 0 1px; font-style: italic;">
+                          {{'claims.estimateBasedBenefits' | translate}}</p>
+                        <p
+                          style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:13px; color:black; padding: 0 0 1px; font-style: italic;">
+                          {{'claims.quikcardParticipantsVerification' | translate}}</p>
+                        <p
+                          style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-weight: 700; font-size:12px; color:black; padding: 0 10px 0 0; font-style: bold;">
+                          {{'claims.covergaeTotalsIncludeEstimates' | translate}}</p>
+                      </td>
+                    </tr>
+                    <tr *ngFor="let covrage of printCovrage">
+                      <td
+                        style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:14px; color:#303030; padding: 6px 0px 0px 15px ;">
+                        {{covrage.percent}}
+                      </td>
+                    </tr>
+                    <tr
+                      style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:14px; color:#303030; padding: 0 10px 0 15px ;">
+                      <td style="padding: 5px 10px 0 15px ;">{{'claims.cardHolderPlanMax' | translate}}</td>
+                    </tr>
+                    <tr *ngFor="let formulas of printFormulas">
+                      <td
+                        style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:14px; color:#303030; padding: 0 10px 10px 15px ;">
+                        {{formulas.formula}}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+
+      </div>
+      <!-- Modal Body End-->
+
+      <div class="modal-footer">
+        <button id="btnPrintClaimForm" class="btn grey-btn" data-dismiss="modal"
+          (click)="print('PrintClaimForm')">{{'button.print'|translate}}</button>
+      </div>
+      <!-- Modal Footer End-->
+
+    </div>
+  </div>
+</div>
+
+<!-- BindComment Claim Modal-->
+<div id="BindCommentData" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="btncloseSearchCompany" type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">{{'claims.claims-view.claims' | translate}} {{'common.comments' | translate}}
+          <span class="comment-fm">
+            <i class="fa fa-flag" style="color:red;" aria-hidden="true"></i>
+          </span>
+        </h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12 col-xs-12 table-col">
+
+            <div class="table-responsive">
+              <table id="importantCommentsList" class="table table-bordered table-stripped">
+                <thead>
+                </thead>
+                <tfoot>
+                </tfoot>
+                <tfoot></tfoot>
+              </table>
+            </div>
+            <!-- Table Ends -->
+          </div>
+        </div>
+      </div>
+      <!-- Modal Body Ends -->
+      <div class="modal-footer">
+        <button id="closeSearchCompany" type="button" class="btn grey-btn"
+          data-dismiss="modal">{{'button.close' | translate}}
+        </button>
+      </div>
+    </div>
+    <!-- Modal Content Ends -->
+  </div>
+</div>
+
+<!-- Adjudicate Claim Modal-->
+<div id="ModalAdjudicate" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{'claims.claims-view.adjudicate-claim-button.adjudicate-claim' | translate}}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="text-center">
+          <h3 class="success-msg" [innerHTML]="adjudicatedMessage"> </h3>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btnCloseAdjudicateModal" data-dismiss="modal" class="btn grey-btn" (click)="closeModal()"
+          autofocus>{{'button.ok'|translate}}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PrintAuth Letter Modal-->
+<modal #PrintAuthLetter [closeOnEscape]="false" [closeOnOutsideClick]="false" [hideCloseButton]="false"
+  modalClass="modal-sm letter-table">
+  <modal-header>
+    <h4 class="modal-title">Letter</h4>
+  </modal-header>
+  <modal-content id="PrintPreAuth">
+    <table #PrintPreAuthLtr width="100%" align="center" cellpadding="0" cellspacing="0"
+      style="border:1px solid #d5d5d5; font-family:tahoma, arial; text-align:left; background: #fff; padding: 0px; font-size: 12px;">
+      <tbody>
+        <tr>
+          <td valign="top">
+            <table id="PrintPreAuth1" width="100%" cellpadding="0" cellspacing="0"
+              style=" border-bottom: 1px solid #d5d5d5">
+              <tr>
+                <td width="15px"></td>
+                <td valign="top" style="vertical-align: top;">
+                  <img src="{{imgUrl}}" style="padding:15px 0;" />
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding:10px 0px; border-bottom: 1px solid #d5d5d5;">
+            <table id="PrintPreAuth2" width="100%" align="center" cellpadding="0" cellspacing="0">
+              <tr>
+                <td width="70%">
+                  <table width="100%" align="center" cellpadding="0" cellspacing="0">
+                    <tr *ngIf="ltrDate">
+                      <td
+                        style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:12px; color:#303030; padding: 0 0 6px 15px;">
+                        <span style="font-weight: bold;">{{ltrDate}}</span>
+                      </td>
+                    </tr>
+                    <tr *ngIf="provider">
+                      <td
+                        style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:12px; color:#303030; padding: 0 0 6px 15px;">
+                        <span>{{provider}}</span>
+                      </td>
+                    </tr>
+                    <tr *ngIf="providerLttrAdrs && providerLttrAdrs[0]">
+                      <td
+                        style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:12px; color:#303030; padding: 0 0 6px 15px;">
+                        <span>{{providerLttrAdrs[0]}}</span>
+                      </td>
+                    </tr>
+                    <tr *ngIf="providerLttrAdrs && providerLttrAdrs[1]">
+                      <td
+                        style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:12px; color:#303030; padding: 0 0 6px 15px;">
+                        <span>{{providerLttrAdrs[1]}}</span>
+                      </td>
+                    </tr>
+                    <tr *ngIf="providerLttrAdrs && providerLttrAdrs.length == 5">
+                      <td
+                        style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:12px; color:#303030; padding: 0 0 6px 15px;">
+                        <span>{{providerLttrAdrs[2]}},{{providerLttrAdrs[3]}},{{providerLttrAdrs[4]}}
+                          ({{providerLttrAdrs[5]}})
+                        </span>
+                      </td>
+                    </tr>
+                    <tr *ngIf="providerLttrAdrs &&  providerLttrAdrs.length == 4">
+                      <td
+                        style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:12px; color:#303030; padding: 0 0 6px 15px;">
+                        <span>{{providerLttrAdrs[2]}},{{providerLttrAdrs[3]}},({{providerLttrAdrs[4]}})</span>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td
+                  style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:12px; color:#303030; padding: 0 0 3px 15px;">
+                  <span
+                    style="font-weight: bold;">{{'claims.claims-view.print-button.adjudicate-claims.reference' | translate}}:
+                  </span> {{ltrReference}}
+                </td>
+              </tr>
+              <tr>
+                <td width="70%">
+                  <table width="100%" align="center" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td
+                        style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:12px; color:#303030; padding: 8px 0 3px 15px;">
+                        <span
+                          style="font-weight: bold;">{{'claims.claims-view.print-button.adjudicate-claims.patient' | translate}}:</span>
+                        {{ltrPatientName}}
+                      </td>
+                      <td
+                        style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:12px; color:#303030; padding: 8px 0 3px 15px;">
+                        <span style="font-weight: bold;">{{'common.date-of-birth' | translate}}:</span>
+                        {{ltrDateOfBirth | dateFormate}}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td
+                        style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:12px; color:#303030; padding: 8px 0 3px 15px;">
+                        <span style="font-weight: bold;">{{'reviewApp.claim-search.claimNo' | translate}}:</span>
+                        {{ltrCrdNum}}
+                      </td>
+                      <td
+                        style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:12px; color:#303030; padding: 8px 0 3px 15px;">
+                        {{daspContent}}
+                      </td>
+                    </tr>
+
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td
+            style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:12px; color:#303030; padding: 8px 0 3px 15px;">
+            {{ltrContntLine1}}
+          </td>
+        </tr>
+        <tr>
+          <td *ngIf="ltrContntLine4"
+            style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:12px; color:#303030; padding: 8px 0 3px 15px;">
+            {{ltrContntLine4}}
+          </td>
+        </tr>
+        <tr>
+          <td *ngIf="ltrContntLine2"
+            style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:12px; color:#303030; padding: 8px 0 3px 15px;">
+            {{ltrContntLine2}}
+          </td>
+        </tr>
+        <tr>
+          <td *ngIf="ltrContntLine3"
+            style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:12px; color:#303030; padding: 8px 0 3px 15px;">
+            {{ltrContntLine3}}
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:0 0 10px 0px; border-bottom: 1px solid #d5d5d5">
+            <table id="PrintPreAuth5" width="100%" cellpadding="0" cellspacing="0">
+              <tbody>
+                <tr>
+                  <th
+                    style="padding:10px 5px 10px 15px; text-align:left; background: #fff; border-bottom:1px solid #d5d5d5; color:#333; border-top:1px solid #d5d5d5;font-size: 12px;">
+                    {{'claims.claims-view.print-button.adjudicate-claims.service-date' | translate}}</th>
+                  <th
+                    style="padding:10px 5px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333; border-top:1px solid #d5d5d5;font-size: 12px;">
+                    {{'claims.claims-view.print-button.adjudicate-claims.proc-#' | translate}}</th>
+                  <th
+                    style="padding:10px 5px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333; border-top:1px solid #d5d5d5;font-size: 12px;">
+                    {{'claims.claims-view.print-button.adjudicate-claims.msg-#' | translate}}</th>
+                  <th
+                    style="padding:10px 5px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333; border-top:1px solid #d5d5d5;font-size: 12px;">
+                    {{'claims.claims-view.print-button.adjudicate-claims.to' | translate}}</th>
+                  <th
+                    style="padding:10px 5px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333; border-top:1px solid #d5d5d5;font-size: 12px;">
+                    {{'claims.claims-view.print-button.adjudicate-claims.su' | translate}}</th>
+                  <th
+                    style="padding:10px 5px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333;text-align: right; border-top:1px solid #d5d5d5;font-size: 12px;">
+                    {{'claims.claims-view.print-button.adjudicate-claims.fee-claimed' | translate}}</th>
+                  <th
+                    style="padding:10px 5px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333;text-align: right; border-top:1px solid #d5d5d5;font-size: 12px;">
+                    {{'claims.claims-view.print-button.adjudicate-claims.elig-amount' | translate}}</th>
+                  <th
+                    style="padding:10px 5px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333;text-align: right; border-top:1px solid #d5d5d5;font-size: 12px;">
+                    {{'claims.claims-view.print-button.adjudicate-claims.allowed' | translate}}</th>
+                  <th
+                    style="padding:10px 5px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333;text-align: right; border-top:1px solid #d5d5d5;font-size: 12px;">
+                    {{'claims.claims-view.print-button.adjudicate-claims.payable' | translate}}</th>
+                  <th
+                    style="padding:10px 5px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333;text-align: right; border-top:1px solid #d5d5d5;font-size: 12px;">
+                    {{'claims.claims-view.print-button.adjudicate-claims.lab-fee-claimed' | translate}}</th>
+                  <th
+                    style="padding:10px 5px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333;text-align: right; border-top:1px solid #d5d5d5;font-size: 12px;">
+                    {{'claims.claims-view.print-button.adjudicate-claims.allowed' | translate}}</th>
+                  <th
+                    style="padding:10px 5px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333;text-align: right; border-top:1px solid #d5d5d5;font-size: 12px;">
+                    {{'claims.claims-view.print-button.adjudicate-claims.payable' | translate}}</th>
+                </tr>
+                <tr id="{{'row_'+i}}" *ngFor="let dataRow of serviceData; let i = index">
+                  <td style="padding:5px 5px 5px 15px; text-align: left; font-size: 12px;">
+                    {{dataRow.itemServiceDt | dateFormate}}
+                  </td>
+                  <td style="padding:5px; text-align: left; font-size: 12px;">{{dataRow.itemProcedureCd}}</td>
+                  <td style="padding:5px; text-align: left; font-size: 12px;">{{dataRow.messageRank}}</td>
+                  <td style="padding:5px; text-align: left; font-size: 12px;">{{dataRow.itemToothId}}</td>
+                  <td style="padding:5px; text-align: left; font-size: 12px;">{{dataRow.itemToothSurfaceTxt}}</td>
+                  <td style="padding:5px; text-align: right; font-size: 12px;">{{dataRow.itemFeeClaimAmt | currency}}
+                  </td>
+                  <td style="padding:5px; text-align: right; font-size: 12px;">{{dataRow.itemFeeEligAmt | currency}}
+                  </td>
+                  <td style="padding:5px; text-align: right; font-size: 12px;">{{dataRow.itemFeeAllowAmt | currency}}
+                  </td>
+                  <td style="padding:5px; text-align: right; font-size: 12px;">{{dataRow.itemPayable | currency}}</td>
+                  <td style="padding:5px; text-align: right; font-size: 12px;">{{dataRow.itemLabClaimAmt | currency}}
+                  </td>
+                  <td style="padding:5px; text-align: right; font-size: 12px;">{{dataRow.itemLabAllowAmt | currency}}
+                  </td>
+                  <td style="padding:5px; text-align: right; font-size: 12px;">{{dataRow.itemLabPaidAmt | currency}}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding:0 0 10px 0px; border-bottom: 1px solid #d5d5d5">
+            <table id="PrintPreAuth4" width="100%" cellpadding="0" cellspacing="0">
+              <tbody>
+                <tr
+                  style="margin:0; font-weight:normal; text-align:left; font-size:12px; color:#303030; padding: 0 0 6px; font-weight: bold;">
+                  <th
+                    style="padding:10px 5px 10px 15px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333;text-align: right; font-size: 12px; padding-left:1px; ">
+                    {{'claims.claims-view.print-button.adjudicate-claims.claim-total' | translate}}</th>
+                  <th
+                    style="padding:10px 5px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333;text-align: right; font-size: 12px;">
+                    {{'claims.claims-view.print-button.adjudicate-claims.allowed-total' | translate}}</th>
+                  <th
+                    style="padding:10px 5px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333;text-align: right; font-size: 12px;">
+                    {{'claims.claims-view.print-button.adjudicate-claims.paid-carrier' | translate}}</th>
+                  <th
+                    style="padding:10px 5px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333;text-align: right; font-size: 12px;">
+                    {{'claims.claims-view.print-button.adjudicate-claims.not-covered' | translate}}</th>
+                  <th
+                    style="padding:10px 5px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333;text-align: right; font-size: 12px;">
+                    {{'claims.claims-view.print-button.adjudicate-claims.deductible' | translate}}</th>
+                  <th
+                    style="padding:10px 5px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333;text-align: right; font-size: 12px;">
+                    {{'claims.claims-view.print-button.adjudicate-claims.total-payable' | translate}}</th>
+                  <th
+                    style="padding:10px 5px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333;text-align: right; font-size: 12px;">
+                  </th>
+
+                </tr>
+                <tr id="{{'row_'+i}}" *ngFor="let dataRow of providerTotals; let i = index">
+                  <td style="padding:5px 5px 5px 15px; text-align: right; font-size: 12px;">
+                    {{dataRow.ClaimTotal | currency}}
+                  </td>
+                  <td style="padding:5px; text-align: right; font-size: 12px;">{{dataRow.AllowedTotal | currency}}</td>
+                  <td style="padding:5px; text-align: right; font-size: 12px;">{{dataRow.PaidCarrier | currency}}</td>
+                  <td style="padding:5px; text-align: right; font-size: 12px;">{{dataRow.NotCovered | currency}}</td>
+                  <td style="padding:5px; text-align: right; font-size: 12px;">{{dataRow.Deductible | currency}}</td>
+                  <td style="padding:5px; text-align: right; font-size: 12px;">{{dataRow.TotalPayable | currency}}</td>
+                  <td style="padding:5px; text-align: right; font-size: 12px;"></td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+        <tr *ngIf="reviewStatus == 'PARTIALLY APPROVED' || reviewStatus == 'DENIED' ">
+          <td style="padding:0 0 10px 0px; border-bottom: 1px solid #d5d5d5">
+            <table id="PrintPreAuth7" width="100%" cellpadding="0" cellspacing="0">
+              <tbody>
+                <tr>
+                  <th width="10%"
+                    style="padding:10px 5px 10px 15px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333; text-align:left; font-size: 12px;">
+                    {{'claims.claims-view.print-button.adjudicate-claims.msg-#' | translate}}</th>
+                  <th
+                    style="padding:10px 5px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333; text-align:left; font-size: 12px;">
+                    {{'claims.claims-view.print-button.adjudicate-claims.system-message' | translate}}</th>
+                  <th
+                    style="padding:10px 5px; background: #fff; border-bottom:1px solid #d5d5d5; color:#333; text-align:left; font-size: 12px;">
+                    {{'common.action'|translate}}</th>
+                </tr>
+                <tr id="{{'row_'+i}}" *ngFor="let dataRow of systemMessageData; let i = index">
+                  <td style="padding:5px 5px 5px 15px; text-align: left; font-size: 12px;">{{dataRow.messageNumber}}
+                  </td>
+                  <td style="padding:5px 5px 8px 5px; text-align: left; font-size: 12px;">{{dataRow.messageCom}}</td>
+                  <td style="padding:5px 5px 8px 5px; text-align: left; font-size: 12px;">{{dataRow.actionCom}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td
+            style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:12px; color:#303030; padding: 15px 0 6px 15px;">
+            If you have any questions about this matter, please contact the ADSC claims department.
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding-bottom: 15px">
+            <table width="100%" cellpadding="0" cellspacing="0">
+              <tr>
+                <td
+                  style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:12px; color:#303030; font-weight: normal; padding: 0 0 8px 15px;">
+                  Sincerely,</td>
+              </tr>
+              <tr>
+                <td style="padding:10px 0 10px 15px">
+                  <img width="142" src="{{signImage}}" alt="" />
+                </td>
+              </tr>
+              <tr>
+                <td
+                  style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:12px; color:#303030; font-weight: normal; padding: 0 0 6px 15px;">
+                  Lyle R. Best C.M., A.L.H.C.
+                </td>
+              </tr>
+              <tr>
+                <td
+                  style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:12px; color:#303030; font-weight: normal; padding: 0 0 6px 15px;">
+                  Chairman of Dental Exceptions</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:0 0 8px 15px;">
+            <p
+              style="font-family:sans-serif; margin:0; font-weight:normal; text-align:left; font-size:13px; color:black; padding: 0 0 1px; font-style: italic;">
+              The review is based on the benefits presently available and subject to the Schedule of Benefits in place
+              at the time of treatment,
+              coverage maximums, frequencies, and age restrictions present in the terms of the Agreement. Payment of
+              these
+              benefits will be subject to the patient being covered under the program and eligible for these benefits at
+              the time of the treatment.
+            </p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </modal-content>
+  <modal-footer>
+    <button id="btnPrintClaimForm" class="btn red-btn" data-dismiss="modal"
+      (click)="print('PrintPreAuth')">{{'button.print'|translate}}</button>
+    <button id="btnCloseLetterModal" class="btn grey-btn" (click)="closePrintModal(PrintAuthLetter)">Close</button>
+    <button (click)="exportLetter(PrintPreAuthLtr)" class="btn green-btn">Export PDF</button>
+
+  </modal-footer>
+</modal>
+
+<!-- Reverse Claim Confirmation Modal-->
+<div id="reverseClaim" class="modal fade" style="top: 80px !important;" role="dialog" data-backdrop="static"
+  data-keyboard="false">
+  <div class="modal-dialog" style="width: 700px !important;">
+    <div class="modal-content ">
+      <div class="modal-header">
+        <h4 class="modal-title">Reverse Claim Item</h4>
+      </div>
+      <div class="modal-body">
+        <label class="text-center revers-label">Confirmation No. Of Claim To Select Reversal Items From</label>
+        <form [formGroup]="reverseClaimForm">
+          <div class="form-row">
+            <div class="row min-ht-sf">
+              <div class="col-md-3 col-xs-12"></div>
+              <div class="col-md-6 col-xs-12">
+                <input type="text" class="fm-txt form-control" id="comfirMationNo"
+                  placeholder="{{ 'finance.paymentGenerate.confirmationNo' | translate }}"
+                  formControlName="rvrseClmNo" />
+                <show-errors [control]="reverseClaimForm.controls.rvrseClmNo"></show-errors>
+              </div>
+              <div class="col-md-3 col-xs-12"></div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button id="btnReverseModal" type="button" class="btn grey-btn"
+          (click)="reverseClaim()">{{'button.ok'|translate}}</button>
+        <button id="btnReverseCloseModal" type="button" (click)="resetReverseClaim()" data-dismiss="modal"
+          class="btn red-btn">{{'common.cancel'|translate}}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Reverse Claim Items Modal-->
+<div id="reverseClaimItems" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content ">
+      <div class="modal-header">
+        <h4 class="modal-title">Save Reverse Claim Items Dental</h4>
+      </div>
+      <div class="modal-body">
+        <div class="grid-box">
+          <form [formGroup]="reverseClaimGeneralInformationFormGroup">
+            <div class="grid-heading">
+              <h3>
+                {{'claims.claims-add.claims-totals.totals-button.totals.general-information.general-information' | translate}}
+              </h3>
+            </div>
+            <div class="grid-inner">
+              <div class="form-row">
+                <div class="row min-ht-sf">
+                  <div class="col-xs-12 col-md-2">
+                    <label>{{'claims.claims-add.claims-totals.totals-button.totals.general-information.discipline-type' | translate}}</label>
+                    <input id="totalOperator" type="text" disabled class="fm-txt form-control" placeholder="Discipline"
+                      formControlName="reverseClaimDiscipline">
+                  </div>
+                  <div class="col-md-2 col-xs-12">
+                    <label>{{'claims.claims-add.claims-totals.totals-button.totals.general-information.entry-date' | translate}}
+                    </label>
+                    <input id="totalOperator" type="text" disabled class="fm-txt form-control" placeholder="Entry Date"
+                      formControlName="reverseClaimEntryDate">
+                  </div>
+
+                  <div class="col-md-2 col-xs-12">
+                    <label>{{'claims.claims-add.claims-totals.totals-button.totals.general-information.claim-type' | translate}}
+                    </label>
+                    <input id="totalOperator" type="text" disabled class="fm-txt form-control" placeholder="Claim Type"
+                      formControlName="reverseClaimType">
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <div class="input-half">
+                      <label>{{'claims.claims-add.claims-general-information.operator_name' | translate}}</label>
+                      <input id="totalOperator" type="text" disabled class="fm-txt form-control"
+                        placeholder="{{'claims.claims-add.claims-totals.totals-button.totals.general-information.operator' | translate}}"
+                        formControlName="reverseClaimOperator">
+                    </div>
+                    <div class="input-half">
+                      <label>{{'claims.claims-add.claims-general-information.reference_no' | translate}}</label>
+                      <input id="totalReference" type="text" disabled class="fm-txt form-control"
+                        placeholder="{{'claims.claims-add.claims-totals.totals-button.totals.general-information.reference' | translate}}"
+                        formControlName="reverseClaimReference">
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <div class="input-half">
+                      <label>{{'claims.claims-add.claims-general-information.modified_by' | translate}}</label>
+                      <input id="totalUserId" type="text" disabled class="fm-txt form-control"
+                        placeholder="{{'claims.claims-add.claims-totals.totals-button.totals.general-information.user-id' | translate}}"
+                        formControlName="reverseClaimUserId">
+                    </div>
+                    <div class="input-half">
+                      <label>{{'claims.claims-add.claims-general-information.modified_on' | translate}}</label>
+                      <input id="totalModifiedDate" type="text" disabled class="fm-txt form-control"
+                        placeholder="{{'claims.claims-add.claims-totals.totals-button.totals.general-information.modified' | translate}}"
+                        formControlName="reverseClaimModified_date">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="grid-inner">
+          <div class="form-row">
+            <div class="row">
+              <div class="col-md-12 col-xs-12 table-col ">
+                <div class="table-responsive search-table multi-col">
+                  <form [formGroup]="reverseClaimItemForm">
+                    <table id="reverse-claim-items-table" class="table table-bordered table-stripped dataTable">
+                      <thead>
+                        <tr>
+                          <th width="3%">{{'claims.claims-view.claim-items.reverse' | translate}}</th>
+                          <th *ngIf="reversClaimDisciplineKey == 1" width="2%">{{'C' | translate}}</th>
+                          <th width="7%">{{'claims.claims-view.claim-items.date' | translate}}</th>
+                          <th width="5%">{{'claims.claims-view.claim-items.proc' | translate}}</th>
+                          <th *ngIf="reversClaimDisciplineKey == 1" width="4%">
+                            {{'claims.claims-view.claim-items.tooth' | translate}}</th>
+                          <th *ngIf="reversClaimDisciplineKey == 1" width="4%">
+                            {{'claims.claims-view.claim-items.surface' | translate}}</th>
+                          <th *ngIf="reversClaimDisciplineKey == 1" width="3%">
+                            {{'claims.claims-view.claim-items.count' | translate}}</th>
+                          <th width="4.5%">{{'claims.claims-view.claim-items.fee-claim' | translate}}</th>
+                          <th *ngIf="reversClaimDisciplineKey == 1" width="5%">
+                            {{'claims.claims-view.claim-items.fee' | translate}}
+                            <br>{{'claims.claims-view.claim-items.elig' | translate}}</th>
+                          <th width="5%">{{'claims.claims-view.claim-items.fee-allow' | translate}}</th>
+                          <th *ngIf="reversClaimDisciplineKey == 1" width="5%">
+                            {{'claims.claims-view.claim-items.lab-claim' | translate}}</th>
+                          <th *ngIf="reversClaimDisciplineKey == 1" width="5%">
+                            {{'claims.claims-view.claim-items.lab' | translate}}
+                            <br>{{'claims.claims-view.claim-items.elig' | translate}}</th>
+                          <th *ngIf="reversClaimDisciplineKey == 1" width="4%">
+                            {{'claims.claims-view.claim-items.lab-allow' | translate}}</th>
+                          <th *ngIf="reversClaimDisciplineKey == 1" width="8%">
+                            {{'claims.claims-view.claim-items.override' | translate}}</th>
+                          <th *ngIf="reversClaimDisciplineKey == 1" width="5%">
+                            {{'claims.claims-view.claim-items.fee-paid' | translate}}</th>
+                          <th *ngIf="reversClaimDisciplineKey == 1" width="4%">
+                            {{'claims.claims-view.claim-items.lab-paid' | translate}}</th>
+                          <th *ngIf="reversClaimDisciplineKey == 1" width="5.2%">
+                            {{'claims.claims-view.claim-items.total' | translate}}
+                            <br>{{'claims.claims-view.claim-items.paid' | translate}}</th>
+                          <th *ngIf="reversClaimDisciplineKey == 1" width="6%">
+                            {{'claims.claims-view.claim-items.approve' | translate}}
+                            <br>{{'claims.claims-view.claim-items.review' | translate}}
+                          </th>
+                          <th width="5%">{{'claims.claims-view.claim-items.deduct' | translate}}</th>
+                          <th width="4%">{{'claims.claims-view.claim-items.cob1' | translate}}</th>
+                          <th width="5%" *ngIf="cobVal == 'T'">{{'claims.claims-view.claim-items.cob2' | translate}}
+                          </th>
+                          <th *ngIf="reversClaimDisciplineKey != 1" width="4%">
+                            {{'claims.claims-view.claim-items.overide-type' | translate}}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngIf="reverseClaimItems && reverseClaimItems.length == 0" class="odd">
+                          <td *ngIf="reversClaimDisciplineKey == 1" valign="top" colspan="20" class="dataTables_empty">
+                            {{'card.card-holder.data-tables.datamsg' | translate}}</td>
+                          <td valign="top" colspan="21" class="dataTables_empty"
+                            *ngIf="cobVal == 'T' && reversClaimDisciplineKey == 1">
+                            {{'card.card-holder.data-tables.datamsg' | translate}}</td>
+                          <td *ngIf="reversClaimDisciplineKey != 1" valign="top" colspan="8" class="dataTables_empty">
+                            {{'card.card-holder.data-tables.datamsg' | translate}}</td>
+                        </tr>
+                        <tr *ngFor="let dataRow of reverseClaimItems; let i = index"
+                          (click)="getSelectedClaimReverse(i,dataRow)" (dblclick)="doubleClick(i,dataRow)"
+                          [ngClass]="{blue: dataRow.selectedRow == true ,pink: dataRow.itemRejectedInd === 'T', yellow: dataRow.itemReviewInd === 'T'}">
+                          <td>
+                            <input id="ccid_claimItemRejected" [disabled]=true type="checkbox"
+                              [checked]="dataRow.isReversed == true">
+                          </td>
+                          <td *ngIf="reversClaimDisciplineKey == 1">
+                            <input id="ccid_claimItemClaimed" [disabled]=true type="checkbox"
+                              [checked]="dataRow.isClaimed == true">
+                          </td>
+                          <td>
+                            <span>{{dataRow.itemServiceDt | dateFormate}}</span>
+                          </td>
+                          <td *ngIf="reversClaimDisciplineKey == 1">
+                            <span>{{dataRow.itemProcedureCd}}</span>
+                          </td>
+                          <td *ngIf="reversClaimDisciplineKey == 1">
+                            <span *ngIf="!dataRow.selectedRow">{{dataRow.itemToothId}}</span>
+                            <input *ngIf="i == selectedReverseClaimIndex  && dataRow.selectedRow" OnlyNumber="true"
+                              id="rvcl_ToothId" type="text" class="fm-txt form-control" placeholder=""
+                              formControlName="toothId">
+                          </td>
+                          <td *ngIf="reversClaimDisciplineKey == 1">
+                            <span *ngIf="!dataRow.selectedRow">{{dataRow.itemToothSurfaceTxt}}</span>
+                            <input *ngIf="i == selectedReverseClaimIndex  && dataRow.selectedRow"
+                              id="rvcl_ToothSurfaceTxt" type="text" class="fm-txt form-control" placeholder=""
+                              formControlName="toothSurfaceTxt">
+                          </td>
+                          <td *ngIf="reversClaimDisciplineKey == 1">
+                            <span *ngIf="!dataRow.selectedRow">{{dataRow.itemUnitCount}}</span>
+                            <input *ngIf="i == selectedReverseClaimIndex  && dataRow.selectedRow" OnlyNumber="true"
+                              id="rvcl_UnitCount" type="text" class="fm-txt form-control" placeholder=""
+                              formControlName="unitCount">
+                          </td>
+                          <td>
+                            <span style="text-align:right;">{{dataRow.itemFeeClaimAmt | currency:'USD'}}</span>
+                          </td>
+                          <td *ngIf="reversClaimDisciplineKey == 1">
+                            <span style="text-align:right;">{{dataRow.itemFeeEligAmt | currency:'USD'}}</span>
+                          </td>
+                          <td>
+                            <span style="text-align:right;">{{dataRow.itemFeeAllowAmt | currency:'USD' }}</span>
+                          </td>
+                          <td *ngIf="reversClaimDisciplineKey == 1">
+                            <span style="text-align:right;">{{dataRow.itemLabClaimAmt | currency:'USD'}}</span>
+                          </td>
+                          <td *ngIf="reversClaimDisciplineKey == 1">
+                            <span style="text-align:right;">{{dataRow.itemLabEligAmt | currency:'USD'}}</span>
+                          </td>
+                          <td *ngIf="reversClaimDisciplineKey == 1">
+                            <span style="text-align:right;">{{dataRow.itemLabAllowAmt | currency:'USD'}}</span>
+                          </td>
+                          <td *ngIf="reversClaimDisciplineKey == 1">
+                            <span>{{dataRow.overrideTypeKey}}</span>
+                          </td>
+                          <td *ngIf="reversClaimDisciplineKey == 1">
+                            <span style="text-align:right;">{{dataRow.itemLabPaidAmt | currency:'USD'}}</span>
+                          </td>
+                          <td>
+                            <span style="text-align:right;">{{dataRow.itemFeePaidAmt | currency:'USD'}}</span>
+                          </td>
+                          <td *ngIf="reversClaimDisciplineKey == 1">
+                            <span style="text-align:right;">{{dataRow.itemTotalPaidAmt | currency:'USD'}}</span>
+                          </td>
+                          <td *ngIf="reversClaimDisciplineKey == 1">
+                            <input *ngIf='!dataRow.selectedRow' [disabled]=true id="ccid_approveReview" type="checkbox"
+                              [checked]="dataRow.itemApprovedReviewInd == true">
+                            <input *ngIf='i == selectedReverseClaimIndex  && dataRow.selectedRow'
+                              id="ccid_approveReview" type="checkbox" formControlName="approveReview"
+                              [checked]="dataRow.itemApprovedReviewInd == true">
+                          </td>
+                          <td>
+                            <span *ngIf="!dataRow.selectedRow"
+                              style="text-align:right;">{{dataRow.itemDeductAmt | currency:'USD'}}
+                            </span>
+                            <input *ngIf="i == selectedReverseClaimIndex && dataRow.selectedRow"
+                              id="rvcl_dcItemDeductAmt" type="text" class="fm-txt form-control" placeholder=""
+                              formControlName="deductAmt">
+                          </td>
+                          <td>
+                            <span *ngIf="!dataRow.selectedRow"
+                              style="text-align:right;">{{dataRow.itemCarrierAmtTot | currency:'USD'}}
+                            </span>
+                            <input *ngIf="i == selectedReverseClaimIndex && dataRow.selectedRow" id="rvcl_cob"
+                              type="text" class="fm-txt form-control" placeholder="" formControlName="cobVal">
+                          </td>
+                          <td *ngIf="reversClaimDisciplineKey != 1">
+                            <span style="text-align:right;">{{dataRow.overrideTypeDesc}}</span>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="saveReversalClaim" (click)="saveReversalClaim()" class="btn grey-btn">Reverse</button>
+        <button id="btnReverseClaimItemCloseModal" (click)="resetReverseClaimItems()" data-dismiss="modal"
+          class="btn red-btn">{{'common.cancel'|translate}}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- loader -->
+<div *ngIf="showLoader" class="loader-outer">
+  <div class="cube-wrapper">
+    <div class="cube-folding">
+      <span class="leaf1"></span>
+      <span class="leaf2"></span>
+      <span class="leaf3"></span>
+      <span class="leaf4"></span>
+    </div>
+    <span class="loading" data-name="Loading">{{loaderPlaceHolder}}</span>
+  </div>
+</div>
+
+<!-- hidden adjudication button to open adjudicate modal when adjudicate after save  -->
+<div [attr.hidden]="true">
+  <button id="adjudicate-btn" class="btn green-btn" data-toggle="modal"
+    data-target="#ModalAdjudicate">{{'button.adjudicate-claim' | translate}}</button>
+</div>
+
+<!-- hidden reverse claim item button to open reverse claim item modal after adding confirmation no. -->
+<div [attr.hidden]="true">
+  <button id="showReverseClaimItem" class="btn green-btn" data-toggle="modal"
+    data-target="#reverseClaimItems">{{'button.adjudicate-claim' | translate}}</button>
+</div>
+
+<!-- Track Claim -->
+<div id="trackClaimModal" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+  <app-track-claim  [claimId] = "claimId" [trackStatusList] = "trackStatusList" [message] = "message" [recordLength] = "recordLength" [refNumber] = "refNumber"></app-track-claim>
+</div>
+
+
+<!--Show Claim Modal-->
+<div id="ShowClaimModal" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content ">
+      <div class="modal-header">
+        <h4 class="modal-title">Show Claim</h4>
+        <div class="web-reg">
+          <span *ngIf="checkReferenceId" class="claim-status btn status-btn">Reference Id : {{referenceId}}</span>
+        </div>
+      </div>
+      <div class="modal-body" *ngIf="recordLength != 0">
+        <!-- Grid Heading Ends  -->
+        <div class="grid-inner">
+          <div class="form-row">
+            <div class="row">
+              <div class="col-md-12 col-xs-12 table-col">
+                <div class="table-responsive" id="showClaimItemSection">
+
+                  <table id='show-claim-table' class="table table-bordered table-stripped inlinePopupTable">
+                    <thead>
+                      <tr>
+                        <th>{{'claims.claims-view.claim-items.reverse' | translate}}</th>
+                        <th>{{'claims.claims-view.claim-items.date' | translate}}</th>
+                        <th>{{'claims.claims-view.claim-items.proc' | translate}}</th>
+                        <th>{{'claims.claims-view.claim-items.tooth' | translate}}</th>
+                        <th>{{'claims.claims-view.claim-items.fee-claim' | translate}}</th>
+                        <th>{{'claims.claims-view.claim-items.fee' | translate}}
+                          <br>{{'claims.claims-view.claim-items.elig' | translate}}</th>
+                        <th>{{'claims.claims-view.claim-items.fee-allow' | translate}}</th>
+                        <th>{{'claims.claims-view.claim-items.fee-paid' | translate}}</th>
+                        <th>{{'claims.claims-view.claim-items.lab' | translate}}
+                          <br>{{'claims.claims-view.claim-items.elig' | translate}}</th>
+                        <th>{{'claims.claims-view.claim-items.lab-allow' | translate}}</th>
+                    <th>{{'claims.claims-view.claim-items.lab-paid' | translate}}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!-- Below class "keep_right" added for keeping data right  -->
+                      <tr *ngFor="let scData of showRevPreAuthTableObj" (click)="redirectToClaim(scData)" class="amount_right">
+                        <!-- Below class "keep_left" added for keeping data left  -->
+                        <td class="keep_left">
+                          <input *ngIf="scData.reversed == 'T'" type="checkbox" name="" value="" checked
+                            disabled="disabled" />
+                          <input *ngIf="scData.reversed == 'F'" type="checkbox" name="" value="" disabled="disabled" />
+                        </td> 
+                        <td>{{scData.dcItemServiceDt}}</td>
+                        <td title="{{scData.itemProcLongDesc}}">{{scData.dcItemProcedureCd}}</td>
+                        <td>{{scData.dcItemToothId}}</td>
+                        <td>{{scData.dcItemFeeClaimAmt}}</td>
+                        <td>{{scData.dcItemFeeEligAmt}}</td>
+                        <td>{{scData.dcItemFeeAllowAmt}}</td>
+                        <td>{{scData.dcItemFeePaidAmt}}</td>
+                        <td>{{scData.dcItemLabEligAmt}}</td>
+                        <td>{{scData.dcItemLabAllowAmt}}</td>
+                        <td>{{scData.dcItemLabPaidAmt}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Form Row ENds -->
+        </div>
+        <!-- Grid Inner Ends -->
+      </div>
+      <div class="modal-body" *ngIf="recordLength == 0">
+        <div class="text-center">
+          <h3 class="success-msg" [innerHTML]="message"> </h3>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="modalFooterCloseS" type="button" class="btn grey-btn" data-dismiss="modal"
+          (click)="resetShowClaimGrid()">{{'button.close' | translate }}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ----------  refer to doc popup log 1012  ------------- -->
+<div id="ShowClaimModalReferToDoc" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content ">
+      <div class="modal-header">
+        <h4 class="modal-title">Refer Claim Dialog </h4>
+        <div class="web-reg">
+          
+        </div>
+      </div>
+      <div class="modal-body" >
+        <!-- Grid Heading Ends  -->
+        <div class="grid-inner">
+          <div class="form-row">
+            <div class="row">
+             
+              <div class="col-md-12 col-xs-12">
+                <select class="fm-txt form-control" (change)="getListing($event)"  name="category" id="category" >
+                    <option value=""  selected>{{'common.select' | translate}}</option>
+                    <option *ngFor="let category of categories" [value]="category.dentCovCatKey">{{category.dentCovCatDesc}}</option>
+                </select>
+                </div>
+            </div>
+          </div>
+          <!-- Form Row ENds -->
+        </div>
+        <!-- Grid Inner Ends -->
+      </div>
+    
+      <div class="modal-footer">
+        <button id="modalFooterCloseS" type="button" class="btn grey-btn" data-dismiss="modal"
+          (click)="resetRefToDocForm()">{{'button.close' | translate }}</button>
+          <button id="modalFooterCloseS" type="button" class="btn green-btn" data-dismiss="modal"
+          (click)="SendRequestRefToDoc()">{{'button.sendPreAuthConsultant' | translate }}</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ------------refer todoc popup ends log 1012 ----------------->
+<!--Show Pre Auth Review Claim Modal-->
+<div id="ShowPreAuthReviewModal" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content ">
+      <div class="modal-header">
+        <h4 class="modal-title">Show Claim</h4>
+      </div>
+      <div class="modal-body" *ngIf="recordLength != 0">
+        <div class="grid-inner">
+          <div class="form-row">
+            <div class="row">
+              <div class="col-md-12 col-xs-12 table-col">
+                <div class="table-responsive">
+                  <table id="show-preAuthReview-claim-table"
+                    class="table table-bordered table-stripped inlinePopupTable">
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-body" *ngIf="recordLength == 0">
+        <div class="text-center">
+          <h3 class="success-msg" [innerHTML]="message"> </h3>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="preAuthReviewFooterClose" type="button" class="btn grey-btn" data-dismiss="modal"
+          (click)="resetpreAuthReviewClaimGrid()">{{'button.close' | translate }}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div [hidden]="!showLoader" class="loader-outer">
+  <div class="cube-wrapper">
+    <div class="cube-folding">
+      <span class="leaf1"></span>
+      <span class="leaf2"></span>
+      <span class="leaf3"></span>
+      <span class="leaf4"></span>
+    </div>
+    <span class="loading" data-name="Loading">{{'company.plan.benefits.pleaseWait'|translate}}</span>
+  </div>
+</div>
+
+<!-- Show Claim History Modal -->
+<div id="showClaimHistoryModal" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content ">
+      <div class="modal-header">
+        <h4 class="modal-title">Show Claim History</h4>
+      </div>
+      <div class="modal-body" *ngIf="claimHistoryRecordLength != 0">
+        <div class="grid-inner">
+          <div class="form-row">
+            <div class="row">
+              <div *ngIf="checkClaimHistoryRefId" class="col-md-12 col-xs-12 table-col">
+                <span class="claim-status btn status-btn">Reference Id : {{claimHisRefId}}</span>
+                <div class="table-responsive" id="showClaimHistoryItemSection">
+                  <table id='showClaimHistoryTable' class="table table-bordered table-stripped inlinePopupTable">
+                    <thead>
+                      <tr>
+                        <th>{{'claims.claims-view.claim-items.reverse' | translate}}</th>
+                        <th>{{'claims.claims-view.claim-items.date' | translate}}</th>
+                        <th>{{'claims.claims-view.claim-items.proc' | translate}}</th>
+                        <th>{{'claims.claims-view.claim-items.tooth' | translate}}</th>
+                        <th>{{'claims.claims-view.claim-items.fee-claim' | translate}}</th>
+                        <th>{{'claims.claims-view.claim-items.fee' | translate}}
+                          <br>{{'claims.claims-view.claim-items.elig' | translate}}</th>
+                        <th>{{'claims.claims-view.claim-items.fee-allow' | translate}}</th>
+                        <th>{{'claims.claims-view.claim-items.fee-paid' | translate}}</th>
+                        <th>{{'claims.claims-view.claim-items.lab' | translate}}
+                          <br>{{'claims.claims-view.claim-items.elig' | translate}}</th>
+                        <th>{{'claims.claims-view.claim-items.lab-allow' | translate}}</th>
+                        <th>{{'claims.claims-view.claim-items.lab-paid' | translate}}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let schData of showClaimHistoryTableObj" (click)="claimRedirection(schData)">
+                        <td>
+                          <input *ngIf="schData.isReversed == 'T'" type="checkbox" name="" value="" checked
+                            disabled="disabled" />
+                          <input *ngIf="schData.isReversed == 'F'" type="checkbox" name="" value="" disabled="disabled" />
+                        </td>
+                        <td>{{schData.itemServiceDt}}</td>
+                        <td title="{{schData.itemProcLongDesc}}">{{schData.itemProcedureCd}}</td>
+                        <td>{{schData.itemToothId}}</td>
+                        <td>{{schData.itemFeeClaimAmt}}</td>
+                        <td>{{schData.itemFeeEligAmt}}</td>
+                        <td>{{schData.itemFeeAllowAmt}}</td>
+                        <td>{{schData.itemFeePaidAmt}}</td>
+                        <td>{{schData.itemLabEligAmt}}</td>
+                        <td>{{schData.itemLabAllowAmt}}</td>
+                        <td>{{schData.itemLabPaidAmt}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div *ngIf="checkClaimHistoryRefIdSecond" class="col-md-12 col-xs-12 table-col">
+                <span class="claim-status btn status-btn">Reference Id : {{claimHisRefIdSecond}}</span>
+                <div class="table-responsive" id="showClaimHistoryItemSection">
+                  <table id='showClaimHistoryTable' class="table table-bordered table-stripped inlinePopupTable">
+                    <thead>
+                      <tr>
+                        <th>{{'claims.claims-view.claim-items.reverse' | translate}}</th>
+                        <th>{{'claims.claims-view.claim-items.date' | translate}}</th>
+                        <th>{{'claims.claims-view.claim-items.proc' | translate}}</th>
+                        <th>{{'claims.claims-view.claim-items.tooth' | translate}}</th>
+                        <th>{{'claims.claims-view.claim-items.fee-claim' | translate}}</th>
+                        <th>{{'claims.claims-view.claim-items.fee' | translate}}
+                          <br>{{'claims.claims-view.claim-items.elig' | translate}}</th>
+                        <th>{{'claims.claims-view.claim-items.fee-allow' | translate}}</th>
+                        <th>{{'claims.claims-view.claim-items.fee-paid' | translate}}</th>
+                        <th>{{'claims.claims-view.claim-items.lab' | translate}}
+                          <br>{{'claims.claims-view.claim-items.elig' | translate}}</th>
+                        <th>{{'claims.claims-view.claim-items.lab-allow' | translate}}</th>
+                        <th>{{'claims.claims-view.claim-items.lab-paid' | translate}}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let schDataSec of showClaimHistoryTableObj" (click)="claimRedirection(schDataSec)">
+                        <td>
+                          <input *ngIf="schDataSec.isReversed == 'T'" type="checkbox" name="" value="" checked
+                            disabled="disabled" />
+                          <input *ngIf="schDataSec.isReversed == 'F'" type="checkbox" name="" value="" disabled="disabled" />
+                        </td>
+                        <td>{{schDataSec.itemServiceDt}}</td>
+                        <td title="{{schDataSec.itemProcLongDesc}}">{{schDataSec.itemProcedureCd}}</td>
+                        <td>{{schDataSec.itemToothId}}</td>
+                        <td>{{schDataSec.itemFeeClaimAmt}}</td>
+                        <td>{{schDataSec.itemFeeEligAmt}}</td>
+                        <td>{{schDataSec.itemFeeAllowAmt}}</td>
+                        <td>{{schDataSec.itemFeePaidAmt}}</td>
+                        <td>{{schDataSec.itemLabEligAmt}}</td>
+                        <td>{{schDataSec.itemLabAllowAmt}}</td>
+                        <td>{{schDataSec.itemLabPaidAmt}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-body" *ngIf="claimHistoryRecordLength == 0">
+        <div class="text-center">
+          <h3 class="success-msg" [innerHTML]="claimHistoryMessage"> </h3>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="closeShowClaimHistoryModal" type="button" class="btn grey-btn" data-dismiss="modal"
+          (click)="resetShowClaimHistoryGrid()">{{'button.close' | translate }}</button>
+      </div>
+    </div>
+  </div>
+</div>

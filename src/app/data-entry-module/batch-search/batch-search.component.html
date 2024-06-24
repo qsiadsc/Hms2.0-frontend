@@ -1,0 +1,269 @@
+
+    
+    <div class="section-heading">
+        <h2>{{'dataEntry.headings.claim-heading' | translate }} 
+            <span>{{'dataEntry.headings.search' | translate}} </span>
+        </h2>
+    </div>
+    <!-- Section Heading Ends -->
+    
+    <div class="grid-box">
+        <div class="grid-heading">
+            <h3>{{'dataEntry.batch-search.locateBatch/ClaimsBy' | translate}}</h3>
+            <div class="web-reg">
+                <a *ngIf = "authCheck[0].addClaims == 'T'" class="green-btn-add btn" [routerLink]="['/dataEntry/claims']">
+                    <i class="fa fa-plus" ></i>
+                    {{'button.addClaimToBatch' | translate}}
+                </a> 
+            </div>
+        </div>
+        <!-- Grid Heading Ends -->
+        
+        <div class="grid-inner">
+            <form [formGroup]="batchSearchForm">
+                <div class="form-row">
+                    <div class="row min-ht-sf">
+                        
+                        <div class="col-md-3 col-xs-12">
+                            <label>{{'dataEntry.batch-search.batchNo' | translate}}</label>
+                            <input id="batchSearch_batchNo" type="text" class="fm-txt form-control" formControlName="batchNo" placeholder="{{'dataEntry.batch-search.batchNo' | translate}}" />
+                        </div>
+                        
+                        <div class="col-md-3 col-xs-12">
+                                <label>{{'dataEntry.batch-search.batchStatus' | translate}}</label>
+                                <div id="procedureCodeScroll">
+                                  <angular2-multiselect tabindex="0" [data]="arrBatchStatusItem" [(ngModel)]="batchStatus"
+                                    [ngModelOptions]="{standalone: true}" (onSelect)="onSelect($event,'batchStatus')"
+                                    (onDeSelect)="onDeSelect($event,'batchStatus')" (onSelectAll)="onSelectAll($event,'batchStatus')" 
+                                    (onDeSelectAll)="onDeSelectAll($event,'batchStatus')" [settings]="multiSelectDropdownSettings">
+                                  </angular2-multiselect>
+                                </div>
+                        </div>
+                    </div>
+                    <div class="row min-ht-sf">
+                        <div class="col-md-3 col-xs-12">
+                            <label>{{'dataEntry.batch-search.claimNo' | translate}}</label>
+                            <input id="batchSearch_claim" type="text" class="fm-txt form-control" formControlName="claim" name="Claim" placeholder="{{'dataEntry.batch-search.claimNo' | translate}}"
+                            />
+                        </div>
+                        <div class="col-md-3 col-xs-12">
+                            <label> &nbsp;</label>
+                            <label class="check-lb"><span class="custom-check">
+                                <input id="batchSearch_showHeldClaims" type="checkbox" name="showHeldClaims" formControlName="showHeldClaims">{{'dataEntry.batch-search.showOnlyHeldClaims' | translate}} <span></span></span></label>
+                        </div>
+                        <div class="col-md-6 col-xs-12">
+                                <label> &nbsp;</label>
+                                <label class="check-lb"><span class="custom-check">
+                                <input id="batchSearch_showClaimsRejectionCode" type="checkbox" name="showClaimsRejectionCode" formControlName="showClaimsRejectionCode">{{'dataEntry.batch-search.showOnlyClaimsWithRejection/ExplanationCodes' | translate}}<span></span></span></label>
+                        </div>
+                    </div>
+                    <div class="row min-ht-sf">
+                        <div class="col-md-3 col-xs-12">
+                            <label>{{'dataEntry.batch-search.claimItemNo' | translate}}</label>
+                            <input id="batchSearch_claimItemNo" type="text" class="fm-txt form-control" name="claimItemNo" formControlName="claimItemNo"
+                            placeholder="{{'dataEntry.batch-search.claimItemNo' | translate}}" />
+                        </div>
+                    </div>
+                    <div class="row min-ht-sf">
+                        <div class="col-md-3 col-xs-12">
+                            <label>{{'dataEntry.batch-search.claimantPhnNo' | translate}}</label>
+                            <input id="batchSearch_claimantPhnNo" type="text" class="fm-txt form-control" name="claimantPhnNo" formControlName="claimantPhnNo"
+                            placeholder="{{'dataEntry.batch-search.claimantPhnNo' | translate}}" />
+                        </div>
+                    </div>
+                    
+                    <div class="row min-ht-sf">
+                        <div class="col-md-3 col-xs-12">
+                            <label>{{'dataEntry.batch-search.uliNo' | translate}}</label>
+                            <input id="batchSearch_uliNo" type="text" class="fm-txt form-control" formControlName="uliNo" name="uliNo" placeholder="{{'dataEntry.batch-search.uliNo' | translate}}"
+                            />
+                        </div>
+                    </div>
+                    
+                    <div class="row min-ht-sf">
+                        <div class="col-md-3 col-xs-12">
+                            <label>{{'dataEntry.batch-search.serviceDate' | translate}}</label>
+                            <div class="calender-field">
+                                <my-date-picker id="batchSearch_serviceDate" [options]="myDatePickerOptions" name="serviceDate" formControlName="serviceDate"
+                                (inputFocusBlur)="changeDateFormat($event, 'serviceDate')" placeholder="{{'common.date-placeholder' | translate}}">
+                                </my-date-picker>
+                            </div>
+                            <!-- Calendar Field Ends -->
+                        </div>
+                    
+                            
+                            
+                            <div class="col-md-3 col-xs-12">
+                                <label>{{'dataEntry.batch-search.claimDate' | translate}}</label>
+                                <div class="calender-field">
+                                    <my-date-picker id="batchSearch_claimDate" [options]="myDatePickerOptions" name="claimDate" formControlName="claimDate" (inputFocusBlur)="changeDateFormat($event, 'claimDate')"
+                                    placeholder="{{'common.date-placeholder' | translate}}">
+                                </my-date-picker>
+                            </div>
+                            <!-- Calendar Field Ends -->
+                        </div>
+                        
+                        <div class="col-md-3 col-xs-12">
+                            <label>{{'dataEntry.batch-search.claimEntryDate' | translate}}</label>
+                            <div class="calender-field">
+                                <my-date-picker id="batchSearch_claimEntryDate" [options]="myDatePickerOptions" name="claimEntryDate" formControlName="claimEntryDate"
+                                (inputFocusBlur)="changeDateFormat($event, 'claimEntryDate')" placeholder="{{'common.date-placeholder' | translate}}">
+                            </my-date-picker>
+                        </div>
+                        <!-- Calendar Field Ends -->
+                    </div>
+                </div>      
+                
+                <div class="form-row left-align-btn">
+                        <label>&nbsp;</label>
+                        <button *ngIf = "authCheck[0].searchClaim == 'T'" id="batchSearch_search" class="btn green-btn" (click)="onSubmit()">{{'button.search' | translate}}</button>
+                        <button id="batchSearch_clear" class="grey-btn btn" (click)="resetSearchBatchForm()">{{'button.clear' | translate}}</button>
+                </div>
+            </div>
+            <!-- Form Row ENds -->
+        </form>
+    </div>
+    <!-- Grid Inner Ends -->
+</div>
+<!-- Grid Box Ends -->
+
+<div id ='searchResult'[hidden]="!showBatchList">
+    <div class="grid-box">
+        <div class="grid-heading">
+            <h3>{{'dataEntry.headings.searchResults' | translate }}</h3>
+        </div>
+        <!-- Grid Heading Ends -->
+        <div class="grid-inner">
+            <form (submit)="searchBatchList('batch-list')">
+            <div class="form-row text-right search-top">
+                <button id="batchSearchLower_search" type="button" class="btn green-btn searchreset" (click)="searchBatchList('batch-list')">
+                    <span class="glyphicon glyphicon-search"></span>
+                </button>
+                <button id="batchSearchLower_reset" class="btn grey-btn searchreset" (click)="resetBatchListFilter()">
+                    <span class="glyphicon glyphicon-repeat"></span>
+                </button>
+            </div>
+            <div class="form-row">
+                <div class="row">
+                    
+                    <div class="col-md-12 col-xs-12 table-col">
+                        <div class="table-responsive">
+                            <table id="batch-list" class="table table-bordered table-stripped">
+                                <tfoot>
+                                    <tr>
+                                        <td width="6%">
+                                            <input id="batchSearchLower_batch" class="fm-txt form-control tFootInput inputSearch" type="text" name="batch" placeholder="{{'dataEntry.batch-search.batch' | translate}}">
+                                        </td>
+                                        <td width="6%">
+                                            <select id="batchSearchLower_batchStatus" (keydown)="filterSearchOnEnter($event,'batch-list')" name="status" class="fm-txt form-control tFootInput inputSearch amount_right_grid" placeholder="Batch Status">
+                                                <option [ngValue]="" disabled hidden>{{'common.select' | translate}}</option>
+                                                <option *ngFor="let type of arrBatchStatus" [value]="type.id"> {{type.name}}</option>
+                                            </select>
+                                        </td>
+                                        <td width="9%" class="alignDpRight">
+                                            <div class="calender-field">
+                                                <my-date-picker id="batchSearchLower_batchDate" class="inputSearch" name="batchDate" data-type="date" [options]="myDatePickerOptions"
+                                                [selDate]="dateNameArray['batchDate']" (inputFocusBlur)="changeDateFormat1($event, 'batchDate')"
+                                                placeholder="{{'common.date-placeholder' | translate}}">
+                                            </my-date-picker>
+                                        </div>
+                                    </td>
+                                    
+                                    <td width="6%">
+                                        <input id="batchSearchLower_claim#" class="fm-txt form-control tFootInput inputSearch amount_right_grid" type="text" name="claim" placeholder="{{'dataEntry.batch-search.claimNo' | translate}}">
+                                    </td>
+                                    
+                                    <td width="7%">
+                                        <input id="batchSearchLower_claimItem#" class="fm-txt form-control tFootInput inputSearch amount_right_grid" type="text" name="claimItem" placeholder="{{'dataEntry.batch-search.claimItemNo' | translate}}">
+                                    </td>
+                                    
+                                    <td width="6%">
+                                        <select id="batchSearchLower_claimStatus" (keydown)="filterSearchOnEnter($event,'batch-list')" name="claimStatus" class="fm-txt form-control tFootInput inputSearch amount_right_grid" placeholder="Claim Status">
+                                            <option [ngValue]="null" disabled hidden>{{'common.select' | translate}}</option>
+                                            <option *ngFor="let type of arrBatchStatus" [value]="type.id"> {{type.name}}</option>
+                                        </select>
+                                    </td>
+                                    
+                                    <td width="7%">
+                                        <input id="batchSearchLower_assessAc" class="fm-txt form-control tFootInput inputSearch amount_right_grid" type="text" name="assess_Ac" placeholder="{{'dataEntry.batch-search.assessAc' | translate}}">
+                                    </td>
+                                    
+                                    <td width="10%">
+                                        <input id="batchSearchLower_pnh" class="fm-txt form-control tFootInput inputSearch amount_right_grid" type="text" name="claimantPhn" placeholder="{{'dataEntry.batch-search.phn' | translate}}">
+                                    </td>
+                                    
+                                    <td width="10%">
+                                        <input id="batchSearchLower_uli" class="fm-txt form-control tFootInput inputSearch amount_right_grid" type="text" name="uli" placeholder="{{'dataEntry.batch-search.uli' | translate}}">
+                                    </td>
+                                    
+                                    <td width="11%" class="alignDpRight">
+                                        <div class="calender-field">
+                                            <my-date-picker id="batchSearchLower_claimDate" class="inputSearch" name="claimDate" data-type="date" [options]="myDatePickerOptions"
+                                            [selDate]="dateNameArray['claimDate']" (inputFocusBlur)="changeDateFormat1($event, 'claimDate')"
+                                            placeholder="{{'common.date-placeholder' | translate}}">
+                                        </my-date-picker>
+                                    </div>
+                                </td>
+                                
+                                <td width="11%" class="alignDpRight">
+                                    <div class="calender-field">
+                                        <my-date-picker id="batchSearchLower_serviceDate" class="inputSearch" name="serviceDate" data-type="date" [options]="myDatePickerOptions"
+                                        [selDate]="dateNameArray['serviceDate']" (inputFocusBlur)="changeDateFormat1($event, 'serviceDate')"
+                                        placeholder="{{'common.date-placeholder' | translate}}">
+                                    </my-date-picker>
+                                </div>
+                            </td>
+                            
+                            <td width="11%" class="alignDpRight">
+                                <div class="calender-field">
+                                    <my-date-picker id="batchSearchLower_createdOn" class="inputSearch" name="claimEntryDate" data-type="date" [options]="myDatePickerOptions"
+                                    [selDate]="dateNameArray['createdOn']" (inputFocusBlur)="changeDateFormat1($event, 'createdOn')"
+                                    placeholder="{{'common.date-placeholder' | translate}}">
+                                </my-date-picker>
+                                <!-- batchSearchLower_createdOn -->
+                            </div>
+                        </td>
+                        
+                    </tr>
+                </tfoot>
+                
+            </table>
+            
+            <div class="grid-box" *ngIf="showCount">
+                    <div class="grid-heading">
+                    <div class="row" >
+                                    <div class="col-md-2 batchCustom">Batch: {{full}}</div>
+                                    <div class="col-md-2 batchCustom">Batch Status: {{fullStatus}}</div>
+                                    <div class="col-md-2 batchCustom">Claim Item Total: {{totalRecords}}</div>
+                      </div>
+                    </div>
+             </div>
+                      
+                
+                   
+                    
+          
+        </div>
+        <!-- Table Ends -->
+    </div>
+</div>
+</div>
+<!-- Form Row ENds -->
+</form>
+<!-- Form Row ENds -->
+</div>
+<!-- Grid Inner Ends -->
+</div>
+<!-- Grid Box Ends -->
+</div>
+<div [hidden]="!showLoader" class="loader-outer">
+    <div class="cube-wrapper">
+      <div class="cube-folding">
+        <span class="leaf1"></span>
+        <span class="leaf2"></span>
+        <span class="leaf3"></span>
+        <span class="leaf4"></span>
+      </div>
+      <span class="loading" data-name="Loading">{{'company.plan.benefits.pleaseWait'|translate}}</span>
+    </div>
+  </div>

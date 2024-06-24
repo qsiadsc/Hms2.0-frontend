@@ -1,0 +1,275 @@
+<!-- Section Heading Starts -->
+<div class="section-heading">
+  <h2>{{'feeGuide.procedureCode.heading.proc-code'|translate}} -
+    <span>{{'button.search'|translate}}</span>
+  </h2>
+</div>
+<!-- Section Heading Ends -->
+<div class="grid-box">
+  <div class="grid-heading">
+    <h3>{{'feeGuide.procedureCode.heading.dental-proc-code'|translate}}</h3>
+    <div class="web-reg">
+      <button id="fgpc_addNewProcCode" data-toggle="modal" *ngIf="procedureCodesChecks[0].addNewProcedureCode == 'T'"
+        data-target="#AddNewFee" class="green-btn-add btn" (click)="resetAddDentalProcedureForm()">
+        <i class="fa fa-plus"></i>{{'feeGuide.procedureCode.proc-code-listing.add-new-proc-code'|translate}}</button>
+    </div>
+  </div>
+  <!-- Grid Heading Ends -->
+  <div class="grid-inner">
+    <form [formGroup]="filterProcedureCode">
+      <div class="form-row">
+        <div class="row min-ht-sf">
+          <div class="col-md-2 col-xs-12">
+            <label>{{'feeGuide.procedureCode.proc-code-listing.proc-id'|translate}}</label>
+            <input type="text" id="fgpc_procId" formControlName="procId" class="form-control"
+              placeholder="{{'feeGuide.procedureCode.proc-code-listing.proc-id'|translate}}"
+              (keydown)="isNumberKey($event)" (keyup.enter)="isEnterKey($event)" />
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>Procedure Description</label>
+            <ng2-completer [(ngModel)]="procDesc" [inputId]="'fgpc_procDesc'" formControlName="procDesc"
+              [datasource]="dentalProcDescRemote" [minSearchLength]="3" [clearUnselected]="false"
+              [placeholder]="'Search Procedure Description'" [textSearching]="'Please wait...'"
+              [inputClass]="'form-control'" [fillHighlighted]="false" [autoHighlight]="true" [selectOnFocus]="true"
+              (selected)="onProcDescSelect($event)">
+            </ng2-completer>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{'feeGuide.procedureCode.proc-code-listing.mouth-id'|translate}}</label>
+            <ng2-completer id="fgpc_mouthID" formControlName="mouthId" [datasource]="MouthSiteData"
+              [minSearchLength]="0" [fillHighlighted]="false" [autoHighlight]="true" [selectOnFocus]="true"
+              [placeholder]="'Search Mouth ID'" [textSearching]="'Please wait...'" [inputClass]="'form-control'"
+              (selected)="onMouthIDSelected($event)" [clearUnselected]="false">
+            </ng2-completer>
+          </div>
+          <div class="col-md-2 col-xs-12">
+            <label>{{'feeGuide.procedureCode.proc-code-listing.unit-count'|translate}}</label>
+            <input type="text" id="fgpc_unitCount" formControlName="procUnitCount" class="form-control"
+              placeholder="Unit Count" />
+          </div>
+          <div class="col-md-2 col-xs-12">
+            <label></label>
+            <div class="select-options">
+              <span>
+                <label><span class="custom-check">
+                    <input type="checkbox" id="fgpc_hasSurfaceId"
+                      formControlName="prodSurfaceId">{{'feeGuide.procedureCode.proc-code-listing.surface-id'|translate}}<span></span></span></label>
+              </span>
+            </div>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>&nbsp;</label>
+            <button id="fgpc_procSearchFilter" *ngIf="procedureCodesChecks[0].search == 'T'" type="submit"
+              class="btn green-btn" (click)="searchProcedureCode()" title="{{'common.search' | translate}}">
+              {{ 'button.search' | translate }}</button>
+            <button id="fgpc_procSearchFilterClear" type="button" class="btn grey-btn" (click)="resetSearchForm()"
+              title="{{'common.clear' | translate}}">{{ 'button.clear' | translate }}</button>
+          </div>
+        </div>
+      </div>
+      <!-- Form Row ENds -->
+    </form>
+  </div>
+  <!-- Grid Inner Ends -->
+</div>
+<div [hidden]="!showSearchTable">
+  <div class="grid-box">
+    <div class="grid-heading">
+      <h3>{{'feeGuide.procedureCode.heading.proc-code-list'|translate}}</h3>
+    </div>
+    <div class="grid-inner">
+      <form>
+        <div class="form-row">
+          <div class="row">
+            <div class="col-md-12 col-xs-12 table-col">
+              <div class="table-responsive">
+                <table id="fgpc_search_ProcedureCode" class="display table table-bordered table-stripped">
+                  <thead>
+                  </thead>
+                  <tfoot>
+                    <tr>
+                      <td width="100px">
+                        <input [(ngModel)]="serviceIdL" id="fgpc_dentalServiceId" type="text"
+                          class="fm-txt form-control inputSearch" name="dentalServiceId"
+                          placeholder="{{'feeGuide.procedureCode.proc-code-listing.serviceId' | translate}}">
+                      </td>
+                      <td width="100px">
+                        <input [(ngModel)]="procId" id="fgpc_dentalProcId" type="text"
+                          class="fm-txt form-control inputSearch amount_right_grid" name="dentalProcedureId"
+                          placeholder="{{'feeGuide.procedureCode.proc-code-listing.proc-id' | translate}}">
+                      </td>
+                      <td width="50px"></td>
+                      <td width="50px"></td>
+                      <td width="100px">
+                        <input [(ngModel)]="shortDescL" id="fgpc_dentalProcDesc" type="text"
+                          class="fm-txt form-control inputSearch amount_right_grid" name="dentalProcedureDesc"
+                          placeholder="{{'feeGuide.procedureCode.proc-code-listing.desc-short' | translate}}">
+                      </td>
+                      <td width="200px">
+                        <input [(ngModel)]="searchProcDesc" id="fgpc_dentalProcDescLong" type="text"
+                          class="fm-txt form-control inputSearch amount_right_grid" name="dentalProcedureLongDesc"
+                          placeholder="{{'feeGuide.procedureCode.proc-code-listing.desc-long' | translate}}">
+                      </td>
+                      <td width="100px">
+                        <input [(ngModel)]="unitCount" id="fgpc_dentalProcUnitCount" type="text"
+                          class="fm-txt form-control inputSearch amount_right_grid" name="dentalProcedureUnitCount"
+                          placeholder="{{'feeGuide.procedureCode.proc-code-listing.unit-count' | translate}}">
+                      </td>
+                      <td width="100px">
+                        <select class="fm-txt form-control inputSearch" dir="rtl" id="fgpc_userSurface"
+                          name="dentalProcedureUseSurfaceI" placeholder="User Surface"
+                          (keydown)="filterSearchOnEnter($event,'fgpc_search_ProcedureCode')" [(ngModel)]="surfaceID">
+                          <option value="" disabled hidden>{{'common.select'|translate}}</option>
+                          <option value="T">{{'feeGuide.dentalSchedule.yes'|translate}}</option>
+                          <option value="F">{{'feeGuide.dentalSchedule.no'|translate}}</option>
+                        </select>
+                      </td>
+                      <td width="50px"></td>
+                      <td width="50px"></td>
+                      <td width="100px">
+                        <div class="form-row text-right">
+                          <button title="{{'common.search' | translate}}" type="submit" id="fgpc_searchbtn"
+                            class="btn green-btn searchreset"
+                            (click)="getProcCodeListByGridFilteration('fgpc_search_ProcedureCode')">
+                            <span class="glyphicon glyphicon-search"></span>
+                          </button>
+                          <button title="{{'common.reset' | translate}}" id="fgpc_resetbtn"
+                            class="btn grey-btn searchreset" (click)="searchProcedureCode()">
+                            <span class="glyphicon glyphicon-repeat"></span>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+              <!-- Table Ends -->
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Add New Guide Modal-->
+<div id="AddNewFee" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">{{'feeGuide.procedureCode.proc-code-listing.dental-proc'|translate}}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="grid-box">
+          <div class="grid-inner">
+            <div class="form-row">
+              <form [formGroup]="addDentalProcedureForm">
+                <div class="row min-ht-sf">
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'feeGuide.procedureCode.proc-code-listing.dental-service'|translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <ng2-completer [(ngModel)]="dentalService1" [inputId]="'fgpc_add_dentalService'"
+                      formControlName="dentalService" [datasource]="dentalProcDataRemote" [minSearchLength]="1"
+                      [clearUnselected]="true" [placeholder]="'Search Dental Service'"
+                      [textSearching]="'Please wait...'" [inputClass]="'form-control'" [fillHighlighted]="true"
+                      [autoHighlight]="true" [selectOnFocus]="true" (selected)="onDentalServiceSelect($event)">
+                    </ng2-completer>
+                    <show-errors [control]="addDentalProcedureForm.controls.dentalService"></show-errors>
+                  </div>
+
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'feeGuide.procedureCode.proc-code-listing.proc-id'|translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <input id="fgpc_add_procID" type="text" formControlName="procId" class="form-control"
+                      placeholder="{{'feeGuide.procedureCode.proc-code-listing.proc-id'|translate}}"
+                      (keydown)="isNumberKey($event)" />
+                    <show-errors [control]="addDentalProcedureForm.controls.procId"></show-errors>
+                  </div>
+
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'feeGuide.procedureCode.proc-code-listing.mouth-id'|translate}}</label>
+                    <input ngui-auto-complete value-property-name="key"
+                      style="height: 37px;width: 267px;border-radius: 4px;border: 1px solid #ccc;padding-left:10px;color:#555;"
+                      formControlName="mouthId" [select-on-blur]="true" [source]="arrayOfMouthID"
+                      [accept-user-input]="true" [tab-to-select]="true" [list-formatter]="renderProcId"
+                      value-formatter="id itemName" placeholder=" Search for ID" display-property-name="id key"
+                      [header-item-template]="cityHeaderTemplate" (valueChanged)="getMouthIDValue($event)" />
+                    <show-errors [control]="addDentalProcedureForm.controls.mouthId"></show-errors>
+                  </div>
+
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'feeGuide.procedureCode.proc-code-listing.qc-mouth-id'|translate}}</label>
+                    <input ngui-auto-complete value-property-name="key"
+                      style="height: 37px;width: 267px;border-radius: 4px;border: 1px solid #ccc;"
+                      formControlName="QCMouthId" [select-on-blur]="true" [source]="arrayOfMouthID"
+                      [accept-user-input]="true" [tab-to-select]="true" [list-formatter]="renderProcId"
+                      value-formatter="id itemName" placeholder=" Search for ID" display-property-name="id key"
+                      [header-item-template]="cityHeaderTemplate" (valueChanged)="getQCMouthIDSelected($event)" />
+                    <show-errors [control]="addDentalProcedureForm.controls.QCMouthId"></show-errors>
+                  </div>
+
+                  <div class="col-md-6 col-xs-12 txtarea-height">
+                    <label>{{'feeGuide.procedureCode.proc-code-listing.desc-short'|translate}}</label>
+                    <textarea id="fgpc_add_sdesc" class="form-control notInCaps" formControlName="DescShort"
+                      placeholder="{{'feeGuide.procedureCode.proc-code-listing.desc-short'|translate}}"></textarea>
+                    <show-errors [control]="addDentalProcedureForm.controls.DescShort"></show-errors>
+                  </div>
+
+                  <div class="col-md-6 col-xs-12 txtarea-height">
+                    <label>{{'feeGuide.procedureCode.proc-code-listing.desc-long'|translate}}</label>
+                    <textarea id="fgpc_add_ldesc" class="form-control notInCaps" formControlName="descLong"
+                      placeholder="{{'feeGuide.procedureCode.proc-code-listing.desc-long'|translate}}"></textarea>
+                    <show-errors [control]="addDentalProcedureForm.controls.descLong"></show-errors>
+                  </div>
+
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'feeGuide.procedureCode.proc-code-listing.unit-count'|translate}}</label>
+                    <input id="fgpc_add_unitCount" type="text" OnlyNumber="true" formControlName="unitCount"
+                      class="form-control"
+                      placeholder="{{'feeGuide.procedureCode.proc-code-listing.unit-count'|translate}}" />
+                    <show-errors [control]="addDentalProcedureForm.controls.unitCount"></show-errors>
+                  </div>
+
+                  <div class="col-md-3 col-xs-12">
+                    <label>&nbsp;</label>
+                    <label class="rd-middle">
+                      <span class="custom-check">
+                        <input id="fgpc_add_usersurface" type="checkbox"
+                          formControlName="userSurface">{{'feeGuide.procedureCode.proc-code-listing.user-surface'|translate}}<span></span></span></label>
+                    <show-errors [control]="addDentalProcedureForm.controls.userSurface"></show-errors>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <!-- Form Row ENds -->
+          </div>
+        </div>
+      </div>
+      <!-- Modal Body End-->
+      <div class="modal-footer">
+        <button id="fgpc_add_save" class="green-btn btn" *ngIf="addMode"
+          (keyup.arrowLeft)="focusNextEle($event,'fgpc_addDentalProcedure_close')"
+          (keyup.arrowRight)="focusNextEle($event,'fgpc_addDentalProcedure_close')"
+          (click)="saveAddDentalProcedureDetails()">{{'button.save'|translate}}</button>
+        <button class="btn grey-btn" *ngIf="addMode" id="fgpc_addDentalProcedure_close" data-dismiss="modal"
+          (keyup.arrowLeft)="focusNextEle($event,'fgpc_add_save')"
+          (keyup.arrowRight)="focusNextEle($event,'fgpc_add_save')"
+          (click)="resetDentalProcedureOnClose()">{{'button.close'|translate}}</button>
+        <button id="fgpc_add_Update" class="green-btn btn" *ngIf="editMode"
+          (keyup.arrowLeft)="focusNextEle($event,'fgpc_addDentalProcedure_close')"
+          (keyup.arrowRight)="focusNextEle($event,'fgpc_addDentalProcedure_close')"
+          (click)="saveAddDentalProcedureDetails()">{{buttonText}}</button>
+        <button class="btn grey-btn" *ngIf="editMode" id="fgpc_addDentalProcedure_close" data-dismiss="modal"
+          (keyup.arrowLeft)="focusNextEle($event,'fgpc_add_Update')"
+          (keyup.arrowRight)="focusNextEle($event,'fgpc_add_Update')"
+          (click)="resetDentalProcedureOnClose()">{{'button.close'|translate}}</button>
+      </div>
+      <!-- Modal  Footer Ends -->
+    </div>
+  </div>
+</div>
+<!-- Add New Fee Guide Modal-->

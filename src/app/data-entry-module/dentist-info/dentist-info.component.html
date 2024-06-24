@@ -1,0 +1,615 @@
+<nav class="breadcrumb">
+    <span *ngIf="authCheck[0].search == 'F'" class="serviceProviderParent">Provider ></span>
+    <span *ngIf="authCheck[0].search == 'T'" [routerLink]="['/dataEntry/provider-search']"
+        class="serviceProviderParent">Provider ></span>
+    <span *ngIf="addMode" class="active serviceProviderActive" href="javascript:void(0)">{{breadCrumbText}}</span>
+    <span class="active serviceProviderActive" *ngIf="!addMode" href="javascript:void(0)">{{breadCrumbText}}</span>
+</nav>
+
+<div class="section-heading">
+    <h2>{{'dataEntry.dentist-info.pageTextProvider'|translate}} - <span>{{'dataEntry.headings.detail'|translate}}</span>
+    </h2>
+<!-- log 1116  -->
+
+   
+</div>
+
+<div class="grid-box">
+    <div class="grid-heading">
+        <h3>{{'dataEntry.dentist-info.headerTextProvider' | translate}}</h3>
+        <div class="web-reg">
+            <form [formGroup]="importProviderFormGroup"  *ngIf="addMode">
+            <input formControlName="file" style="display: none" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" class="form-control"  (change)="onFileChanged($event)"  (click)="importProviderInput.value = null" value=""
+            #importProviderInput>
+            <button  (click)="importProviderInput.click()"
+        href="javascript:void(0)" class="green-btn-add btn"><i class="fa fa-upload"></i>
+        <!-- Load Daily File -->
+        Import Providers
+      </button>
+    </form>
+            <a *ngIf="!addMode && showClaimbtn" (click)="backToSearch()" style="cursor: pointer"
+                class="green-btn-add btn" [routerLink]="['/dataEntry/provider-search']"><i class="fa fa-share"
+                    aria-hidden="true"></i>Back To Search</a>
+        </div>
+    </div>
+    <!-- Grid Heading Ends -->
+
+    <div class="grid-inner">
+        <form [formGroup]="FormGroup">
+            <div class="form-row">
+                <div class="row min-ht-sf">
+
+                    <div class="col-md-3 col-xs-12">
+                        <label>{{'common.first-name'|translate}} <span class="required">*</span></label>
+                        <input id="di_providerFirstName" onlyAlphabet="true" type="text" class="fm-txt form-control"
+                            placeholder="{{'common.first-name'|translate}}" formControlName="providerFirstName">
+                        <show-errors [control]="FormGroup.controls.providerFirstName"></show-errors>
+                    </div>
+
+                    <div class="col-md-3 col-xs-12">
+                        <label>{{'common.last-name'|translate}} <span class="required">*</span></label>
+                        <input id="di_providerLastName" onlyAlphabet="true" type="text" class="fm-txt form-control"
+                            placeholder="{{'common.last-name'|translate}}" formControlName="providerLastName">
+                        <show-errors [control]="FormGroup.controls.providerLastName"></show-errors>
+                    </div>
+                    <div class="col-md-6 col-xs-12">
+                        <label>{{'dataEntry.dentist-info.alert-message' | translate}} </label>
+                        <input id="dI-alertmessage" type="text" class="fm-txt form-control" maxlength="50"
+                            placeholder="{{'dataEntry.dentist-info.alert-message' | translate}}"
+                            formControlName="providerAlertMessage">
+                    </div>
+
+                    <div class="col-md-3 col-xs-12">
+                        <label>{{'dataEntry.dentist-info.providerUli' | translate}}
+                            <span class="required">*</span>
+                        </label>
+                        <input id="di_providerUli" type="text" OnlyNumber="true" maxlength="9"
+                            (blur)="ValidateProviderUli()" class="fm-txt form-control"
+                            placeholder="{{'dataEntry.dentist-info.providerUli' | translate}}"
+                            formControlName="providerUli">
+                        <show-errors [control]="FormGroup.controls.providerUli"></show-errors>
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                        <label>{{'dataEntry.dentist-info.licenseNo' | translate}}
+                        </label>
+                        <input id="di_licenseNo" type="text" maxlength="10" class="fm-txt form-control"
+                            placeholder="{{'dataEntry.dentist-info.licenseNo' | translate}}"
+                            formControlName="licenseNo">
+                    </div>
+                    <div class="col-md-6 col-xs-12">
+                        <label>{{'dataEntry.dentist-info.providerSpecialty' | translate}}
+                        </label>
+
+                            <ng2-completer [inputName]="'providerSpecialty'" name="providerSpecialty" formControlName='providerSpecialty' [datasource]="providerSpecialtyRemote" [minSearchLength]="0"
+                            [openOnFocus]="true" (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Select'" [textSearching]="'Please wait...'"
+                            [inputClass]="'form-control inputSearch'" data-type="predective" [inputId]="'di_Speciality'" (selected)="onSelectFeeModifier($event,'providerSpecialty')"
+                            (blur)="editStatusValue('providerSpecialty')" [clearUnselected]="false" [autoHighlight]="true">
+                          </ng2-completer>
+
+                    </div>
+                    <!-- To add Comment with Attachment as per ticket #1314 Start-->
+                    <div class="col-md-3 col-xs-12">
+                        <label>Comments</label>
+                        <textarea id="providercomments" class="form-control" formControlName="comment" placeholder="Comments"></textarea>
+                        <show-errors [control]="FormGroup.controls.comment"></show-errors>
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                        <label>{{'uft.dashboard.financeReports.documentName' | translate}}</label>
+                        <input style="display: none" type="file" (click)="provFileInput.value = null" (change)="onProvFileChanged($event)" #provFileInput>
+                        <input formControlName="documentName" class="fm-txt form-control datepicker" type="text" disabled=true>
+                        <ul *ngIf="provError.isError==true" class="validation-errors">
+                          <li style="color: red">{{error.errorMessage}}</li>
+                        </ul>
+                        <ul *ngIf="provError1.isError==true" class="validation-errors">
+                          <li style="color: red">{{error1.errorMessage}}</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                        <label>&nbsp;</label>
+                        <button class="btn green-btn" (click)="provFileInput.click()">{{'button.selectFile' | translate}}</button>
+                        <button *ngIf="showRemoveBtn" (click)="removeExtension()" class="btn red-btn ">{{'button.remove' | translate}}</button>
+                    </div>
+                    <!-- To add Comment with Attachment as per ticket #1314 Ends -->
+                </div>
+            </div>
+            <!-- Form Row ENds -->
+        </form>
+    </div>
+    <!-- Grid Inner Ends -->
+</div>
+
+<div class="grid-box">
+    <div class="grid-heading">
+        <h3>{{'dataEntry.dentist-info.Addresses.headerTextProvider'|translate}}</h3>
+        <div class="web-reg">
+            <button title="Add New" class="green-btn-add btn upperCase" (click)="openModal(addressLine1Modal,'')"
+                data-toggle="modal" data-target="#addressLine1Modal"
+                *ngIf="!viewMode && authCheck[0].addNewDentistAddress == 'T'">
+                <i class="fa fa-plus"></i>{{'button.addnew'|translate}}</button>
+        </div><!-- Web Reg Ends -->
+    </div><!-- Grid HEading Ends -->
+
+    <div class="grid-inner">
+        <!-- Form Row Ends -->
+
+        <div class="form-row">
+            <div class="row">
+
+                <div class="col-md-12 col-xs-12 table-col">
+                    <div class="table-responsive">
+                        <table id="dI_AddrInfo" datatable [dtOptions]="dtOptions['dI_AddrInfo']"
+                            [dtTrigger]="dtTrigger['dI_AddrInfo']"
+                            class="table table-bordered table-stripped dataTable alignRightText">
+                            <thead>
+                                <tr>
+                                    <th width="10%">{{'dataEntry.dentist-info.Addresses.effective'|translate}}</th>
+                                    <th width="10%">{{'dataEntry.dentist-info.Addresses.expired'|translate}}</th>
+                                    <th width="10%">{{'dataEntry.dentist-info.Addresses.postal-code'|translate}}</th>
+                                    <th width="10%">{{'dataEntry.dentist-info.Addresses.address'|translate}}</th>
+                                    <th width="10%">{{'dataEntry.dentist-info.Addresses.City'|translate}}</th>
+                                    <th width="10%">{{'dataEntry.dentist-info.Addresses.province'|translate}}</th>
+                                    <th width="10%">{{'dataEntry.dentist-info.Addresses.buss-arr-number'|translate}}
+                                    </th>
+                                    <th width="10%">{{'dataEntry.dentist-info.Addresses.facility-number'|translate}}
+                                    </th>
+                                    <th width="8%">{{'card.card-eligibility.action'|translate}}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="tableRow" *ngFor="let dataRow of arrAddrList; let i = index"
+                                    id="{{'row_'+i}}">
+                                    <td>{{dataRow.effectiveOn | dateFormate}}</td>
+                                    <td>{{dataRow.expiredOn| dateFormate}}</td>
+                                    <td>{{dataRow.postalCode}}</td>
+                                    <td>{{dataRow.addressLine1}}</td>
+                                    <td>{{dataRow.city}}</td>
+                                    <td>{{dataRow.province}}</td>
+                                    <td>{{dataRow.businessArrangementNumber}}</td>
+                                    <td>{{dataRow.facilityNumber}}</td>
+                                    <td>
+                                        <button class="table-action-btn mail-ico"
+                                            [ngClass]="{ 'table-action-btn': true, 'mail-ico': true}"
+                                            (click)="mailMerge(dataRow,'View',addressLine1Modal, i)" title="Mail">
+                                            <i class="fa fa-envelope"></i>
+                                        </button>
+                                        <button class="table-action-btn view-ico"
+                                            [ngClass]="{ 'table-action-btn': true, 'view-ico': true}"
+                                            (click)="ViewEditAddress(dataRow,'View',addressLine1Modal, i)" title="View">
+                                            <i class="fa fa-eye"></i>
+                                        </button>
+                                        <button
+                                            [ngClass]="{ 'edit_row': true,'table-action-btn': true,'edit-ico': true, 'disabled': viewMode}"
+                                            (click)="ViewEditAddress(dataRow,'Edit',addressLine1Modal, i)"
+                                            title="Edit"><i class="fa fa-pencil"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Table Ends -->
+                </div>
+            </div>
+        </div>
+        <!-- Form Row ENds -->
+    </div>
+    <!-- Grid Inner Ends -->
+</div>
+<div class="form-row text-center">
+    <button id="sp_save" *ngIf="addMode && authCheck[0].saveDentist == 'T'" title="SAVE" class="btn green-btn btn-lg"
+        type="submit" (click)="SaveDentistInfoData()"
+        [ngClass]="{'disabled':disableAddBtn}">{{'button.save' | translate}}</button>
+    <button id="sp_edit" *ngIf="viewMode && authCheck[0].editDentist  == 'T'" title="Service Provider - Edit Details"
+        class="btn green-btn btn-lg" type="button" (click)="enableEditMode()">{{'button.edit' | translate}}</button>
+    <button id="sp_update" *ngIf="editMode && authCheck[0].editDentist  == 'T'"
+        title="Service Provider - Update Details" class="btn green-btn btn-lg" type="button"
+        (click)="UpdateDentistInfo()" [ngClass]="{'disabled':disableAddBtn}">{{'button.update' | translate}}</button>
+</div>
+
+<modal #addressLine1Modal [closeOnEscape]="false" [closeOnOutsideClick]="false" [hideCloseButton]="false"
+    modalClass="modal-sm">
+    <modal-header>
+        <h4 class="modal-title">
+            {{'dataEntry.dentist-info.Addresses.popupHeaderTextProvider'|translate}}</h4>
+    </modal-header>
+    <modal-content>
+        <div class="grid-box">
+            <form [formGroup]="dentistAddressFormGroup">
+                <div class="grid-inner">
+                    <div class="form-row">
+                        <div class="row min-ht-sf">
+
+                            <div class="col-md-3 col-xs-12">
+                                <label>{{'dataEntry.dentist-info.Addresses.buss-arr-number'|translate}} <span
+                                        class="required">*</span></label>
+                                <input id="dentist_businessArrangementNumber" type="text" class="fm-txt form-control"
+                                    placeholder="Buss Arr. No." maxlength="7"
+                                    [attr.disabled]="enableViewMode ? true:null"
+                                    formControlName="businessArrangementNumber">
+                                <show-errors [control]="dentistAddressFormGroup.controls.businessArrangementNumber">
+                                </show-errors>
+                            </div>
+                            <div class="col-md-3 col-xs-12">
+                                <label>{{'dataEntry.dentist-info.Addresses.postal-code'|translate}} <span
+                                        class="required">*</span></label>
+                                <input id="dentist_postalCode" autocomplete="off" type="text" title="Postal Code"
+                                    [attr.disabled]="enableViewMode ? true:null"
+                                    placeholder="{{'common.postal-code' | translate}}"
+                                    (blur)="isCompanyPostalcodeValid($event)" formControlName="postalCode"
+                                    class="upperCase fm-txt form-control" />
+                                <show-errors [control]="dentistAddressFormGroup.controls.postalCode"></show-errors>
+                            </div>
+
+                            <div class="col-md-3 col-xs-12">
+                                <label>{{'dataEntry.dentist-info.Addresses.City'|translate}} <span
+                                        class="required">*</span></label>
+                                <input id="dentist_city" [attr.disabled]="enableViewMode ? true:null" type="text"
+                                    autocomplete="off" title="City" placeholder="{{'common.city' | translate}}"
+                                    formControlName="city" (blur)="isCompanyPostalVerifyValid($event, 'city')"
+                                    class="fm-txt form-control" maxlength="50" />
+                                <show-errors [control]="dentistAddressFormGroup.controls.city"></show-errors>
+                            </div>
+
+                            <div class="col-md-3 col-xs-12">
+                                <label>{{'common.province'|translate}} <span class="required">*</span></label>
+                                <input id="dentist_province" [attr.disabled]="enableViewMode ? true:null" type="text"
+                                    autocomplete="off" title="Province" placeholder="{{'common.province' | translate}}"
+                                    formControlName="province" class="fm-txt form-control"
+                                    (blur)="isCompanyPostalVerifyValid($event, 'province')" maxlength="50" />
+                                <show-errors [control]="dentistAddressFormGroup.controls.province"></show-errors>
+                            </div>
+
+                            <div class="col-md-3 col-xs-12">
+                                <label>{{'company.company-form.country'|translate}} <span
+                                        class="required">*</span></label>
+                                <input id="dentist_country" [attr.disabled]="enableViewMode ? true:null" type="text"
+                                    autocomplete="off" title="Country" placeholder="{{'common.country' | translate}}"
+                                    formControlName="country" class="fm-txt form-control" maxlength="50"
+                                    (blur)="isCompanyPostalVerifyValid($event, 'country')" />
+                                <show-errors [control]="dentistAddressFormGroup.controls.country"></show-errors>
+                            </div>
+
+                            <div class="col-md-3 col-xs-12">
+                                <label>{{'dataEntry.dentist-info.Addresses.address'|translate}} <span
+                                        class="required">*</span></label>
+                                <input id="dentist_Addrr1" [attr.disabled]="enableViewMode ? true:null" type="text"
+                                    autocomplete="off" class="fm-txt form-control"
+                                    placeholder="{{'dataEntry.dentist-info.Addresses.address'|translate}}"
+                                    maxlength="50" formControlName="addressLine1">
+                                <show-errors [control]="dentistAddressFormGroup.controls.addressLine1"></show-errors>
+                            </div>
+
+                            <div class="col-md-3 col-xs-12">
+                                <label>{{'common.ext'|translate}}</label>
+                                <input id="dentist_extension" [attr.disabled]="enableViewMode ? true:null"
+                                    autocomplete="off" placeholder="{{'common.ext' | translate}}" type="text"
+                                    formControlName="extension" class="fm-txt form-control">
+                                <show-errors [control]="dentistAddressFormGroup.controls.extension"></show-errors>
+                            </div>
+
+                            <div class="col-md-3 col-xs-12">
+                                <label>{{'dataEntry.dentist-info.Addresses.phone-no'|translate}}</label>
+                                <input id="dentist_phone" [attr.disabled]="enableViewMode ? true:null"
+                                    autocomplete="off" [textMask]="{mask: phoneMask}"
+                                    placeholder="{{'common.phone' | translate}}" type="text" formControlName="phone"
+                                    class="fm-txt form-control" maxlength="50">
+                                <show-errors [control]="dentistAddressFormGroup.controls.phone"></show-errors>
+                            </div>
+
+
+
+                            <div class="col-md-3 col-xs-12">
+                                <label>{{'dataEntry.dentist-info.Addresses.effective'|translate}} <span
+                                        class="required">*</span></label>
+                                <div class="calender-field">
+                                    <my-date-picker [ngClass]="(enableViewMode== true) ? 'removeCross':''"
+                                        [disabled]="enableViewMode ? true:null" id="dentist_efffectiveDate"
+                                        [options]="myDatePickerOptions"
+                                        placeholder="{{'common.date-placeholder' | translate}}" name="effectiveOn"
+                                        formControlName="effectiveOn"
+                                        (inputFocusBlur)="changeDateFormat($event, 'effectiveOn' ,'dentistAddressFormGroup',true)">
+                                    </my-date-picker>
+                                </div>
+                                <show-errors [control]="dentistAddressFormGroup.controls.effectiveOn"></show-errors>
+                                <!-- Calendar Field Ends -->
+                            </div>
+
+                            <div class="col-md-3 col-xs-12">
+                                <label>{{'dataEntry.dentist-info.Addresses.expired'|translate}}</label>
+                                <div class="calender-field">
+                                    <div class="calender-field">
+                                        <my-date-picker [ngClass]="(enableViewMode== true) ? 'removeCross':''"
+                                            [disabled]="enableViewMode ? true:null" id="dentist_expiryDate"
+                                            [options]="myDatePickerOptions"
+                                            placeholder="{{'common.date-placeholder' | translate}}" name="expiredOn"
+                                            formControlName="expiredOn"
+                                            (inputFocusBlur)="changeDateFormat($event, 'expiredOn' ,'dentistAddressFormGroup')">
+                                        </my-date-picker>
+                                    </div>
+                                    <show-errors [control]="dentistAddressFormGroup.controls.expiredOn"></show-errors>
+                                </div>
+                                <!-- Calendar Field Ends -->
+                            </div>
+
+                            <div class="col-md-3 col-xs-12">
+                                <label>{{'dataEntry.dentist-info.Addresses.facility-number'|translate}}
+                                </label>
+                                <input id="dentist_facility" [attr.disabled]="enableViewMode ? true:null" maxlength="6"
+                                    autocomplete="off" type="text" class="fm-txt form-control"
+                                    placeholder="{{'dataEntry.dentist-info.Addresses.facility-number'|translate}}"
+                                    formControlName="facilityNumber">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </modal-content>
+    <modal-footer>
+        <div class="form-row text-center">
+            <button [ngClass]="{'disabled':disableAddBtn}" title="Save" class="btn green-btn" *ngIf="!enableViewMode"
+                (click)="SaveUpdateaddress(addressLine1Modal)">{{'button.save'|translate}}</button>
+            <button title="Close" type="button" class="btn grey-btn"
+                (click)="closeModal(addressLine1Modal)">{{'button.close'|translate}}</button>
+        </div>
+    </modal-footer>
+</modal>
+
+
+
+
+<!--[Start Mail Merge Pop Up]-->
+<button class="green-btn-add btn" data-toggle="modal" id="mailTemplatesFormPopUp" data-target="#openMailTemplatesPopUp"
+    style="display:none"></button>
+
+<div id="openMailTemplatesPopUp" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog" style="width: 500px;">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                    (click)="resetMailTemplateForm()">&times;</button>
+                <h4 class="modal-title">Mail Merge Template</h4>
+            </div>
+            <div class="modal-body">
+                <div class="grid-box">
+                    <!-- Grid Heading Ends -->
+                    <div class="grid-inner">
+                        <form [formGroup]="mailTemplatesFormGroup">
+                            <div class="grid-inner">
+                                <div class="form-row">
+                                    <div class="row min-ht-sf">
+                                        <div class="col-md-12 col-xs-12">
+                                            <label>Select Mail Template</label>
+                                            <select class="fm-txt form-control" name="templateType" id="templateType"
+                                                formControlName="templateType">
+                                                <option [ngValue]="null" disabled hidden selected>
+                                                    {{'common.select' | translate}}</option>
+                                                <option *ngFor="let type of mailTemplateType" [value]="type">
+                                                    {{type}}
+                                                </option>
+                                            </select>
+                                            <show-errors [control]="mailTemplatesFormGroup.controls.templateType">
+                                            </show-errors>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="row min-ht-st">
+                                        <div class="col-md-12 col-xs-12">
+                                            <button (click)="proceedTemplate()" class="btn green-btn"
+                                                style="width: 400px;">Proceed</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
+                        <!--[Start Files Grid]-->
+                        <div class="form-row">
+                            <div class="table-responsive">
+                                <table id="gov-elig-file-upload-doc"
+                                    class="table table-bordered table-stripped text-left col-lt-search"
+                                    style="width: 100%"></table>
+                            </div>
+                        </div>
+                        <!--[End Files Grid]-->
+                    </div>
+                </div>
+                <!-- Grid Box Ends -->
+            </div><!-- Modal Body End-->
+            <div class="modal-footer">
+                <button id="ReportResetFooterButton" type="button" class="btn grey-btn" data-dismiss="modal"
+                    (click)="resetMailTemplateForm()">{{ 'button.close' | translate }}</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<button class="green-btn-add btn" data-toggle="modal" id="fileUplaodpopup" data-target="#fileUplaod"
+    style="display:none"></button>
+<!-- --------- -->
+<div id="fileUplaod" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog" style="width: 500px;">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" id="CloseProvider" class="close" data-dismiss="modal"
+                    (click)="resetImportProvider()">&times;</button>
+                <h4 class="modal-title">Import Providers Details </h4>
+            </div>
+            <div class="modal-body">
+                <div class="grid-box">
+                    <!-- Grid Heading Ends -->
+                    <div class="grid-inner">
+
+                        <!--[Start Files Grid]-->
+                        <div class="form-row">
+                            <div class="table-responsive">
+                                <table id="gov-elig-file-upload-doc"
+                                    class="table table-bordered table-stripped text-left col-lt-search"
+                                    style="width: 100%"></table>
+                            </div>
+                        </div>
+                        <!--[End Files Grid]-->
+                    </div>
+                </div>
+                <!-- Grid Box Ends -->
+            </div><!-- Modal Body End-->
+            <div class="modal-footer">
+                <button id="importResetFooterButton" type="button" class="btn grey-btn" data-dismiss="modal"
+                    (click)="resetImportProvider()">{{ 'button.close' | translate }}</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- -------------------- -->
+<!--[End Mail Merge Pop Up]-->
+
+<!--[Start Mail Templates]-->
+<div id="exportContent1" style="display: none">
+    <p>{{ today | date }}</p><br>
+    <p>Dr. {{mt_providerFirstName}} {{mt_providerLastName}} <br>
+        {{mt_addressLine1}}<br>
+        {{mt_province}} <br>
+        {{mt_postalCode}} </p>
+    <p> Alberta Health and Wellness has sent Quikcard Solutions a letter requesting we register you for claims
+        submission. We have registered you in our system but they have requested that we get an AH2096 form signed by
+        you before we submit any claims on your behalf.</p>
+    <p>I have completed as much of the AH2096 Form that I can. I have highlighted the portions that I need you to
+        complete. Once completed please send me the form and I will make sure Alberta Health and Wellness gets a copy.
+        Completed form can be faxed to 1-780-424-7669, scanned and e-mailed to <a
+            href="mailto:tbladon@quikcard.com">tbladon@quikcard.com</a> or mailed to 200
+        Quikcard Centre, 17010 – 103 Avenue, Edmonton, Alberta, T5S 1K7.</p>
+    <p> Sincerely,</p>
+    <p> Tracey Bladon </p>
+    <p>Vice President Data Management</p>
+    <p>Encl</p>
+</div>
+
+<div id="exportContent2" style="display: none">
+    <table width="100%">
+        <tr>
+            <td align="center"><b>RECEIPT</b></td>
+        </tr>
+        <tr>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+        </tr>
+        <tr>
+            <td><b>DATE:</b>{{ today | date }}</td>
+            <td> </td>
+        </tr>
+        <tr>
+            <td> </td>
+        </tr>
+        <tr>
+            <td><b>FROM:</b> Quikcard Solutions Inc.</td>
+        </tr>
+        <tr>
+            <td></td>
+        </tr>
+        <tr>
+            <td><b>TO:</b> <b>Dr. {{mt_providerFirstName}} {{mt_providerLastName}} Bischof</b></td>
+        </tr>
+        <tr>
+            <td><b>{{mt_addressLine1}}</b></td>
+        </tr>
+        <tr>
+            <td><b>{{mt_addressLine1}} {{mt_postalCode}}</b></td>
+            <td><b></b></td>
+        </tr>
+        <tr>
+            <td></td>
+        </tr>
+        <tr>
+            <td>RE: Alberta Health Care Submission Services</td>
+        </tr>
+        <tr>
+            <td>
+                <hr>
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+        </tr>
+        <tr>
+            <td> </td>
+        </tr>
+    </table>
+    <table>
+        <tr>
+            <td> Annual Fee for Alberta Health Care submission services</td>
+        </tr>
+        <tr>
+            <td></td>
+        </tr>
+        <tr>
+            <td> July 2019 to June 2020</td>
+        </tr>
+        <tr>
+            <td></td>
+        </tr>
+        <tr>
+            <td> Fee $500.00</td>
+        </tr>
+        <tr>
+            <td> GST $25.00 </td>
+        </tr>
+        <tr>
+            <td> TOTAL $525.00</td>
+        </tr>
+        <tr>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+        </tr>
+        <tr>
+            <td> GST registration #86661-5164 RT0001</td>
+        </tr>
+        <tr>
+            <td></td>
+        </tr>
+    </table>
+</div>
+
+<div id="exportContent3" style="display: none">
+    <p><b>{{ today | date }}</b></p>
+    <p><b>Dr. {{mt_providerFirstName}} {{mt_providerLastName}}<br>
+            {{mt_addressLine1}}<br>
+            {{mt_province}}<br>
+            {{mt_postalCode}}</b></p>
+    <p>RE: ANNUAL PAYMENT</p>
+    <p>Dear Service Provider:</p>
+    <p>Quikcard Solutions Inc. (QSI) has been pleased to be your Accredited
+        Submitter for your claim submissions to Alberta Health Care for the past year. Your current payment period will
+        expire on June 30, 2019. We hope that you will be choosing QSI as your submitter for the upcoming year.</p>
+    <p>Our fee for service has increased to a flat annual rate of $525.00 ($500.00 plus $25.00 for Goods and Services
+        Tax).
+        Payment can be made by cheque payable to Quikcard Solutions Inc. or by One Time Authorization directly from your
+        bank account (form attached) void cheque is required. We will issue you a receipt upon receipt of your payment.
+    </p>
+    <p>Please do not hesitate to contact our office if you have any questions. Call either (780) 702-3431 or our
+        toll-free number 1-800-232-1997 (Extension 3431).</p>
+    <p>Sincerely,</p>
+    <p>Tracey Bladon <br>Vice President Data Management</p>
+    <p></p>
+    <p>GST Registration Number 86661-5164RT0001 </p>
+</div>
+<!--[End Mail Templates]-->
+
+<div *ngIf="showLoader" class="loader-outer">
+    <div class="cube-wrapper">
+        <div class="cube-folding">
+            <span class="leaf1"></span>
+            <span class="leaf2"></span>
+            <span class="leaf3"></span>
+            <span class="leaf4"></span>
+        </div>
+        <span class="loading" data-name="Loading">Please Wait...</span>
+    </div>
+</div>

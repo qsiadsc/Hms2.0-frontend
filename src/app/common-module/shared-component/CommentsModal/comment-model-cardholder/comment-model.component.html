@@ -1,0 +1,100 @@
+<div class="grid-inner">
+    <form [formGroup]="commentForm" *ngIf="enableAddButton != 'F'">
+        <div class="form-row">
+            <label>Add Comment<span class="required"> *</span></label>
+            <div class="add-comments">
+                <div class="row">
+                    <div class="col-sm-5">
+                        <textarea #focusAddCommentEl class="notInCaps fm-txt form-control comment-textarea"
+                            formControlName="commentTxt"></textarea>
+                        <show-errors [control]="commentForm.controls.commentTxt"></show-errors>
+                    </div>
+                    <div class="col-sm-2">
+                        <label class="check-lb">
+                            <input type="checkbox" formControlName="isImportant" />
+                            <span class="check-flag">
+                                <i class="fa fa-flag" aria- hidden="true"></i>
+                            </span>Importance</label>
+                    </div>
+                    <div class="col-sm-2">
+                        <label>Department<span class="required"> *</span></label>
+                        <ng2-completer formControlName="userGroupKey" [datasource]="userGroupData" [minSearchLength]="0"
+                            [openOnFocus]="true" [fillHighlighted]="false" [placeholder]="'Search Department'"
+                            [textSearching]="'Please wait...'" [inputClass]="'form-control'" [clearUnselected]="true"
+                            (selected)="onSelect($event)"> >
+                        </ng2-completer>
+                        <show-errors [control]="commentForm.controls.userGroupKey"></show-errors>
+                    </div>
+                    <div class="col-sm-2">
+                        <label>{{'card.card-eligibility.expirydate' | translate}}</label>
+                        <div class="calender-field">
+                            <my-date-picker id="c_expiryDate" placeholder="{{'common.date-placeholder' | translate}}"
+                                [options]="myDatePickerOptions" name="expiry_date"
+                                [ngClass]="expired  ? 'expired' : 'notExpired'" formControlName="expiry_date"
+                                (inputFocusBlur)="changeDateFormat($event, 'expiry_date' ,'commentForm')">
+                            </my-date-picker>
+                            <show-errors [control]="commentForm.controls.expiry_date"></show-errors>
+                        </div>
+                      
+                      </div>
+                    <div class="col-sm-1 text-right">
+                        <button class="green-btn-add btn" (click)="addComment(commentForm)"><i class="fa fa-plus"></i>
+                            Add </button>
+                        <!-- Please don't remove following button -->
+                        <button id="btnResetComment" class="green-btn-add btn" (click)="resetComment(commentForm)"
+                            style="display:none"><i class="fa fa-plus"></i> Cancel </button>
+                    </div>
+                </div>
+            </div>
+            <!-- Add Comments Ends -->
+        </div>
+        <!-- Form Row Ends -->
+    </form>
+    <div class="form-row">
+        <div class="row">
+
+            <div class="col-md-12 col-xs-12 table-col">
+                <div *ngIf="commentFormEditMode == false" class="filter-hdr">
+                    <div class="filter-column">
+                        <div class="pull-left"><label>Filters</label></div>
+                        <div class="pull-right">
+                            <button class="green-btn btn btn-sm">Apply</button>
+                            <button class="btn grey-btn btn-sm">Clear All</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table id="comments" datatable [dtOptions]="dtOptions['comments']"
+                        [dtTrigger]="dtTrigger['comments']" class="table table-bordered table-stripped">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th class="amount_right_grid">User Name</th>
+                                <th class="amount_right_grid">Department</th>
+                                <th class="amount_right_grid">Comments</th>
+                                <th class="amount_right_grid">Expiry Date</th>
+                                <th class="amount_right_grid">Importance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let comment of comments1">
+                                <td>{{ comment.createdOn }}</td>
+                                <td class="amount_right_grid">{{ comment.username}}</td>
+                                <td class="amount_right_grid">{{ comment.department}}</td>
+                                <td class="amount_right_grid">{{ comment.commentTxt }}</td>
+                                <td class="amount_right_grid">{{ comment.expiredOn}}</td>
+                                <td class="amount_right_grid" *ngIf="comment.commentImportance == 'Y'"><span
+                                        class="flag"><i class="fa fa-flag" aria-hidden="true"></i></span></td>
+                                <td class="amount_right_grid" *ngIf="comment.commentImportance == 'N'"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Table Ends -->
+            </div>
+        </div>
+
+    </div>
+    <!-- Form Row ENds -->
+</div>
+<!-- Grid Inner Ends -->

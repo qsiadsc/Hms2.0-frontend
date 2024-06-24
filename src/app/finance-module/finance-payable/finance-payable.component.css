@@ -1,0 +1,127 @@
+.hideGPRunButton {display : none;}
+
+.select-options {
+    width: 40%;
+}
+
+.dataTables_info{
+    display: none !important;
+}
+  .search-top {
+    margin: 0;
+    margin-bottom: 10px;
+    float: initial;
+    width: 100%;
+}
+:host ::ng-deep #ListTable .dataTables_empty {
+  height: 160px;
+}
+  .scroll-ListTable{
+    overflow-y: scroll;
+    max-height: 500px;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+  }
+  :host ::ng-deep .dataTables_wrapper{
+    width:100% !important;
+  }
+  :host ::ng-deep #ListTable_wrapper {
+    min-height: 301px;
+  }
+
+  :host ::ng-deep .transType .c-token{
+    padding-right: 10px !important;
+  }
+
+:host ::ng-deep .fixedHeader > thead > tr > td, :host ::ng-deep .fixedHeader > thead > tr > th {
+  position: sticky !important;
+  top: 0;
+  z-index: 9;
+}
+
+:host ::ng-deep .fixedHeader > thead > tr:nth-child(1) > td, :host ::ng-deep .fixedHeader > thead > tr:nth-child(1) > th {
+  height: 75px;
+  box-sizing: border-box;
+}
+:host ::ng-deep  .list-filter {
+  display: none;
+}
+
+:host ::ng-deep .dropdown-list ul li {
+  padding-top: 4px !important;
+}
+
+:host ::ng-deep .dropdown-list ul li :last-child {
+  padding-bottom: 5px !important;
+}
+
+:host ::ng-deep .dropdown-list ul li {
+  padding: 5px 8px !important;
+}
+
+:host ::ng-deep .fixedHeader > thead > tr:nth-child(2) > td, :host ::ng-deep .fixedHeader > thead > tr:nth-child(2) > th {
+  top: 75px;
+  z-index: 8;
+}
+:host ::ng-deep .fixedHeader .mydp .selector {
+  right: 0;
+}
+:host ::ng-deep div#ListTable_length {
+  position: absolute;
+}
+.dropdown{
+    background: white;
+    z-index: 40;
+    position: relative;
+    height: 80px;
+}
+.custom-check {
+    position: relative;
+    padding-left: 0px;
+    cursor: pointer;
+}
+.sub-totalvalue{
+    margin-left: 40%;
+    margin-top: 17px;
+    font-weight: 600;
+}
+.sub-totalvalue-total{
+    margin-left: 38%;
+    margin-top: 7px;
+    font-weight: 600;
+}
+
+.statcls{
+background: white;
+position: relative;
+}
+::-webkit-scrollbar {
+    width: 7px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+
+  .content-aling{
+    text-align: end;
+  }
+
+  :host ::ng-deep .table-responsive .calender-field .selectiongroup input.selection {
+    height: 37px !important;
+    margin: 0px 0 0 0;
+  }
+  :host ::ng-deep td.daycell.currmonth.range {
+    background-color: #8ebfff !important;
+}

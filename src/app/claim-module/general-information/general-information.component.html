@@ -1,0 +1,210 @@
+<form [formGroup]="ClaimGeneralInformationFormGroup">
+  <div class="grid-box ">
+    <div class="grid-heading">
+      <h3>{{'claims.claims-add.claims-general-information.general-information' | translate}}</h3>
+      <div class="web-reg">
+        <a *ngIf="(!addMode && !copyMode && !reviewer && !isReverseClaim && claimAuthChecks[0].copyClaim == 'T') && !showCopyClaim && !isReversedInd" (click)='copyClaim()'
+        class="green-btn-add btn" style="cursor: pointer" target="_blank"
+        href="/claim/copy/{{claimKey}}">Copy Claim</a>
+        <!-- To restrict action of copy claim button showCopyClaim check added as per lockProcessor functionality -->
+        <a *ngIf="(!addMode && !copyMode && !reviewer && !isReverseClaim && claimAuthChecks[0].copyClaim == 'T') && showCopyClaim && !isReversedInd" (click)='copyClaim()'
+        class="green-btn-add btn" style="cursor: pointer" target="_blank">Copy Claim</a>
+        <!-- #log no 808 809 810 811 812   as per Arun randev -->
+       
+        <a *ngIf="showQuikDashBackBtn" [routerLink]="['/claimDashboard']" class="green-btn-add btn" style="cursor: pointer">Back To Dashboard</a>
+        <a *ngIf="showADSCDashBackBtn" [routerLink]="['/claimDashboard/alberta']" class="green-btn-add btn" style="cursor: pointer">Back To Dashboard</a>
+          <button *ngIf="filePath && !isReverseClaim && claimAuthChecks[0].viewFile == 'T'"
+          (click)="openNewWindow()" class="green-btn-add btn" style="cursor: pointer">File View</button>
+        <button data-toggle="modal" *ngIf="!filePath && !viewMode && (initiateClaim != true) && (filesPath == undefined || filesPath == '') " id="attachClaimFileButton" data-target="#attachClaimFile"
+          class="green-btn-add btn" style="cursor: pointer">Attach Claim File</button>
+          <button data-toggle="modal" *ngIf="!filePath && viewMode && (initiateClaim != true) && (filesPath == undefined || filesPath == '') " id="attachClaimFileButton" data-target="#attachClaimFile"
+          class="green-btn-add btn" style="cursor: pointer">Attach Claim File</button>
+        <button data-toggle="modal" *ngIf="!filePath && !addMode && filesPath && (initiateClaim != true)" id="viewClaimFile" (click)="openFileViewWindow()"
+          class="green-btn-add btn" style="cursor: pointer">View Claim File</button>
+        <a *ngIf="currentUser && filePath && !isReverseClaim && currentUser.isAdmin == 'T' && claimAuthChecks[0].searchCard == 'T'"
+          style="cursor: pointer" class="green-btn-add btn" target="_blank"
+          [routerLink]="['/card/searchCard']" [queryParams]="{ claim: 'T' }">Search Cardholder</a>
+        <a *ngIf="(viewMode || editMode) && showBackBtn  && !isReverseClaim && !reviewer" style="cursor: pointer"
+          class="green-btn-add btn" [routerLink]="['/claim/searchClaim']" (click)="backToSearch()"><i
+            class="fa fa-share" aria-hidden="true"></i>Back To Search</a>
+        <a *ngIf="(viewMode || editMode) && showReviewBackBtn && !isReverseClaim && !isDash" id="backToSearchBtn" style="cursor: pointer"
+          class="green-btn-add btn" [routerLink]="['/reviewer/searchClaim']" (click)="backToReviewSearch()"><i
+            class="fa fa-share" aria-hidden="true"></i>Back To Search</a>
+        <a *ngIf="(viewMode || editMode) && showReviewBackBtn && !isReverseClaim && isDash" id="backToSearchBtn" style="cursor: pointer"
+          class="green-btn-add btn" [routerLink]="['/reviewer/searchClaim/RR']" (click)="backToReviewSearch()"><i
+          class="fa fa-share" aria-hidden="true"></i>Back To Search</a>
+        <span *ngIf="(viewMode || editMode) && claimStatus" class="green-btn-add btn removeMargin">{{claimStatus}}</span>
+        <span *ngIf="(viewMode || editMode) && claimReleased"
+          class="green-btn-add  btn removeMargin">{{claimReleased}}</span>
+      </div>
+    </div>
+    
+      <div class="grid-inner" [ngClass]="'contract'">
+      <div class="form-row genralForm">
+        <div class="row min-ht-sf">
+          <div class="col-xs-12 col-md-2">
+            <label>{{'claims.claims-add.claims-general-information.discipline-type' | translate}}</label>
+            <select class="fm-txt form-control" #autofocusDisciplineType (change)="getDisciplineType($event)"
+              placeholder="Claim Type" name="claimType" id="cgI_claimType" formControlName="claimType">
+              <option [ngValue]="null" disabled hidden selected>
+                {{'claims.claims-add.claims-general-information.select' | translate}}</option>
+                
+              <option id="cgI_claimType" *ngFor="let type of claimType" [value]="type.disciplineKey">
+                {{type.disciplineName}}</option>
+            </select>
+            <show-errors [control]="ClaimGeneralInformationFormGroup.controls.claimType"></show-errors>
+          </div>
+          <div class="col-md-2 col-xs-12">
+            <label>{{'claims.claims-add.claims-general-information.entry-date' | translate}}</label>
+            <div class="calender-field">
+              <my-date-picker [ngClass]="'removeCross'" id="dateEntryDate" [disabled]=true
+                [options]="myDatePickerOptions" placeholder="dd/mmm/yyyy" name="entry_date" formControlName="entry_date"
+                (inputFocusBlur)="changeDateFormat($event, 'entry_date' ,'ClaimGeneralInformationFormGroup')">
+              </my-date-picker>
+              <show-errors [control]="ClaimGeneralInformationFormGroup.controls.entry_date"></show-errors>
+            </div>
+          </div>
+
+          <div class="col-md-2 col-xs-12">
+            <label>{{'claims.claims-add.claims-general-information.claim-type' | translate}}</label>
+           
+
+            <input id="claimType" type="text" (keyup)='SearcType($event)' (focus)='focus($event)' (blur)='searchBlur($event)' (click)='clicked()' class="fm-txt form-control notInCaps"
+            placeholder="Search Claim Type"
+            formControlName="type">
+            <span id='claimTypeError'>
+              <show-errors [control]="ClaimGeneralInformationFormGroup.controls.type"></show-errors>
+
+            </span>
+
+            <div id="claimType_search">
+              <div class="option"  *ngFor="let claim of filterArrClaimType" > {{claim.claimTypeDesc}}</div>
+            </div>
+          </div>
+
+
+          <div class="col-md-2 col-xs-12" >
+            <label>{{'claims.claims-add.claims-general-information.claim-cat' | translate}}</label>
+
+            <select class="fm-txt form-control" title="Claim Category" placeholder="Claim Category" name="claimCategory" id="claimCategory" formControlName="cat" (change)="getCatChange($event)">
+							<option [ngValue]="null" disabled hidden selected>{{'common.select' | translate}}</option>
+           
+
+              <!-- add for (#1206) -->
+              <option id="cgI_claimCategory" *ngFor="let obj of arrClaimCategory" [value]="obj.claimCategoryCd">
+                {{obj.claimCategoryDesc}}
+              </option>
+            </select>
+
+
+            <span id='claimTypeError'>
+              <show-errors [control]="ClaimGeneralInformationFormGroup.controls.cat"></show-errors>
+            </span>
+          </div>
+
+
+
+          <div class="col-md-3 col-xs-12">
+            <div class="input-half">
+              <label>{{'claims.claims-add.claims-general-information.operator_name' | translate}}</label>
+              <input id="cgI_operator" type="text" disabled class="fm-txt form-control"
+                placeholder="{{'claims.claims-add.claims-general-information.operator' | translate}}"
+                formControlName="operator">
+              <show-errors [control]="ClaimGeneralInformationFormGroup.controls.operator"></show-errors>
+            </div>
+            <div class="input-half">
+              <label>{{'claims.claims-add.claims-general-information.reference_no' | translate}}</label>
+              <input id="cgI_reference" type="text" disabled class="fm-txt form-control"
+                placeholder="{{'claims.claims-add.claims-general-information.reference' | translate}}"
+                formControlName="reference">
+              <show-errors [control]="ClaimGeneralInformationFormGroup.controls.reference"></show-errors>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-xs-12">
+            <div class="input-half">
+              <label>{{'claims.claims-add.claims-general-information.modified_by' | translate}}</label>
+              <input id="cgI_userId" type="text" disabled class="fm-txt form-control"
+                placeholder="{{'claims.claims-add.claims-general-information.modified_by' | translate}}"
+                formControlName="userId">
+              <show-errors [control]="ClaimGeneralInformationFormGroup.controls.userId"></show-errors>
+            </div>
+            <div class="input-half">
+              <label>{{'claims.claims-add.claims-general-information.modified_on' | translate}}</label>
+              <input id="cgI_modifiedDate" type="text" disabled class="fm-txt form-control"
+                placeholder="{{'claims.claims-add.claims-general-information.modified' | translate}}"
+                formControlName="modified_date">
+              <show-errors [control]="ClaimGeneralInformationFormGroup.controls.modified_date"></show-errors>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<div *ngIf="showLoader" class="loader-outer">
+  <div class="cube-wrapper">
+    <div class="cube-folding">
+      <span class="leaf1"></span>
+      <span class="leaf2"></span>
+      <span class="leaf3"></span>
+      <span class="leaf4"></span>
+    </div>
+    <span class="loading" data-name="Loading">{{loaderPlaceHolder}}</span>
+  </div>
+</div>
+
+<div id="attachClaimFile" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="btnAttachClaimFile" type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Attach Claim File</h4>
+      </div>
+
+       <div class="modal-body">
+        <div class="grid-box">
+            <div class="grid-heading">
+              <h3>Attach File</h3>
+            </div>
+            <div class="grid-inner" id="uploadClaimViewFile">
+              <div class="form-row">
+                <div class="row min-ht-sf">
+            <div id="uploadClaimViewFile">
+                          <div class="col-md-3 col-xs-12 min-ht-half">
+                              <label>Document Name</label>
+                              <input style="display: none" type="file" (click)="crFileInput.value = null" (change)="onFileChanged($event)" #crFileInput>
+                              <input [(ngModel)]="selectedFileName" class="fm-txt form-control datepicker" type="text">
+                              <ul *ngIf="error.isError==true" class="validation-errors">
+                                  <li style="color: red">{{error.errorMessage}}</li>
+                              </ul>
+                              <ul *ngIf="error3.isError==true" class="validation-errors">
+                                  <li style="color: red">{{error3.errorMessage}}</li>
+                              </ul>
+          
+                          </div>
+                          <div class="col-md-4 col-xs-12 min-ht-half">
+                              <label>&nbsp;</label>
+                              <button class="btn green-btn" (click)="crFileInput.click()">Select File</button>
+                              <button *ngIf="this.selectedFileName" (click)="removeExtension()" class="btn red-btn ">Remove</button>
+                          </div>
+          
+                      </div>
+                  </div>
+                  <div class="form-row" >
+                      <div class="table-responsive">
+                          <table id="company-upload-doc" class="table table-bordered table-stripped text-left col-lt-search" style="width: 100%"></table> 
+                      </div>  
+                  </div>
+              </div>
+              </div>
+        </div>
+      </div> 
+      <div class="modal-footer">
+        <button id="closeClaimViewFileModal" class="btn grey-btn" data-dismiss="modal">{{'button.close'|translate}}</button>
+        <button id="saveClaimViewFileModal" *ngIf="!addMode && !editMode" class="green-btn-add btn" data-dismiss="modal" (click)="SaveAttachFile()">Save</button>
+      </div>
+    </div>
+  </div>
+</div>

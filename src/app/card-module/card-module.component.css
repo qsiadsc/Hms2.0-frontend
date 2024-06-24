@@ -1,0 +1,154 @@
+.old-comment p {
+  margin: 15px 30px 30px;
+  text-align: left;
+  font-size: 15px;
+}
+
+.colorRed {
+  color: #eb5757;
+  cursor: default;
+}
+
+.colorGreen {
+  color: #009124;
+  cursor: default;
+}
+
+:host ::ng-deep #companyComments>thead>tr th:nth-child(5) {
+  width: 45% !important;
+}
+
+:host ::ng-deep #cardCommentsCombined_length {
+  display: none;
+}
+
+:host ::ng-deep #cardCommentsCombined_length {
+  display: none;
+}
+
+:host ::ng-deep #cardCommentsCombined_info {
+  display: none;
+}
+
+:host ::ng-deep #cardCommentsCombined_paginate {
+  display: none;
+}
+
+:host ::ng-deep #cardCommentsCombined tbody {
+  display: block;
+  overflow: auto;
+  max-height: 226px;
+  width: 100%;
+  padding-bottom: 10px;
+}
+
+:host ::ng-deep #cardCommentsCombined thead tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+:host ::ng-deep #cardCommentsCombined thead,
+:host ::ng-deep #cardCommentsCombined tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+:host ::ng-deep #cardCommentsCombined thead {
+  width: calc(100% - 5px)
+}
+
+:host ::ng-deep #cardCommentsCombined tbody {
+  width: calc(100% - 5px)
+}
+
+:host ::ng-deep .qc #cardCommentsCombined td {
+  width: 70px;
+}
+
+:host ::ng-deep #cardCommentsCombined ::-webkit-scrollbar {
+  width: 5px;
+}
+
+:host ::ng-deep #cardCommentsCombined ::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+:host ::ng-deep #cardCommentsCombined ::-webkit-scrollbar-thumb {
+  background: rgb(151, 151, 151);
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+:host ::ng-deep #cardCommentsCombined ::-webkit-scrollbar-thumb:hover {
+  background: rgb(128, 127, 127);
+}
+
+:host ::ng-deep table#cardCommentsCombined {
+  padding-bottom: 10px;
+}
+
+:host ::ng-deep #cardCommentsCombined>thead>tr th:nth-child(3) {
+  width: 40% !important;
+}
+
+:host ::ng-deep #cardCommentsCombined>tbody>tr td:nth-child(3) {
+  width: 40% !important;
+}
+
+:host ::ng-deep #cardCommentsCombined>thead>tr th:nth-child(5) {
+  width: 7% !important;
+}
+
+:host ::ng-deep #cardCommentsCombined>tbody>tr td:nth-child(5) {
+  width: 7% !important;
+}
+
+:host ::ng-deep #cardCommentsCombined>thead>tr th:nth-child(4) {
+  width: 12% !important;
+}
+
+:host ::ng-deep #cardCommentsCombined>tbody>tr td:nth-child(4) {
+  width: 12% !important;
+}
+
+:host ::ng-deep #cardCommentsCombined>thead>tr th:nth-child(2) {
+  width: 12% !important;
+}
+
+:host ::ng-deep #cardCommentsCombined>tbody>tr td:nth-child(2) {
+  width: 12% !important;
+}
+
+:host ::ng-deep #cardCommentsCombined>thead>tr th:nth-child(1),
+th:nth-child(5) {
+  width: 7% !important;
+}
+
+:host ::ng-deep #cardCommentsCombined>tbody>tr td:nth-child(1),
+td:nth-child(5) {
+  width: 7% !important;
+}
+
+:host ::ng-deep #cardCommentsCombined>thead>tr th:nth-child(6) {
+  width: 7% !important;
+}
+
+:host ::ng-deep #cardCommentsCombined>tbody>tr td:nth-child(6) {
+  width: 7% !important;
+}
+
+:host ::ng-deep .alberta #cardCommentsCombined th {
+  width: 14% !important;
+}
+
+:host ::ng-deep .alberta #cardCommentsCombined td {
+  width: 14% !important;
+}
+
+.cardholderFileFieldAlign {
+  margin-left: -1.3% !important;
+  margin-bottom: 1%;
+}

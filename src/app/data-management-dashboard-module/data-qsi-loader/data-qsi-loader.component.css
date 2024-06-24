@@ -1,0 +1,21 @@
+.min-ht-half{
+    display: flex;
+    align-items: center;
+}
+.checkpading{
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    width: auto;
+    height: 46px;
+    padding: 0px;
+}
+.col-width{
+    width: 120px;
+}
+
+.form-row .search_data {
+    padding: 3px 7px;
+    margin: 3px 0 -30px 0;
+}

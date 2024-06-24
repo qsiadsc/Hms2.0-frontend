@@ -1,0 +1,1259 @@
+<div class="grid-box">
+  <div class="grid-heading">
+    <h3>{{'uft.dashboard.heading.Uft'|translate}}</h3>
+    <div *ngIf="showLastUpdated" class="web-reg">
+      <h3 class="lst-updated">{{'common.lastUpdated' | translate }} {{dateTime}}</h3>
+      <button [disabled]=s howBalanceLoader (click)="ngOnInit()" class="claim-status btn status-btn" style="cursor: pointer">
+        <i class="fa fa-refresh" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+  <!-- Grid Heading Ends -->
+  <div class="grid-inner innerRow">
+    <div class="form-row">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-row">
+            <form [formGroup]="uftContinuityData">
+              <div class="row min-ht-sf">
+                <div class="col-md-12 col-xs-12 min-ht-half paddingRight">
+                  <ng2-completer [inputId]="'compName'" formControlName="compName" [datasource]="companyDataRemoteMainUft" [minSearchLength]="0"
+                    [placeholder]="'Search Company'" [textSearching]="'Please wait...'" [inputClass]="'form-control'" [clearUnselected]="true"
+                    (selected)="onCompanyNameSelectedMainUft($event)" (blur)="OnBlurCompanyMainUft()" [fillHighlighted]="false"
+                    [autoHighlight]="true">
+                  </ng2-completer>
+                </div>
+              </div>
+              <div class="row nrow">
+                <div class="col-md-2 col-xs-12 paddingRight">
+                  <div *ngIf="defaultMode; then showDefaultDropDown else hideDefaultDropDown"></div>
+                  <ng-template #showDefaultDropDown>
+                    <ng2-completer formControlName="dateRange" [datasource]="dateRangeData" [minSearchLength]="0" [openOnFocus]="true" [selectOnFocus]="true"
+                      (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Select Date Range'" [textSearching]="'Please wait...'"
+                      [inputClass]="'form-control'" [clearUnselected]="true" [autoHighlight]="true" (selected)="onDateRangeSelected($event)"
+                      (blur)="onBlurDateRange($event)" [inputId]="'dateRange'">
+                    </ng2-completer>
+                  </ng-template>
+                  <ng-template #hideDefaultDropDown>
+                    <ng2-completer formControlName="dateRange" [datasource]="dateRangeData" [minSearchLength]="0" [openOnFocus]="true" [selectOnFocus]="true"
+                      (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Select Date Range'" [textSearching]="'Please wait...'"
+                      [inputClass]="'form-control'" [clearUnselected]="true" [autoHighlight]="true" (selected)="onDateRangeSelected($event)"
+                      (blur)="onBlurDateRange($event)">
+                    </ng2-completer>
+                  </ng-template>
+                </div>
+                <div class="col-md-3 col-xs-12 paddingRight">
+                  <div class="calender-field">
+                    <my-date-picker id="uft_dashboardFromDate" placeholder="From" [options]="myDatePickerOptions" name="fromDate" (inputFocusBlur)="changeDateFormat($event, 'fromDate' ,'uftContinuityData')"
+                      formControlName="fromDate" #mydp="mydatepicker">
+                    </my-date-picker>
+                    <show-errors [control]="uftContinuityData.controls.fromDate"></show-errors>
+                  </div>
+                </div>
+                <div class="col-md-3 col-xs-12 ">
+                  <div class="calender-field">
+                    <my-date-picker id="uft_dashboardToDate" placeholder="To" [options]="myDatePickerOptions" name="toDate" (inputFocusBlur)="changeDateFormat($event, 'toDate' ,'uftContinuityData')"
+                      formControlName="toDate" #mydpToDate="mydatepicker">
+                    </my-date-picker>
+                    <show-errors [control]="uftContinuityData.controls.toDate"></show-errors>
+                  </div>
+                </div>
+                <div class="col-md-4 col-xs-12 min-ht-half paddingRight" style="padding:0px;">
+                  <button style="margin-left: 4px;" id="fgpc_procSearchFilter" type="submit" class="btn green-btn bnew" (click)="getUftData('')"
+                    title="{{'common.search' | translate}}">
+                    <i class="fa fa-search"></i>
+                  </button>
+                  <button id="uftReportData" type="submit" class="btn green-btn bnew" (click)="uftContinuityReport('AllUFTCODEDATA')" (blur)="focusOnOpenBal()"
+                    title="{{'common.report' | translate}}">
+                    {{ 'button.report' | translate }}</button>
+                  <button id="fgpc_procClearFilter" type="submit" class="grey-btn bnew btn" (click)="clearData()" title="{{'common.clear' | translate}}">
+                    {{'button.reset' | translate }}</button>
+                </div>
+              </div>
+            </form>
+          </div>
+          <!-- Form Row ENds -->
+          <div class="form-row">
+            <div class="balance-main">
+              <div class="row">
+                <div class="col-sm-6" id="uft_opening_bal" (click)="openingClosingBalance('open')">
+                  <div class="balance-box">
+                    <h4>{{'uft.dashboard.main-tabs.OpenBal'|translate}}</h4>
+                    <span *ngIf=showOpeningClosingBalLoader class="dash-loader">
+                      <span class="dash-loader-inner"></span>
+                    </span>
+                    <span *ngIf=!showOpeningClosingBalLoader>{{openingBalance}}</span>
+                  </div>
+                </div>
+                <div class="col-sm-6" id="uft_closing_bal" (click)="openingClosingBalance('close')">
+                  <div class="balance-box bg-dark">
+                    <h4>{{'uft.dashboard.main-tabs.CloseBal'|translate}}</h4>
+                    <span *ngIf=showOpeningClosingBalLoader class="dash-loader">
+                      <span class="dash-loader-inner"></span>
+                    </span>
+                    <span *ngIf=!showOpeningClosingBalLoader>{{closingBalance}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Balance Main Ends -->
+          </div>
+          <!-- Form Row Ends -->
+        </div>
+        <div class="col-md-6">
+          <div class="form-row fn-tabs">
+            <div class="panel-group" id="accordion">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" id="fundding" data-parent="#accordion" href="#Funding" class="p-title cashInflow" aria-expanded="false">
+                      <span>{{'uft.dashboard.uft-continuity.Funding'|translate}}</span>
+                      <span *ngIf=showBalanceLoader class="dash-loader amount">
+                        <span class="dash-loader-inner"></span>
+                      </span>
+                      <button class="btn green-btn-add" (click)="uftContinuityReport('FUNDING')">
+                        {{'uft.dashboard.uft-continuity.Report'|translate}}
+                      </button>
+                      <span class="amount" style="margin-right: 13px" *ngIf=!showBalanceLoader>{{fundingTotalAmount}}</span>
+                    </a>
+                  </h4>
+                </div>
+                <div id="Funding" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    <div class="table-responsive">
+                      <table class="table table-bordered">
+                        <thead>
+                          <tr>
+                            <th width="25%">{{'uft.dashboard.uft-continuity.Funding'|translate}}</th>
+                            <th width="15%" class="amount_right_grid">
+                              {{'uft.dashboard.uft-continuity.Amount'|translate}}</th>
+                            <th width="60%" class="amount_right_grid">
+                              {{'uft.dashboard.uft-continuity.Action'|translate}}</th>
+                          </tr>
+                        </thead>
+                        <tbody *ngIf="!showTabListLoader">
+                          <tr *ngFor="let funds of fundingList let last=last let first=first; index as i">
+                            <td>{{funds.data}}</td>
+                            <td class="amount_right_grid">
+                              <span>$</span>{{funds.amount}}</td>
+                            <td class="amount_right_grid">
+                              <button *ngIf="i == 1" type="button" class="btn green-btn-add" (click)="getDailyPapBatch()">{{'uft.dashboard.uft-continuity.generateEFT' | translate }}</button>
+                              <button *ngIf="!last && !first" data-toggle="modal" data-target="#oneTimePayment" type="button" class="btn green-btn-add"
+                                (click)="addOtpForm(funds,'FUNDING')">{{'uft.dashboard.uft-continuity.Add'|translate}}</button>
+                              <button *ngIf="!last" class="btn green-btn-add" data-toggle="modal" data-target="#reversePopup" (click)="reverseForm(funds,'FUNDING')">{{'uft.dashboard.uft-continuity.Reverse'|translate}}</button>
+                              <button class="btn green-btn-add" (click)="uftContinuitySubTypeReport(funds)">{{'uft.dashboard.uft-continuity.Report'|translate}}</button>
+                            </td>
+                          </tr>
+                        </tbody>
+                        <tbody *ngIf="showTabListLoader">
+                          <tr>
+                            <td colspan="3">{{'common.loading' | translate}}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#prun" class="p-title cashOutflow">
+                      <span>{{'uft.dashboard.uft-continuity.PaymentRun'|translate}} </span>
+                      <span *ngIf=showBalanceLoader class="dash-loader amount">
+                        <span class="dash-loader-inner"></span>
+                      </span>
+                      <button class="btn green-btn-add" (click)="uftContinuityReport('PAYMENT_RUN')">
+                        {{'uft.dashboard.uft-continuity.Report'|translate}}
+                      </button>
+                      <button class="btn green-btn-add" (click)="uftContinuityReportClaimPayments('CLAIMS_PAYMENT_RUN')">
+                        {{'uft.dashboard.uft-continuity.ClaimsPaymentReport'|translate}}
+                      </button>
+                      <span class="amount" style="margin-right: 13px;
+                      " *ngIf=!showBalanceLoader>{{paymentRunTotalAmount}}</span>
+                    </a>
+                  </h4>
+                </div>
+                <div id="prun" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    <div class="table-responsive">
+                      <table class="table table-bordered">
+                        <thead>
+                          <tr>
+                            <th width="40%">{{'uft.dashboard.uft-continuity.PaymentRun'|translate}}</th>
+                            <th width="25%" class="amount_right_grid">
+                              {{'uft.dashboard.uft-continuity.Amount'|translate}}</th>
+                            <th width="30%" class="amount_right_grid">
+                              {{'uft.dashboard.uft-continuity.Action'|translate}}</th>
+                          </tr>
+                        </thead>
+                        <tbody *ngIf="!showTabListLoader">
+                          <tr *ngFor="let payments of paymentRunList">
+                            <td>{{payments.data}}</td>
+                            <td class="amount_right_grid">
+                              <span>$</span>{{payments.amount}}</td>
+                            <td class="amount_right_grid">
+                              <button class="btn green-btn-add" (click)="uftContinuitySubTypeReport(payments)">{{'uft.dashboard.uft-continuity.Report'|translate}}</button>
+                            </td>
+                          </tr>
+                        </tbody>
+                        <tbody *ngIf="showTabListLoader">
+                          <tr>
+                            <td colspan="3">{{'common.loading' | translate}}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#Refund" class="p-title cashOutflow">
+                      <span class="">{{'uft.dashboard.uft-continuity.Refund'|translate}} </span>
+                      <span *ngIf=showBalanceLoader class="dash-loader amount">
+                        <span class="dash-loader-inner"></span>
+                      </span>
+                      <button data-toggle="modal" data-target="#oneTimePayment" class="btn green-btn-add" type="button" (click)="addOtpForm('','REFUND')">{{'uft.dashboard.uft-continuity.Add'|translate}}</button>
+                      <button class="btn green-btn-add" (click)="uftContinuityReport('REFUND')">
+                        {{'uft.dashboard.uft-continuity.Report'|translate}}
+                      </button>
+                      <span class="amount" style="margin-right: 13px" *ngIf=!showBalanceLoader>{{refundTotalAmount}}</span>
+                    </a>
+                  </h4>
+                </div>
+                <div id="Refund" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    <div class="table-responsive">
+                      <table class="table table-bordered">
+                        <thead>
+                          <tr>
+                            <th width="30%">{{'uft.dashboard.uft-continuity.Refunds'|translate}}</th>
+                            <th width="30%" class="amount_right_grid">
+                              {{'uft.dashboard.uft-continuity.Amount'|translate}}</th>
+                            <th width="40%" class="amount_right_grid">
+                              {{'uft.dashboard.uft-continuity.Action'|translate}}</th>
+                          </tr>
+                        </thead>
+                        <tbody *ngIf="!showTabListLoader">
+                          <tr *ngFor="let refunds of refundingList">
+                            <td>{{refunds.data}}</td>
+                            <td class="amount_right_grid">
+                              <span>$</span>{{refunds.amount}}</td>
+                            <td class="amount_right_grid">
+                              <button class="btn green-btn-add" data-toggle="modal" data-target="#reversePopup" (click)="reverseForm(refunds,'REFUND')">{{'uft.dashboard.uft-continuity.Reverse'|translate}}</button>
+                              <button class="btn green-btn-add" (click)="uftContinuitySubTypeReport(refunds)">{{'uft.dashboard.uft-continuity.Report'|translate}}</button>
+                            </td>
+                          </tr>
+                        </tbody>
+                        <tbody *ngIf="showTabListLoader">
+                          <tr>
+                            <td colspan="3">{{'common.loading' | translate}}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#Adjustments" [ngClass]="(amountb== true) ? 'p-title cashOutflow':'p-title cashInflow'">
+                      <span class="">{{'uft.dashboard.uft-continuity.Adj'|translate}} </span>
+                      <span *ngIf=showBalanceLoader class="dash-loader amount">
+                        <span class="dash-loader-inner"></span>
+                      </span>
+                      <button class="btn green-btn-add" (click)="uftContinuityReport('ADJUSTMENT')">{{'uft.dashboard.uft-continuity.Report'|translate}}</button>
+                      <span class="amount" style="margin-right: 13px" *ngIf=!showBalanceLoader>{{adjustmentTotalAmount}}</span>
+                    </a>
+                  </h4>
+                </div>
+                <div id="Adjustments" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    <div class="table-responsive">
+                      <table class="table table-bordered">
+                        <thead>
+                          <tr>
+                            <th width="40%">{{'uft.dashboard.uft-continuity.Adj'|translate}}</th>
+                            <th width="25%" class="amount_right_grid">
+                              {{'uft.dashboard.uft-continuity.Amount'|translate}}</th>
+                            <th width="30%" class="amount_right_grid">
+                              {{'uft.dashboard.uft-continuity.Action'|translate}}</th>
+                          </tr>
+                        </thead>
+                        <tbody *ngIf="!showTabListLoader">
+                          <tr *ngFor="let adjustments of adjustmentList">
+                            <td>{{adjustments.data}}</td>
+                            <td class="amount_right_grid">
+                              <span>$</span> {{adjustments.amount}}</td>
+                            <td class="amount_right_grid">
+                              <button data-toggle="modal" data-target="#oneTimePayment" type="button" class="btn green-btn-add" (click)="addOtpForm(adjustments,'ADJUSTMENT')">{{'uft.dashboard.uft-continuity.Add'|translate}}</button>
+                              <button class="btn green-btn-add" (click)="uftContinuitySubTypeReport(adjustments)">{{'uft.dashboard.uft-continuity.Report'|translate}}</button>
+                            </td>
+                          </tr>
+                        </tbody>
+                        <tbody *ngIf="showTabListLoader">
+                          <tr>
+                            <td colspan="3">{{'common.loading' | translate}}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- form Row Ends  -->
+        </div>
+      </div>
+    </div>
+    <!-- Form Row Ends -->
+  </div>
+  <!-- Grid Inner Ends -->
+</div>
+<!-- <bank-reconcilation></bank-reconcilation> -->
+<div *ngIf="showGraph" class="grid-box">
+  <div class="grid-heading">
+    <h3>{{'uft.dashboard.uft-continuity.uftBalance' | translate}}</h3>
+  </div>
+  <div class="grid-inner">
+    <div class="form-row">
+      <div class="row min-ht-sf">
+        <div [ngClass]="{'tableLoader': showtableLoader}" style="z-index: auto !important">
+          <div *ngIf="showGraph">
+            <div style="display: block;padding: 15px 90px 15px 90px" class="col-sm-12">
+              <canvas baseChart height="100" id="compBalanceBarChart" [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions"
+                [legend]="barChartLegend" [chartType]="barChartType" [colors]="barChartColors" (chartHover)="chartHovered($event)">
+              </canvas>
+            </div>
+          </div>
+          <span *ngIf="showtableLoader" class="loading" data-name="Loading" style="z-index: auto !important">{{'common.processing' | translate}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Grid Inner Ends -->
+</div>
+
+<div id="oneTimePayment" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button title="Close" id="closeOTP" (click)="resetOtpForm()" type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title" *ngIf="!isRefundHeading">{{reverseTransHeading}}</h4>
+        <h4 class="modal-title" *ngIf="isRefundHeading">{{'uft.dashboard.uft-continuity.refund' | translate}}</h4>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="addOTPform">
+          <div class="grid-box">
+            <div *ngIf="isRefundForm" class="grid-heading">
+              <h3>{{'uft.uftSearch.generateRefund' | translate}}</h3>
+            </div>
+            <div class="grid-inner">
+              <div class="form-row">
+                <div class="row min-ht-sf">
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{companyFieldLabel1}}
+                      <span class="required">*</span>
+                    </label>
+                    <ng2-completer [inputId]="'companyNameNo'" formControlName="companyNameNo" [datasource]="companyDataRemote" [minSearchLength]="0"
+                      [placeholder]="'Search Company'" [textSearching]="'Please wait...'" [inputClass]="'form-control'" [fillHighlighted]="false"
+                      (selected)="onCompanyNameSelected($event)" (blur)="OnBlurCompany1()">
+                    </ng2-completer>
+                    <show-errors [control]="addOTPform.controls.companyNameNo"></show-errors>
+                  </div>
+                  <div *ngIf="company2enable" class="col-md-3 col-xs-12">
+                    <label>{{companyFieldLabel2}}
+                      <span class="required">*</span>
+                    </label>
+                    <ng2-completer [inputId]="'companyNameNo2'" formControlName="companyNameNo2" [datasource]="companyDataRemote2" [minSearchLength]="0"
+                      [placeholder]="'Search Company'" [textSearching]="'Please wait...'" [inputClass]="'form-control'" [fillHighlighted]="false"
+                      (selected)="onCompanyName2Selected($event)" (blur)="OnBlurCompany2('companyNameNo2')">
+                    </ng2-completer>
+                    <show-errors [control]="addOTPform.controls.companyNameNo2"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'uft.upcomingTransactionsSearch.transactionDate' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <div class="calender-field">
+                      <my-date-picker id="otp_accTrans" [options]="myDatePickerOptions" name="transactionDate" formControlName="transactionDate"
+                        #mydpTransDate="mydatepicker" (inputFocusBlur)="changeDateFormat($event, 'transactionDate','addOTPform',true)"
+                        placeholder="{{'common.date-placeholder' | translate}}">
+                      </my-date-picker>
+                      <show-errors [control]="addOTPform.controls.transactionDate"></show-errors>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'uft.upcomingTransactionsSearch.transactionAmount' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <div class="calender-field d-amount">
+                      <input id="otp_TransAmt" type="text" placeholder="{{'uft.upcomingTransactionsSearch.transactionAmount' | translate}}" formControlName="transactionAmt"
+                        class="form-control in-number" (blur)="addDecimal($event,'transactionAmt')" appTwoDigitDecimaNumber
+                      />
+                      <show-errors [control]="addOTPform.controls.transactionAmt"></show-errors>
+                    </div>
+                  </div>
+                  <div *ngIf="!showRefundBtn" class="col-md-3 col-xs-12">
+                    <label>{{'uft.dashboard.uft-continuity.transactionType' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <div *ngIf="!showRefundBtn">
+                      <ng2-completer #otp_transactionType formControlName="transactionType" [datasource]="transactionTypeData" [minSearchLength]="0"
+                        [openOnFocus]="false" (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Search Transaction Type'"
+                        [textSearching]="'Please wait...'" [inputClass]="'form-control'" [clearUnselected]="true">
+                      </ng2-completer>
+                      <show-errors [control]="addOTPform.controls.transactionType"></show-errors>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'uft.upcomingTransactionsSearch.transactionDescription' | translate}}
+                    </label>
+                    <textarea id="otp_TransDesc" class="form-control" formControlName="transactionDesc" placeholder="{{'uft.upcomingTransactionsSearch.transactionDescription' | translate}}"></textarea>
+                    <show-errors [control]="addOTPform.controls.transactionDesc"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'uft.upcomingTransactionsSearch.currentBalance' | translate}}</label>
+                    <div class="calender-field d-amount">
+                      <input placeholder="{{'uft.upcomingTransactionsSearch.currentBalance' | translate}}" id="otp_currentbalance" type="text"
+                        formControlName="currentBalance" class="form-control in-number" />
+                      <show-errors [control]="addOTPform.controls.currentBalance"></show-errors>
+                    </div>
+                  </div>
+                  <div *ngIf="isRefundForm || isMiscType" class="col-md-3 col-xs-12">
+                    <label>{{'uft.uftSearch.entryDate' | translate}}
+                    </label>
+                    <div class="calender-field">
+                      <my-date-picker id="uftrcEntrysDate" [options]="myDatePickerOptions" name="entryDate" formControlName="entryDate" (inputFocusBlur)="changeDateFormat($event, 'entryDate','addOTPform',true)"
+                        placeholder="{{'common.date-placeholder' | translate}}">
+                      </my-date-picker>
+                      <show-errors [control]="addOTPform.controls.entryDate"></show-errors>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row" *ngIf="fundingTabType == 'FUNDING' || 'ADJUSTMENT'">
+                <div class="col-md-3 col-xs-12" >
+                  <label>{{'uft.dashboard.financeReports.documentName' | translate}}</label>
+                  <input style="display: none" type="file" (click)="this.value = null" (change)="onFileChanged($event)" #crFileInput>
+                  <input formControlName="documentName" class="fm-txt form-control datepicker" type="text">
+                  <ul *ngIf="error2.isError==true" class="validation-errors">
+                    <li style="color: red">{{error2.errorMessage}}</li>
+                  </ul>
+                  <ul *ngIf="error3.isError==true" class="validation-errors">
+                    <li style="color: red">{{error3.errorMessage}}</li>
+                  </ul>
+                </div>
+                <div class="col-md-3 col-xs-12">
+                  <label>&nbsp;</label>
+                  <button class="btn green-btn" (click)="crFileInput.click()">{{'button.selectFile' | translate}}</button>
+                  <button *ngIf="showRemoveBtn" (click)="removeExtension()" class="btn red-btn ">{{'button.remove' | translate}}</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--[Start Add Payee Section]-->
+          <!--[End Add Payee Section]-->
+          <div *ngIf="isRefundForm" class="grid-box">
+            <div class="grid-heading">
+              <h3>{{'uft.uftSearch.companyRefundInfo' | translate}}</h3>
+            </div>
+            <div class="grid-inner">
+              <div class="form-row">
+                <div class="row min-ht-sf">
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'uft.uftSearch.companyEffOn' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <div class="calender-field">
+                      <my-date-picker id="uftrcCompanyEffectiveOn" [options]="myDatePickerOptions" name="companyEffectiveOn" formControlName="companyEffectiveOn"
+                        (inputFocusBlur)="changeDateFormat($event, 'companyEffectiveOn','addOTPform',false)" placeholder="{{'common.date-placeholder' | translate}}">
+                      </my-date-picker>
+                      <show-errors [control]="addOTPform.controls.companyEffectiveOn"></show-errors>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'uft.uftSearch.yearEndDate' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <div class="calender-field">
+                      <my-date-picker id="uftrcYearEndDate" [options]="myDatePickerOptions" name="yearEndDate" formControlName="yearEndDate" (inputFocusBlur)="changeDateFormat($event, 'yearEndDate','addOTPform',false)"
+                        placeholder="{{'common.date-placeholder' | translate}}">
+                      </my-date-picker>
+                      <show-errors [control]="addOTPform.controls.yearEndDate"></show-errors>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'uft.uftSearch.yearEndBalance' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <div class="calender-field d-amount">
+                      <input id="uftrcYearEndBalance" type="text" class="form-control in-number" name="yearEndBalance" formControlName="yearEndBalance"
+                        placeholder="{{'uft.uftSearch.yearEndBalance' | translate}}" (blur)="zeroPatchWithAmt($event,'yearEndBalance')"
+                      />
+                      <show-errors [control]="addOTPform.controls.yearEndBalance"></show-errors>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'uft.uftSearch.standardPapAmount' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <div class="calender-field d-amount">
+                      <input id="uftrcStandardPapAmount" type="text" class="form-control in-number" name="standardPapAmount" formControlName="standardPapAmount"
+                        placeholder="{{'uft.uftSearch.standardPapAmount' | translate}}" (blur)="zeroPatchWithAmt($event,'standardPapAmount')"
+                      />
+                      <show-errors [control]="addOTPform.controls.standardPapAmount"></show-errors>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'uft.uftSearch.refundAmount' | translate}}</label>
+                    <div class="calender-field d-amount">
+                      <input id="uftrcRefundAmount" type="text" class="form-control in-number" name="refundAmount" formControlName="refundAmount"
+                        placeholder="{{'uft.uftSearch.refundAmount' | translate}}" (blur)="zeroPatchWithAmt($event,'refundAmount')"
+                      />
+                      <show-errors [control]="addOTPform.controls.refundAmount"></show-errors>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+        <!--[Start Grid To Show Bank Details Associated With Company]-->
+        <!-- log Bank Information should not be there in any of the Adjustments(Finance)  8 may  -->
+        <table *ngIf="showBankGrid" class="table table-bordered table-stripped dataTable" id="company-bank-account-active" style="display: none;">
+          <thead>
+            <th>{{'uft.dashboard.uft-continuity.bankNumber' | translate }}</th>
+            <th class="amount_right_grid">{{'uft.dashboard.uft-continuity.branchNumber' | translate }}</th>
+            <th class="amount_right_grid">{{'uft.dashboard.uft-continuity.bankName' | translate }}</th>
+            <th class="amount_right_grid">{{'uft.dashboard.uft-continuity.accountNumber' | translate }}</th>
+            <th class="amount_right_grid">{{'uft.dashboard.uft-continuity.effectiveDate' | translate }}</th>
+          </thead>
+          <tbody>
+            <tr *ngFor="let bd of bankDetailsArr">
+              <td>{{bd.coBankNum}}</td>
+              <td class="amount_right_grid">{{bd.coBankBranchNum}}</td>
+              <td class="amount_right_grid">{{bd.coBankName}}</td>
+              <td class="amount_right_grid">{{bd.coBankAccountNum}}</td>
+              <td class="amount_right_grid">{{bd.effectiveOn}}</td>
+            </tr>
+          </tbody>
+        </table>
+        <!--[End Grid To Show Bank Details Associated With Company]-->
+      </div>
+      <div class="modal-footer">
+        <button id="saveOtpFormBtn" class="green-btn btn" (keyup.arrowLeft)="focusNextEle($event,'closeOtpFormBtn')" (keyup.arrowRight)="focusNextEle($event,'closeOtpFormBtn')"
+          (click)="submitOTPForm()">{{'button.save' | translate }}
+        </button>
+        <button id="closeOtpFormBtn" type="button" class="btn grey-btn" (keyup.arrowLeft)="focusNextEle($event,'saveOtpFormBtn')"
+          (keyup.arrowRight)="focusNextEle($event,'saveOtpFormBtn')" data-dismiss="modal" (click)="resetOtpForm()">{{'button.close' | translate}}</button>
+      </div>
+      <!--[Start Grid To Show For 4 Accordians]-->
+      <div class="modal-content" [hidden]="!showGrid">
+        <div class="modal-body">
+          <div class="grid-box">
+            <div class="grid-heading">
+              <h3>{{'uft.dashboard.uft-continuity.reportGrid' | translate}}</h3>
+            </div>
+            <!-- Grid Heading Ends -->
+            <div class="grid-inner">
+              <div class="form-row">
+                <div class="row">
+                  <div class="col-md-12 col-xs-12 table-col uFTReportList">
+                    <table class="table table-bordered" id="dailyPAPDataTable"></table>
+                    <!--[Start Grid Column Filters Buttons]-->
+                    <div class="form-row text-right search-top">
+                      <button type="submit" id="companySearchFilterSearch" class="btn green-btn searchreset" (click)="filterGridColumnSearch('unitFinancialTransactionListReportGrid')"
+                        title="{{'common.search' | translate }}">
+                        <span class="glyphicon glyphicon-search"></span>
+                      </button>
+                      <button id="gridColumnSearchFilterReset" class="btn grey-btn searchreset" (click)="resetGridColumnSearchFilter('unitFinancialTransactionListReportGrid')">
+                        <span class="glyphicon glyphicon-repeat" title="{{'common.clear' | translate }}"></span>
+                      </button>
+                    </div>
+                    <!--[End Grid Column Filters Buttons]-->
+                    <table class="table table-bordered" id="unitFinancialTransactionListReportGrid">
+                      <!--[Start Grid Column Filters]-->
+                      <tfoot>
+                        <tr>
+                          <td width="50px">
+                            <input id="filterCompanyNameAndNo" class="fm-txt form-control tFootInput inputSearch" type="text" placeholder="{{'uft.dashboard.uft-continuity.compNameNo' | translate }}"
+                              name="companyNameAndNo" />
+                          </td>
+                          <td width="50px" class="alignDpRight">
+                            <div class="calender-field">
+                              <my-date-picker id="filterUnitFinancialTransDt" class="inputSearch" name="unitFinancialTransDt" data-type="date" [options]="myDatePickerOptions"
+                                [selDate]="dateNameArray['unitFinancialTransDt']" (inputFocusBlur)="changeFilterDateFormat($event, 'unitFinancialTransDt')"
+                                placeholder="{{'common.date-placeholder' | translate }}">
+                              </my-date-picker>
+                            </div>
+                          </td>
+                          <td width="50px">
+                            <input id="filterUnitFinancialTransAmt" class="fm-txt form-control tFootInput inputSearch amount_right_grid" type="text" placeholder="{{'uft.dashboard.uft-continuity.transactionAmount' | translate }}"
+                              name="unitFinancialTransAmt" />
+                          </td>
+                          <td width="50px">
+                            <input id="filterTranCd" class="fm-txt form-control tFootInput inputSearch amount_right_grid" type="text" placeholder="{{'uft.dashboard.uft-continuity.uftCode' | translate }}" name="tranCd"
+                            />
+                          </td>
+                          <td width="50px">
+                            <input id="filterunitFinancialTransDesc" class="fm-txt form-control tFootInput inputSearch amount_right_grid" type="text" placeholder="{{'uft.dashboard.uft-continuity.transactionDescription' | translate }}"
+                              name="unitFinancialTransDesc" />
+                          </td>
+                          <td width="50px">
+                            <input id="filterunitFinTranOpenBalAmt" class="fm-txt form-control tFootInput inputSearch amount_right_grid" type="text" placeholder="{{'uft.dashboard.uft-continuity.currentBalance' | translate }}"
+                              name="unitFinTranOpenBalAmt" />
+                          </td>
+                        </tr>
+                      </tfoot>
+                      <!--[End Grid Column Filters]-->
+                    </table>
+                    <!-- Table Ends -->
+                  </div>
+                </div>
+              </div>
+              <!-- Form Row ENds -->
+            </div>
+            <!-- Grid Inner Ends -->
+          </div>
+        </div>
+      </div>
+      <!--[End Grid To Show For 4 Accordians]]-->
+    </div>
+  </div>
+</div>
+<div id="reversePopup" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button title="{{'button.close' | translate }}" id="closeReversePopup" (click)="resetReverseForm()" type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">{{reverseTransHeading}}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{'uft.dashboard.uft-continuity.listOf' | translate}} {{reverseTransHeading}}</h3>
+          </div>
+          <!-- Grid Heading Ends -->
+          <div class="grid-inner">
+            <form [formGroup]="filterReverse">
+              <div class="form-row">
+                <div class="row">
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{ 'common.company-name' | translate }}
+                    </label>
+                    <ng2-completer [inputId]="'searchCompany'" formControlName="searchCompany" [datasource]="companyDataRemote" [minSearchLength]="2"
+                      [placeholder]="'Search Company'" [textSearching]="'Please wait...'" [inputClass]="'form-control'" [fillHighlighted]="false"
+                      (selected)="onCompanyNameReverseSelected($event)" [autoHighlight]="true" [selectOnFocus]="false">
+                    </ng2-completer>
+                    <show-errors [control]="filterReverse.controls.searchCompany"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'uft.dashboard.financeReports.startDate' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <div class="calender-field">
+                      <my-date-picker id="startDate" placeholder="Start Date" [options]="myDatePickerOptions" name="startDate" (inputFocusBlur)="changeDateFormat($event, 'startDate' ,'filterReverse')"
+                        formControlName="startDate" #filterReportStartDate> </my-date-picker>
+                      <show-errors [control]="filterReverse.controls.startDate"></show-errors>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'uft.dashboard.financeReports.endDate' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <div class="calender-field">
+                      <my-date-picker id="endDate" placeholder="End Date" [options]="myDatePickerOptions" name="endDate" (inputFocusBlur)="changeDateFormat($event, 'endDate' ,'filterReverse')"
+                        formControlName="endDate"> </my-date-picker>
+                      <show-errors [control]="filterReverse.controls.endDate"></show-errors>
+                    </div>
+                    <!-- Calendar Field Ends -->
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>&nbsp;</label>
+                    <button id="filterReverse" (click)="onSubmitReverse(filterReverse)" class="btn green-btn">{{'common.search' | translate}}</button>
+                    <button id="resetReverse" (click)="resetReverse()" class="btn green-btn">{{'common.clear' | translate}}</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div [hidden]="!showReverseTable">
+          <div class="grid-box">
+            <div class="grid-heading">
+              <h3>{{'uft.dashboard.uft-continuity.reverseGrid' | translate}}</h3>
+            </div>
+            <div class="grid-inner">
+              <form>
+                <div class="form-row text-right search-top">
+                  <button id="uftc_gridSearch" class="btn green-btn searchreset" type="submit" (click)="gridFilteration('unitFinancialTransactionList_PDS')"
+                    title="{{'common.search' | translate }}">
+                    <span class="glyphicon glyphicon-search"></span>
+                  </button>
+                  <button id="uftc_resetGridSearch" class="btn grey-btn searchreset" (click)="resetRefundPdsGrid('unitFinancialTransactionList_PDS')"
+                    title="{{'common.reset' | translate }}">
+                    <span class="glyphicon glyphicon-repeat"></span>
+                  </button>
+                </div>
+                <div class="form-row">
+                  <div class="row">
+                    <div class="col-md-12 col-xs-12 table-col">
+                      <div *ngIf="!showStopCheque" class="table-responsive">
+                        <table id="unitFinancialTransactionList_PDS" class="display table table-bordered table-stripped ">
+                          <tfoot>
+                            <tr>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch" type="text" name="companyname" placeholder="{{'uft.dashboard.uft-continuity.compNameNo' | translate }}"
+                                  [(ngModel)]="filterCompanyNameAndNo">
+                              </td>
+                              <td class="alignDpRight">
+                                <div class="calender-field">
+                                  <my-date-picker id="uftTransactionDate" class="inputSearch" name="transactionDate" data-type="date" [options]="myDatePickerOptions"
+                                    [selDate]="dateNameArray['transactionDate']" (inputFocusBlur)="changeDateFormat1($event, 'transactionDate')"
+                                    placeholder="{{'common.date-placeholder' | translate}}">
+                                  </my-date-picker>
+                                </div>
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="tranCd" placeholder="{{'uft.dashboard.uft-continuity.uftCode' | translate }}" [(ngModel)]="filterUFTCode">
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="transactionAmt" placeholder="{{'uft.dashboard.uft-continuity.transactionAmount' | translate }}"
+                                  [(ngModel)]="filterTransactionAmt">
+                              </td>
+                              <td>
+                                <input class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="transactionDescription" placeholder="{{'uft.dashboard.uft-continuity.transactionDescription' | translate }}"
+                                  [(ngModel)]="filterTransactionDescription">
+                              </td>
+                              <td class="alignDpRight">
+                                <div class="calender-field">
+                                  <my-date-picker id="uftTransactionDate" class="inputSearch" name="entrydate" data-type="date" [options]="myDatePickerOptions"
+                                    [selDate]="dateNameArray['entrydate']" (inputFocusBlur)="changeDateFormat1($event, 'entrydate')"
+                                    placeholder="{{'common.date-placeholder' | translate}}">
+                                  </my-date-picker>
+                                </div>
+                              </td>
+                            </tr>
+                          </tfoot>
+                        </table>
+                      </div>
+                      <!-- Table Ends -->
+                      <!-- Form Row ENds -->
+                      <!-- Form Row ENds -->
+                      <!-- Grid Inner Ends -->
+
+                      <div *ngIf="showReverseTable" class="modal-footer">
+                        <button id="reverseFormBtn" class="green-btn btn" [attr.disabled]="isDisableReversePap == false ? '' : null" (click)="reversePap()">{{'button.reverse' | translate}}</button>
+                        <button id="closeReverseFormBtn" type="button" class="btn grey-btn" data-dismiss="modal" (click)="resetReverseForm()">{{'button.close' | translate}}</button>
+                      </div>
+
+                      <!-- Grid Inner Ends -->
+                      <!--modal-footer Ends-->
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div [hidden]="!showStopCheque">
+          <div class="grid-heading">
+            <h3>{{'uft.dashboard.uft-continuity.reverseGrid' | translate }}</h3>
+          </div>
+          <!-- Grid Heading Ends -->
+          <div class="grid-inner">
+            <form (submit)="filterReverseGridSearch('unitFinancialTransactionList1')">
+              <div class="form-row text-right search-top">
+                <button type="submit" id="companySearchFilterSearch" class="btn green-btn searchreset" (click)="filterReverseGridSearch('unitFinancialTransactionList1')"
+                  title="{{'common.search' | translate }}">
+                  <span class="glyphicon glyphicon-search"></span>
+                </button>
+                <button id="reverseGridSearchFilterReset" class="btn grey-btn searchreset" (click)="resetReverseGridSearchFilter('unitFinancialTransactionList1')">
+                  <span class="glyphicon glyphicon-repeat" title="{{'common.clear' | translate }}"></span>
+                </button>
+              </div>
+              <div class="form-row">
+                <div class="row">
+                  <div class="col-md-12 col-xs-12 table-col">
+                    <div class="table-responsive table-overflow-sc">
+                      <table id="unitFinancialTransactionList1" class="table table-bordered table-stripped">
+                        <!--[Start Grid Column Filter]-->
+                        <tfoot>
+                          <tr>
+                            <td width="50px">
+                              <input id="filterCompanyId" class="fm-txt form-control tFootInput inputSearch" type="text" placeholder="{{'uft.dashboard.uft-continuity.companyID' | translate }}" name="coId"
+                              />
+                            </td>
+                            <td width="50px">
+                              <input id="filterCompanyName" class="j2 fm-txt form-control tFootInput inputSearch" type="text" placeholder="{{'uft.dashboard.uft-continuity.companyName' | translate }}" name="coName"
+                              />
+                            </td>
+                            <td width="143px">
+                              <input id="filterStatus" class="fm-txt form-control tFootInput inputSearch in-number" type="text" placeholder="{{'uft.dashboard.uft-continuity.status' | translate }}" name="tranStatDesc"
+                              />
+                            </td>
+                            <td width="50px" class="alignDpRight">
+                              <div class="calender-field">
+                                <my-date-picker id="filterProcessDate" class="inputSearch" name="processDate" data-type="date" [options]="myDatePickerOptions"
+                                  [selDate]="dateNameArray['processDate']" (inputFocusBlur)="changeFilterDateFormat($event, 'processDate')"
+                                  placeholder="{{'common.date-placeholder' | translate }}">
+                                </my-date-picker>
+                              </div>
+                            </td>
+                            <td width="50px">
+                              <input id="filterTotalAmount" class="fm-txt form-control tFootInput inputSearch" type="text" placeholder="{{'uft.dashboard.uft-continuity.totalAmount' | translate }}" name="coRefundTotalAmt"
+                              />
+                            </td>
+                            <td width="143px" class="alignDpRight">
+                              <div class="calender-field">
+                                <my-date-picker id="filterTransactionDate" class="inputSearch" name="coRefundTransDt" data-type="date" [options]="myDatePickerOptions"
+                                  [selDate]="dateNameArray['coRefundTransDt']" (inputFocusBlur)="changeFilterDateFormat($event, 'coRefundTransDt')"
+                                  placeholder="{{'common.date-placeholder' | translate }}">
+                                </my-date-picker>
+                              </div>
+                            </td>
+                            <td width="143px" class="alignDpRight">
+                              <div class="calender-field">
+                                <my-date-picker id="filterIssueDate" class="inputSearch" name="coRefundIssueDt" data-type="date" [options]="myDatePickerOptions"
+                                  [selDate]="dateNameArray['coRefundIssueDt']" (inputFocusBlur)="changeFilterDateFormat($event, 'coRefundIssueDt')"
+                                  placeholder="{{'common.date-placeholder' | translate }}">
+                                </my-date-picker>
+                              </div>
+                            </td>
+                            <td width="143px" class="alignDpRight">
+                              <div class="calender-field">
+                                <my-date-picker id="filterCancelDate" class="inputSearch" name="coRefundCancelDt" data-type="date" [options]="myDatePickerOptions"
+                                  [selDate]="dateNameArray['coRefundCancelDt']" (inputFocusBlur)="changeFilterDateFormat($event, 'coRefundCancelDt')"
+                                  placeholder="{{'common.date-placeholder' | translate }}">
+                                </my-date-picker>
+                              </div>
+                            </td>
+                            <td width="143px" class="alignDpRight">
+                              <div class="calender-field">
+                                <my-date-picker id="filterClearDate" class="inputSearch" name="coRefundClearDt" data-type="date" [options]="myDatePickerOptions"
+                                  [selDate]="dateNameArray['coRefundClearDt']" (inputFocusBlur)="changeFilterDateFormat($event, 'coRefundClearDt')"
+                                  placeholder="{{'common.date-placeholder' | translate }}">
+                                </my-date-picker>
+                              </div>
+                            </td>
+                            <td width="143px">
+                              <input id="filterChequeNumber" class="fm-txt form-control tFootInput inputSearch in-number" type="text" placeholder="{{'uft.dashboard.uft-continuity.chequeNumber' | translate }}"
+                                name="coRefundChequeNum" />
+                            </td>
+                          </tr>
+                        </tfoot>
+                        <!--[End Grid Column Filter]-->
+                      </table>
+                    </div>
+                    <!-- Table Ends -->
+                  </div>
+                </div>
+              </div>
+              <!-- Form Row ENds -->
+              <div class="form-row text-center modal-footer">
+                <div class="row">
+                  <div class="col-md-12 col-xs-12">
+                    <button id="stopCheque" [disabled]="!stopChequeBtn" class="btn green-btn" (click)=stopCheque()>{{'uft.dashboard.uft-continuity.stopCheque' | translate }}
+                    </button>
+                    <button id="broker-edit_comment_form_close" (click)="closeModal()" type="button" class="btn grey-btn" data-dismiss="modal">{{ 'button.close' | translate }}</button>
+                  </div>
+                </div>
+              </div>
+              <!-- Form Row ENds -->
+            </form>
+          </div>
+          <!-- Grid Inner Ends -->
+          <!-- Grid Box Ends -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div hidden>
+  <button id="dailyPapEftPdfPopupBtn" class="green-btn-add btn" data-toggle="modal" data-target="#dailyPapEftPdfPopup">
+    <i class="fa fa-plus"></i>{{'uft.upcomingTransactionsSearch.eftPopup' | translate}}</button>
+</div>
+
+<!-- Daily Pap Generate EFT Popup Start-->
+<div id="dailyPapEftPdfPopup" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="closeDailyPapEftPdfPopup" type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">{{pdfName}}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="grid-box">
+          <!-- Grid Heading Ends -->
+          <div class="grid-inner">
+            <p class="info-icon" style="width:100%;">{{generateDailyPapPath}}</p>
+          </div>
+          <!-- Grid Inner Ends -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="closeDailyPapEftPdfPopup" type="button" data-dismiss="modal" class="btn grey-btn">{{'button.close' | translate}}</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Daily Pap Generate EFT Popup End-->
+
+<button data-toggle="modal" id="openOTPBankAccount" data-target="#oneTimePaymentBankDetail" style="display:none">
+  {{'button.openpopUp' | translate}}</button>
+<!-- One time payment bank details Popup -->
+<div id="oneTimePaymentBankDetail" class="modal fade double-modal" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button title="{{'button.close' | translate }}" id="closeOTPBankDetail" (click)="resetOTPBankDetail()" type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">{{ 'uft.upcomingTransactionsSearch.otp-bank-account.add-bank-account' | translate }}
+        </h4>
+      </div>
+      <div class="modal-body">
+        <div class="grid-box">
+          <div class="grid-inner">
+            <form [formGroup]="otpBankAccountsForm">
+              <div class="form-row">
+                <div class="row">
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{ 'uft.upcomingTransactionsSearch.otp-bank-account.bank-no' | translate }}
+                      <span class="required">*</span>
+                    </label>
+                    <input type="text" name="bankNumber" #otpBankAccountName formControlName="bankNumber" class="fm-txt form-control" placeholder="{{'uft.upcomingTransactionsSearch.otp-bank-account.bank-no' | translate }}"
+                      (blur)="getBankName()" />
+                    <show-errors [control]="otpBankAccountsForm.controls.bankNumber"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{ 'uft.upcomingTransactionsSearch.otp-bank-account.branch-no.' | translate }}
+                      <span class="required">*</span>
+                    </label>
+                    <input type="text" name="branch" id="company_bank_account_branch" formControlName="branch" class="fm-txt form-control" placeholder="{{ 'uft.upcomingTransactionsSearch.otp-bank-account.branch-no.' | translate }}"
+                      (blur)="getBankName()" />
+                    <show-errors [control]="otpBankAccountsForm.controls.branch"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{ 'uft.upcomingTransactionsSearch.otp-bank-account.bank-name' | translate }}
+                      <span class="required">*</span>
+                    </label>
+                    <input type="text" class="fm-txt form-control" name="bankName" id="company_bank_account_bank_name" formControlName="bankName"
+                      placeholder="{{'uft.upcomingTransactionsSearch.otp-bank-account.bank-name' | translate }}" />
+                    <show-errors [control]="otpBankAccountsForm.controls.bankName"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{ 'uft.upcomingTransactionsSearch.otp-bank-account.account-no.' | translate }}
+                      <span class="required">*</span>
+                    </label>
+                    <input type="text" name="account" id="company_bank_account_account" formControlName="account" class="fm-txt form-control"
+                      placeholder="{{ 'uft.upcomingTransactionsSearch.otp-bank-account.account-no.' | translate }}" />
+                    <show-errors [control]="otpBankAccountsForm.controls.account"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{ 'uft.upcomingTransactionsSearch.otp-bank-account.effective-date' | translate }}
+                      <span class="required">*</span>
+                    </label>
+                    <div class="calender-field">
+                      <my-date-picker id="company-bank-account_effective_on" [options]="myDatePickerOptions" name="effectiveOn" formControlName="effectiveOn"
+                        (inputFocusBlur)="changeDateFormat($event, 'effectiveOn', 'otpBankAccountsForm', true)" placeholder="{{ 'uft.upcomingTransactionsSearch.otp-bank-account.dd/mm/yyyy' | translate }}">
+                      </my-date-picker>
+                      <show-errors [control]="otpBankAccountsForm.controls.effectiveOn"></show-errors>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{ 'uft.upcomingTransactionsSearch.otp-bank-account.expiry-date' | translate }}</label>
+                    <div class="calender-field">
+                      <my-date-picker id="company-bank-account_expired_on" [options]="myDatePickerOptions" name="expiredOn" formControlName="expiredOn"
+                        (inputFocusBlur)="changeDateFormat($event, 'expiredOn', 'otpBankAccountsForm', false)" placeholder="{{ 'uft.upcomingTransactionsSearch.otp-bank-account.dd/mm/yyyy' | translate }}">
+                      </my-date-picker>
+                      <show-errors [control]="otpBankAccountsForm.controls.expiredOn"></show-errors>
+                    </div>
+                    <!-- Calendar Field Ends -->
+                  </div>
+                  <!-- Calendar Field Ends -->
+                  <div class="col-md-3 col-xs-12">
+                    <span class="input-radio">
+                      <label>{{'uft.dashboard.uft-continuity.useBankAccountOneTime' | translate }}</label>
+                      <input style="width: 15px; float: left;" checked="checked" type="radio" value="oneTimeAcc" formControlName="bankType" id="company-bank-account_oneTime">
+                      <label>{{'uft.dashboard.uft-continuity.permanentlyChangeBankAccount' | translate }}</label>
+                      <input style="width: 15px; float: left;" formControlName="bankType" id="company-bank-account_permanent" type="radio" value="permanentBankAcc">
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </form>
+            <button id="opt-bank-account-uft" (keyup.arrowLeft)="focusNextEle($event,'saveOTPBnakAccountCloseUFT')" (keyup.arrowRight)="focusNextEle($event,'saveOTPBnakAccountCloseUFT')"
+              class="btn green-btn" (click)="onSubmitBankDetail(otpBankAccountsForm)">{{'button.save' | translate}}</button>
+            <button id="saveOTPBnakAccountCloseUFT" (keyup.arrowLeft)="focusNextEle($event,'opt-bank-account-uft')" (keyup.arrowRight)="focusNextEle($event,'opt-bank-account-uft')"
+              type="button" class="btn grey-btn" data-dismiss="modal" (click)="resetOTPBankDetail()">{{ 'button.close' | translate }}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div [hidden]="!showPageLoader" class="loader-outer">
+  <div class="cube-wrapper">
+    <div class="cube-folding">
+      <span class="leaf1"></span>
+      <span class="leaf2"></span>
+      <span class="leaf3"></span>
+      <span class="leaf4"></span>
+    </div>
+    <span class="loading" data-name="Loading">{{'company.plan.benefits.pleaseWait'|translate}}</span>
+  </div>
+</div>
+
+<button data-toggle="modal" id="openBankEffDateModal" data-target="#BankEffDate" style="display:none">
+  {{'button.openpopUp' | translate}}</button>
+
+<div id="BankEffDate" class="modal fade" role="dialog">
+  <div class="modal-dialog" style="width:400px">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" (click)="resetBankDetailsForm()">&times;</button>
+        <h4 class="modal-title">{{'uft.dashboard.uft-continuity.bankAccountDetails' | translate }}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{'uft.dashboard.uft-continuity.oldBankEffectiveDate' | translate }}</h3>
+          </div>
+          <div class="grid-inner">
+            <form [formGroup]="bankDetails">
+              <div class="form-row">
+                <div class="add-comments">
+                  <div class="calender-field">
+                    <my-date-picker id="uft_dashboard_effective_on" [options]="myDatePickerOptions" name="effectiveOn" formControlName="effectiveOn"
+                      (inputFocusBlur)="changeEffectiveDateFormat($event, 'effectiveOn', 'bankDetails')" placeholder="{{ 'uft.upcomingTransactionsSearch.otp-bank-account.dd/mm/yyyy' | translate }}">
+                    </my-date-picker>
+                    <show-errors [control]="bankDetails.controls.effectiveOn"></show-errors>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <!-- Grid Inner Ends -->
+        </div>
+        <!-- Grid Box Ends -->
+      </div>
+      <!-- Modal Body End-->
+      <div class="modal-footer">
+        <button class="btn green-btn" (click)="saveBankDetailsForm()">{{'button.save' | translate }}</button>
+        <button type="button" class="btn grey-btn" id="effDateClose" data-dismiss="modal" (click)="resetBankDetailsForm()">{{'button.close' | translate }}</button>
+      </div>
+      <!-- Modal  Footer Ends -->
+    </div>
+  </div>
+</div>
+
+<!-- Hidden button to open No active bank account modal after save  -->
+<div [attr.hidden]="true">ModalNoActiveBank
+  <button id="noActiveBank-btn" class="btn green-btn" data-toggle="modal" data-target="#ModalNoActiveBank">{{'button.adjudicate-claim' | translate}}</button>
+</div>
+<!-- Start No Active Bank Account Modal-->
+<div id="ModalNoActiveBank" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="btnCloseNoActiveBankModal" type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">{{'uft.dashboard.uft-continuity.confirmation' | translate }}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="text-center">
+          <h3 class="success-msg">{{'uft.dashboard.uft-continuity.noActivebankAccount' | translate }}
+            <a href="javascript:void(0);" (click)="openBankForm()">{{'uft.dashboard.uft-continuity.clickHere' | translate }}
+            </a> {{'uft.dashboard.uft-continuity.toEnterOne' | translate }}</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End No Active Bank Account Modal-->
+
+<!-- Log #1247: Confirmation popup box -->
+<div [attr.hidden]="true">ModalPaymentBankInfo
+  <button id="paymentBankConfirmation" class="btn green-btn" data-toggle="modal" data-target="#ModalPaymentBankInfo">{{'button.adjudicate-claim' | translate}}</button>
+</div>
+<!-- Start No Active Bank Account Modal-->
+<div id="ModalPaymentBankInfo" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="closeModalPaymentBankInfoBtn" type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">{{'uft.dashboard.uft-continuity.issuePaymentInformation' | translate}}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="text-center">
+          <h3 class="success-msg">{{'uft.dashboard.uft-continuity.paperPaymentOrBankInfoConfirmation' | translate }}
+          </h3>
+          <button id="addBankingInfomationBtn" type="button" class="btn green-btn" (click)="submitBankingInfoAndIssuePaperPayment('bankingInfo')">{{'uft.dashboard.uft-continuity.issueElectronicPayment' | translate}}</button>
+          <button id="issuePaperPaymentBtn" type="button" class="btn green-btn" (click)="submitBankingInfoAndIssuePaperPayment('issuePaperPayment')">{{'uft.dashboard.uft-continuity.issuePaperPayment' | translate}}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Log #1247: Confirmation popup box -->
+<div [attr.hidden]="true">ModalPayeeInfo
+  <button id="payeeConfirmation" class="btn green-btn" data-toggle="modal" data-target="#ModalPayeeInfo">{{'button.adjudicate-claim' | translate}}</button>
+</div>
+<!-- Start No Active Bank Account Modal-->
+<div id="ModalPayeeInfo" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="closeModalPayeeInfoBtn" type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">{{'uft.dashboard.uft-continuity.payee' | translate}}</h4>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="addOTPform">
+          <div class="grid-box">
+            <div class="grid-inner">
+              <div class="form-row">
+                <div class="row min-ht-sf">
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'uft.dashboard.uft-continuity.name' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <input id="uftName" type="text" class="form-control" name="payeeName" formControlName="payeeName" placeholder="{{'uft.dashboard.uft-continuity.name' | translate}}"
+                    />
+                    <show-errors [control]="addOTPform.controls.payeeName"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'uft.dashboard.uft-continuity.addressLine1' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <input id="uftAddress" type="text" class="form-control" name="payeeAddress" formControlName="payeeAddress" placeholder="{{'uft.dashboard.uft-continuity.addressLine1' | translate}}"
+                    />
+                    <show-errors [control]="addOTPform.controls.payeeAddress"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'uft.dashboard.uft-continuity.addressLine2' | translate}}
+                    </label>
+                    <input id="uftAddress" type="text" class="form-control" name="payeeAddress2" formControlName="payeeAddress2" placeholder="{{'uft.dashboard.uft-continuity.addressLine2' | translate}}"
+                    />
+                    <show-errors [control]="addOTPform.controls.payeeAddress2"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'uft.dashboard.uft-continuity.postalCode' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <input id="uftPostalCode" type="text" class="upperCase form-control" name="payeePostalCode" formControlName="payeePostalCode"
+                      placeholder="{{'uft.dashboard.uft-continuity.postalCode' | translate}}" (blur)="postalCodeValid($event)"
+                    />
+                    <show-errors [control]="addOTPform.controls.payeePostalCode"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'uft.dashboard.uft-continuity.city' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <input id="uftCity" type="text" class="form-control" name="payeeCity" formControlName="payeeCity" placeholder="{{'uft.dashboard.uft-continuity.city' | translate}}"
+                      (blur)="isPostalCodeVerifyValid($event, 'payeeCity')" />
+                    <show-errors [control]="addOTPform.controls.payeeCity"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'uft.dashboard.uft-continuity.province' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <input id="uftProvince" type="text" class="form-control" name="payeeProvince" formControlName="payeeProvince" placeholder="{{'uft.dashboard.uft-continuity.province' | translate}}"
+                      (blur)="isPostalCodeVerifyValid($event, 'payeeProvince')" />
+                    <show-errors [control]="addOTPform.controls.payeeProvince"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'uft.dashboard.uft-continuity.country' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <input id="uftCountry" type="text" class="form-control" name="payeeCountry" formControlName="payeeCountry" placeholder="{{'uft.dashboard.uft-continuity.country' | translate}}"
+                      (blur)="isPostalCodeVerifyValid($event, 'payeeCountry')" />
+                    <show-errors [control]="addOTPform.controls.payeeCountry"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>&nbsp;</label>
+                    <button id="addPayeeInfoBtn" type="button" class="btn green-btn" (click)="submitPayeeInfo('addOTPform')">{{'common.save' | translate }}</button>
+                    <button id="closePayeeInfoBtn" type="button" data-dismiss="modal" class="btn grey-btn" (click)="closePayeeInfoPopup()">{{'common.close' | translate }}</button>
+                    </div>
+                  </div> 
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Reverse Confirmation popup box -->
+<div [attr.hidden]="true">fundingReverseModal
+  <button id="fundingReverseModalCB" class="btn green-btn" data-toggle="modal"
+    data-target="#fundingReverseModal">{{'button.adjudicate-claim' | translate}}</button>
+</div>
+<!-- Start funding Reverse Modal-->
+<div id="fundingReverseModal" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog modal-dialog-trs">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="closefundingReverseModalCrossBtn" type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">{{'uft.dashboard.uft-continuity.confirmation' | translate }}</h4>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="addOTPform">
+          <div class="grid-box">
+            <div class="grid-inner">
+              <div class="form-row display-pro">      
+                  <div class="transaction-dis-flex">
+                    <div class="transaction-dis margin-right">
+                      <label>{{'uft.upcomingTransactionsSearch.transactionDescription' | translate}}</label>
+                      <textarea id="otp_TransDesc" class="form-control height-40" formControlName="transactionDesc"
+                        placeholder="{{'uft.upcomingTransactionsSearch.transactionDescription' | translate}}"></textarea>
+                        <show-errors [control]="addOTPform.controls.transactionDesc"></show-errors>
+                    </div>
+                    <div class="input-fields-part">
+                      <div class="document-name">
+                        <label>{{'uft.dashboard.financeReports.documentName' | translate}}</label>
+                          <input style="display: none" type="file" (change)="onFileChanged($event)" #crFileInput>
+                          <input formControlName="documentName" class="fm-txt form-control datepicker" type="text">
+                          <ul *ngIf="error2.isError==true" class="validation-errors">
+                            <li style="color: red">{{error2.errorMessage}}</li>
+                          </ul>
+                          <ul *ngIf="error3.isError==true" class="validation-errors">
+                            <li style="color: red">{{error3.errorMessage}}</li>
+                          </ul>
+                        </div>
+                      <div class="green-btn-part transaction-dis-flex">
+                        <label>&nbsp;</label>
+                          <button class="btn green-btn margin-right margin-bottom" (click)="crFileInput.click()">{{'button.selectFile' | translate}}</button>
+                          <button *ngIf="showRemoveBtn" (click)="removeExtension()" class="btn red-btn margin-0 ">{{'button.remove' | translate}}</button>
+                      </div>
+                    </div>
+                  </div> 
+              </div>
+            </div>
+          </div>
+        </form>
+        <div class="text-center">
+          <p class="success-msg margin-0 font-size-14px">Do you want to Reverse Amount, {{reverseAmount}} for company '{{company}}'</p>
+         <div class="margin-custome">
+          <button id="savefundingReverseModalBtn" type="button" class="btn green-btn"
+          (click)="submitReversePAP()">{{'button.Yes' | translate}}</button>
+        <button id="closefundingReverseModalBtn" type="button" class="btn green-btn"
+          (click)="resetReversePAP()">{{'button.No' | translate}}</button>
+         </div>
+        </div>
+      </div>

@@ -1,0 +1,90 @@
+<div class="grid-box">
+    <div class="grid-heading collapse-heading" aria-expanded="false" data-toggle="collapse" data-target="#uploadsDateForm">
+        <h3 aria-expanded="false" data-toggle="collapse" data-target="#uploadsDateForm">Upload Document</h3>
+    </div>
+    
+    <!-- Grid Heading Ends -->
+    <div class="collapse" id="uploadsDateForm">
+    <div class="grid-inner">
+        <div class="form-row">
+            <div class="row">
+                <div class="col-md-3 col-xs-12 min-ht-half">
+                    <label>Document Name</label>
+                    <input style="display: none" type="file" (click)="crFileInput.value = null" (change)="onFileChanged($event)" #crFileInput>
+                    <input [(ngModel)]="selectedFileName" class="fm-txt form-control datepicker" type="text">
+                    <ul *ngIf="error.isError==true" class="validation-errors">
+                        <li style="color: red">{{error.errorMessage}}</li>
+                    </ul>
+                    <ul *ngIf="error3.isError==true" class="validation-errors">
+                        <li style="color: red">{{error3.errorMessage}}</li>
+                    </ul>
+
+                </div>
+                <div class="col-md-4 col-xs-12 min-ht-half">
+                    <label>&nbsp;</label>
+                    <button class="btn green-btn" (click)="crFileInput.click()">Select File</button>
+                    <button *ngIf="!uploadDocAddMode" (click)="onUpload()" class="btn green-btn">Upload</button>
+                    <button *ngIf="this.selectedFileName" (click)="removeExtension()" class="btn red-btn ">Remove</button>
+                </div>
+
+            </div>
+        </div>
+        <!-- Form Row End -->
+        <div class="form-row" *ngIf="!uploadDocAddMode">
+            <div class="table-responsive">
+                <table id="company-upload-doc" class="table table-bordered table-stripped text-left col-lt-search" style="width: 100%"></table> 
+            </div>  
+        </div>
+        <!-- Form Row End -->
+    </div>
+    </div>
+</div> 
+
+<div id="viewCompanyDoc" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog"> 
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button id="resetViewCompanyDoc" type="button" class="close" data-dismiss="modal" (click)="closeModal()">&times;</button>
+                <h4 class="modal-title">{{docName}}</h4>
+            </div>
+            <div class="modal-body">
+    
+        <div class="grid-box">        
+        <!-- Grid Heading Ends -->
+        <div class="grid-inner">
+        <div class="form-row">
+            <div class="row min-ht-sf">
+                <div class="text-center">
+                    <img *ngIf="docType == 'jpg' || docType == 'image/jpeg' || docType == 'image/png' || docType == 'png'" id="companyImageUploadDoc" [src]="filePath" />
+                </div>
+                <pdf-viewer *ngIf="docType == 'application/pdf' || docType == 'pdf' " [src]="filePath"  [external-link-target]="'blank'" [render-text]="true" style="display: block;"></pdf-viewer>
+            </div>
+        </div>
+        <!-- Form Row ENds -->
+        </div>
+        <!-- Grid Inner Ends -->
+        </div>
+        </div>
+        <div class="modal-footer">
+            <button id="btnCloseBanModal" type="button" class="btn grey-btn" data-dismiss="modal" (click)="closeModal()">{{'button.close' | translate}}</button>
+        </div>
+        </div>
+    </div>
+</div>
+
+      <div [hidden]="hidebtn">
+          <button id="addUploadDocBtn" class="green-btn-add btn" data-toggle="modal" data-target="#viewCompanyDoc"><i class="fa fa-plus"></i> {{'admin.adminRate.addAdminRate' | translate}} </button>
+      </div>
+
+<div *ngIf="showLoader" class="loader-outer">
+    <div class="cube-wrapper">
+        <div class="cube-folding">
+            <span class="leaf1"></span>
+            <span class="leaf2"></span>
+            <span class="leaf3"></span>
+            <span class="leaf4"></span>
+        </div>
+        <span class="loading" data-name="Loading">{{loaderPlaceHolder}}</span>
+    </div>
+</div>

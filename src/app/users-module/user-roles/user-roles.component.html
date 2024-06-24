@@ -1,0 +1,122 @@
+<!-- <div class="container"> -->
+<div class="section-heading">
+	<h2>{{ 'user.userRoles.role' | translate }} -
+		<span>{{ 'user.userRoles.management' | translate }}</span>
+	</h2>
+</div>
+<!-- Section Heading Ends -->
+<div>
+	<div class="grid-box">
+		<div class="grid-heading">
+			<h3>{{'user.userRoles.userRoles' | translate}}</h3>
+			<div class="web-reg">
+				<a id="addNewUserRoleButton" *ngIf="userRolesAuthCheck[0].addRole == 'T'" [routerLink]="['/users/roles/add']" class="green-btn-add btn">
+					<i class="fa fa-plus"></i>{{ 'button.addNewUserRole' | translate }}</a>
+			</div>
+		</div>
+		<!-- Grid Heading Ends -->
+		<div class="grid-inner">
+			<div class="form-row">
+				<div class="row">
+					<div class="col-md-12 col-xs-12 table-col">
+						<div class="table-responsive">
+							<form>
+								<table id="userRolesList" class="table table-bordered table-stripped">
+									<tfoot>
+										<tr>
+											<td width="25%">
+												<ng2-completer [datasource]="rolAssignedData" [inputName]="'userTypeName'" name="userTypeName" [minSearchLength]="0" [openOnFocus]="true"
+												 (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Search Role'" [textSearching]="'Please wait...'"
+												 [inputClass]="'form-control inputSearch'" [clearUnselected]="true">
+												</ng2-completer>
+											</td>
+											<td>
+											</td>
+											<td>
+												<div class="form-row">
+													<button id="userRolesSearch" type="submit" title="{{'common.search' | translate}}" class="btn green-btn searchreset" (click)="searchUserRoleList('userRolesList')">
+														<span class="glyphicon glyphicon-search"></span>
+													</button>
+													<button id="userRolesReset" title="{{'common.reset' | translate}}" class="btn grey-btn searchreset" (click)="resetUserRoleListFilter()">
+														<span class="glyphicon glyphicon-repeat"></span>
+													</button>
+												</div>
+											</td>
+										</tr>
+									</tfoot>
+								</table>
+							</form>
+						</div>
+						<!-- Table Ends -->
+					</div>
+				</div>
+			</div>
+			<!-- Form Row ENds -->
+		</div>
+		<!-- Grid Inner Ends -->
+	</div>
+	<!-- Grid Box Ends -->
+</div>
+<!-- </div> -->
+<!-- Container Ends -->
+
+<!--[Start Members Pop Up]-->
+<button class="green-btn-add btn" data-toggle="modal" id="userMembersPopUp" data-target="#membersPopUp" style="display:none"></button>
+<div id="membersPopUp" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">{{'user.userRoles.membersList' | translate}}</h4>
+			</div>
+			<div class="modal-body">
+				<div class="grid-box">
+					<div class="grid-inner">
+						<form>
+							<div class="form-row text-right search-top">
+								<button type="submit" id="roleUsersSearchLower_search" title="{{'common.search' | translate}}" class="btn green-btn searchreset"
+								 (click)="filterRoleUsersList('roles-users-list')">
+									<span class="glyphicon glyphicon-search"></span>
+								</button>
+								<button id="roleUsersSearchLower_reset" title="{{'common.reset' | translate}}" class="btn grey-btn searchreset" (click)="resetRolesUserListFilter('roles-users-list')">
+									<span class="glyphicon glyphicon-repeat"></span>
+								</button>
+							</div>
+							<table id="roles-users-list" class="table table-bordered table-stripped">
+								<tfoot>
+									<tr>
+										<td width="12%">
+											<input id="firstName" placeholder="{{'user.user-search-filter.fname' | translate}}" class="fm-txt form-control tFootInput inputSearch"
+											 type="text" name="firstName">
+										</td>
+										<td width="12%">
+											<input id="lastName" placeholder="{{'user.user-search-filter.lname' | translate}}" class="fm-txt form-control tFootInput inputSearch in-number"
+											 type="text" name="lastName">
+										</td>
+										<td width="12%">
+											<input id="email" placeholder="{{'user.user-search-filter.email' | translate}}" class="fm-txt form-control tFootInput inputSearch in-number"
+											 type="text" name="email">
+										</td>
+									</tr>
+								</tfoot>
+							</table>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!--[End Members Pop Up]-->
+<!-- Show Loader -->
+<div *ngIf="showLoader" class="loader-outer">
+	<div class="cube-wrapper">
+		<div class="cube-folding">
+			<span class="leaf1"></span>
+			<span class="leaf2"></span>
+			<span class="leaf3"></span>
+			<span class="leaf4"></span>
+		</div>
+		<span class="loading" data-name="Loading">{{'user.addEditViewUsers.pleaseWait' | translate}}</span>
+	</div>
+</div>

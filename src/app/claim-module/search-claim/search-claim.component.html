@@ -1,0 +1,456 @@
+<div class="section-heading">
+  <h2>{{'header.claims' | translate }} -
+    <span>{{'claims.search' | translate }}</span>
+  </h2>
+</div>
+<!-- Section Heading Ends -->
+<form [formGroup]="searchClaimForm" (keyup.enter)="getClaimList()">
+  <div class="grid-box">
+    <div class="grid-heading">
+      <h3>{{'claims.claims-search.claims-claim.claim' | translate}}</h3>
+      <div class="web-reg">
+        <a *ngIf="searchClaimChecks[0].addNewClaim == 'T' " [routerLink]="['/claim']" class="green-btn-add btn">
+          <i class="fa fa-plus"></i>{{'button.add-new-claim' | translate }}</a>
+      </div>
+    </div>
+    <!-- Grid Heading Ends -->
+    <div class="grid-inner">
+      <div class="form-row">
+        <div class="row min-ht-sf">
+          <div class="col-md-2 col-xs-12">
+            <label>{{'claims.claims-search.claims-claim.discipline-type' | translate}}</label>
+            <select class="fm-txt form-control" placeholder="Claim Type" name="claim" id="csc_claim" formControlName="disciplineType"
+              (change)="onChangeDiscType($event)">
+              <option *ngFor="let type of claimType" [value]="type.disciplineName">{{type.disciplineName}}</option>
+            </select>
+          </div>
+          <div class="col-md-2 col-xs-12">
+            <label>{{'claims.claims-search.claims-claim.reference' | translate}}</label>
+            <input type="number" class="fm-txt form-control" id="csc_refNo" placeholder="{{'claims.claims-search.claims-claim.reference' | translate}}"
+              formControlName="referenceno" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+            
+            <show-errors [control]="searchClaimForm.controls.referenceno"></show-errors>
+          </div>
+        
+          <div class="col-md-2 col-xs-12">
+            <label>{{'claims.claims-search.claims-claim.card-id' | translate}}</label>
+            <input id="csc_cardNo" type="text" placeholder="{{'claims.claims-search.claims-claim.card-id' | translate}}" class="fm-txt form-control"
+              formControlName="cardno" (keydown)="isNumberKey($event)">
+            <show-errors [control]="searchClaimForm.controls.cardno"></show-errors>
+          </div>
+          <div class="col-md-1 col-xs-12">
+            <label>&nbsp;</label>
+            <label class="rd-middle">
+              <span class="custom-check">
+                <input id="csc_released" type="checkbox" formControlName="released">{{'claims.claims-search.claims-claim.released' | translate}}
+                <span></span>
+              </span>
+            </label>
+          </div>
+          <div class="col-md-2 col-xs-12">
+            <label>&nbsp;</label>
+            <label class="rd-middle">
+              <span class="custom-check">
+                <input id="csc_released" type="checkbox" formControlName="unReleased">Unreleased
+                <span></span>
+              </span>
+            </label>
+          </div>
+          
+        </div>
+      </div>
+      <!-- Form Row ENds -->
+    </div>
+    <!-- Grid Inner Ends -->
+  </div>
+
+  <div class="row">
+
+    <div class="col-md-3 col-xs-12">
+      <div class="grid-box">
+        <div class="grid-heading">
+          <h3>{{'claims.claims-search.claims-cardholder.card-holder' | translate}}</h3>
+        </div>
+        <!-- Grid Heading Ends -->
+
+        <div class="grid-inner">
+          <div class="form-row">
+            <div class="row min-ht-sf">
+              <div class="col-md-6 col-xs-12">
+                <label>{{'claims.claims-search.claims-cardholder.card-holders-lastName' | translate}}</label>
+                <input id="csc_cardHolderLastName" placeholder="{{'claims.claims-search.claims-cardholder.card-holders-lastName' | translate}}"
+                  class="fm-txt form-control" type="text" formControlName="lastName" onkeypress="return (event.charCode > 64 && 
+                  event.charCode < 91) || (event.charCode > 96 && event.charCode < 123)">
+                <show-errors [control]="searchClaimForm.controls.lastName"></show-errors>
+              </div>
+              <div class="col-md-6 col-xs-12">
+                <label>{{'claims.claims-search.claims-cardholder.card-holders-firstName' | translate}}</label>
+                <input id="csc_cardHolderFirstName" placeholder="{{'claims.claims-search.claims-cardholder.card-holders-firstName' | translate}}"
+                  class="fm-txt form-control" type="text" formControlName="firstName" onkeypress="return (event.charCode > 64 && 
+                  event.charCode < 91) || (event.charCode > 96 && event.charCode < 123)">
+                <show-errors [control]="searchClaimForm.controls.firstName"></show-errors>
+              </div>
+            </div>
+          </div>
+          <!-- Form Row ENds -->
+        </div>
+        <!-- Grid Inner Ends -->
+      </div>
+      <!-- Grid Box Ends -->
+    </div>
+
+    <div class="col-md-3 col-xs-12">
+      <div class="grid-box">
+        <div class="grid-heading">
+          <h3>{{'claims.claims-search.claims-service-providers.service-providers' | translate}}</h3>
+        </div>
+        <!-- Grid Heading Ends -->
+
+        <div class="grid-inner">
+          <div class="form-row">
+            <div class="row">
+              <div class="col-md-12 col-xs-12">
+                <label>{{'claims.claims-search.claims-service-providers.license-no.' | translate}}</label>
+                <input id="csc_license" placeholder="{{'claims.claims-search.claims-service-providers.license-no.' | translate}}" class="fm-txt form-control"
+                  type="text" formControlName="license">
+              </div>
+            </div>
+          </div>
+          <!-- Form Row ENds -->
+        </div>
+        <!-- Grid Inner Ends -->
+      </div>
+      <!-- Grid Box Ends -->
+    </div>
+
+    <div class="col-md-6 col-xs-12" *ngIf="checkUserPermission">
+      <div class="grid-box">
+        <div class="grid-heading">
+          <h3>{{'claims.claims-search.claims-plan.plan' | translate}}</h3>
+        </div>
+        <!-- Grid Heading Ends -->
+
+        <div class="grid-inner">
+          <div class="form-row">
+            <div class="row min-ht-sf">
+              <div class="col-md-6 col-xs-12">
+                <label>{{'claims.claims-search.claims-plan.plan-no.' | translate}}</label>
+                <input id="csc_planNo" placeholder="{{'claims.claims-search.claims-plan.plan-no.' | translate}}" class="fm-txt form-control"
+                  type="text" formControlName="plan">
+              </div>
+
+              <div class="col-md-6 col-xs-12">
+                <label>{{'claims.claims-search.claims-plan.business-type' | translate}}</label>
+                <select [ngClass]="{'disableInput':disableBsnsType}" id="csc_businessType" class="fm-txt form-control" formControlName="businessType">
+                  <option [ngValue]="null" disabled hidden selected>{{'claims.claims-search.claims-plan.select' | translate}}
+                  </option>
+                  <option *ngFor="let businessType of businessTypeList" value="{{businessType.businessTypeDesc}}">
+                    {{businessType.businessTypeDesc}}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <!-- Form Row ENds -->
+        </div>
+        <!-- Grid Inner Ends -->
+      </div>
+      <!-- Grid Box Ends -->
+    </div>
+
+  </div>
+  <!-- Row Ends -->
+
+  <div class="grid-box">
+    <div class="grid-heading">
+      <h3>{{'claims.claims-search.claims-options.claims-options' | translate}}</h3>
+    </div>
+    <!-- Grid Heading Ends -->
+
+    <div class="grid-inner">
+      <div class="form-row">
+        <div class=" row min-ht-sf">
+          <div class="col-md-3 col-xs-12">
+            <label>{{'claims.claims-search.claims-options.entry-date' | translate}}</label>
+            <div class="calender-field">
+              <my-date-picker id="ce_entryFromDate" [options]="myDatePickerOptions" placeholder="From Date" name="entry_from_date" formControlName="entry_from_date"
+                (inputFocusBlur)="changeDateFormat($event, 'entry_from_date' ,'searchClaimForm')">
+              </my-date-picker>
+              <show-errors [control]="searchClaimForm.controls.entry_from_date"></show-errors>
+            </div>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>&nbsp;</label>
+            <div class="calender-field">
+              <my-date-picker id="ce_entryToDate" [options]="myDatePickerOptions" placeholder="To Date" name="entry_to_date" formControlName="entry_to_date"
+                (inputFocusBlur)="changeDateFormat($event, 'entry_to_date' ,'searchClaimForm')">
+              </my-date-picker>
+              <show-errors [control]="searchClaimForm.controls.entry_to_date"></show-errors>
+            </div>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{'claims.claims-search.claims-options.service-date' | translate}}</label>
+            <div class="calender-field">
+              <my-date-picker id="ce_serviceFromDate" [options]="myDatePickerOptions" placeholder="From Date" name="service_from_date"
+                formControlName="service_from_date" (inputFocusBlur)="changeDateFormat($event, 'service_from_date' ,'searchClaimForm')">
+              </my-date-picker>
+              <show-errors [control]="searchClaimForm.controls.service_from_date"></show-errors>
+            </div>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>&nbsp;</label>
+            <div class="calender-field">
+              <my-date-picker id="ce_serviceToDate" [options]="myDatePickerOptions" placeholder="To Date" name="service_to_date" formControlName="service_to_date"
+                (inputFocusBlur)="changeDateFormat($event, 'service_to_date' ,'searchClaimForm')">
+              </my-date-picker>
+              <show-errors [control]="searchClaimForm.controls.service_to_date"></show-errors>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-xs-12">
+            <label>{{'claims.claims-search.claims-options.release-date' | translate}}</label>
+            <div class="calender-field">
+              <my-date-picker id="ce_releaseFromDate" [options]="myDatePickerOptions" placeholder="From Date" name="release_from_date"
+                formControlName="release_from_date" (inputFocusBlur)="changeDateFormat($event, 'release_from_date' ,'searchClaimForm')">
+              </my-date-picker>
+              <show-errors [control]="searchClaimForm.controls.release_from_date"></show-errors>
+            </div>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>&nbsp;</label>
+            <div class="calender-field">
+              <my-date-picker id="ce_releaseToDate" [options]="myDatePickerOptions" placeholder="To Date" name="release_to_date" formControlName="release_to_date"
+                (inputFocusBlur)="changeDateFormat($event, 'release_to_date' ,'searchClaimForm')">
+              </my-date-picker>
+              <show-errors [control]="searchClaimForm.controls.release_to_date"></show-errors>
+            </div>
+          </div>
+          <!-- Calendar Field Ends -->
+          <div class="col-md-3 col-xs-12">
+            <label>{{'claims.claims-search.claims-options.claims-status' | translate}}</label>
+            <select id="csc_claimStatus" class="fm-txt form-control" formControlName="claimStatus">
+              <option [ngValue]="null" disabled hidden selected>{{'common.select' | translate}}</option>
+              <option *ngFor="let claimStatus of arrClaimStatus" [value]="claimStatus.claimStatusDesc">
+                {{claimStatus.claimStatusDesc}}
+              </option>
+
+            </select>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{'claims.claims-search.claims-options.claim-type' | translate}}</label>
+            <select id="csc_claimType" class="fm-txt form-control" formControlName="claimType">
+              <option [ngValue]="null" disabled hidden selected>{{'common.select' |translate}}</option>
+              <option *ngFor="let claim of arrClaimType" [value]="claim.claimTypeCd">
+                {{claim.claimTypeDesc}}
+              </option>
+            </select>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{'claims.claims-search.claims-options.procedure-code' | translate}}</label>
+            <!-- convert type number to text for log 968 -->
+            <input id="datepicker" placeholder="{{'claims.claims-search.claims-options.procedure-code' | translate}}" class="fm-txt form-control"
+              type="text" formControlName="procedureCode" (keydown)="isNumberKey($event)">
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{'claims.claims-search.claims-options.operator-id' | translate}}</label>
+  
+            <ng2-completer formControlName="operatorID" [datasource]="operatorIdData" [minSearchLength]="0" [openOnFocus]="true" [autoHighlight]="true"
+              [selectOnFocus]="true" (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Search operator ID'"
+              [textSearching]="'Please wait...'" [inputClass]="'form-control'" (selected)="onOperatorIDSelected($event)">
+            </ng2-completer>
+
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>&nbsp;</label>
+            <button type="submit" *ngIf="searchClaimChecks[0].search == 'T'" id="btnSearchClaim" class="btn green-btn" (click)="getClaimList(searchClaimForm)">{{'button.search'|translate}}</button>
+            <button type="button" id="btnClearClaim" class="btn grey-btn" (click)="resetClaimSearch(searchClaimForm)">{{'button.clear'|translate}}</button>
+           
+          </div>
+          <!-- Form Row ENds -->
+          <!-- </div> -->
+        </div>
+        <!-- Form Row ENds -->
+
+      </div>
+    </div>
+    <!-- Grid Inner Ends -->
+  </div>
+  <!-- Grid Box Ends -->
+</form>
+<div [hidden]="!showSearchTable">
+  <div class="grid-box">
+    <div class="grid-heading">
+      <h3>{{'claims.claims-search.claims-claim-date.claim-date' | translate}}</h3>
+    </div>
+    <div class="grid-inner">
+      <form (submit)="getClaimListByGridFilteration('search-claim-table')">
+  
+        <!-- Form Row Ends -->
+
+        <div class="form-row">
+          <div class="row">
+            <div class="col-md-12 col-xs-12 table-col">
+              <!-- class added in below div for scroll bar by designer.-->
+              <div class="table-responsive-xl table-wrap">
+                <table id="search-claim-table" class="display table table-bordered table-stripped">
+                  <thead>
+                  </thead>
+                  <tfoot>
+                    <tr>
+                      <td width="10%">
+                        <input type="text" [(ngModel)]='refNoL' placeholder="Reference No" class="fm-txt form-control inputSearch" name="refId" />
+                      </td>
+                      <td width="2%" class="alignDpRight">
+                        <div class="calender-field">
+                          <my-date-picker id="entryDate" placeholder="{{ 'common.date-placeholder' | translate }}" class="inputSearch" name="entryStartDate"
+                            data-type="date" [options]="myDatePickerOptions" [selDate]="dateNameArray['entryDate']" (inputFocusBlur)="changeDateFormat1($event, 'entryDate','searchClaimForm')">
+                          </my-date-picker>
+                        </div>
+                      </td>
+                      <td width="2%" class="alignDpRight">
+                        <div class="calender-field">
+                          <my-date-picker id="serviceStartDate" placeholder="{{ 'common.date-placeholder' | translate }}" class="inputSearch" name="serviceStartDate"
+                            data-type="date" [options]="myDatePickerOptions" [selDate]="dateNameArray['serviceStartDate']"
+                            (inputFocusBlur)="changeDateFormat1($event, 'serviceStartDate','searchClaimForm')">
+                          </my-date-picker>
+                        </div>
+                      </td>
+                      <td width="3%">
+                        <input [(ngModel)]='payableL' id="csc_payable" type="text" placeholder="Payable" class="fm-txt form-control inputSearch amount_right_grid"
+                          name="payable" />
+                      </td>
+                      <td width="3%">
+                        <input [(ngModel)]='deductibleL' id="csc_deductible" type="text" placeholder="Deductible" class="fm-txt form-control inputSearch amount_right_grid"
+                          name="deductible" />
+                      </td>
+
+                      <td width="3%">
+                        <select [(ngModel)]='releasedL' id="csc_released" class="fm-txt form-control inputSearch" dir="rtl" name="released" (keydown)="filterSearchOnEnter($event,'search-claim-table')"
+                          data-type="select">
+                          <option value="" disabled hidden selected>{{'claims.claims-search.claims-claim-date.select' | translate}}</option>
+                          <option value="T">Yes</option>
+                          <option value="F">No</option>
+                        </select>
+                      </td>
+                      <!-- Task 629 Action buttons added on top of action column so width adjusted. -->
+                      <td width="20%">
+                        <select [(ngModel)]='claimTypeL' id="csc_claimType" class="fm-txt form-control inputSearch" dir="rtl" (keydown)="filterSearchOnEnter($event,'search-claim-table')"
+                          name="claimType" data-type="select">
+                          <option value="" disabled hidden selected>{{'claims.claims-search.claims-claim-date.select' | translate}}</option>
+                          <option *ngFor="let claim of arrClaimType" [value]="claim.claimTypeCd">
+                            {{claim.claimTypeDesc}}
+                          </option>
+                        </select>
+                      </td>
+                      <!-- Task 629 Action buttons added on top of action column so width adjusted. -->
+                      <td width="12%">
+                        <input [(ngModel)]='cardNoL' id="csc_cardNo" type="text" placeholder="Card ID" class="fm-txt form-control inputSearch amount_right_grid"
+                          name="cardNumber" />
+                      </td>
+                     
+                      <td width="18%">
+                        <input [(ngModel)]='lastNameL' id="csc_Lastname" type="text" placeholder="Last Name" class="fm-txt form-control inputSearch amount_right_grid"
+                          name="personLastName" />
+                      </td>
+                      <!-- Task 629 Action buttons added on top of action column so width adjusted. -->
+                      <td width="19%">
+                        <input [(ngModel)]='firstNameL' id="csc_Firstname" type="text" placeholder="First Name" class="fm-txt form-control inputSearch amount_right_grid"
+                          name="personFirstName" />
+                      </td>
+                      <td width="10%">
+                        <select [(ngModel)]='refNoLPayee' class="fm-txt form-control inputSearch" dir="rtl" (keydown)="filterSearchOnEnter($event,'search-claim-table')"
+                          name="payeeTypeName" id="payee" data-type="select">
+                          <option value="undefined" disabled hidden selected>{{'claims.claims-search.claims-claim-date.select' | translate}}</option>
+                          <option *ngFor="let payee of payeeData" [value]="payee.payeeTypeDesc">{{payee.payeeTypeDesc}}
+                          </option>
+                        </select>
+                      </td>
+                      <td width="6%" class="alignDpRight">
+                        <div class="calender-field">
+                          <my-date-picker id="receivedDate" placeholder="{{ 'common.date-placeholder' | translate }}" class="inputSearch amount_right_grid"
+                            name="receivedDate" data-type="date" [options]="myDatePickerOptions" [selDate]="dateNameArray['receivedDate']"
+                            (inputFocusBlur)="changeDateFormat1($event, 'receivedDate','searchClaimForm')">
+                          </my-date-picker>
+                        </div>
+                      </td>
+                      <td width="8%">
+                        <select [(ngModel)]='claimStatusL' id="csc_status" class="fm-txt form-control inputSearch" dir="rtl" (keydown)="filterSearchOnEnter($event,'search-claim-table')"
+                          name="status" data-type="select">
+                          <option value="" disabled hidden selected>{{'claims.claims-search.claims-claim-date.select' | translate}}</option>
+                          <option *ngFor="let claimStatus of arrClaimStatus" [value]="claimStatus.claimStatusDesc">
+                            {{claimStatus.claimStatusDesc}}
+                          </option>
+                        </select>
+                      </td>
+                     
+                      <!-- Task 629 Action buttons added on top of action column to prevent design issue of buttons when there is no data in search claims table. -->
+                      <td style="width:6%">
+                        <div class="form-row text-right claim-search-top" style="width: 34px; margin-bottom: 10% !important;">
+                          <button type="button" id="btnSearchClaimTable" class="btn green-btn searchreset" (click)="getClaimListByGridFilteration('search-claim-table')">
+                            <span class="glyphicon glyphicon-search"></span>
+                          </button>
+                          <button type="button" id="btnResettableSearch" class="btn grey-btn searchreset" (click)="getClaimList()">
+                            <span class="glyphicon glyphicon-repeat"></span>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+              <ul class="color-list">
+                <li *ngIf="showPreAuthorizedByReview">
+                  <span class="color-des violet-color"></span>
+                  <h5>Pre-Authorized By Review</h5>
+                </li>
+                <li>
+                  <span class="color-des green-color"></span>
+                  <h5>Pre-Authorization-Paper</h5>
+                </li>
+                <li>
+                  <span class="color-des yellow-color"></span>
+                  <h5>Pre-Authorization-Phone-In</h5>
+                </li>
+              </ul>
+              <!-- Table Ends -->
+            </div>
+          </div>
+        </div>
+        <!-- Form Row ENds -->
+      </form>
+    </div>
+    <!-- Grid Inner Ends -->
+
+  </div>
+</div>
+<div *ngIf="showLoader" class="loader-outer">
+  <div class="cube-wrapper">
+    <div class="cube-folding">
+      <span class="leaf1"></span>
+      <span class="leaf2"></span>
+      <span class="leaf3"></span>
+      <span class="leaf4"></span>
+    </div>
+    <span class="loading" data-name="Loading">{{loaderPlaceHolder}}</span>
+  </div>
+</div>
+<div [attr.hidden]="true">
+  <button id="showReverseClaimMsg" class="btn green-btn" data-toggle="modal" data-target="#reverseClaimMsg">{{'button.adjudicate-claim' | translate}}</button>
+</div>
+<div id="reverseClaimMsg" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Reverse Claim</h4>
+      </div>
+      <div class="modal-body">
+        <div class="text-center">
+          <h3 class="success-msg" [innerHTML]="reverseClaimMessage"> </h3>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btnCloseAdjudicateModal" data-dismiss="modal" class="btn grey-btn" (click)="closeModal()">{{'button.ok'|translate}}</button>
+      </div>
+    </div>
+  </div>
+</div>

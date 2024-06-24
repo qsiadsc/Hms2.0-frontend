@@ -1,0 +1,12 @@
+<p-treeTable [value]="arrData"  [(selection)]="selectedNode">
+  <p-column field="name" header="Name">
+    <ng-template let-col let-node="rowData" pTemplate="body">
+      <input [(ngModel)]="node.data.isSelected" value="{{node.data.isSelected}}" type="checkBox"
+      (change)="setNodeSelected(node,$event.target.checked)" />
+      <span>{{node.data.name}}</span>
+      </ng-template>
+  </p-column>
+  <p-column field="size" header="Size"></p-column>
+  <p-column field="type" header="Type"></p-column>
+</p-treeTable>
+{{selectedNode | json}}

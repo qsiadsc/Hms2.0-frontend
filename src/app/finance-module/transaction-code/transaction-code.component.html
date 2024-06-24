@@ -1,0 +1,156 @@
+    <div class="section-heading">
+      <h2>{{'finance.transactionCode.transactionCode' | translate }}
+      <span>{{'finance.transactionCode.list' | translate }}</span>
+      </h2>
+    </div> 
+  <div class="grid-box">
+    <div class="grid-heading">
+      <h3>{{'finance.transactionCode.transCodeList' | translate}}</h3>
+      <div class="web-reg">
+        <button *ngIf="transactionCodeArray[0].addTransactionCode == 'T'" class="green-btn-add btn" data-toggle="modal" data-target="#AddTransactionCode" (click)="enableAddMode()"><i class="fa fa-plus"></i>{{'finance.transactionCode.addTransCode' | translate}}</button>
+      </div>
+    </div>
+    <!-- Grid Heading Ends -->
+    <div class="grid-inner">
+      <div class="form-row">
+        <div class="row">
+          <div class="col-md-12 col-xs-12 table-col">
+            <div class="table-responsive">
+              <form>
+              <table id="transaction-code-list" class="table table-bordered table-stripped">
+                <tfoot>
+                  <tr>
+                    <td>
+                        <ng2-completer
+                        [inputName]="'tranCd'"
+                        name="tranCd"
+                        [datasource]="codeDataRemote"
+                        [minSearchLength]="0"
+                        [openOnFocus]="true"
+                        (opened)="onOpened($event)"
+                        [fillHighlighted]="false"
+                        [placeholder]="'Code'"
+                        [textSearching]="'Please wait...'"
+                        [inputClass]="'form-control inputSearch'"
+                        data-type="predective"
+                        [inputId]="'transactionFilterCode'"
+                        id="transactionFilterCode"
+                        [clearUnselected]="true">
+                      </ng2-completer>
+                    </td>
+                    <td>
+                      <input id="transactionFilterDescription" class="fm-txt form-control tFootInput inputSearch" type="text" placeholder="{{'finance.transactionCode.description' | translate}}"
+                        name="tranDescription" />
+                    </td>
+                     <td class="alignDpRight">
+                      <div class="calender-field">
+                        <my-date-picker id="effectiveOn" class="inputSearch" name="effectiveOn" data-type="date" [options]="myDatePickerOptions"
+                          [selDate]="dateNameArray['effectiveOn']" (inputFocusBlur)="changeDateFormat1($event, 'effectiveOn')"
+                          placeholder="dd/mmm/yyyy">
+                        </my-date-picker>
+                      </div>
+                    </td>
+                    <td class="alignDpRight">
+                      <div class="calender-field">
+                        <my-date-picker id="expiredOn" class="inputSearch" name="expiredOn" data-type="date" [options]="myDatePickerOptions"
+                          [selDate]="dateNameArray['expiredOn']" [ngClass]="expired  ? 'expired' : 'notExpired'" (inputFocusBlur)="changeDateFormat1($event, 'expiredOn')"
+                          placeholder="{{'common.date-placeholder' | translate}}">
+                        </my-date-picker>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="form-row">
+                          <button id="transactionCodeFilterSearch" type="submit" title="{{'common.search' | translate}}" class="btn green-btn searchreset" (click)="filterTransactionCodeSearch('transaction-code-list')">
+                            <span class="glyphicon glyphicon-search"></span>
+                          </button>
+                          <button id="transactionCodeFilterReset" title="{{'common.reset' | translate}}" class="btn grey-btn searchreset" (click)="resetListingFilter()">
+                            <span class="glyphicon glyphicon-repeat"></span>
+                          </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </form>
+            </div>
+            <!-- Table Ends -->            
+          </div>
+        </div>
+      </div>
+      <!-- Form Row ENds -->
+    </div>
+    <!-- Grid Inner Ends -->
+  </div>
+  <!-- </div> -->
+
+<!-- Section Heading Ends -->
+<div id="AddTransactionCode" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog"> 
+    <!-- Modal content-->
+    <div class="modal-content">
+        <div class="modal-header">
+            <button id="resetTransactionCodeForm" type="button" class="close" data-dismiss="modal" (click)="resetTransactionCodeForm()">&times;</button>
+            <h4 *ngIf="addMode" class="modal-title">{{'finance.transactionCode.addTransCode' | translate}}</h4>
+            <h4 *ngIf="viewMode" class="modal-title">{{'finance.transactionCode.transCodeDetail' | translate}}</h4>
+            <h4 *ngIf="editMode" class="modal-title">{{'finance.transactionCode.editTransDetail' | translate}}</h4>
+        </div>
+        <div class="modal-body">
+    <div class="grid-box">
+      <div class="grid-heading">
+        <h3>{{'finance.transactionCode.transCode' | translate}}</h3>
+      </div>
+    <!-- Grid Heading Ends -->
+    <div class="grid-inner">
+    <form [formGroup]="addTransactionCode" (ngSubmit)="addUpdateTransitCode(addTransactionCode)">
+      <div class="form-row">
+        <div class="row min-ht-sf">
+          <div class="col-md-2 col-xs-12">
+            <label>{{'finance.transactionCode.code' | translate}}<span class="required">*</span></label>
+            <input id="code" type="text" formControlName="code" maxlength = "2" class="form-control" placeholder="{{'finance.transactionCode.code' | translate}}"> 
+            <show-errors [control]="addTransactionCode.controls.code"></show-errors>
+          </div> 
+          <div class="col-md-5 col-xs-12">
+            <label>{{'finance.transactionCode.description' | translate}}<span class="required">*</span></label>
+            <!-- //remove caps as per arun -->
+            <input id="decsription" type="text" formControlName="description" class="form-control notInCaps" placeholder="{{'finance.transactionCode.description' | translate}}"> 
+            <show-errors [control]="addTransactionCode.controls.description"></show-errors>
+          </div>
+          <!-- Added for log 823 -->
+          <div class="col-md-2 col-xs-12">
+            <label>{{'finance.transactionCode.effective_date' | translate}}<span class="required">*</span></label>
+            <div class="calender-field">
+              <my-date-picker id="transactionCode_effectiveOn" [options]="myDatePickerOptions" name="effectiveOn" formControlName="effectiveOn"
+                (inputFocusBlur)="changeDateFormat($event, 'effectiveOn','addTransactionCode')"  placeholder="{{'common.date-placeholder' | translate}}"
+                (keyup)="onKeyPress($event)">
+              </my-date-picker>
+              <show-errors [control]="addTransactionCode.controls.effectiveOn"></show-errors>
+            </div>
+          </div> 
+
+          <div class="col-md-2 col-xs-12">
+            <label>{{'finance.transactionCode.expiryDate' | translate}}</label>
+            <div class="calender-field">
+              <my-date-picker id="transactionCode_expiredOn" [options]="myDatePickerOptions" name="expiredOn" formControlName="expiredOn"
+                [ngClass]="expired  ? 'expired' : 'notExpired'"
+                (inputFocusBlur)="changeDateFormat($event, 'expiredOn','addTransactionCode')"  placeholder="{{'common.date-placeholder' | translate}}"
+                (keyup)="onKeyPress($event)">
+              </my-date-picker>
+              <show-errors [control]="addTransactionCode.controls.expiredOn"></show-errors>
+            </div>
+            <!-- Calendar Field Ends -->
+          </div>           
+        </div>
+      </div>
+      <!-- Form Row ENds -->
+      </form>
+    </div>
+  <!-- Grid Inner Ends -->
+      </div>
+    </div>
+      <div class="modal-footer">
+          <button id="transactionCodeAdd" type="button" class="btn green-btn" (keyup)="onKeyPress($event)" (keyup.arrowLeft) = "focusNextEle($event,'closeTransactionCodeForm')" (keyup.arrowRight) = "focusNextEle($event,'closeTransactionCodeForm')" (click)="addUpdateTransitCode(addTransactionCode)">{{buttonText}}</button>
+          <button id="closeTransactionCodeForm" type="button" class="btn grey-btn" data-dismiss="modal" (keyup.arrowLeft) = "focusNextEle($event,'transactionCodeAdd')" (keyup.arrowRight) = "focusNextEle($event,'transactionCodeAdd')" (click)="resetTransactionCodeForm()">{{'button.close' | translate}}</button>
+      </div>
+    </div>
+  </div>
+</div>

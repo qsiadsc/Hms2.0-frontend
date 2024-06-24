@@ -1,0 +1,197 @@
+<div class="container">
+
+    <div class="section-heading">
+        <h2>{{'dataEntry.headings.claim-heading' | translate }}
+            <!-- BATCH/CLAIMS - -->
+            <span> {{'dataEntry.headings.search' | translate }}</span>
+        </h2>
+    </div>
+    <!-- Section Heading Ends -->
+
+    <div class="grid-box">
+        <div class="grid-heading grid-hdr-btn">
+            <h3>{{'dataEntry.claims-search.dentistInfo' | translate}}</h3>
+        </div>
+        <!-- Grid Heading Ends -->
+
+        <div class="grid-inner">
+            <!-- Form Start Here -->
+            <form [formGroup]="claimsSearchForm">
+                <div class="form-row">
+                    <div class="row min-ht-sf">
+
+                        <div class="col-md-3 col-xs-12">
+                            <label>{{'dataEntry.claims-search.firstName' | translate}}</label>
+                            <input id="claimsSearch_firstName" type="text" class="fm-txt form-control"
+                                formControlName="firstName"
+                                placeholder="{{'dataEntry.claims-search.firstName' | translate}}" />
+                        </div>
+
+                        <div class="col-md-3 col-xs-12">
+                            <label>{{'dataEntry.claims-search.lastName' | translate}}</label>
+                            <input id="claimsSearch_lastName" type="text" class="fm-txt form-control"
+                                formControlName="lastName"
+                                placeholder="{{'dataEntry.claims-search.lastName' | translate}}" />
+                        </div>
+
+                        <div class="col-md-3 col-xs-12">
+                            <label>{{'dataEntry.claims-search.alertMessage' | translate}}</label>
+                            <input id="claimsSearch_alertMessage" type="text" class="fm-txt form-control"
+                                formControlName="alertMessage"
+                                placeholder="{{'dataEntry.claims-search.alertMessage' | translate}}" />
+                        </div>
+
+                        <div class="col-md-3 col-xs-12">
+                            <label>{{'dataEntry.claims-search.uliNo' | translate}}</label>
+                            <input id="claimsSearch_uli" type="text" class="fm-txt form-control" formControlName="uliNo"
+                                placeholder="{{'dataEntry.claims-search.uliNo' | translate}}" />
+                        </div>
+
+                        <div class="col-md-3 col-xs-12">
+                            <label>{{'dataEntry.claims-search.licenseNo' | translate}}</label>
+                            <input id="claimsSearch_licenseNo" type="text" class="fm-txt form-control"
+                                formControlName="licenseNo"
+                                placeholder="{{'dataEntry.claims-search.licenseNo' | translate}}" />
+                        </div>
+
+                        <div class="col-md-3 col-xs-12">
+                            <label>{{'dataEntry.claims-search.speciality' | translate}}</label>
+                            <input id="claimsSearch_speciality" type="text" class="fm-txt form-control"
+                                formControlName="speciality"
+                                placeholder="{{'dataEntry.claims-search.speciality' | translate}}" />
+                        </div>
+
+                        <div class="col-md-3 col-xs-12">
+                            <label>&nbsp;</label>
+                            <button id="claimsSearch_saveDentist" class="btn green-btn"
+                                (click)="onSubmit()">{{'button.search' | translate}}</button>
+                            <button id="claimsSearch_addProvider" class="btn green-btn"
+                                (click)="resetClaimsSearchForm()">{{'button.clear' | translate}}</button>
+                        </div>
+
+                    </div>
+
+                </div>
+                <!-- Form Row ENds -->
+            </form>
+            <!-- Form Ends Here -->
+        </div>
+        <!-- Grid Inner Ends -->
+    </div>
+    <!-- Grid Box Ends -->
+
+    <div [hidden]="!showClaimsList">
+        <div class="grid-box">
+            <div class="grid-heading">
+                <h3>{{'dataEntry.claims-search.dentistAddresses' | translate}}</h3>
+            </div>
+            <!-- Grid Heading Ends -->
+            <div class="grid-inner">
+                <div class="form-row text-right">
+                    <button id="providerSearchLower_search" class="btn green-btn searchreset"
+                        (click)="searchClaimsList('claims-list')">
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                    <button id="providerSearchLower_reset" class="btn grey-btn searchreset"
+                        (click)="resetClaimsListFilter()">
+                        <span class="glyphicon glyphicon-repeat"></span>
+                    </button>
+                </div>
+                <div class="form-row">
+                    <div class="row">
+
+                        <div class="col-md-12 col-xs-12 table-col">
+                            <div class="table-responsive">
+                                <table id="claims-list" class="table table-bordered table-stripped">
+                                    <tfoot>
+                                        <tr>
+                                            <td width="15%">
+                                                <div class="calender-field">
+                                                    <my-date-picker id="claimsSearchLower_effectiveDate"
+                                                        class="inputSearch" name="effectiveDate" data-type="date"
+                                                        [options]="myDatePickerOptions"
+                                                        [selDate]="dateNameArray['effectiveDate']"
+                                                        (inputFocusBlur)="changeDateFormat1($event, 'effectiveDate')"
+                                                        placeholder="{{'common.date-placeholder' | translate}}">
+                                                    </my-date-picker>
+                                                </div>
+                                            </td>
+
+                                            <td width="15%">
+                                                <div class="calender-field">
+                                                    <my-date-picker id="claimsSearchLower_expiryDate"
+                                                        class="inputSearch" name="expiryDate" data-type="date"
+                                                        [options]="myDatePickerOptions"
+                                                        [selDate]="dateNameArray['expiryDate']"
+                                                        (inputFocusBlur)="changeDateFormat1($event, 'expiryDate')"
+                                                        placeholder="{{'common.date-placeholder' | translate}}">
+                                                    </my-date-picker>
+                                                </div>
+                                            </td>
+
+                                            <td width="10%">
+                                                <input id="claimsSearchLower_postalCode"
+                                                    class="upperCase fm-txt form-control tFootInput inputSearch"
+                                                    type="text"
+                                                    placeholder="{{'dataEntry.claims-search.postalCode' | translate}}">
+                                            </td>
+
+                                            <td width="15%">
+                                                <input id="claimsSearchLower_address"
+                                                    class="fm-txt form-control tFootInput inputSearch" type="text"
+                                                    placeholder="{{'dataEntry.claims-search.address' | translate}}">
+                                            </td>
+
+                                            <td width="10%">
+                                                <input id="claimsSearchLower_city"
+                                                    class="fm-txt form-control tFootInput inputSearch" type="text"
+                                                    placeholder="{{'dataEntry.claims-search.city' | translate}}">
+                                            </td>
+
+                                            <td width="10%">
+                                                <input id="claimsSearchLower_province"
+                                                    class="fm-txt form-control tFootInput inputSearch" type="text"
+                                                    placeholder="{{'dataEntry.claims-search.province' | translate}}">
+                                            </td>
+
+                                            <td width="10%">
+                                                <input id="claimsSearchLower_bussArrNo"
+                                                    class="fm-txt form-control tFootInput inputSearch" type="text"
+                                                    placeholder="{{'dataEntry.claims-search.bussArrNo' | translate}}">
+                                            </td>
+
+                                            <td width="15%">
+                                                <input id="claimsSearchLower_facilityNo"
+                                                    class="fm-txt form-control tFootInput inputSearch" type="text"
+                                                    placeholder="{{'dataEntry.claims-search.facilityNo' | translate}}">
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <!-- Table Ends -->
+                        </div>
+                    </div>
+                </div>
+                <!-- Form Row ENds -->
+
+                <div class="form-row">
+                    <div class="row">
+
+                        <div class="col-md-12 col-xs-12">
+                            <button id="claimsSearch_editAddress"
+                                class="btn green-btn">{{'button.editAddress' | translate}}</button>
+                            <button id="claimsSearch_addAddress"
+                                class="btn green-btn">{{'button.addAddress' | translate}}</button>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- Form Row ENds -->
+            </div>
+            <!-- Grid Inner Ends -->
+        </div>
+        <!-- Grid Box Ends -->
+    </div>
+</div>
+<!-- Container Ends -->

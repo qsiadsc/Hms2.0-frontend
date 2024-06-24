@@ -1,0 +1,7 @@
+:host ::ng-deep .custom-check {
+    padding-left: 19px;
+}
+/* Below one is to align Search and refresh buttons correctly.  */
+.claim-search-top{
+    margin: 6px 30px -40px 0px !important;
+}

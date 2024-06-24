@@ -1,0 +1,37 @@
+a.disabled {
+    color: gray;
+    cursor: no-drop!important;
+    text-decoration: underline;
+}
+
+.noAccess{
+    text-align: center;
+    font-size: 14px;
+    padding-bottom: 19px;
+}
+
+:host ::ng-deep .rbtn {
+    padding: 6px 7px;
+    font-size: -0.1rem;
+    font-weight: 500;
+    margin: 0 0 0 8px;
+}
+.dashboard-company-tabs{
+    padding-bottom: 5px;
+    background: white;
+}
+.dashboard-income-tabs{
+    margin-top: -12px;
+    margin-left: -12px;
+}
+.dashboard-income-tabs li a{
+    padding-top: 0px !important;
+}
+/* Below one is added by designer to fix the design issue as per discussed with Arun sir in Count by claim status tile */
+.countByClaimStatusBlock{
+    min-height: 45px;
+}
+.grey-btn{
+    font-size: 12px;
+    padding: 6px 10px;
+}

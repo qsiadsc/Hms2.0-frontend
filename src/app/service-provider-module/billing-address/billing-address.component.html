@@ -1,0 +1,460 @@
+<div id="ModalBanSetup" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{'serviceProvider.billing-address.ban-bank-account.bAN-setup-heading'|translate}}</h4>
+      </div>
+      <div class="modal-body">
+        <app-ban-bank-account [serviceProviderAddMode]="serviceProviderAddMode"
+          [serviceProviderViewMode]="serviceProviderViewMode" [serviceProviderEditMode]="serviceProviderEditMode"
+          [disciplineKey]="disciplineKey" [provBillAddKey]="provBillAddKey" [banId]="banId" [providerKey]="providerKey">
+        </app-ban-bank-account>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- Multiple calendars are opening at same time -->
+<div id="ModalGlobalApproval" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{'serviceProvider.billing-address.global-approval'|translate}}</h4>
+      </div>
+      <div class="modal-body">
+        <app-global-approval [serviceProviderAddMode]="serviceProviderAddMode"
+        [serviceProviderViewMode]="serviceProviderViewMode" [serviceProviderEditMode]="serviceProviderEditMode"
+        [disciplineKey]="disciplineKey" [provBillingAddressKey]="provBillingAddressKey">
+      </app-global-approval>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="grid-box">
+  <div class="grid-heading">
+    <h3>{{'claims.claims-edit.service-provider.service-provider.billing-address.billing-address'|translate}}</h3>
+    <div class="web-reg">
+      <button title="Add New Billing Address" *ngIf="serviceProviderChecks[0].addSPBillingAdrs == 'T'"
+        class="green-btn-add btn upperCase" (click)="openModal(BillingAS,'')" data-toggle="modal"
+        data-target="#BillingAS">
+        <i class="fa fa-plus"></i>{{'button.addnew'|translate}}</button>
+    </div>
+    <!-- Web Reg Ends -->
+  </div>
+  <!-- Grid HEading Ends -->
+
+  <div class="grid-inner">
+    <!-- Form Row Ends -->
+    <div class="form-row">
+      <div class="row loader-wrapper">
+        <div class="col-md-12 col-xs-12 table-col">
+          <div class="table-responsive">
+            <table  id="spba_BillingAddrInfo" datatable [dtOptions]="dtOptions['spba_BillingAddrInfo']"
+              [dtTrigger]="dtTrigger['spba_BillingAddrInfo']" class="table table-bordered table-stripped dataTable">
+              <thead>
+                <!-- To show row in case of add new -->
+                <tr *ngIf="serviceProviderAddMode">
+                  <th width="6%">{{'serviceProvider.billing-address.ban-bank-account.buss-arr-number'|translate}}</th>
+                  <th class="amount_right" width="8%">{{'claims.claims-edit.service-provider.service-provider.billing-address.payee-name'|translate}}</th>
+                  <th class="amount_right" width="20%">{{'common.location'|translate}}</th>
+                  <th class="amount_right" width="6%">{{'serviceProvider.billing-address.eMail' | translate}}</th>
+                  <th class="amount_right" width="6%">{{'serviceProvider.billing-address.phone'|translate}}</th>
+                  <th class="amount_right" width="6%">{{'serviceProvider.billing-address.fax'|translate}}</th>
+                  <th class="amount_right" width="6%">{{'card.card-eligibility.effectivedate'|translate}}</th>
+                  <th class="amount_right" width="6%">{{'card.card-eligibility.expirydate'|translate}}</th>
+                  <th class="amount_right" width="2%">{{'serviceProvider.billing-address.est'|translate}}</th>
+                  <th class="amount_right" width="2%">{{'serviceProvider.billing-address.qsi-eft'|translate}}</th>
+                  <th class="amount_right" width="2%">{{'serviceProvider.billing-address.paper-eft'|translate}}</th>
+                  <th class="amount_right" width="5%">{{'serviceProvider.billing-address.cda-number'|translate}}</th>
+                  <th class="amount_right" width="15%" *ngIf="selectedDisciplineKey != 4">{{'serviceProvider.billing-address.webUserInd'|translate}}</th>
+                  <th class="amount_right" width="5%">{{'serviceProvider.billing-address.lang'|translate}}</th>                  
+                  <th class="amount_right" width="10%">{{'card.card-eligibility.action'|translate}}</th>
+                </tr>
+                <!-- to show row in case of discipline 1 -->
+                <tr *ngIf="!serviceProviderAddMode &&  selectedDisciplineKey == 1">
+                  <th width="6%">{{'serviceProvider.billing-address.ban-bank-account.buss-arr-number'|translate}}</th>
+                  <th class="amount_right" width="8%">
+                    {{'claims.claims-edit.service-provider.service-provider.billing-address.payee-name'|translate}}</th>
+                  <th class="amount_right" width="20%">{{'common.location'|translate}}</th>
+                  <th class="amount_right" width="6%">{{'serviceProvider.billing-address.eMail' | translate}}</th>
+                  <th class="amount_right" width="6%">{{'serviceProvider.billing-address.phone'|translate}}</th>
+                  <th class="amount_right" width="6%">{{'serviceProvider.billing-address.fax'|translate}}</th>
+                  <th class="amount_right" width="6%">{{'card.card-eligibility.effectivedate'|translate}}</th>
+                  <th class="amount_right" width="6%">{{'card.card-eligibility.expirydate'|translate}}</th>
+                  <th class="amount_right" width="2%">{{'serviceProvider.billing-address.est'|translate}}</th>
+                  <th class="amount_right" width="2%">{{'serviceProvider.billing-address.qsi-eft'|translate}}</th>
+                  <th class="amount_right" width="2%">{{'serviceProvider.billing-address.paper-eft'|translate}}</th>
+                  <th class="amount_right" width="5%">{{'serviceProvider.billing-address.cda-number'|translate}}</th>
+                  <th class="amount_right" width="15%" *ngIf="selectedDisciplineKey != 4">
+                    {{'serviceProvider.billing-address.webUserInd'|translate}}</th>
+                  <th class="amount_right" width="5%">{{'serviceProvider.billing-address.lang'|translate}}</th>
+                  <th class="amount_right" width="5%" *ngIf="!serviceProviderAddMode">
+                    {{'serviceProvider.billing-address.sb'|translate}}</th>
+                  <th class="amount_right" width="5%">
+                    {{'serviceProvider.billing-address.ga'|translate}}</th> 
+                  <th class="amount_right" width="10%">{{'card.card-eligibility.action'|translate}}</th>
+                </tr>
+                <!-- to show row in case of discipline is not 1 -->
+                <tr *ngIf="!serviceProviderAddMode &&  selectedDisciplineKey != 1">
+                  <th width="6%">{{'serviceProvider.billing-address.ban-bank-account.buss-arr-number'|translate}}</th>
+                  <th class="amount_right" width="8%">{{'claims.claims-edit.service-provider.service-provider.billing-address.payee-name'|translate}}</th>
+                  <th class="amount_right" width="20%">{{'common.location'|translate}}</th>
+                  <th class="amount_right" width="6%">{{'serviceProvider.billing-address.eMail' | translate}}</th>
+                  <th class="amount_right" width="6%">{{'serviceProvider.billing-address.phone'|translate}}</th>
+                  <th class="amount_right" width="6%">{{'serviceProvider.billing-address.fax'|translate}}</th>
+                  <th class="amount_right" width="6%">{{'card.card-eligibility.effectivedate'|translate}}</th>
+                  <th class="amount_right" width="6%">{{'card.card-eligibility.expirydate'|translate}}</th>
+                  <th class="amount_right" width="2%">{{'serviceProvider.billing-address.est'|translate}}</th>
+                  <th class="amount_right" width="2%">{{'serviceProvider.billing-address.qsi-eft'|translate}}</th>
+                  <th class="amount_right" width="2%">{{'serviceProvider.billing-address.paper-eft'|translate}}</th>
+                  <th class="amount_right" width="5%">{{'serviceProvider.billing-address.cda-number'|translate}}</th>
+                  <th class="amount_right" width="15%" *ngIf="selectedDisciplineKey != 4">{{'serviceProvider.billing-address.webUserInd'|translate}}</th>
+                  <th class="amount_right" width="5%">{{'serviceProvider.billing-address.lang'|translate}}</th>
+                  <th class="amount_right" width="5%">{{'serviceProvider.billing-address.sb'|translate}}</th>                    
+                  <th class="amount_right" width="10%">{{'card.card-eligibility.action'|translate}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngIf="arrBillAddrList.length == 0 && serviceProviderAddMode" class="odd">
+                  <td valign="top" colspan="15" class="dataTables_empty">
+                    {{'card.card-holder.data-tables.datamsg' | translate}}</td>
+                </tr>
+
+                <tr class="tableRow" [ngClass]="{'hterminated-row': dataRow.billinAddressStatus == 'INACTIVE'}"
+                  *ngFor="let dataRow of arrBillAddrList; let i = index" id="{{'row_'+i}}">
+                  <td>{{dataRow.banId}}</td>
+                  <td class="amount_right">{{dataRow.payeeName}}</td>
+                  <td *ngIf="dataRow.provBillAddL2MailAdd" class="amount_right">
+                    {{dataRow.provBillAddL1MailAdd}}, {{dataRow.provBillAddL2MailAdd}}, {{dataRow.cityName}},
+                    {{dataRow.provinceName}}, {{dataRow.countryName}},{{dataRow.postalCode}}
+                  </td>
+                  <td *ngIf="!dataRow.provBillAddL2MailAdd" class="amount_right">
+                    {{dataRow.provBillAddL1MailAdd}}, {{dataRow.cityName}},
+                    {{dataRow.provinceName}}, {{dataRow.countryName}},{{dataRow.postalCode}}
+                  </td>
+                  <td class="amount_right">{{dataRow.provBillAddEmail}}</td>
+                  <td class="amount_right">{{dataRow.provBillAddPhoneNum}}</td>
+                  <td class="amount_right">{{dataRow.provBillAddFaxNum}}</td>
+                  <td class="amount_right">{{dataRow.effectiveOn|dateFormate}}</td>
+                  <td *ngIf="dataRow.checkDate" class="amount_right expiryDate">{{dataRow.expiredOn|dateFormate}}</td>
+                  <td *ngIf="!dataRow.checkDate" class="amount_right">{{dataRow.expiredOn|dateFormate}}</td>
+                  <td class="amount_right">
+                    <input type="checkbox" disabled [checked]="dataRow.provBillAddEftInd == 'T'">
+                  </td>
+                  <td class="amount_right">
+                    <input type="checkbox" disabled [checked]="dataRow.provAddQsiEftInd == 'T'">
+                  </td>
+                  <td class="amount_right">
+                    <input type="checkbox" disabled [checked]="dataRow.provAddPaperEftInd == 'T'">
+                  </td>
+                  <td class="amount_right">{{dataRow.provBillAddCdaNum}}</td>
+                  <td class="amount_right" *ngIf="selectedDisciplineKey != 4">{{dataRow.webUserId}}</td>
+                  <td class="amount_right">{{dataRow.languageName}}</td>
+                  <td class="amount_right" *ngIf="!serviceProviderAddMode">
+                    <button type="button" title="Setup BAN"
+                      [ngClass]="dataRow.banId != '' ?'green-btn-add btn':'red-btn-add btn'"
+                      [disabled]="dataRow.banId == '' && serviceProviderViewMode" data-toggle="modal"
+                      data-target="#ModalBanSetup" (click)="GetBanDetail(dataRow,ModalBanSetup)"
+                      *ngIf="!serviceProviderAddMode && serviceProviderChecks[0].setupBan == 'T' && sbButtonPermission">{{'serviceProvider.billing-address.sb'|translate}}</button>
+                  </td>
+                  
+                  <td class="amount_right" *ngIf="!serviceProviderAddMode &&  selectedDisciplineKey == 1">
+                    <button class="green-btn-add btn" title="Global Approval" data-toggle="modal"
+                    data-target="#ModalGlobalApproval" (click)="openGlobalApproval(ModalGlobalApproval,dataRow.provBillAddKey)"
+                      *ngIf="!serviceProviderAddMode && selectedDisciplineKey == 1 && serviceProviderChecks[0].globalApproval == 'T'">{{'serviceProvider.billing-address.ga'|translate}}</button>
+                  </td>
+                  <td class="amount_right"> 
+                    <a class="table-action-btn view-ico" *ngIf="serviceProviderChecks[0].viewSPBillingAdrs == 'T'"
+                      (click)="ViewEditBillingAddress(dataRow,'View',BillingAS)" title="View">
+                      <i class="fa fa-eye"></i>
+                    </a>
+                    <!-- issue number 716 start -->
+                    <a [ngClass]="{ 'edit_row': true,'table-action-btn': true,'edit-ico': true, '': serviceProviderViewMode}"
+                      *ngIf="serviceProviderChecks[0].editSPBillingAdrs == 'T'" 
+                      (click)="ViewEditBillingAddress(dataRow,'Edit',BillingAS)" title="Edit">
+                      <i class="fa fa-pencil"></i>
+                    </a>
+                     <a *ngIf="disciplineKey == 3" class="delete_row table-action-btn del-ico" (click)="DeleteInfo(dataRow)">
+                        <i class="fa fa-trash"></i>  
+                      </a> 
+                    <!-- issue number 716 end -->
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <!-- Table Ends -->
+        </div>
+        <!-- For processing -->
+        <span *ngIf="noData" class="loading loader-box" data-name="Loading">Processing...</span>
+      </div>
+    </div>
+    <!-- Form Row ENds -->
+  </div>
+  <!-- Grid Inner Ends -->
+</div>
+<modal #BillingAS [closeOnEscape]="false" [closeOnOutsideClick]="false" [hideCloseButton]="true" modalClass="modal-sm">
+  <modal-header>
+    <h4 class="modal-title">
+      {{'claims.claims-edit.service-provider.service-provider.billing-address.billing-address'|translate}}
+      <span>{{'serviceProvider.billing-address.contact-details'|translate}}</span>
+    </h4>
+  </modal-header>
+  <modal-content>
+    <div class="grid-box">
+      <form [formGroup]="ServiceProviderBillingAddressFormGroup">
+        <div class="grid-inner">
+          <div class="form-row">
+            <div class="row min-ht-sf">
+              <div class="col-md-3 col-xs-12">
+                <label>{{'serviceProvider.billing-address.ban-bank-account.buss-arr-number'|translate}}</label>
+                <input id="spba_bussAddrr" autocomplete="off" [attr.disabled]="true" type="text"
+                  class="fm-txt form-control"
+                  placeholder="{{'serviceProvider.billing-address.ban-bank-account.buss-arr-number'|translate}}"
+                  formControlName="bussAddrr">
+              </div>
+
+              <div class="col-md-3 col-xs-12">
+                <label>{{'claims.claims-edit.service-provider.service-provider.billing-address.payee-name'|translate}}
+                  <span class="required">*</span>
+                </label>
+                <input id="spba_payeeName" autocomplete="off" [attr.disabled]="enableViewMode ? true:null" type="text"
+                  class="fm-txt form-control"
+                  placeholder="{{'claims.claims-edit.service-provider.service-provider.billing-address.payee-name'|translate}}"
+                  formControlName="payeeName">
+                <show-errors [control]="ServiceProviderBillingAddressFormGroup.controls.payeeName"></show-errors>
+              </div>
+              <div class="col-md-3 col-xs-12">
+                <label>{{'company.company-tab-datatable.contact-datatables.language'|translate}}
+                  <span class="required">*</span>
+                </label>
+                <select id="spba_langauge" autocomplete="off" class="fm-txt form-control"
+                  [attr.disabled]="enableViewMode ? true:null" placeholder="Language" name="langauge"
+                  formControlName="languageKey">
+                  <option *ngFor="let languageValue of languages" [ngValue]="languageValue.languageKey">
+                    {{ languageValue.languageDesc }}
+                  </option>
+                </select>
+                <show-errors [control]="ServiceProviderBillingAddressFormGroup.controls.langauge"></show-errors>
+              </div>
+              <div class="col-md-3 col-xs-12">
+                <label>{{'company.company-form.postal-code'|translate}}
+                  <span class="required">*</span>
+                </label>
+                <input id="spba_postalCode" autocomplete="off" type="text" title="Postal Code"
+                  [attr.disabled]="enableViewMode ? true:null" placeholder="{{'common.postal-code' | translate}}"
+                  (blur)="isCompanyPostalcodeValid($event)" formControlName="postalCode"
+                  class="upperCase fm-txt form-control" />
+                <show-errors [control]="ServiceProviderBillingAddressFormGroup.controls.postalCode"></show-errors>
+              </div>
+
+              <div class="col-md-3 col-xs-12">
+                <label>{{'company.company-search.city'|translate}}
+                  <span class="required">*</span>
+                </label>
+                <input id="spba_city" [attr.disabled]="enableViewMode ? true:null" type="text" autocomplete="off"
+                  title="City" placeholder="{{'common.city' | translate}}" formControlName="cityName"
+                  (blur)="isCompanyPostalVerifyValid($event, 'cityName')" class="fm-txt form-control" maxlength="60" />
+                <show-errors [control]="ServiceProviderBillingAddressFormGroup.controls.cityName"></show-errors>
+              </div>
+
+              <div class="col-md-3 col-xs-12">
+                <label>{{'common.province'|translate}}
+                  <span class="required">*</span>
+                </label>
+                <input id="spba_province" [attr.disabled]="enableViewMode ? true:null" type="text" autocomplete="off"
+                  title="Province" placeholder="{{'common.province' | translate}}" formControlName="provinceName"
+                  class="fm-txt form-control" (blur)="isCompanyPostalVerifyValid($event, 'provinceName')"
+                  maxlength="60" />
+                <show-errors [control]="ServiceProviderBillingAddressFormGroup.controls.provinceName"></show-errors>
+              </div>
+
+              <div class="col-md-3 col-xs-12">
+                <label>{{'company.company-form.country'|translate}}
+                  <span class="required">*</span>
+                </label>
+                <input id="spba_country" [attr.disabled]="enableViewMode ? true:null" type="text" autocomplete="off"
+                  title="Country" placeholder="{{'common.country' | translate}}" formControlName="countryName"
+                  class="fm-txt form-control" maxlength="60"
+                  (blur)="isCompanyPostalVerifyValid($event, 'countryName')" />
+                <show-errors [control]="ServiceProviderBillingAddressFormGroup.controls.countryName"></show-errors>
+              </div>
+
+              <div class="col-md-3 col-xs-12">
+                <label>{{'company.company-form.address-line-1'|translate}}
+                  <span class="required">*</span>
+                </label>
+                <input id="spba_Addrr1" [attr.disabled]="enableViewMode ? true:null" type="text" autocomplete="off"
+                  class="fm-txt form-control" placeholder="{{'common.address-line-1' | translate}}"
+                  formControlName="provBillAddL1MailAdd">
+                <show-errors [control]="ServiceProviderBillingAddressFormGroup.controls.provBillAddL1MailAdd">
+                </show-errors>
+              </div>
+
+              <div class="col-md-3 col-xs-12">
+                <label>{{'company.company-form.address-line-2'|translate}}</label>
+                <input id="spba_Addrr2" [attr.disabled]="enableViewMode ? true:null" type="text" autocomplete="off"
+                  class="fm-txt form-control" placeholder="{{'common.address-line-2' |translate}}"
+                  formControlName="provBillAddL2MailAdd">
+              </div>
+
+              <div class="col-md-3 col-xs-12">
+                <div class="row min-ht-sf">
+                  <div class="col-md-5 col-xs-12">
+                    <label>{{'common.ext'|translate}}</label>
+                    <input id="spba_ext" [attr.disabled]="enableViewMode ? true:null" autocomplete="off"
+                      placeholder="{{'common.ext' | translate}}" formControlName="extension" type="text"
+                      class="fm-txt form-control size">
+                    <show-errors [control]="ServiceProviderBillingAddressFormGroup.controls.extension"></show-errors>
+                  </div>
+                  <div class="col-md-7 col-xs-12">
+                    <label>{{'company.company-form.phone-no'|translate}}</label>
+                    <input id="spba_phone" [attr.disabled]="enableViewMode ? true:null" autocomplete="off"
+                      [textMask]="{mask: phoneMask}" placeholder="{{'common.phone' | translate}}" type="text"
+                      formControlName="provBillAddPhoneNum" class="fm-txt form-control">
+                    <show-errors [control]="ServiceProviderBillingAddressFormGroup.controls.provBillAddPhoneNum">
+                    </show-errors>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-3 col-xs-12">
+                <label>{{'common.fax-no' | translate}}</label>
+                <input id="spba_fax" [attr.disabled]="enableViewMode ? true:null" autocomplete="off"
+                  [textMask]="{mask: phoneMask}" placeholder="{{'common.fax-no' | translate}}" type="text"
+                  formControlName="provBillAddFaxNum" class="fm-txt form-control">
+                <show-errors [control]="ServiceProviderBillingAddressFormGroup.controls.provBillAddFaxNum">
+                </show-errors>
+              </div>
+
+              <div class="col-md-3 col-xs-12" >
+                <label>{{'common.email'|translate}}</label>
+                <input id="spba_email" [attr.disabled]="enableViewMode ? true:null" autocomplete="off" type="text"
+                  class="fm-txt form-control" placeholder="{{'common.email'|translate}}"
+                  formControlName="provBillAddEmail">
+                <show-errors [control]="ServiceProviderBillingAddressFormGroup.controls.provBillAddEmail"></show-errors>
+              </div>
+            
+              <!-- webuserid field -->
+              <div class="col-md-3 col-xs-12" >
+                <label>{{'common.webUserId'|translate}}</label>
+                <input id="spba_webUserId" [attr.disabled]="enableViewMode ? true:null" autocomplete="off" type="text"
+                  class="fm-txt form-control" placeholder="{{'common.webUserId'|translate}}"
+                  formControlName="webUserId">
+                <!-- Task 662 Below one for validation-->
+                <show-errors [control]="ServiceProviderBillingAddressFormGroup.controls.webUserId"></show-errors>
+              </div>
+
+              <div class="col-md-3 col-xs-12">
+                <label>{{'card.card-eligibility.effectivedate'|translate}}
+                  <span class="required">*</span>
+                </label>
+                <div class="calender-field">
+                  <my-date-picker [ngClass]="(enableViewMode == true) ? 'removeCross':''"
+                    [disabled]="enableViewMode ? true:null" id="spba_efffectiveDate" [options]="myDatePickerOptions"
+                    placeholder="{{'common.date-placeholder' | translate}}" name="effectiveOn"
+                    formControlName="effectiveOn"
+                    (inputFocusBlur)="changeDateFormat($event, 'effectiveOn' ,'ServiceProviderBillingAddressFormGroup',true)">
+                  </my-date-picker>
+                </div>
+                <show-errors [control]="ServiceProviderBillingAddressFormGroup.controls.effectiveOn"></show-errors>
+                <!-- Calendar Field Ends -->
+              </div>
+
+              <div class="col-md-3 col-xs-12">
+                <label>{{'card.card-eligibility.expirydate'|translate}}</label>
+                <div class="calender-field">
+                  <my-date-picker [ngClass]="[expired  ? 'expired' : 'notExpired', (enableViewMode == true) ? 'removeCross':'']"
+                    [disabled]="enableViewMode ? true:null" id="spba_expiryDate" [options]="myDatePickerOptions"
+                    placeholder="{{'common.date-placeholder' | translate}}" name="expiredOn" formControlName="expiredOn"
+                    (inputFocusBlur)="changeDateFormat($event, 'expiredOn' ,'ServiceProviderBillingAddressFormGroup')">
+                  </my-date-picker>
+                </div>
+                <show-errors [control]="ServiceProviderBillingAddressFormGroup.controls.expiredOn"></show-errors>
+                <!-- Calendar Field Ends -->
+              </div>
+              <div class="col-md-3 col-xs-12 ">
+                <label></label>
+                <div style="margin-top:12px" class="select-options">
+                  <span><label><input id="spba_govtEft" type="checkbox" formControlName="provBillAddEftInd"
+                        value="govtEft">{{'serviceProvider.billing-address.govt-eft'|translate}}</label></span>
+                  <span><label><input id="spba_quikCardEft" type="checkbox" formControlName="provAddQsiEftInd"
+                        value="quikcardEft">{{'serviceProvider.billing-address.quikcard-eft'|translate}}</label></span>
+                  <span><label><input id="spba_paperEft" type="checkbox" formControlName="provAddPaperEftInd"
+                    value="paperEft">{{'serviceProvider.billing-address.paper-eft'|translate}}</label></span>
+                </div>
+              </div>
+              <div class="col-md-3 col-xs-12">
+                <label>{{'serviceProvider.billing-address.debit-amount'|translate}}</label>
+                <div class="calender-field d-amount">
+                  <input [attr.disabled]="enableViewMode ? true:null" id="spba_debitAmount" autocomplete="off"
+                    OnlyNumber="true" type="text" class="fm-txt form-control amount_right_grid"
+                    placeholder="{{'serviceProvider.billing-address.debit-amount'|translate}}"
+                    formControlName="provBillAddDebitAmt">
+                  <show-errors [control]="ServiceProviderBillingAddressFormGroup.controls.provBillAddDebitAmt">
+                  </show-errors>
+                </div>
+                <span class="input-radio">
+                  <div style="width: 50%; float: left;">
+                    <label
+                      style="width: 50px; float: left;">{{'serviceProvider.billing-address.fixed'|translate}}</label>
+                    <input style="width: 15px; float: left;" type="radio" value="fixed"
+                      [attr.disabled]="enableViewMode ? true:null" formControlName="provBillAddDebitType"
+                      name="provBillAddDebitType" id="fixed" (change)="onPercChange('fixed')">
+                  </div>
+                  <div style="width: 50%;  float: left;">
+                    <label style="width: 20px; float: left;">{{'serviceProvider.billing-address.%'|translate}}</label>
+                    <input style="width: 15px; float: left;" [attr.disabled]="enableViewMode ? true:null"
+                      formControlName="provBillAddDebitType" name="provBillAddDebitType" id="isPerc" type="radio"
+                      value="isPerc" (change)="onPercChange('isPerc')">
+                  </div>
+                </span>
+              </div>
+              <div class="col-md-3 col-xs-12">
+                <label>{{'serviceProvider.billing-address.cdaNo' | translate}}</label>
+                <input id="spba_cdaNo" [attr.disabled]="enableViewMode ? true:null" type="text" autocomplete="off"
+                  class="fm-txt form-control" placeholder="{{'serviceProvider.billing-address.cdaNo' | translate}}"
+                  formControlName="cda">
+                <show-errors [control]="ServiceProviderBillingAddressFormGroup.controls.cda"></show-errors>
+              </div>
+              <div class="col-md-6 col-xs-12">
+                <label>{{'button.comments'|translate}}</label>
+                <textarea [attr.disabled]="enableViewMode ? true:null" id="spba_comments" autocomplete="off" type="text"
+                  class="notInCaps fm-txt form-control" placeholder="{{'button.comments'|translate}}"
+                  formControlName="provBillAddCom">
+                </textarea>
+                <show-errors [control]="ServiceProviderBillingAddressFormGroup.controls.provBillAddCom"></show-errors>
+              </div>
+
+              <div class="form-row text-center">
+                <button id="confirmButton" [ngClass]="{'disabled':disableAddBtn}" class="btn green-btn"
+                  *ngIf="!enableViewMode" (keyup.arrowLeft)="focusNextEle($event,'closeButton')"
+                  (keyup.arrowRight)="focusNextEle($event,'closeButton')" #actionButtonElem
+                  (click)="SaveUpdateBillingAddress(BillingAS)">{{'button.save'|translate}}</button>
+                <button id="closeButton" type="button" class="btn grey-btn"
+                  (keyup.arrowLeft)="focusNextEle($event,'confirmButton')"
+                  (keyup.arrowRight)="focusNextEle($event,'confirmButton')" #closeButtonElem
+                  (click)="closeModal(BillingAS)">{{'button.close'|translate}}</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </modal-content>
+</modal>
+
+<div [hidden]="!showLoader" class="loader-outer">
+  <div class="cube-wrapper">
+    <div class="cube-folding">
+      <span class="leaf1"></span>
+      <span class="leaf2"></span>
+      <span class="leaf3"></span>
+      <span class="leaf4"></span>
+    </div>
+    <span class="loading" data-name="Loading">{{'company.plan.benefits.pleaseWait'|translate}}</span>
+  </div>
+</div>

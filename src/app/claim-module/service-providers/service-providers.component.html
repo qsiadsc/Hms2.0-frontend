@@ -1,0 +1,446 @@
+<div class="grid-box">
+    <div class="grid-heading">
+        <h3>{{'claims.claims-edit.service-provider.services-provider' | translate}}</h3>
+    </div>
+    <!-- Grid Heading Ends -->
+    <div class="grid-inner">
+        <form [formGroup]="ClaimServiceProvidersFormGroup">
+            <div class="form-row">
+                <div class="row min-ht-sf">
+                    <div class="col-md-2 col-xs-12">
+                        <label>{{'claims.claims-edit.service-provider.payee' | translate}}</label>
+                      
+                        <select class="fm-txt form-control" (change)="onSelectedPayeeType($event)" (keydown.tab)="validatePayee($event)" placeholder="" name="payee" id="payee"
+                            formControlName="payee" 
+                            [attr.disabled]= "(disablePayee == true || viewMode == true)? 'disabled' : null" >
+                            <option [ngValue]="null"   selected>
+                                {{'claims.claims-add.claims-general-information.select' | translate}}</option>
+                            <option id="cgI_claimType" *ngFor="let c of payeeData" [value]="c.payeeTypeKey">
+                                {{c.payeeTypeDesc}}</option>
+                        </select>
+                        <show-errors [control]="ClaimServiceProvidersFormGroup.controls.payee"></show-errors>
+                    </div>
+                    <div class="col-md-2 col-xs-12">
+                        <label>{{'claims.claims-edit.service-provider.license-no.' | translate}}
+                            <span class="required">*</span>
+                            <!-- Log #1008: As per client new feedback for comments flag Start Here  -->
+                            <span class="comment-fm" *ngIf="showSpFlag && isShowSpRedFlag">
+                                <i class="fa fa-flag"  *ngIf="isShowSpRedFlag" aria-hidden="true" style="cursor:pointer; color:red;"></i>
+                                <div class="comment-top">
+                                <p>{{serviceProviderCommentText}}</p>
+                                </div>
+                            </span>
+                            <span class="comment-fm" *ngIf="showSpFlag && !isShowSpRedFlag">
+                                <i class="fa fa-flag"  *ngIf="!isShowSpRedFlag" aria-hidden="true" style="cursor:pointer; color:green;"></i>
+                                <div class="comment-top">
+                                <p>{{serviceProviderCommentText}}</p>
+                                </div>
+                            </span>
+                            <span class="comment-fm" *ngIf="!showSpFlag"><i class="fa fa-flag"
+                                aria-hidden="true" style="cursor:pointer; color:grey;"></i>
+                            </span>
+                            <!-- Log #1008 Ends Here -->
+                        </label>
+                        <div class="calender-field">
+                            <input id="csp_licenseNo" type="text" class="fm-txt form-control datepicker"
+                             (keydown.tab)="getServiceProviderDetails('onPressTab'); openPostalCode()"
+                                placeholder="{{'claims.claims-edit.service-provider.license-no.' | translate}}"
+                                formControlName="licenseNumber">
+                            <label *ngIf="validlicenseNo" class="input-group-addon btn dt-picker"
+                                data-toggle="modal" data-target="#ServiceProvider">
+                                <i (click)="getServiceProviderDetailById()" class="fa fa-user"></i>
+                            </label>
+                        </div>
+                        <show-errors [control]="ClaimServiceProvidersFormGroup.controls.licenseNumber"></show-errors>
+                    </div>
+
+                    <div class="col-md-2 col-xs-12" id="setFocus">
+                        <label>{{'claim-service-provider.postal-add' | translate}}
+                            <span class="required">*</span>
+                        </label>
+                        <div id="openSelect" [ngClass]="{'disableMultiselect': viewMode}">
+                       
+                            <input ng2-auto-complete formControlName="postalCd" [source]="dropdownList"
+                                [list-formatter]="autocompleListFormatter" value-property-name="id"
+                                display-property-name="itemName" placeholder="Search Postal Code"
+                                class="upperCase form-control postalCd" (valueChanged)="valueChanged($event)">
+                           
+                        </div>
+                        <show-errors [control]="ClaimServiceProvidersFormGroup.controls.postalCd"></show-errors>
+                    </div>
+                    <div class="col-md-6 col-xs-12">
+                        <label>{{'claims.claims-edit.service-provider.pay-to-address' | translate}}
+                            <span class="required">*</span>
+                            <span class="status-label active">{{addressStatus}}</span>
+                        </label>
+                        <select [ngClass]="{'pink': billingAddressClass}" class="fm-txt form-control"
+                            (change)=" setClassBillingAdrs($event)" (keydown.tab)="addnew()" placeholder="Address"
+                            name="payToAddress" id="payToAddress" formControlName="payToAddress">
+                            <option hidden value="">{{'claims.claims-edit.service-provider.select' | translate}}
+                            </option>
+                            <option *ngFor="let address of payToAddress" [value]="address.provBillAddKey"
+                                [attr.addrs-status]="address.status" [ngClass]="{'pink': address.status == 'INACTIVE'}">
+                                {{address.fullbillingAddress}}</option>
+                        </select>
+                        <show-errors [control]="ClaimServiceProvidersFormGroup.controls.payToAddress"></show-errors>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+
+        <!-- Form Row ENds -->
+    </div>
+    <!-- Grid Inner Ends -->
+
+    <!--Service Provider Modal -->
+
+    <div id="ServiceProvider" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button id="btnCloseServiceProvider" type="button" class="close"
+                        data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">
+                        {{'claims.claims-edit.service-provider.service-provider.service-provider' | translate}}</h4>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="grid-box">
+                        <div class="grid-heading">
+                            <h3>{{'claims.claims-edit.service-provider.service-provider.general-information.general-information'
+                                | translate}}</h3>
+                        </div>
+                        <!-- Grid Heading Ends -->
+
+                        <div class="grid-inner">
+                            <form [formGroup]="ServiceProviderPopupFormGroup">
+                                <div class="form-row">
+                                    <div class="row">
+                                        <div class="col-md-3 col-xs-12">
+                                            <label>{{'claims.claims-edit.service-provider.provider-name' | translate}}</label>
+                                            <input id="csp_provider" type="text" disabled class="fm-txt form-control"
+                                                placeholder="Provider Name" formControlName="provider">
+                                        </div>
+                                        <div class="col-md-3 col-xs-12">
+                                            <label>{{'claims.claims-edit.service-provider.service-provider.general-information.participation-date'
+                                                | translate}}</label>
+                                            <my-date-picker disabled="true" placeholder="dd/mmm/yyyy"
+                                                id="participationDate" [options]="myDatePickerOptions"
+                                                name="participationDate" formControlName="participationDate"
+                                                (inputFocusBlur)="changeDateFormatparticipationDate($event, 'participationDate' ,'ServiceProviderPopupFormGroup')">
+                                            </my-date-picker>
+                                        </div>
+
+                                        <div class="col-md-3 col-xs-12">
+                                            <!--713 log -->
+                                            <label>{{'claims.claims-edit.service-provider.service-provider.general-information.email-address'
+                                                | translate}}</label>
+                                            <input id="csp_email" disabled type="text" class="fm-txt form-control"
+                                                placeholder="Email Address" formControlName="email">
+                                        </div>
+                                        <div class="col-md-3 col-xs-12">
+                                            <label>{{'claims.claims-edit.service-provider.service-provider.general-information.preferred-language'
+                                                | translate}}</label>
+                                            <select id="csp_preferredLang" disabled class="fm-txt form-control"
+                                                name="PreferredLanguage" formControlName="PreferredLanguage">
+                                                <option value="" disabled hidden>{{'claims.claims-edit.service-provider.service-provider.general-information.select'
+                                                    | translate}}</option>
+                                                <option value="1">English</option>
+                                                <option value="2">French</option>
+                                                <option value="3">Spanish</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Form Row ENds -->
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Grid box Ends -->
+                    <div class="grid-box">
+                        <div class="grid-heading">
+                            <h3>{{'claims.claims-edit.service-provider.service-provider.billing-address.billing-address' | translate}}
+                            </h3>
+
+                        </div>
+                        <!-- Grid Heading Ends -->
+
+                        <div class="grid-inner">
+
+                            <div class="form-row">
+                                <div class="row">
+                                    <div class="col-md-12 col-xs-12 table-col">
+                                        <div class="table-responsive">
+                                            <table id="claim-serviceProvider" datatable
+                                                [dtOptions]="dtOptions['claim-serviceProvider']"
+                                                [dtTrigger]="dtTrigger['claim-serviceProvider']"
+                                                class="table table-bordered table-stripped">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="7%">{{'claims.claims-edit.service-provider.service-provider.billing-address.bus.-arr#'
+                                                            | translate}}</th>
+                                                        <th width="12%">{{'claims.claims-edit.service-provider.service-provider.billing-address.payee-name'
+                                                            | translate}}</th>
+                                                        <th width="28%">{{'claims.claims-edit.service-provider.service-provider.billing-address.location'
+                                                            | translate}}</th>
+                                                        <th width="5%">{{'claims.claims-edit.service-provider.service-provider.billing-address.phone#'
+                                                            | translate}}</th>
+                                                        <th width="5%">{{'claims.claims-edit.service-provider.service-provider.billing-address.fax#'
+                                                            | translate}}</th>
+                                                        <th width="5%">{{'claims.claims-edit.service-provider.service-provider.billing-address.email-address'
+                                                            | translate}}</th>
+                                                        <th width="8%">{{'claims.claims-edit.service-provider.service-provider.billing-address.effective-date'
+                                                            | translate}}</th>
+                                                        <th width="8%">{{'claims.claims-edit.service-provider.service-provider.billing-address.expiry-date'
+                                                            | translate}}</th>
+                                                        <th width="5%">{{'claims.claims-edit.service-provider.service-provider.billing-address.eft'
+                                                            | translate}}</th>
+                                                        <th width="5%">{{'claims.claims-edit.service-provider.service-provider.billing-address.qsi-eft'
+                                                            | translate}}</th>
+                                                        <th width="5%">{{'claims.claims-edit.service-provider.service-provider.billing-address.cda#'
+                                                            | translate}}</th>
+                                                        <th width="5%">{{'claims.claims-edit.service-provider.service-provider.billing-address.language'
+                                                            | translate}}</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr id="{{'row_'+i}}"
+                                                        *ngFor="let dataRow of billingAddressDetails; let i = index">
+                                                        <td>{{dataRow.banId}}</td>
+                                                        <td>{{dataRow.payeeName}}</td>
+                                                        <td>{{dataRow.provBillAddL1MailAdd}},
+                                                            {{dataRow.provBillAddL2MailAdd}},
+                                                            {{dataRow.cityName}}, {{dataRow.provinceName}},
+                                                            {{dataRow.countryName}},
+                                                            {{dataRow.postalCode}}
+                                                        </td>
+                                                        <td>{{dataRow.provBillAddPhoneNum}}</td>
+                                                        <td>{{dataRow.provBillAddFaxNum}}</td>
+                                                        <td>{{dataRow.provBillAddEmail}}</td>
+                                                        <td>{{dataRow.effectiveOn | dateFormate}}</td>
+                                                        <td>{{dataRow.expiredOn | dateFormate}}</td>
+                                                        <td *ngIf="dataRow.provBillAddEftInd == 'F'">NO</td>
+                                                        <td *ngIf="dataRow.provBillAddEftInd == 'T'">YES</td>
+                                                        <td *ngIf="dataRow.provAddQsiEftInd == 'F'">NO</td>
+                                                        <td *ngIf="dataRow.provAddQsiEftInd == 'T'">YES</td>
+                                                        <td>&nbsp;</td>
+                                                        <td>{{dataRow.languageName}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <!-- Table Ends -->
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- Form Row ENds -->
+                        </div>
+                        <!-- Grid Inner Ends -->
+
+                    </div>
+                    <!-- Grid Box Ends -->
+
+                    <div class="grid-box">
+                        <div class="grid-heading">
+                            <h3>{{'claims.claims-edit.service-provider.service-provider.eligibility.eligibility' | translate}}
+                            </h3>
+                        </div>
+                        <!-- Grid Heading Ends -->
+
+                        <div class="grid-inner">
+
+                            <div class="form-row">
+                                <div class="row">
+
+                                    <div class="col-md-12 col-xs-12 table-col">
+                                        <div class="table-responsive">
+                                            <table id="claim-providerEligibilityDetail" datatable
+                                                [dtOptions]="dtOptions['claim-providerEligibilityDetail']"
+                                                [dtTrigger]="dtTrigger['claim-providerEligibilityDetail']"
+                                                class="table table-bordered table-stripped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>{{'claims.claims-edit.service-provider.service-provider.eligibility.effective-date'
+                                                            | translate}}</th>
+                                                        <th>{{'claims.claims-edit.service-provider.service-provider.eligibility.expiry-date'
+                                                            | translate}}</th>
+                                                        <th>{{'claims.claims-edit.service-provider.service-provider.eligibility.suspended'
+                                                            | translate}}</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr id="{{'row_'+i}}"
+                                                        *ngFor="let dataRow of ServiceProviderEligibilityDetails; let i = index">
+                                                        <td>{{dataRow.effectiveOn | dateFormate}}</td>
+                                                        <td>{{dataRow.expiredOn | dateFormate}}</td>
+                                                        <td *ngIf="dataRow.suspendedInd == 'F'">NO</td>
+                                                        <td *ngIf="dataRow.suspendedInd == 'T'">YES</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <!-- Table Ends -->
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- Form Row ENds -->
+                        </div>
+                        <!-- Grid Inner Ends -->
+
+                    </div>
+                    <!-- Grid Box Ends -->
+
+
+                    <div class="grid-box">
+                        <div class="grid-heading">
+                            <h3>{{'claims.claims-edit.service-provider.service-provider.speciality-history.speciality-history'
+                                | translate}}</h3>
+
+                        </div>
+                        <!-- Grid Heading Ends -->
+
+                        <div class="grid-inner">
+
+                            <div class="form-row">
+                                <div class="row">
+
+                                    <div class="col-md-12 col-xs-12 table-col">
+                                        <div class="table-responsive">
+                                            <table id="claim-providerSpeciality" datatable
+                                                [dtOptions]="dtOptions['claim-providerSpeciality']"
+                                                [dtTrigger]="dtTrigger['claim-providerSpeciality']"
+                                                class="table table-bordered table-stripped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>{{'claims.claims-edit.service-provider.service-provider.speciality-history.speciality'
+                                                            | translate}}</th>
+                                                        <th>{{'claims.claims-edit.service-provider.service-provider.speciality-history.license'
+                                                            | translate}}</th>
+                                                        <th>{{'claims.claims-edit.service-provider.service-provider.speciality-history.effective-date'
+                                                            | translate}}</th>
+                                                        <th>{{'claims.claims-edit.service-provider.service-provider.speciality-history.expiry-date'
+                                                            | translate}}</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr id="{{'row_'+i}}"
+                                                        *ngFor="let dataRow of ProviderSpecialityList; let i = index">
+                                                        <td>{{dataRow.provSpecialDesc}}</td>
+                                                        <td>{{dataRow.provLicenseNum}}</td>
+                                                        <td>{{dataRow.effectiveOn | dateFormate}}</td>
+                                                        <td>{{dataRow.expiredOn | dateFormate}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <!-- Table Ends -->
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- Form Row ENds -->
+                        </div>
+                        <!-- Grid Inner Ends -->
+
+                    </div>
+                    <!-- Grid Box Ends -->
+
+
+
+                    <div class="grid-box">
+                        <div class="grid-heading">
+                            <h3>{{'claims.claims-edit.service-provider.service-provider.comments.comments' | translate}}
+                            </h3>
+
+                        </div>
+                        <!-- Grid Heading Ends -->
+
+                        <div class="grid-inner">
+                            <div class="form-row">
+                                <div class="row">
+
+                                    <div class="col-md-12 col-xs-12 table-col">
+                                        <div class="table-responsive">
+                                            <table id="claim-providerComments" datatable
+                                                [dtOptions]="dtOptions['claim-providerComments']"
+                                                [dtTrigger]="dtTrigger['claim-providerComments']"
+                                                class="table table-bordered table-stripped">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="10%">{{'claims.claims-edit.service-provider.service-provider.filters.date'
+                                                            | translate}}</th>
+                                                        <th width="25%">{{'claims.claims-edit.service-provider.service-provider.filters.user-id'
+                                                            | translate}}</th>
+                                                        <th width="25%">{{'claims.claims-edit.service-provider.service-provider.filters.department'
+                                                            | translate}}</th>
+                                                        <th width="25%">{{'claims.claims-edit.service-provider.service-provider.filters.notes'
+                                                            | translate}}</th>
+                                                        <th width="25%">{{'claims.claims-edit.service-provider.service-provider.filters.importance'
+                                                            | translate}}</th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr id="{{'row_'+i}}"
+                                                        *ngFor="let dataRow of ProviderCommentsList; let i = index">
+                                                        <td>{{dataRow.createdOn | dateFormate}}</td>
+                                                        <td>{{dataRow.username}}</td>
+                                                        <td>{{dataRow.department}}</td>
+                                                        <td>{{dataRow.provComTxt}}</td>
+                                                        <td *ngIf="dataRow.claimImportance == 'Y'">
+                                                            <span class="flag">
+                                                                <i class="fa fa-flag" aria-hidden="true"></i>
+                                                            </span>
+                                                        </td>
+                                                        <td *ngIf="dataRow.claimImportance == 'N'"></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <!-- Table Ends -->
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- Form Row ENds -->
+                        </div>
+                        <!-- Grid Inner Ends -->
+
+                    </div>
+                    <!-- Grid Box Ends -->
+
+
+                </div>
+                <!-- Modal Body Ends -->
+
+                <div class="modal-footer">
+                    <button id="closeServiceProvider" class="btn grey-btn"
+                        data-dismiss="modal">{{'button.close'|translate}} </button>
+
+                </div>
+            </div>
+
+        </div>
+        <!-- modal Content Ends -->
+
+    </div>
+    <!--Service Provider Modal-->
+
+</div>
+<div *ngIf="showLoader" class="loader-outer">
+    <div class="cube-wrapper">
+        <div class="cube-folding">
+            <span class="leaf1"></span>
+            <span class="leaf2"></span>
+            <span class="leaf3"></span>
+            <span class="leaf4"></span>
+        </div>
+        <span class="loading" data-name="Loading">{{loaderPlaceHolder}}</span>
+    </div>
+</div>

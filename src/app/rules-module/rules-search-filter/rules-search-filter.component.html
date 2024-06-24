@@ -1,0 +1,106 @@
+<div class="section-heading">
+  <h2>{{ruleName}} -
+    <span>{{'rules.rules-search-filter.searchCap' | translate}}</span>
+  </h2>
+</div>
+<!-- Section Heading Ends -->
+<div class="grid-box">
+  <div class="grid-heading">
+    <h3>{{'rules.rules-search-filter.searchSml' | translate}} {{ruleName}}</h3>
+    <div class="web-reg">
+      <a *ngIf="rulesAuthCheck[0].addDentalRule == 'T' && this.disciplineKey == '1' " id="rulesSearchAddrules" [routerLink]="[rulesRoute]"
+        class="green-btn-add btn">
+        <i class="fa fa-plus"></i>{{'rules.rules-search-filter.addRules' | translate}}</a>
+      <a *ngIf="rulesAuthCheck[0].addVisionRule == 'T' && this.disciplineKey == '2' " id="rulesSearchAddrules" [routerLink]="[rulesRoute]"
+        class="green-btn-add btn">
+        <i class="fa fa-plus"></i>{{'rules.rules-search-filter.addRules' | translate}}</a>
+      <a *ngIf="rulesAuthCheck[0].addHealthRule == 'T' && this.disciplineKey == '3' " id="rulesSearchAddrules" [routerLink]="[rulesRoute]"
+        class="green-btn-add btn">
+        <i class="fa fa-plus"></i>{{'rules.rules-search-filter.addRules' | translate}}</a>
+      <a *ngIf="rulesAuthCheck[0].addDrugRule == 'T' && this.disciplineKey == '4' " id="rulesSearchAddrules" [routerLink]="[rulesRoute]"
+        class="green-btn-add btn">
+        <i class="fa fa-plus"></i>{{'rules.rules-search-filter.addRules' | translate}}</a>
+    </div>
+  </div>
+  <!-- Grid Heading Ends -->
+  <div class="grid-inner">
+    <form [formGroup]="filterRules" (ngSubmit)="onSubmit()">
+      <div class="form-row">
+        <div class="row min-ht-sf">
+          <div class="col-md-3 col-xs-12">
+            <label>{{'rules.rules-search-filter.mask' | translate}}</label>
+            <input type="text" class="fm-txt form-control" formControlName="rulesMask" placeholder="{{'rules.rules-search-filter.mask' | translate}}" />
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{'rules.rules-search-filter.rule#' | translate}}</label>
+            <input type="text" class="fm-txt form-control" formControlName="rulesRule" placeholder="{{'rules.rules-search-filter.rule#' | translate}}" />
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{'rules.rules-search-filter.ruleDescription' | translate}}</label>
+            <input type="text" class="fm-txt form-control" formControlName="rulesRuleDescription" placeholder="{{'rules.rules-search-filter.ruleDescription' | translate}}" />
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{'rules.rules-search-filter.script' | translate}}</label>
+            <input type="text" class="fm-txt form-control" formControlName="rulesScript" placeholder="{{'rules.rules-search-filter.script' | translate}}" />
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <div class="select-options">
+              <span>
+                <label>
+                  <input type="radio" name="rulesRadio" value="F" formControlName="rulesRadio">{{'rules.rules-search-filter.generalRule' | translate}}</label>
+              </span>
+              <span>
+                <label>
+                  <input type="radio" name="rulesRadio" value="T" formControlName="rulesRadio">{{'rules.rules-search-filter.PlanRule' | translate}}</label>
+              </span>
+              <span>
+                <label>
+                  <input type="radio" name="rulesRadio" value="" formControlName="rulesRadio">{{'rules.rules-search-filter.all' | translate}}</label>
+              </span>
+            </div>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <button *ngIf="rulesAuthCheck[0].searchDentalRule == 'T' && this.disciplineKey == '1' " id="companySearchFilterSave" type="submit"
+              class="btn green-btn" (keyup)="onKeyPress($event)">{{'rules.rules-search-filter.searchSml' | translate}}</button>
+            <button *ngIf="rulesAuthCheck[0].searchVisionRule == 'T' && this.disciplineKey == '2' " id="companySearchFilterSave" type="submit"
+              class="btn green-btn" (keyup)="onKeyPress($event)">{{'rules.rules-search-filter.searchSml' | translate}}</button>
+            <button *ngIf="rulesAuthCheck[0].searchHealthRule == 'T' && this.disciplineKey == '3' " id="companySearchFilterSave" type="submit"
+              class="btn green-btn" (keyup)="onKeyPress($event)">{{'rules.rules-search-filter.searchSml' | translate}}</button>
+            <button *ngIf="rulesAuthCheck[0].searchDrugRule == 'T' && this.disciplineKey == '4' " id="companySearchFilterSave" type="submit"
+              class="btn green-btn" (keyup)="onKeyPress($event)">{{'rules.rules-search-filter.searchSml' | translate}}</button>
+            <button id="companySearchFilterClear" type="button" class="btn grey-btn" (click)="resetSearchForm()">{{'rules.rules-search-filter.clear' | translate}}</button>
+          </div>
+        </div>
+      </div>
+      <!-- Form Row ENds -->
+    </form>
+  </div>
+  <!-- Grid Inner Ends -->
+</div>
+<!-- Grid Box Ends -->
+<!-- Include the rule list selector-->
+<div [hidden]="!showRulesList">
+  <div class="grid-box">
+    <div class="grid-heading">
+      <h3>{{'rules.rules-search-filter.listOfRules' | translate}}</h3>
+    </div>
+    <!-- Grid Heading Ends -->
+    <div class="grid-inner">
+      <div class="form-row">
+        <div class="row">
+          <div class="col-md-12 col-xs-12 table-col">
+            <div class="table-responsive">
+              <table table id="rules-list" class="table table-bordered table-stripped">
+              </table>
+            </div>
+            <!-- Table Ends -->
+          </div>
+        </div>
+      </div>
+      <!-- Form Row ENds -->
+    </div>
+    <!-- Grid Inner Ends -->
+  </div>
+  <!-- Grid Box Ends -->
+</div>
+<!-- End the rule list selector-->

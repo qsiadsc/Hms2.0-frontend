@@ -1,0 +1,589 @@
+<nav class="breadcrumb">
+	<span class="breadcrumb-item" [routerLink]="['/company']">{{'company.plan.company' | translate}}</span>>
+	<span class="breadcrumb-item" (click)="goBack()">{{'company.plan.plan' | translate}}</span>>
+    <a *ngIf="addMode" class="active serviceProviderActive">{{'company.plan.add' | translate}}</a>
+    <a *ngIf="editMode" class="active serviceProviderActive">{{'company.plan.edit' | translate}}</a>
+</nav>
+<div class="section-heading">
+    <h2>{{'company.plan.plan' | translate}}   <span></span></h2>
+</div>
+<!-- Section Heading Ends -->
+<div class="grid-box" id="main-plan-ot">
+    <div class="grid-heading">
+        <h3 *ngIf="addMode && planType=='addNewPlan'">{{'company.plan.add-new-plan' | translate}}</h3>
+        <h3 *ngIf="addMode == true && planType == 'addDivision'">{{'company.plan.add-new-division' | translate}}</h3>
+        <h3 *ngIf="planType == 'copyDivision'">{{'company.plan.copy-division' | translate}}</h3>
+        <h3 *ngIf="editMode">{{'company.plan.edit-plan' | translate}}</h3>
+    </div>
+    <!-- Grid Heading Ends -->
+    <ul class="nav company-tabs nav-pills">
+        <li id="li-plan-dash" class="tab-li active" (click)="onChangeTab('planInfo')"><a data-toggle="pill" href="#plan-dash"> {{'company.plan.plan-info.plan-info' | translate}}</a></li>
+        <li id="li-plan-benefits" class="tab-li" (click)="onChangeTab('planBenefit')"><a data-toggle="pill" href="#plan-benefits">{{'company.plan.benefits.benefits' | translate}}</a></li>
+        <li id="li-plan-Division"class="tab-li" (click)="onChangeTab('planDivisionMax')"><a data-toggle="pill" href="#plan-Division">{{'company.plan.division-max.division-max' | translate}}</a></li>
+        <li id="li-plan-rule"class="tab-li" (click)="onChangeTab('planRule')"><a data-toggle="pill" href="#plan-rule">{{'company.plan.rules.rules' | translate}}</a></li>
+        <li id="li-plan-guide" class="tab-li" (click)="onChangeTab('planFeeGuide')"><a data-toggle="pill" href="#plan-guide">{{'company.plan.fee-guide.fee-guide' | translate}}</a></li>
+        <li id="li-plan-preview"class="tab-li" (click)="onChangeTab('planPreview')"><a data-toggle="pill" href="#plan-preview">{{'company.plan.preview.preview' | translate}}</a></li>
+        
+            <div class="web-reg"> 
+                <form [formGroup]="FormGroup">               
+                    <button [attr.disabled]="!isSaved ? true : null" *ngIf="addMode" class=" green-btn-add btn" data-toggle="modal" (click)="savePlan(FormGroup)">{{'company.plan.save-plan' | translate}}</button> 
+                    <button [attr.disabled]="!isSaved ? true : null" *ngIf="editMode && mainPlanArray[0].updatePlan == 'T'" class=" green-btn-add btn" data-toggle="modal" (click)="updatePlan(FormGroup)" id="updatePlan">{{'company.plan.update-plan' | translate}}</button>
+                    <button class=" green-btn-add btn" (click)="close(FormGroup)" id="close" >Close</button>
+                </form>
+            </div>
+            
+        <div *ngIf="printPlanMode == true" class="web-reg">
+            <button id="printBtn" (click)="printPlanDetails('plan-preview')" class="btn green-btn-add">
+                    {{'button.printplan' | translate}}
+            </button>
+            </div>
+    </ul>            
+    <div class="grid-inner">
+        <div class="form-row">
+            <div class="tab-content">
+                <!--- PLAN DASHBOARD TAB STARTS -->
+                <div id="plan-dash" class="tab-pane fade in active plan-tab">                           
+                    <app-plan-info (yearTypeToSave)="getYearTypeToSaved($event)" (selectedYearTypeKey)="getSelectedYearType($event)" (selectedDeductibleTypeKey)="getSelectedDeductibleType($event)" (selectedProratingTypeKey)="getSelectedProratingType($event)" (planInfoData)="receivePlanInfoData($event)" [FormGroup]="FormGroup.controls.PlanInfoFormGroup"></app-plan-info>                           
+                    <div class="form-row text-center">    
+                        <button class="btn green-btn" (click)="clickNextTab('planBenefit','plan-benefits')" >{{'button.next' | translate}}</button>
+                    </div>
+                </div>
+                
+                <!--PLAN DASHBOARD TAB ENDS -> 
+
+                <!- BENEFITS TAB STARTS -->  
+                <div id="plan-benefits" class="tab-pane fade plan-tab">
+                    <app-benefits (benefitsData)="receiveBenefitData($event)" [FormGroup]="FormGroup.controls.BenefitFormGroup" ></app-benefits> 
+                    <div class="form-row text-center">    
+                        <button class="btn green-btn" (click)="clickNextTab('planDivisionMax','plan-Division')" >{{'button.next' | translate}}</button>
+                    </div>
+                </div>   
+                <!-- BENEFITS TAB ENDS --> 
+
+                <!-- DIVISION TAB STARTS -->
+                <div id="plan-Division" class="tab-pane fade plan-tab">
+                    <app-division-max (divisionMaxData)="receiveDivisionMaxData($event)"></app-division-max>
+                    <div class="form-row text-center">    
+                        <button class="btn green-btn" (click)="clickNextTab('planRule','plan-rule')" >{{'button.next' | translate}}</button>
+                    </div>
+                    </div>
+                <!--- DIVISION TAB ENDS --> 
+
+                <!-- RULES TAB STARTS -->
+                <div id="plan-rule" class="tab-pane fade plan-tab">
+                    <app-rules (rulesData)="receiveRuleData($event)"></app-rules>
+                    <div class="form-row text-center">    
+                        <button class="btn green-btn" (click)="clickNextTab('planFeeGuide','plan-guide')" >{{'button.next' | translate}}</button>
+                    </div>
+                </div>
+                <!-- RULES TAB ENDS --> 
+
+                <!-- FEE TAB STARTS --> 
+                <div id="plan-guide" class="tab-pane fade plan-tab">
+                    <app-fee-guide (selectedScheduleEmit)="getSelectedSchedule($event)"(selectedProvinceEmit)="getSelectedProvince($event)"  (feeGuideData)="receiveFeeGuideData($event)" [FormGroup]="FormGroup.controls.FormGroup"></app-fee-guide>
+                    <div class="form-row text-center">    
+                        <button class="btn green-btn" (click)="clickNextTab('planPreview','plan-preview')" >{{'button.next' | translate}}</button>
+                    </div>
+                </div>
+                <!-- FEE TAB ENDS -->  
+
+                <!-- PREVIEW TAB STARTS --> 
+                <div id="plan-preview" class="tab-pane fade plan-tab">
+                    <app-preview></app-preview>
+                </div>
+                <!-- PREVIEW TAB ENDS --> 
+            </div>
+            <!-- Form Row ENds -->
+        </div>
+        <!-- Grid Inner Ends -->
+    </div>
+    <!-- Grid Box Ends -->
+</div>
+<!-- Container Ends -->
+   
+<!-- Wrapper Ends -->
+<!--Plan Comments Modal-->
+<div id="PlanComments" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button id="planClose" type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">{{'company.company-comments.add-comments' | translate}}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="grid-box">
+                    <div class="grid-inner">
+                        <div class="form-row">
+                            <label>{{'company.company-comments.add-comments' | translate}}</label>
+                            <div class="add-comments">
+                                <div class="row">
+                                    <div class="col-sm-8"><input type="text" class="fm-txt form-control" /></div>
+                                    <div class="col-sm-2">
+                                        <label class="check-lb"><input type="checkbox"/> {{'company.company-comments.importance' | translate}}</label>
+                                    </div>
+                                    <div class="col-sm-2 text-right"><button class="green-btn-add btn"><i class="fa fa-plus"></i>{{'button.addnew' | translate}}</button></div>
+                                </div>
+                            </div>
+                            <!-- Add Comments Ends -->
+                        </div>
+                        <!-- Form Row Ends -->
+                        <div class="form-row">
+                            <div class="row">
+                                <div class="col-md-12 col-xs-12 table-col">
+                                    <div class="table-responsive search-table">
+                                        <table id="planTable" class="table table-bordered table-stripped">
+                                            <thead>
+                                                <tr>
+                                                        <th width="10%">{{'comments.data-tables.date' | translate}}</th>
+                                                        <th width="25%">{{'comments.data-tables.user-id' | translate}}</th>
+                                                        <th width="25%">{{'comments.data-tables.division' | translate}}</th>
+                                                        <th width="25%">{{'comments.comments' | translate}}</th>
+                                                        <th width="25%">{{'comments.data-tables.importance' | translate}}</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>12-04-2018</td>
+                                                    <td>1601410011</td>
+                                                    <td>Finance</td>
+                                                    <td>Claim Pending</td>
+                                                    <td>Primary</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>12-04-2018</td>
+                                                    <td>1601410011</td>
+                                                    <td>Finance</td>
+                                                    <td>Claim Pending</td>
+                                                    <td>Primary</td>
+                                                </tr>
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td width="10%">
+                                                        <div class="calender-field" >
+                                                            <input id="datepicker17" type="text" class="fm-txt form-control datepicker" />
+                                                            <label for="datepicker17" class="input-group-addon btn dt-picker">
+                                                            <span class="glyphicon glyphicon-calendar"></span>
+                                                            </label>                                
+                                                        </div>
+                                                        <!-- Calendar Field Ends -->
+                                                    </td>
+                                                    <td width="25%"><input type="text" class="fm-txt form-control"/></td>
+                                                    <td width="25%"><input type="text" class="fm-txt form-control"/></td>
+                                                    <td width="25%"><input type="text" class="fm-txt form-control"/></td>
+                                                    <td width="25%"><input type="text" class="fm-txt form-control"/></td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                    <!-- Table Ends -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Form Row ENds -->
+                    </div>
+                    <!-- Grid Inner Ends -->
+                </div>
+                <!-- Grid Box Ends -->
+            </div>
+            <!-- Modal Body End-->
+            <div class="modal-footer">
+                <button id="planClose1"type="button" class="btn grey-btn" data-dismiss="modal">{{'button.close' | translate}}</button>
+            </div >
+            <!-- Modal  Footer Ends -->
+        </div>
+    </div>
+</div>
+<!--Plan Comments Modal-->
+
+<!--Search Rule Modal-->
+<div id="SearchRule" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button id="planSearchRuleClose" type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">{{'company.plan.search-rule' | translate}}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="grid-box">
+                    <div class="grid-inner">
+                        <div class="form-row">
+                            <div class="row">
+                                <div class="col-md-3 col-xs-12">
+                                    <label>{{'company.plan.discipline' | translate}}</label>
+                                    <select id="planDiscipline" class="fm-txt form-control">
+                                        <option>{{'common.select' | translate}}</option>
+                                        <option>Loren Ipsum</option>
+                                        <option>Loren Ipsum</option>
+                                        <option>Loren Ipsum</option>
+                                        <option>Loren Ipsum</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3 col-xs-12">
+                                    <label>{{'company.plan.coverage-category' | translate}}</label>
+                                    <select class="fm-txt form-control">
+                                        <option>{{'common.select' | translate}}</option>
+                                        <option>Loren Ipsum</option>
+                                        <option>Loren Ipsum</option>
+                                        <option>Loren Ipsum</option>
+                                        <option>Loren Ipsum</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Form Row ENds -->
+                        <div class="form-row text-center">
+                            <button id="planSearch" class="btn green-btn" data-toggle="modal" data-target="#Terminate">{{'button.search' | translate}}</button>
+                        </div>
+                        <div class="form-row">
+                            <div class="row">
+                                <div class="col-md-12 col-xs-12 table-col">
+                                    <div class="table-responsive">
+                                        <table id="planTable1" class="table table-bordered table-stripped">
+                                            <thead>
+                                                <tr>
+                                                    <th><input type="checkbox"/></th>
+                                                    <th>{{'company.plan.discipline' | translate}}</th>
+                                                    <th>{{'company.plan.category' | translate}}</th>
+                                                    <th>{{'company.plan.list-of-rules' | translate}}</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td><input type="checkbox"/></td>
+                                                    <td>Lorem Ipsum</td>
+                                                    <td>12-04-1995</td>
+                                                    <td>12-04-2018</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><input type="checkbox"/></td>
+                                                    <td>Lorem Ipsum</td>
+                                                    <td>12-04-1995</td>
+                                                    <td>12-04-2018</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <!-- Table Ends -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Grid Box Ends -->
+            </div>
+            <!-- Modal Body End-->
+            <div class="modal-footer">
+                <button id="planAdd" type="button" class="btn green-btn" data-dismiss="modal">{{'button.add' | translate}}</button>
+            </div>
+            <!-- Modal  Footer Ends -->
+        </div>
+    </div>
+</div>
+<!--Search Rule Modal-->
+
+<!--Procedure Modal-->
+<div id="Procedure" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button id="PlanProcedureClose" type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">{{'company.plan.plan-view.enter-procedure-no' | translate}}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="grid-box">
+                    <div class="grid-heading">
+                        <h3>{{'company.plan.plan-view.enter-procedure-companyname' | translate}}</h3>
+                    </div>
+                    <!-- Grid Heading Ends -->
+                    <div class="grid-inner">
+                        <div class="form-row">
+                            <div class="row">
+                                <div class="col-md-3 col-xs-12">
+                                    <label>{{'company.plan.plan-view.procedure-code' | translate}}</label>
+                                    <input id="planProcedureCode" type="text" class="fm-txt form-control" />
+                                </div>
+                                <div class="col-md-3 col-xs-12">
+                                    <label>{{'company.plan.plan-no' | translate}}</label>
+                                    <input id="planPlanNo" type="text" class="fm-txt form-control" />
+                                </div>
+                                <div class="col-md-3 col-xs-12">
+                                    <label>{{'company.plan.division-no' | translate}}</label>
+                                    <input id="planDiv" type="text" class="fm-txt form-control" />
+                                </div>
+                                <div class="col-md-3 col-xs-12">
+                                    <label>{{'company.plan.division-name' | translate}}</label>
+                                    <input id="planProcedureDivisionName" type="text" class="fm-txt form-control" />
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Form Row ENds -->
+                        <div class="form-row text-center">
+                            <button id="planFind" class="btn green-btn" data-toggle="modal" data-target="#Terminate">{{'button.find' | translate}}</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid-box">
+                    <div class="grid-heading">
+                        <h3>{{'company.plan.plan-view.plan-coverage-categories' | translate}}</h3>
+                    </div>
+                    <!-- Grid Heading Ends -->
+                    <div class="grid-inner">
+                        <div class="form-row">
+                            <div class="row">
+                                <div class="col-md-12 col-xs-12 table-col">
+                                    <div class="table-responsive">
+                                        <table id="planCoverageCategories" class="table table-bordered table-stripped">
+                                            <thead>
+                                                <tr>
+                                                        <th>{{'company.plan.coverage-category' | translate}}</th>
+                                                        <th>{{'company.plan.effective-date' | translate}}</th>
+                                                        <th>{{'company.plan.expiry-date' | translate}}</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Lorem Ipsum</td>
+                                                    <td>02/03/2018</td>
+                                                    <td>02/03/2019</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Lorem Ipsum</td>
+                                                    <td>02/03/2018</td>
+                                                    <td>02/03/2019</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <!-- Table Ends -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Form Row ENds -->
+                    </div>
+                    <!-- Grid Inner Ends -->
+                </div>
+                <!-- Grid Box Ends -->
+                <div class="grid-box">
+                    <div class="grid-heading">
+                          <h3>  {{'company.plan.plan-view.plan-coverage-rules' | translate}}</h3>
+                    </div>
+                    <!-- Grid Heading Ends -->
+                    <div class="grid-inner">
+                        <div class="form-row">
+                            <div class="row">
+                                <div class="col-md-12 col-xs-12 table-col">
+                                    <div class="table-responsive">
+                                        <table  id="planCoverageRules" class="table table-bordered table-stripped">
+                                            <thead>
+                                                <tr>
+                                                    <th>{{'company.plan.plan-view.rule-cd' | translate}}</th>
+                                                    <th>{{'company.plan.plan-view.rule-description' | translate}}</th>
+                                                    <th>{{'company.plan.effective-date' | translate}}</th>
+                                                    <th>{{'company.plan.expiry-date' | translate}}</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Lorem Ipsum</td>
+                                                    <td>Lorem Ipsum</td>
+                                                    <td>12-04-1995</td>
+                                                    <td>02/03/2019</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Lorem Ipsum</td>
+                                                    <td>Lorem Ipsum</td>
+                                                    <td>12-04-1995</td>
+                                                    <td>02/03/2019</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <!-- Table Ends -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Form Row ENds -->
+                    </div>
+                    <!-- Grid Inner Ends -->
+                </div>
+            </div>
+            <!-- Modal Body End-->
+        </div>
+    </div>
+</div>
+<!--Procedure Modal-->
+
+<!--Terminate Date Modal-->
+<div id="TerminateDate" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button id="TerminateDateClose" type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">{{'company.plan.terminate' | translate}}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="grid-box">
+                    <div class="grid-inner">
+                        <div class="form-row">
+                            <div class="row">
+                                <div class="col-md-3 col-xs-12">
+                                    <label>{{'company.plan.termination-date' | translate}}</label>    
+                                    <div class="calender-field">
+                                        <input id="planDatepicker" type="text" class="fm-txt form-control datepicker">
+                                        <label for="datepicker9" class="input-group-addon btn dt-picker">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                        </label>			  					
+                                    </div>
+                                    <!-- Calendar Field Ends -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Form Row ENds -->
+                        <div class="form-row text-center">
+                            <button id="planSave" class="green-btn btn" data-dismiss="modal">{{'button.save' | translate}}</button>
+                            <button id="planClose2" class="grey-btn btn" data-dismiss="modal">{{'button.close' | translate}}</button>
+                        </div>
+                        <!-- Form Row ENds -->
+                    </div>
+                </div>
+                <!-- Grid Box Ends -->
+            </div>
+            <!-- Modal Body End-->
+        </div>
+    </div>
+</div>
+<!--Terminate Date Modal-->
+
+<!-- Plan Coverage History Modal -->
+<div id="PlanCoverageHistory" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button id="PlanCoverageHistoryClose" type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">{{'company.plan.plan-coverage-history' | translate}}</h4>
+            </div>
+            <!--modal-header Ends-->
+            <div class="modal-body">
+                <div class="grid-box">
+                    <div class="grid-inner">
+                        <div class="form-row">
+                            <div class="add-comments">
+                                <div class="row">
+                                    <div class="col-md-3 col-xs-12">
+                                        <label>{{'company.plan.plan-name' | translate}}</label>	
+                                        <div class="calender-field">
+                                            <input id="planPlanName" type="text" class="fm-txt form-control" />
+                                        </div>
+                                        <!-- Calendar Field Ends -->
+                                    </div>
+                                    <div class="col-md-3 col-xs-12">
+                                        <label>{{'company.plan.division-no' | translate}}</label>	
+                                        <input class="fm-txt form-control" type="text">
+                                    </div>
+                                    <div class="col-md-3 col-xs-12">
+                                        <label>{{'company.plan.division-name' | translate}}</label>	
+                                        <input id="planDivisionName" class="fm-txt form-control" type="text">
+                                    </div>
+                                </div>
+                                <!-- row Ends-->
+                            </div>
+                            <!-- Add Comments Ends -->
+                        </div>
+                        <!-- Form Row Ends -->
+                        <div class="form-row">
+                            <div class="row">
+                                <div class="col-md-12 col-xs-12 table-col">
+                                    <div class="table-responsive">
+                                        <table id="planTable2" class="table table-bordered table-stripped">
+                                            <thead>
+                                                <tr>
+                                                    <th>{{'company.plan.date' | translate}}</th>
+                                                    <th>{{'company.plan.user-id' | translate}}</th>
+                                                    <th>{{'company.plan.division' | translate}}</th>
+                                                    <th>{{'company.plan.coverage-category' | translate}}</th>
+                                                    <th>{{'company.plan.plan-view.adult-fee' | translate}}</th>
+                                                    <th>{{'company.plan.plan-view.dependant-fee%' | translate}}</th>
+                                                    <th>{{'company.plan.plan-view.pay-claim' | translate}}</th>
+                                                    <th>{{'company.plan.effective-date' | translate}}</th>
+                                                    <th>{{'company.plan.expiry-date' | translate}}</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>02/03/2018</td>
+                                                    <td>Lorem Ipsum</td>
+                                                    <td>Lorem Ipsum</td>
+                                                    <td>Lorem Ipsum</td>
+                                                    <td>Lorem Ipsum</td>
+                                                    <td>Lorem Ipsum</td>
+                                                    <td>Lorem Ipsum</td>
+                                                    <td>02/03/2018</td>
+                                                    <td>02/03/2020</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>02/03/2018</td>
+                                                    <td>Lorem Ipsum</td>
+                                                    <td>Lorem Ipsum</td>
+                                                    <td>Lorem Ipsum</td>
+                                                    <td>Lorem Ipsum</td>
+                                                    <td>Lorem Ipsum</td>
+                                                    <td>Lorem Ipsum</td>
+                                                    <td>02/03/2018</td>
+                                                    <td>02/03/2020</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <!-- Table Ends -->
+                                </div>
+                                <!--col Ends-->
+                            </div>
+                            <!-- row Ends-->	
+                        </div>
+                        <!-- Form Row ENds -->
+                    </div>
+                    <!--grid-iner Ends-->
+                </div>
+                <!--grid-box Ends-->
+            </div>
+            <!--modal-body Ends-->
+            <div class="modal-footer">
+                <button id="planClose3" type="button" class="btn grey-btn" data-dismiss="modal">{{'button.close' | translate}}</button>
+            </div>
+            <!--modal-footer Ends-->
+        </div>
+        <!-- Modal Content Ends -->
+    </div>
+    <!--modal-dialog Ends-->
+</div>
+<!-- Plan Coverage History Modal End -->
+
+<div [hidden]="!showLoader" class="loader-outer">
+    <div class="cube-wrapper">
+        <div class="cube-folding">
+            <span class="leaf1"></span>
+            <span class="leaf2"></span>
+            <span class="leaf3"></span>
+            <span class="leaf4"></span>
+        </div>
+        <span class="loading" data-name="Loading">{{'company.plan.benefits.pleaseWait'|translate}}</span>
+    </div>
+</div>
+<!-- add for update plan -->
+<div [hidden]="!showLoaderOnUpdate" class="loader-outer">
+    <div class="cube-wrapper">
+        <div class="cube-folding">
+            <span class="leaf1"></span>
+            <span class="leaf2"></span>
+            <span class="leaf3"></span>
+            <span class="leaf4"></span>
+        </div>
+        <span class="loading" data-name="Loading">{{'company.plan.benefits.pleaseWait'|translate}}</span>
+    </div>
+</div>

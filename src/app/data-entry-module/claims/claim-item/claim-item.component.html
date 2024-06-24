@@ -1,0 +1,994 @@
+<div class="grid-box">
+  <div class="grid-heading">
+    <h3>Claim Items</h3>
+    <div class="web-reg">
+        
+        <!-- add Add New button for #1264  -->
+        <button [disabled]='!claimsComponent.DataEntryClaimFormGroup.valid && addMode || forAddNewClaimDisable' *ngIf="claimItemCheck[0].addClaimItem == 'T' && notClaimItemSaveMode || isEnable" id="btnAddNewClaimItem" 
+        class="green-btn-add btn" [ngClass]="{ 'green-btn-add': true, 'btn': true}" title="ADD NEW CLAIM" (click)="AddNew(0)" (blur)="AddNew(1)">
+            <i class="fa fa-plus"></i>{{'button.capital-addClaimItem' | translate}}</button>
+    </div>
+  </div>
+  <div class="grid-inner">
+    <div class="row">
+      <div class="col-md-12 col-xs-12 table-col">
+        <div class="table-responsive search-table custom-table-ui">
+            <table  id="claim-items" class="table table-bordered table-stripped dataTable alignRightText">
+            <thead>
+              <tr>
+                <th width="11%">{{'dataEntry.claim-items.claim' | translate}}</th>
+                <th width="9%">{{'dataEntry.claim-items.claim-status' | translate}}</th>
+                <th width="7%">{{'dataEntry.claim-items.service-date' | translate}}</th>
+                <th width="7%">{{'dataEntry.claim-items.service-code' | translate}}</th>
+                <th width="9%">{{'dataEntry.claim-items.ref-uLI' | translate}}</th>
+                <th width="7%">{{'dataEntry.claim-items.dignostic-primary' | translate}}</th>
+                <!--change for #1264-->
+                <th width="7%">{{'dataEntry.claim-items.time-units' | translate}}</th>  
+                <th width="8%">{{'dataEntry.claim-items.func-center' | translate}}</th>
+                <th width="7%">{{'dataEntry.claim-items.skill-code' | translate}}</th>
+                <th width="8%">{{'dataEntry.claim-items.fee-mode1' | translate}}</th>
+                <th width="8%">{{'dataEntry.claim-items.fee-mode2' | translate}}</th>
+                <th width="8%">{{'dataEntry.claim-items.fee-mode3' | translate}}</th>
+                <th width="6%">{{'dataEntry.claim-items.encounterNumber' | translate}}</th>
+                <th width="7%">{{'dataEntry.claim-items.claim-amount' | translate}}</th>
+                <th width="6%">{{'dataEntry.claim-items.paid-amount' | translate}}</th>
+                <th width="6%" *ngIf="claimItemCheck[0].deleteClaimItem == 'T' || claimItemCheck[0].editClaimItem == 'T'">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngIf="arrClaimItems.length == 0 && !showErrorMsg || !addMode && claimAddMode" class="odd">                
+                <td valign="top" colspan="16" class="dataTables_empty">{{'card.card-holder.data-tables.datamsg' | translate}}</td>
+              </tr>
+              <!-- for edit mode (#1264) -->
+              <tr class="tableRow" *ngFor="let dataRow of arrClaimItems; let i = index; " id="{{'row_'+i}}">
+                <td>
+                  <span *ngIf="dataRow.id != selectedRowId">{{dataRow.mandatoryClaimItemsDto.claimNum}}<span *ngIf="!addMode" class="number-digit-box">
+                  {{dataRow.digitCode}}
+                  </span></span>
+                <div class="field_group"> 
+                  <input id="txtClaimNum{{i}}" disabled name="claimNum{{i}}" value="{{savedMandatoryClaimNumber}}"
+                   [ngClass]="{ 'error_field': dataRow.claimNum == '', 'fm-txt': true, 'form-control':true }"
+                   [(ngModel)]="dataRow.mandatoryClaimItemsDto.claimNum" *ngIf="dataRow.id == selectedRowId" > 
+                   <div *ngIf="!addMode" class="digit_code">
+                    <input id="checkDigitView" disabled value="{{digitCode}} "type="text" class="fm-txt form-control claim_digit" *ngIf="dataRow.id == selectedRowId" style="width:40px" />
+                  </div>
+                </div>
+                  </td>
+                <td *ngIf="!arrStatusVal">
+                  <span *ngIf="dataRow.id != selectedRowId">{{dataRow.mandatoryClaimItemsDto.claimItemDescStatus}}</span>
+                  <select disabled id="txtclaimItemDescStatus{{i}}" autocomplete="off" class="fm-txt form-control" 
+                  [(ngModel)]="dataRow.mandatoryClaimItemsDto.claimItemDescStatus" 
+                  *ngIf="dataRow.id == selectedRowId">
+                  
+                  <option  value="{{dataRow.mandatoryClaimItemsDto.claimItemDescStatus}}" *ngFor="let statusValue of arrStatus" [value]="statusValue.id">
+                    Submitted
+                  </option>
+                </select>
+                </td>
+                <td *ngIf="arrStatusVal">
+                  <span *ngIf="dataRow.id != selectedRowId">{{dataRow.mandatoryClaimItemsDto.claimItemDescStatus}}</span>
+                  <select disabled id="txtclaimItemDescStatus{{i}}" autocomplete="off" class="fm-txt form-control" 
+                  [(ngModel)]="dataRow.mandatoryClaimItemsDto.claimItemDescStatus" 
+                  *ngIf="dataRow.id == selectedRowId">
+                  
+                  <option  value="{{dataRow.mandatoryClaimItemsDto.claimItemDescStatus}}" *ngFor="let statusValue of arrStatus" [value]="statusValue.id">
+                    Unsubmitted
+                  </option>
+                </select>
+                </td>
+                <td>
+                   <span *ngIf="dataRow.id != selectedRowId">{{dataRow.mandatoryClaimItemsDto.serviceDate | dateFormate}}</span>
+                   <input id="ClaimDate{{i}}" type="text" placeholder="{{'common.date-placeholder'|translate}}"
+                    name="serviceDate{{i}}" value="{{dataRow.mandatoryClaimItemsDto.serviceDate}}"
+                   [(ngModel)]="dataRow.mandatoryClaimItemsDto.serviceDate" (keyup.enter)="OnEnterPress(i,dataRow,1)"
+                   [ngClass]="{ 'error_field': dataRow.mandatoryClaimItemsDto.serviceDate == ''|| dataRow.mandatoryClaimItemsDto.serviceDate == null, 'fm-txt': true, 'form-control':true }"
+                   (blur)="changeDateFormatTest($event, 'serviceDate' ,'mandatoryClaimItemsDto', true)"
+                   *ngIf="dataRow.id == selectedRowId">
+                </td>
+                <td>
+                <span   *ngIf="dataRow.id != selectedRowId">{{dataRow.mandatoryClaimItemsDto.serviceCode}}</span>
+              <div id="loadOnScroll">
+              <ng2-completer id="txtServiceCode{{i}}" name="serviceCode{{i}}" [(ngModel)]="dataRow.mandatoryClaimItemsDto.serviceCode" 
+                [datasource]="serviceCodeRemote" [minSearchLength]="3" 
+                [inputClass]="{ 'error_field': dataRow.mandatoryClaimItemsDto.serviceCode == '', 'fm-txt': true, 'form-control':true }"
+                [clearUnselected]="false" [placeholder]="'Service Code'" [textSearching]="'Please wait...'" 
+                [fillHighlighted]="false" [autoHighlight]="true" [selectOnFocus]="true" (selected)="onServiceCodeSelect($event)"
+                (blur)="editStatusValue()" *ngIf="dataRow.id == selectedRowId" (keydown)="onKeyEditPressEvent($event,i,dataRow,1)">
+              </ng2-completer>
+              </div>
+               </td>
+                <td>
+                  <span *ngIf="dataRow.id != selectedRowId">{{dataRow.mandatoryClaimItemsDto.refUli}}</span>
+                 <ng2-completer id="txtRefUli{{i}}"
+                  name="refUli{{i}}" [(ngModel)]="dataRow.mandatoryClaimItemsDto.refUli" *ngIf="dataRow.id == selectedRowId" [datasource]="dentistULIRemote" [minSearchLength]="3"
+                  [clearUnselected]="false" [placeholder]="'Referring ULI'" [textSearching]="'Please wait...'" [inputClass]="'form-control'"
+                  [fillHighlighted]="false" [autoHighlight]="true" [selectOnFocus]="true" (selected)="onReferringULISelect($event)"
+                  (blur)="editStatusValue()" (keydown)="onKeyEditPressEvent($event,i,dataRow,1)">
+                 </ng2-completer>
+               </td>
+                <td>
+                  <span *ngIf="dataRow.id != selectedRowId">{{dataRow.mandatoryClaimItemsDto.diagnostic1}}</span>
+                <ng2-completer id="txtDiagnostic1{{i}}"
+                name="diagnostic1{{i}}" [(ngModel)]="dataRow.mandatoryClaimItemsDto.diagnostic1" *ngIf="dataRow.id == selectedRowId" [datasource]="dignosticCodeRemote" [minSearchLength]="2"
+                [placeholder]="'Search Diagnostic Primary'" [textSearching]="'Please wait...'" [inputClass]="'fm-txt form-control'"
+                data-type="predective" (selected)="onDiagnosticCodeSelect($event)" (blur)="editStatusValue()" [clearUnselected]="true"
+                [autoHighlight]="true" [fillHighlighted]="false" [selectOnFocus]="true" (keydown)="onKeyEditPressEvent($event,i,dataRow,1)">
+                </ng2-completer>
+               </td>
+                <td>
+                  <span *ngIf="dataRow.id != selectedRowId">{{dataRow.mandatoryClaimItemsDto.timeUnits}}</span>
+                  <input id="txtTimeUnits{{i}}" type="number" (keyup.enter)="OnEnterPress(i,dataRow,1)" name="timeUnits{{i}}" style="text-align:right;" value="{{dataRow.mandatoryClaimItemsDto.time-units}}"
+                  (blur)="ontimeUnitChange($event,'timeUnits')" maxlength="3" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                  [ngClass]="{ 'error_field': dataRow.timeUnits == '', 'fm-txt': true, 'form-control':true }"
+                  [(ngModel)]="dataRow.mandatoryClaimItemsDto.timeUnits" *ngIf="dataRow.id == selectedRowId" >
+                </td>
+                <td>
+                  <span *ngIf="dataRow.id != selectedRowId">{{dataRow.mandatoryClaimItemsDto.functionalCenter}}</span>
+                <ng2-completer id="txtFunctionalCenter{{i}}"
+                  name="functionalCenter{{i}}" [(ngModel)]="dataRow.mandatoryClaimItemsDto.functionalCenter" *ngIf="dataRow.id == selectedRowId" [datasource]="FunctionCentreDetails1"
+                  [minSearchLength]="2"  (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Select'"
+                  [textSearching]="'Please wait...'" [inputClass]="'form-control inputSearch'" data-type="predective" [inputId]="'functCentre'"
+                  (selected)="onSelectFeeModifier($event,'functCentre')" (blur)="editStatusValue('functCentre')" [clearUnselected]="false"
+                  [autoHighlight]="true" (keydown)="onKeyEditPressEvent($event,i,dataRow,1)">
+                </ng2-completer>
+               </td>
+                <td>
+                  <span *ngIf="dataRow.id != selectedRowId">{{dataRow.mandatoryClaimItemsDto.skillCode}}</span>
+                <ng2-completer id="txtSkillCode{{i}}"
+                  name="skillCode{{i}}" [(ngModel)]="dataRow.mandatoryClaimItemsDto.skillCode" *ngIf="dataRow.id == selectedRowId" [datasource]="SkillCodeDetails1" [minSearchLength]="2"
+                   (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Select'" [textSearching]="'Please wait...'"
+                  [inputClass]="'form-control inputSearch'" data-type="predective" [inputId]="'skillCode'" (selected)="onSelectFeeModifier($event,'skillCode')"
+                  (blur)="editStatusValue('skillCode')" [clearUnselected]="false" [autoHighlight]="true" (keydown)="onKeyEditPressEvent($event,i,dataRow,1)">
+                </ng2-completer>
+               </td>
+                <td>
+                 <span *ngIf="dataRow.id != selectedRowId">{{dataRow.mandatoryClaimItemsDto.feeMode1}}</span>
+                 <ng2-completer id="txtFeeMod1{{i}}" 
+                 name="feeMode1{{i}}" [(ngModel)]="dataRow.mandatoryClaimItemsDto.feeMode1" *ngIf="dataRow.id == selectedRowId" [datasource]="feeModifierList"
+                 [minSearchLength]="2"  (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Select'"
+                 [textSearching]="'Please wait...'" [inputClass]="'form-control inputSearch'" data-type="predective" [inputId]="'feeModifier1'"
+                 (selected)="onSelectFeeModifier($event,'feeModifier1')" (blur)="editStatusValue('feeModifier1')" [clearUnselected]="false"
+                 [autoHighlight]="true" (keydown)="onKeyEditPressEvent($event,i,dataRow,1)">
+                </ng2-completer>
+               </td>
+              <td>
+              <span *ngIf="dataRow.id != selectedRowId">{{dataRow.mandatoryClaimItemsDto.feeMode2}}</span>
+              <ng2-completer id="txtFeeMod2{{i}}" 
+               name="feeMode2{{i}}" [(ngModel)]="dataRow.mandatoryClaimItemsDto.feeMode2" *ngIf="dataRow.id == selectedRowId" [datasource]="feeModifier2List"
+               [minSearchLength]="2" (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Select'"
+               [textSearching]="'Please wait...'" [inputClass]="'form-control inputSearch'" data-type="predective" [inputId]="'feeModifier2'"
+               (selected)="onSelectFeeModifier($event,'feeModifier2')" (blur)="editStatusValue('feeModifier2')" [clearUnselected]="false"
+               [autoHighlight]="true" (keydown)="onKeyEditPressEvent($event,i,dataRow,1)">
+              </ng2-completer>
+              </td>
+
+              <td>
+                <span *ngIf="dataRow.id != selectedRowId">{{dataRow.optionalClaimItemsDto.feeMode3}}</span>
+                <div id="loadOnScroll">
+                  <ng2-completer id="txtFeeMod3{{i}}" 
+                  name="feeMode3{{i}}" [(ngModel)]="dataRow.optionalClaimItemsDto.feeMode3" *ngIf="dataRow.id == selectedRowId" [datasource]="feeModifier3List"
+                  [minSearchLength]="2" [openOnFocus]="false" (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Select'"
+                  [textSearching]="'Please wait...'" [inputClass]="'form-control inputSearch'" data-type="predective" [inputId]="'feeModifierOptional1'"
+                  (selected)="onSelectFeeModifier($event,'feeModifierOptional1')" (blur)="editStatusValue('feeModifierOptional1')" [clearUnselected]="false"
+                  [autoHighlight]="true" (keydown)="onKeyEditPressEvent($event,i,dataRow,1)">
+                  </ng2-completer>
+                </div>
+              </td>
+
+              <td>
+                <span *ngIf="dataRow.id != selectedRowId">{{dataRow.optionalClaimItemsDto.encounterNum}}</span>
+                  <input id="encounterNum{{i}}" type="number" (keyup.enter)="OnEnterPress(i,dataRow,1)" name="encounterNum{{i}}" style="text-align:right;" value="{{dataRow.mandatoryClaimItemsDto.encounterNumber}}"
+                  (blur)="ontimeUnitChange($event,'encounterNumber')" maxlength="1" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" 
+                  [ngClass]="{ 'error_field': dataRow.encounterNumber == '', 'fm-txt': true, 'form-control':true }" [(ngModel)]="dataRow.optionalClaimItemsDto.encounterNum"
+                  placeholder="{{'dataEntry.claim-items.encounterNumber' | translate}}" *ngIf="dataRow.id == selectedRowId">
+              </td>
+               <!--change and modified labels positions claimamount and paid amount stating point -->
+              <td>
+                <span *ngIf="dataRow.id != selectedRowId" style="text-align:right;">{{dataRow.mandatoryClaimItemsDto.claimAmount}}</span>
+                 <input type="number" (keyup.enter)="OnEnterPress(i,dataRow,1)" OnlyNumber="true" id="ClaimAmount{{i}}" name="claimAmount{{i}}" style="text-align:right;"
+                 maxlength="5" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" value="{{dataRow.mandatoryClaimItemsDto.claimAmount}}" [(ngModel)]="dataRow.mandatoryClaimItemsDto.claimAmount"
+                 [ngClass]="{ 'error_field': (dataRow.claimAmount == '' ), 'fm-txt': true, 'form-control':true }"
+                 (blur)="ConvertAmountToDecimal($event,'claimAmount',dataRow)" *ngIf="dataRow.id == selectedRowId">
+             </td>
+             <td>
+              <span *ngIf="dataRow.id != selectedRowId" style="text-align:right;">{{dataRow.mandatoryClaimItemsDto.paidAmount}}</span>
+               <input type="number" (keyup.enter)="OnEnterPress(i,dataRow,1)" OnlyNumber="true" id="paidAmount{{i}}" name="paidAmount{{i}}" style="text-align:right;"
+               maxlength="5" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" value="{{dataRow.mandatoryClaimItemsDto.paidAmount}}" [(ngModel)]="dataRow.mandatoryClaimItemsDto.paidAmount"
+               [ngClass]="{ 'error_field': (dataRow.paidAmount== '' ), 'fm-txt': true, 'form-control':true }"
+               (blur)="ConvertAmountToDecimal($event,'paidAmount',dataRow)" *ngIf="dataRow.id == selectedRowId">
+             </td>
+              <!--change and modified labels positions claimamount and paid amount  ending point -->
+                <td class="d-flex" *ngIf="claimItemCheck[0].deleteClaimItem == 'T' || claimItemCheck[0].editClaimItem == 'T'">
+                  <button  [disabled]="editDisable" (click)="EditItemInfo(i,dataRow)" title="Edit" id="editAHC" class='edit_row table-action-btn edit-ico'
+                  *ngIf="dataRow.id != selectedRowId">
+                  <i class='fa fa-pencil'></i>
+                  </button>
+                  <button
+                    [ngClass]="{ 'save_row': true, 'table-action-btn': true, 'edit-ico': true }" 
+                    title="Save" id="save-ahc" *ngIf="dataRow.id == selectedRowId" (click)="saveDataEntryClaim(i,dataRow,true)">
+                    <i class="fa fa-save"></i>
+                  </button>
+                  <button title="Cancel" class="delete_row table-action-btn del-ico" id="btn-CancelInfo " (click)="CancelInfo(i,dataRow,0)"
+                    (blur)="CancelInfo(i,dataRow,1)" *ngIf="dataRow.id == selectedRowId">
+                  <i class="fa fa-times"></i>
+                 </button>
+                  <button [disabled]="cancelDisable" title="Delete" id="deleteAHC" [ngClass]="{ 'delete_row': true, 'table-action-btn': true, 'del-ico': true}" (click)="DeleteInfo(i,dataRow)"
+                    *ngIf="dataRow.id != selectedRowId && claimItemCheck[0].deleteClaimItem == 'T'">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                  <!-- view icon Add functionality -->
+                  <span [hidden]="viewModes">
+                    <button title="View" id="viewAHC" [ngClass]="{ 'view_row': true, 'table-action-btn': true, 'view-ico': true}" (click)="ViewItemInfo(i,dataRow)"
+                    *ngIf="dataRow.id != selectedRowId">
+                    <i class='fa fa-eye'></i>
+                    </button>
+                  </span>
+                </td>
+              </tr>
+              <!-- Add new row for add mode (#1264)  -->
+               <tr [hidden]="!rowVisible || claimAddMode">
+                <td>
+                  <input class="fm-txt form-control" value="" OnlyNumber="true" name="claimNumber" 
+                  id="decMandatory_ClaimNumber" value={{savedMandatoryClaimNumber}} disabled/>
+                </td>
+                <td *ngIf="arrStatusVal">
+                  <input type="text" class="fm-txt form-control" id="decMandatory_ClaimStatus" 
+                  value={{arrStatus[0].name}} disabled>
+                </td>
+                <td *ngIf="!arrStatusVal">
+                  <input type="text" class="fm-txt form-control" id="decMandatory_ClaimStatus" 
+                  value={{arrStatus[1].name}} disabled>
+                </td>
+                <td>
+                  <input id="txtClaimDate" type="text" value=""  class="fm-txt form-control" name="serviceDate" placeholder="{{'common.date-placeholder'|translate}}"
+                  (keyup.enter)="onEnterSaveInfo()"(blur)="changeDateFormatTest($event, 'serviceDate' ,'arrMandatorySection', true)"
+                  [ngClass]="{ 'error_field': newRecordValidate && (arrMandatorySection.serviceDate == ''|| arrMandatorySection.serviceDate == null) }"
+                  [(ngModel)]="arrMandatorySection.serviceDate">
+                </td>
+                <td>
+                   <ng2-completer [inputId]="'decMandatory_ServiceCode'" name="serviceCode" [(ngModel)]="arrMandatorySection.serviceCode" [datasource]="serviceCodeRemote" [minSearchLength]="3"
+                     [clearUnselected]="false" [placeholder]="'Service Code'" [textSearching]="'Please wait...'"
+                      [inputClass]="{ 'error_field': newRecordValidate && arrMandatorySection.serviceCode == '', 'fm-txt': true, 'form-control':true  }"
+                      [fillHighlighted]="false" [autoHighlight]="true" [selectOnFocus]="true" (selected)="onServiceCodeSelect($event)"
+                      (blur)="editStatusValue()" (keydown)="onKeyPressEvent($event)">
+                    </ng2-completer>
+                </td>
+                <td>
+                  <ng2-completer [inputId]="'decMandatory_ReferringULI'" name="refUlI" [(ngModel)]="arrMandatorySection.refUlI" [datasource]="dentistULIRemote" [minSearchLength]="3"
+                   [clearUnselected]="false" [placeholder]="'Referring ULI'" [textSearching]="'Please wait...'" [inputClass]="'form-control'"
+                  [fillHighlighted]="false" [autoHighlight]="true" [selectOnFocus]="true" (selected)="onReferringULISelect($event)"
+                  (blur)="editStatusValue()" (keydown)="onKeyPressEvent($event)">
+                </ng2-completer>
+                </td>
+                <td>
+                  <ng2-completer id="decMandatory_DignosticPrimary" name="dignosticPrimary" [(ngModel)]="arrMandatorySection.dignosticPrimary" [datasource]="dignosticCodeRemote" [minSearchLength]="2"
+                  [placeholder]="'Search Diagnostic Primary'" [textSearching]="'Please wait...'" [inputClass]="'fm-txt form-control'"
+                  data-type="predective" (selected)="onDiagnosticCodeSelect($event)" (blur)="editStatusValue()" [clearUnselected]="true"
+                  [autoHighlight]="true" [fillHighlighted]="false" [selectOnFocus]="true" (keydown)="onKeyPressEvent($event)">
+                </ng2-completer>
+                </td>
+                <td>
+                  <input id="decMandatory_TimeUnits" (blur)="ontimeUnitChange($event,'timeUnits')" maxlength="3" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                  (keyup.enter)="onEnterSaveInfo()" placeholder="{{'dataEntry.claims.mandatory.timeUnits'|translate}}" type="number" OnlyNumber="true" class="fm-txt form-control" name="timeUnits"
+                  [(ngModel)]="arrMandatorySection.timeUnits">
+                </td>
+                <td>
+                  <ng2-completer [inputName]="'functCentre'" name="functCentre" [(ngModel)]="arrMandatorySection.functCentre" [datasource]="FunctionCentreDetails1"
+                  [minSearchLength]="2" (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Select'"
+                  [textSearching]="'Please wait...'" [inputClass]="'form-control inputSearch'" data-type="predective" [inputId]="'functCentre'"
+                  (selected)="onSelectFeeModifier($event,'functCentre')" (blur)="editStatusValue('functCentre')" [clearUnselected]="false"
+                  [autoHighlight]="true" (keydown)="onKeyPressEvent($event)">
+                </ng2-completer>
+                </td>
+                <td>
+                  <ng2-completer [inputName]="'skillCode'" name="skillCode" [(ngModel)]="arrMandatorySection.skillCode" [datasource]="SkillCodeDetails1" [minSearchLength]="2"
+                  (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Select'" [textSearching]="'Please wait...'"
+                  [inputClass]="'form-control inputSearch'" data-type="predective" [inputId]="'skillCode'" (selected)="onSelectFeeModifier($event,'skillCode')"
+                  (blur)="editStatusValue('skillCode')" [clearUnselected]="false" [autoHighlight]="true" (keydown)="onKeyPressEvent($event)">
+                </ng2-completer>
+                </td>
+                <td>
+                  <div>
+                    <ng2-completer [inputName]="'feeModifier1'" name="feeModifier1" [(ngModel)]="arrMandatorySection.feeModifier1"  [datasource]="feeModifierList"
+                     [minSearchLength]="2" (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Select'"
+                     [textSearching]="'Please wait...'" [inputClass]="'form-control inputSearch'" data-type="predective" [inputId]="'feeModifier1'"
+                     (selected)="onSelectFeeModifier($event,'feeModifier1')" (blur)="editStatusValue('feeModifier1')" [clearUnselected]="false"
+                     [autoHighlight]="true" (keydown)="onKeyPressEvent($event)">
+                    </ng2-completer>
+                 </div>
+                </td>
+                <td>
+                  <div>
+                    <ng2-completer [inputName]="'feeModifier2'" name="feeModifier2" [(ngModel)]="arrMandatorySection.feeModifier2" [datasource]="feeModifier2List"
+                      [minSearchLength]="2"  (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Select'"
+                      [textSearching]="'Please wait...'" [inputClass]="'form-control inputSearch'" data-type="predective" [inputId]="'feeModifier2'"
+                      (selected)="onSelectFeeModifier($event,'feeModifier2')" (blur)="editStatusValue('feeModifier2')" [clearUnselected]="false"
+                      [autoHighlight]="true" (keydown)="onKeyPressEvent($event)">
+                    </ng2-completer>
+                  </div>
+                </td>
+
+                <td>
+                  <ng2-completer [inputName]="'feeModifierOptional1'" name="feeModifierOptional1" [(ngModel)]="arrMandatorySection.feeModifierOptional1" [datasource]="feeModifier3List" [minSearchLength]="2" 
+                    (opened)="onOpened($event)"[openOnFocus]="false" [fillHighlighted]="false" [placeholder]="'Select'" [textSearching]="'Please wait...'" 
+                    [inputClass]="'form-control inputSearch'" data-type="predective" [inputId]="'feeModifierOptional1'" (selected)="onSelectFeeModifier($event,'feeModifierOptional1')" 
+                    (blur)="editStatusValue('feeModifierOptional1')" [clearUnselected]="false" 	[autoHighlight]="true" (keydown)="onKeyPressEvent($event)">
+                  </ng2-completer>
+                </td>
+
+                <td>
+                  <input id="decOptional_EncounterNumber" maxlength="1" (blur)="ontimeUnitChange($event,'encounterNumber')" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                  placeholder="{{'dataEntry.claim-items.encounterNumber'|translate}}" type="number"(keyup.enter)="onEnterSaveInfo()" OnlyNumber="true" class="fm-txt form-control" name="encounterNumber"
+                  [(ngModel)]="arrMandatorySection.encounterNumber">
+                </td>
+                 <!--change and modified labels positions claimamount and paid amount stating point -->
+                <td>
+                  <div>   
+                    <input id="decMandatory_FeeClaimedAmount" (blur)="ConvertAmountToDecimal($event,'feeClaimedAmount')" maxlength="5" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" type="number" class="fm-txt form-control amount_right_grid"
+                    (keyup.enter)="onEnterSaveInfo()" placeholder="{{'dataEntry.claims.mandatory.feeClaimedAmount'|translate}}" name="feeClaimedAmount" [(ngModel)]="arrMandatorySection.feeClaimedAmount" >
+                  </div>
+                </td>
+                <td>
+                  <div>
+                    <input id="decPayInfo_PaidAmount"  (blur)="ConvertAmountToDecimal($event,'paidAmount')" placeholder="{{'dataEntry.claims.payment-information.paidAmount'|translate}}"
+                      type="number" maxlength="5" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" class="fm-txt form-control amount_right_grid" (keyup.enter)="onEnterSaveInfo()" [(ngModel)]="arrMandatorySection.paidAmount">
+                  </div>
+                </td>
+                 <!--change and modified labels positions claimamount and paid amount  ending point -->
+                <td class="d-flex"> 
+                <button href="javascript:void(0)" id="saveClaimAhc" class="save_row table-action-btn edit-ico"
+                title="Save" (click)="saveDataEntryClaim('',arrMandatorySection,true)" (click)="AddNew(1)">
+                 <i class="fa fa-save"></i>
+               </button>
+               <button title="Cancel" id="addModeDelete" class="delete_row table-action-btn del-ico" (click)="CancelInfo('i','dataRow',1)"
+               (blur)="CancelInfo('i','dataRow',0)" (keydown.tab)="saveDataEntryClaim('',arrMandatorySection,true)">
+               <i class="fa fa-times"></i>
+                </button>
+                </td>
+              </tr>
+              <tr *ngIf="arrClaimItems.length > 0" class="tableRow border_top">
+                <td>{{arrClaimItems.length}}</td><td></td>
+                <td></td><td></td><td></td><td></td>
+                <td></td><td></td><td></td><td></td><td></td>
+                <td colspan="2">{{'claims.totalClaimAmount' | translate}}</td>
+                <td class="total_amt">{{getClaimAmount('claimAmount') | number:'1.2-2'}}</td>
+                <td></td><td></td>
+              </tr>
+            </tbody>
+          </table>
+          <!-- Table Ends -->
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- </div> -->
+<div>
+  <form [formGroup]="ClaimItemBelowFormGroup">
+    <div [hidden]="hideBelowForm">
+      <div class="grid-box" style="display: none;">
+        <div class="grid-heading">
+          <h3>{{'dataEntry.headings.mandatory'|translate}}</h3>
+        </div>
+        <!-- Grid Heading Ends -->
+        <div class="grid-inner">
+          <div class="form-row">
+
+            <div class="row">
+              <div class="col-md-2 col-xs-12">
+                <label>{{'common.action'|translate}}
+                  <span class="required">*</span>
+                </label>
+                <select id="decMandatory_Action" autocomplete="off" class="fm-txt form-control" formControlName="action" (change)="checkAction('action')">
+                  <option [ngValue]="null" disabled hidden selected >{{'common.select' | translate}}</option>
+                  <option *ngFor="let actionValue of arrAction" [value]="actionValue.actionKey">
+                    {{ actionValue.actionDesc }}
+                  </option>
+                </select>
+                <show-errors [control]="ClaimItemBelowFormGroup.controls.action"></show-errors>
+              </div>
+              <div class="col-md-2 col-xs-12" >
+                <label>&nbsp;</label>
+                <button *ngIf="claimItemCheck[0].Reassess == 'T' && !batchStatusSubmitted" id="btnReAccess" [disabled]="disableSave || addMode || disableReasses"
+                  title="{{'dataEntry.claims.mandatory.reaccess' | translate}}" class="btn green-btn btn-lg no-left-space"
+                  type="button" (click)="reaccessClaim()">{{'dataEntry.claims.mandatory.reaccess' | translate}}</button>
+
+                  <button *ngIf="claimItemCheck[0].Reassess == 'T' && batchStatusSubmitted" id="btnReAccess"
+                  title="{{'dataEntry.claims.mandatory.reaccess' | translate}}" class="btn green-btn btn-lg no-left-space"
+                  type="button" (click)="reaccessClaim()">{{'dataEntry.claims.mandatory.reaccess' | translate}}</button>
+              </div>
+             
+            </div>
+
+          </div>
+          <!-- Form Row ENds -->
+        </div>
+        <!-- Grid Inner Ends -->
+      </div>
+      <div [hidden]="hideOptionalForms">
+      <div class="grid-box">
+        <div class="accordion" id="accordion2">
+          <div class="accordion-group">
+            <div class="accordion-heading grid-heading">
+
+              <button class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" data-target="#optional">
+                <h3>{{'dataEntry.headings.optional'|translate}}</h3>
+              </button>
+
+            </div>
+          </div>
+          <div id="optional" class="accordion-body collapse">
+            <div class="accordion-inner">
+              <div class="grid-inner">
+                <div class="form-row">
+                  <div class="row">
+                    <div class="col-md-1 col-xs-12">
+                      <label>{{'dataEntry.claims.mandatory.toothCode'|translate}}
+                      </label>
+                      <select id="decMandatory_ToothCode" autocomplete="off" class="fm-txt form-control" formControlName="toothCode" (blur)="editStatusValue()">
+                        <option [ngValue]="null" disabled hidden selected>{{'common.select' | translate}}</option>
+                        <option *ngFor="let toothCodeValue of toothCodeDetails" [value]="toothCodeValue.toothCodeKey">
+                          {{ toothCodeValue.toothId }}
+                        </option>
+                      </select>
+                      <show-errors [control]="ClaimItemBelowFormGroup.controls.toothCode"></show-errors>
+                    </div>
+                    <div class="col-md-2 col-xs-12">
+                      <label>{{'dataEntry.claims.mandatory.toothSurfaces'|translate}}
+                      </label>
+                      <input id="decMandatory_ToothSurfaces" placeholder="{{'dataEntry.claims.mandatory.toothSurfaces'|translate}}" type="text"
+                        class="fm-txt form-control" formControlName="toothSurfaces" (blur)="validateSurface($event.target.value)">
+                      <show-errors [control]="ClaimItemBelowFormGroup.controls.toothSurfaces"></show-errors>
+                    </div>
+
+                    <div class="col-md-2 col-xs-12">
+                      <label>{{'dataEntry.claims.optional.locum'|translate}}
+                      </label>
+                      <input id="decOptional_LocumBusNumber" maxlength="7" placeholder="{{'dataEntry.claims.optional.locum'|translate}}" type="text"
+                        class="fm-txt form-control" formControlName="locumBusNumber" (blur)="editStatusValue()">
+                    </div>
+                    <div class="col-md-1 col-xs-12">
+                      <label>{{'dataEntry.claims.optional.location'|translate}}
+                      </label>
+                      <input id="decOptional_Location" maxlength="4" placeholder="{{'dataEntry.claims.optional.location'|translate}} " type="text"
+                        class="fm-txt form-control" formControlName="location" (blur)="editStatusValue()">
+                      <show-errors [control]="ClaimItemBelowFormGroup.controls.location"></show-errors>
+                    </div>
+                    <div class="col-md-1 col-xs-12">
+                      <label>{{'dataEntry.claims.optional.recovery'|translate}}
+                      </label>
+                      <input  maxlength="2"  oninput="this.value = this.value.replace(/[^A-Za-z]/g, '');" id="decOptional_Recovery" placeholder="{{'dataEntry.claims.optional.recovery'|translate}}" type="text" class="fm-txt form-control"   formControlName="recovery" (blur)="enableRecoveryAddress($event)">
+                      <show-errors [control]="ClaimItemBelowFormGroup.controls.recovery"></show-errors>
+                    </div>
+                    <div class="col-md-1 col-xs-12">
+                      <label>{{'dataEntry.claims.optional.intercept'|translate}}
+                      </label>
+                      <select id="decOptional_Intercept" autocomplete="off" class="fm-txt form-control" formControlName="intercept" (blur)="editStatusValue()">
+                        <option [ngValue]="null" disabled hidden selected>{{'common.select' | translate}}</option>
+                        <option *ngFor="let interceptValue of arrIntercept" [value]="interceptValue.key">
+                          {{ interceptValue.desc }}
+                        </option>
+                      </select>
+                    </div>
+                    <div class="col-md-1 col-xs-12">
+                      <label>{{'dataEntry.claims.optional.paperInfo'|translate}}
+                      </label>
+                      <select class="fm-txt form-control" id="decOptional_PaperInfo" formControlName="paperInfo" (blur)="editStatusValue()">
+                        <option [ngValue]="null" disabled hidden selected>{{'common.select' | translate}}</option>
+                        <option value="N">{{'company.plan.no' | translate}}</option>
+                        <option value="Y">{{'company.plan.yes' | translate}}</option>
+                      </select>
+                    </div>
+                    <div class="col-md-2 col-xs-12">
+                      <label>{{'dataEntry.claims.optional.OOPRef'|translate}}
+                      </label>
+                      <select class="fm-txt form-control" id="decOptional_OOPReferral" formControlName="referral" (blur)="editStatusValue()">
+                        <option [ngValue]="null" disabled hidden selected>{{'common.select' | translate}}</option>
+                        <option value="N">{{'company.plan.no' | translate}}</option>
+                        <option value="Y">{{'company.plan.yes' | translate}}</option>
+                      </select>
+                    </div>
+                    <div class="col-md-1 col-xs-12">
+                      <label>{{'dataEntry.claims.optional.confidential'|translate}}
+                      </label>
+                      <select class="fm-txt form-control" id="decOptional_Confidential" formControlName="confidential" (blur)="editStatusValue()">
+                        <option [ngValue]="null" disabled hidden selected>{{'common.select' | translate}}</option>
+                        <option value="N">{{'company.plan.no' | translate}}</option>
+                        <option value="Y">{{'company.plan.yes' | translate}}</option>
+                      </select>
+                    </div>
+                    <div class="col-md-1 col-xs-12">
+                      <label>{{'dataEntry.claims.optional.emsaf'|translate}}
+                      </label>
+                      
+                      <select class="fm-txt form-control" id="decOptional_EMSAF" formControlName="emsaf" (blur)="editStatusValue()">
+                        <option [ngValue]="null" disabled hidden selected>{{'common.select' | translate}}</option>
+                        <option value="N">{{'company.plan.no' | translate}}</option>
+                        <option value="y">{{'company.plan.yes' | translate}}</option>
+                      </select>
+                    </div>
+                    <div class="col-md-2 col-xs-12">
+                      <label>{{'dataEntry.claims.optional.diagnosticSecondary'|translate}}
+                      </label>
+                     
+                      <ng2-completer [inputId]="'decOptional_DignosticSecondary'" formControlName="dignosticSecondary" [datasource]="dignosticCodeRemote"
+                        [minSearchLength]="2" [clearUnselected]="true" [placeholder]="'Search Diagnostic Secondary'" [textSearching]="'Please wait...'"
+                        [inputClass]="'form-control'" [fillHighlighted]="false" [autoHighlight]="true" [selectOnFocus]="true"
+                        (selected)="onDiagnosticCodeSelect($event)" (blur)="editStatusValue()">
+                      </ng2-completer>
+                    </div>
+                    <div class="col-md-2 col-xs-12">
+                      <label>{{'dataEntry.claims.optional.dignosticTeritary'|translate}}
+                      </label>
+                      
+                      <ng2-completer [inputId]="'decOptional_DignosticTeritary'" formControlName="dignosticTeritary" [datasource]="dignosticCodeRemote"
+                        [minSearchLength]="2" [clearUnselected]="true" [placeholder]="'Search Diagnostic Teritary'" [textSearching]="'Please wait...'"
+                        [inputClass]="'form-control'" [fillHighlighted]="false" [autoHighlight]="true" [selectOnFocus]="true"
+                        (selected)="onDiagnosticCodeSelect($event)" (blur)="editStatusValue()">
+                      </ng2-completer>
+                    </div>
+                    <!-- Log #1128: Client Feedback -->
+                    <div class="col-md-2 col-xs-12">
+                      <label>{{'dataEntry.claims.optional.serviceRecipientRegNo' | translate }}</label>
+                      <input id="decOptional_serviceRecpRegNo" placeholder="{{'dataEntry.claims.optional.serviceRecipientRegNo' | translate}}" type="text" class="fm-txt form-control"
+                      formControlName="serviceRecpRegNo" (blur)="editStatusValue()" oninput="this.value = this.value.replace(/[^0-9]/g, '');" >
+                      <show-errors [control]="ClaimItemBelowFormGroup.controls.serviceRecpRegNo"></show-errors>
+                    </div>
+                    <div class="col-md-1 col-xs-12">
+                      <label>{{'dataEntry.claims.mandatory.goodFaith'|translate}}
+                      </label>
+                      <select class="fm-txt form-control" id="decOptional_GoodFaith" (change)="enableGoodFaithAddress($event)" formControlName="goodFaith"
+                        (blur)="editStatusValue()">
+                        <option [ngValue]="null" disabled hidden selected>{{'common.select' | translate}}</option>
+                        <option value="N">{{'company.plan.no' | translate}}</option>
+                        <option value="Y">{{'company.plan.yes' | translate}}</option>
+                      </select>
+                      <show-errors [control]="ClaimItemBelowFormGroup.controls.goodFaith"></show-errors>
+                    </div>
+                    <!-- add text field for #1264 -->
+                    <div class="col-md-4 col-xs-12">
+                      <label>{{'dataEntry.claims.optional.text'|translate}}
+                      </label>
+                      <textarea id="decMandatory_text" placeholder="{{'dataEntry.claims.optional.text'|translate}}" type="text" class="fm-txt form-control"
+                        formControlName="text" (blur)="editStatusValue()"></textarea>
+                    </div>
+                    <div class="col-md-2 col-xs-12">
+                      <label>&nbsp;</label>
+                      <button *ngIf="claimItemCheck[0].editClaimantAddress == 'T'" id="btnClaimantAddress" [disabled]="disableClaimantAddress || isReassessFormDisabled"
+                        title="Edit Claimant Address" class="btn green-btn btn-lg" type="button" (click)="openModal(claimantAddressModal)"
+                        data-toggle="modal" data-target="#claimantAddressModal">{{'button.editClaimantAddress' | translate}}</button>
+                    </div>
+                   
+                  </div>
+                </div>
+                <!-- Form Row ENds -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- Grid Heading Ends -->
+       
+        <!-- Grid Inner Ends -->
+      </div>
+    </div>
+      <!-- default open for log #794 -->
+      <!-- Grid Box Ends -->
+      <div class="grid-box" *ngIf="!addMode && !addModeSet">
+        <div class="accordion" id="accordion3">
+          <div class="accordion-group">
+            <div class="accordion-heading grid-heading">
+
+              <button class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" data-target="#paymentInformationHeadingDiv">
+                <h3>{{'dataEntry.headings.payment-information-heading'|translate}}</h3>
+              </button>
+            </div>
+          </div>
+
+          <div id="paymentInformationHeadingDiv" class="accordion-body collapse">
+
+            <div class="accordion-inner">
+              <div class="grid-inner">
+                <div class="form-row">
+
+                  <div class="row min-ht-sf">
+                    <div class="col-md-2 col-xs-12">
+                      <label>{{'dataEntry.claims.payment-information.claimNumber'|translate}}
+                      </label>
+                      <input id="decPayInfo_ClaimNumber" disabled placeholder="{{'dataEntry.claims.payment-information.claimNumber'|translate}}"
+                        type="text" class="fm-txt form-control" formControlName="claimNumberPayment">
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                      <label>{{'dataEntry.claims.payment-information.reassessmentNumber'|translate}}
+                      </label>
+                      <input id="decPayInfo_ReassessmentReason" disabled placeholder="{{'dataEntry.claims.payment-information.reassessmentNumber'|translate}}"
+                        type="text" class="fm-txt form-control" formControlName="reassessment">
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                      <label>{{'dataEntry.claims.payment-information.assessmentAction'|translate}}
+                      </label>
+                      <input id="decPayInfo_AssessmentAction" disabled placeholder="{{'dataEntry.claims.payment-information.assessmentAction'|translate}}"
+                        type="text" class="fm-txt form-control" formControlName="assessment">
+                    </div>
+                    <div class="col-md-2 col-xs-12">
+                      <label>{{'dataEntry.claims.payment-information.refNumber'|translate}}
+                      </label> 
+                      <input id="decPayInfo_ReferenceNumber" disabled placeholder="{{'dataEntry.claims.payment-information.refNumber'|translate}}"
+                        type="text" class="fm-txt form-control" formControlName="refNumber">
+                    </div>
+                    <div class="col-md-2 col-xs-12">
+                      <label>{{'dataEntry.claims.payment-information.expectedPaymentDate'|translate}}
+                      </label>
+                      <div class="calender-field">
+                        <my-date-picker id="decPayInfo_ExpectedPaymentDate" [disabled]="true" [options]="myDatePickerOptions" placeholder="{{'common.date-placeholder'|translate}}"
+                          name="expPaymentDate" formControlName="expPaymentDate" (inputFocusBlur)="changeDateFormat($event, 'expPaymentDate' ,'ClaimItemBelowFormGroup',true)">
+                        </my-date-picker>
+                      </div>
+                      <show-errors [control]="ClaimItemBelowFormGroup.controls.expPaymentDate"></show-errors>
+                      <!-- Calendar Field Ends -->
+                    </div>
+                    <div class="col-md-2 col-xs-12">
+                      <label>{{'dataEntry.claims.payment-information.assessmentDate'|translate}}
+                      </label>
+                      <div class="calender-field">
+                        <my-date-picker id="decPayInfo_AssessmentDate" [disabled]="true" [options]="myDatePickerOptions" placeholder="{{'common.date-placeholder'|translate}}"
+                          name="assessmentDate" formControlName="assessmentDate" (inputFocusBlur)="changeDateFormat($event, 'assessmentDate' ,'ClaimItemBelowFormGroup',true)">
+                        </my-date-picker>
+                      </div>
+                      <show-errors [control]="ClaimItemBelowFormGroup.controls.assessmentDate"></show-errors>
+                      <!-- Calendar Field Ends -->
+                    </div>
+
+                    <div class="col-md-2 col-xs-12 ">
+                      <label>{{'dataEntry.claims.payment-information.explanationCodes'|translate}}
+                      </label>
+                      <input id="decPayInfo_ExplanationCodes" disabled placeholder="{{'dataEntry.claims.payment-information.explanationCodes'|translate}}"
+                        type="text" class="fm-txt form-control" formControlName="explanationCodes">
+                      <a href="javascript:;" class="gen-btn btn" style="position: absolute;right: 20px;top: 30px;" data-toggle="modal" data-target="#showExplanationCode"
+                        data-backdrop="static" data-keyboard="false" (click)="getExplanatoryCodeSecondList()">
+                        <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+                      </a>
+                    </div>
+                    <div class="col-md-2 col-xs-12">
+                      <label>{{'dataEntry.claims.payment-information.emsaf'|translate}}
+                      </label>
+                      <input id="decPayInfo_EMSAFStatus" disabled placeholder="{{'dataEntry.claims.payment-information.emsaf'|translate}}" type="text"
+                        class="fm-txt form-control" formControlName="status">
+                    </div>
+                    <div class="col-md-2 col-xs-12">
+                      <label>{{'dataEntry.claims.payment-information.feeModifiers'|translate}}
+                      </label>
+                      <input id="decPayInfo_FeeModifiers" disabled placeholder="{{'dataEntry.claims.payment-information.feeModifiers'|translate}}"
+                        type="text" class="fm-txt form-control" formControlName="feeModifiers">
+                    </div>
+                    <div class="col-md-2 col-xs-12">
+                      <label>{{'dataEntry.claims.payment-information.FRrefNumber'|translate}}
+                      </label>
+                      <input id="decPayInfo_FRReferenceNumber" disabled placeholder="{{'dataEntry.claims.payment-information.FRrefNumber'|translate}}"
+                        type="text" class="fm-txt form-control" formControlName="frReferenceNumber">
+                    </div>
+                    <div class="col-md-2 col-xs-12">
+                      <label>{{'dataEntry.claims.payment-information.paidAmount'|translate}}
+                      </label>
+                      <div class="calender-field d-amount">
+                        <input id="decPayInfo_PaidAmount" disabled (blur)="ConvertAmountToDecimal($event,'paidAmount')" placeholder="{{'dataEntry.claims.payment-information.paidAmount'|translate}}"
+                          type="text" class="fm-txt form-control amount_right_grid" formControlName="paidAmount">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Form Row ENds -->
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Grid Inner Ends -->
+      </div>
+      <!-- Grid Box Ends -->
+
+      <div class="row">
+        <div class="col-sm-4" *ngIf= "!addMode && !addModeSet">
+          <div class="grid-box">
+            <div class="grid-heading">
+              <h3>{{'dataEntry.headings.batch-balance-status'|translate}}</h3>
+            </div>
+            <div class="grid-inner">
+
+              <div class="form-row">
+                <div class="row">
+                  <div class="col-md-12 col-xs-12">
+                    <label>Explanation Code</label>
+                    <div class="search-field">
+                      <input id="dec_ExplanationCode" placeholder="Explanation Code" type="text" class="fm-txt form-control" formControlName="explanationCode"
+                        (blur)="editStatusValue()">
+                      <a href="javascript:;" class="gen-btn btn" data-toggle="modal" data-target="#showExplanationCode" data-backdrop="static"
+                        data-keyboard="false" (click)="getExplanatoryCodeList()">
+                        <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+                      </a>
+                    </div>
+                    <!-- Search Field Ends -->
+                    <show-errors [control]="ClaimItemBelowFormGroup.controls.explanationCode"></show-errors>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-8">
+          <div class="grid-box">
+            <div class="grid-heading">
+              <h3>{{'button.comments'|translate}}</h3>
+            </div>
+            <div class="grid-inner">
+              <div class="form-row">
+                <div class="add-comments">
+                  <div class="row">
+                    <div class="col-sm-12 min-ht-half">
+                      <textarea type="text" placeholder="{{'dataEntry.common.add-comment'|translate}}" class="notInCaps fm-txt form-control" formControlName="comment"
+                        (blur)="editStatusValue()"></textarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+    <div class="button-pad">
+      <div class="col-md-12">
+        <div class="green col-md-6">
+          <span [hidden]="hideBelowForm">
+            <button id="btnSaveClaim1" *ngIf="claimAddMode && changeEditClaimantAddressFormDateFormat  && claimItemCheck[0].saveClaimItem == 'F'"
+              title="{{'dataEntry.claim-items.saveclaimitem' | translate}}" [disabled]="disableSave" class="btn green-btn btn-lg"
+              type="button" (click)="saveDataEntryClaim('','','')">{{'dataEntry.claim-items.saveclaimitem' | translate}}</button>
+          </span>
+          <button id="btnEditClaim" *ngIf="viewMode  && claimItemCheck[0].editClaims == 'T'" title="DataEntry - Edit Details" class="secondBtn_2 btn green-btn btn-lg"
+            type="button" (click)="CIableEditMode()">{{'button.edit' | translate}}</button>
+
+          <button id="btnUpdateClaim" *ngIf="editMode && claimItemCheck[0].editClaims == 'T'" [disabled]="disableSaveButton" title="DataEntry - Update Details"
+            class="secondBtn_2 btn green-btn btn-lg" type="button" (click)="CIsaveDataEntryClaim('edit','','')">{{'button.update' | translate}}</button>
+
+          <button id="dupbtndupClaim" *ngIf="claimItemCheck[0].saveClaim == 'T'" title="ADD NEW CLAIM" [disabled]="disableSaveButton"
+            class=" secondBtn btn green-btn-add addbtn  btn-lg" type="submit" (click)="CIduplicate()">
+            <i class="fa fa-plus"></i>ADD NEW </button>
+          <button id="btnSaveClaim2" *ngIf="addMode && claimItemCheck[0].saveClaim == 'T'" title="SAVE" [disabled]="disableSaveButton || !claimsComponent.DataEntryClaimFormGroup.valid"
+            class="secondBtn btn green-btn-add addbtn  btn-lg" type="submit" (click)="CIsaveDataEntryClaim('add','','')">{{'button.save' | translate}}</button>
+        </div>
+        <div class="red col-md-6 btndangerright">
+          <span [hidden]="hideBelowForm">
+            <button id="btnCancelClaim" title="Cancel Claim Item" class="btn red-btn btn-lg" type="submit" (click)="CancelInfo('i','dataRow',-2)">{{'common.cancel' | translate}}</button>
+          </span>
+          <button id="claimItemBtnSaveClaim" *ngIf="addMode && claimItemCheck[0].saveClaim == 'T'" title="DELETE" [disabled]="disableSaveButton"
+            class="btn red-btn btn-lg" type="button" (click)="CIdelete()">{{'button.delete' | translate}}</button>
+          <button id="claimItemBtnSaveClaim" *ngIf="(editMode && claimItemCheck[0].saveClaim == 'T') || viewMode && claimItemCheck[0].saveClaim == 'T' "
+            title="DELETE" [disabled]="disableSaveButton" class="btn red-btn btn-lg" type="button" (click)="deleteClaim()">{{'button.delete' | translate}}</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- Grid Box Ends -->
+<modal #claimantAddressModal [closeOnEscape]="false" [closeOnOutsideClick]="false" [hideCloseButton]="false" modalClass="modal-sm">
+  <modal-header>
+    <h4 class="modal-title">
+      {{'dataEntry.editClaimantAddress.title'|translate}}</h4>
+  </modal-header>
+  <modal-content>
+    <div class="modal-body">
+      <div class="grid-box">
+        <div class="grid-heading">
+          <h3>{{'dataEntry.editClaimantAddress.heading'|translate}}</h3>
+        </div>
+        <div class="grid-inner">
+          <form [formGroup]="EditClaimantAddressForm">
+            <div class="form-row">
+              <div class="row min-ht-sf">
+                <div class="col-md-3 col-xs-12">
+                  <label>{{'dataEntry.editClaimantAddress.PHN'|translate}}
+                  </label>
+                    
+                    <input id="decPopup_phn" maxlength="12"  oninput="this.value = this.value.replace(/[^0-9]/g, '');"  type="text" class="fm-txt form-control" placeholder="{{'dataEntry.editClaimantAddress.PHN'|translate}}"
+                    formControlName="phn" >
+
+                  <show-errors [control]="EditClaimantAddressForm.controls.phn"></show-errors>
+                </div>
+                <div class="col-md-3 col-xs-12">
+                  <label>{{'dataEntry.editClaimantAddress.first-name'|translate}}
+                    <span class="required">*</span>
+                  </label>
+                  <input id="decPopup_firstName" type="text" class="fm-txt form-control" placeholder="{{'dataEntry.editClaimantAddress.first-name'|translate}}"
+                    formControlName="firstName">
+                  <show-errors [control]="EditClaimantAddressForm.controls.firstName"></show-errors>
+                </div>
+                <div class="col-md-3 col-xs-12">
+                  <label>{{'dataEntry.editClaimantAddress.middle-name'|translate}}</label>
+                  <input id="decPopup_middleName" type="text" class="fm-txt form-control" placeholder="{{'dataEntry.editClaimantAddress.middle-name'|translate}}"
+                    formControlName="middleName">
+                </div>
+                <div class="col-md-3 col-xs-12">
+                  <label>{{'dataEntry.editClaimantAddress.last-name'|translate}}
+                    <span class="required">*</span>
+                  </label>
+                  <input id="decPopup_lastName" type="text" class="fm-txt form-control" placeholder="{{'dataEntry.editClaimantAddress.last-name'|translate}}"
+                    formControlName="lastName">
+                  <show-errors [control]="EditClaimantAddressForm.controls.lastName"></show-errors>
+                </div>
+                <div class="col-md-3 col-xs-12">
+                  <label>{{'dataEntry.editClaimantAddress.dob'|translate}}
+                    <span class="required">*</span>
+                  </label>
+                  <div class="calender-field">
+                    <my-date-picker id="decPopup_DOB" [options]="myDatePickerOptions" placeholder="{{'common.date-placeholder'|translate}}" name="dob"
+                      formControlName="dob" (inputFocusBlur)="changeEditClaimantAddressFormDateFormat($event, 'dob' ,'EditClaimantAddressForm',true)">
+                    </my-date-picker>
+                  </div>
+                  <show-errors [control]="EditClaimantAddressForm.controls.dob"></show-errors>
+                </div>
+                <div class="col-md-3 col-xs-12">
+                  <label>{{'dataEntry.editClaimantAddress.gender'|translate}}
+                    <span class="required">*</span>
+                  </label>
+                  <select id="decPopup_gender" class="fm-txt form-control inputSearch" name="gender" formControlName="gender">
+                    <option hidden value="">{{'common.select' | translate}}</option>
+                    <option value="M">{{'common.male' | translate}}</option>
+                    <option value="F">{{'common.female' | translate}}</option>
+                    <option value="O">{{'common.other' | translate}}</option>
+                  </select>
+                  <show-errors [control]="EditClaimantAddressForm.controls.gender"></show-errors>
+                </div>
+                <div class="col-md-3 col-xs-12">
+                  <label>{{'dataEntry.editClaimantAddress.address1'|translate}}
+                  </label>
+                  <input id="decPopup_addressLine1" type="text" class="fm-txt form-control" placeholder="{{'dataEntry.editClaimantAddress.address1'|translate}}"
+                    formControlName="addressLine1">
+                  <show-errors [control]="EditClaimantAddressForm.controls.addressLine1"></show-errors>
+                </div>
+                <div class="col-md-3 col-xs-12">
+                  <label>{{'dataEntry.editClaimantAddress.address2'|translate}}</label>
+                  <input id="decPopup_addressLine2" type="text" class="fm-txt form-control" placeholder="{{'dataEntry.editClaimantAddress.address2'|translate}}"
+                    formControlName="addressLine2">
+                  <show-errors [control]="EditClaimantAddressForm.controls.addressLine2"></show-errors>
+                </div>
+
+                <div class="col-md-3 col-xs-12">
+                  <label>{{'common.postal-code' | translate}}
+                  </label>
+                  <input type="text" placeholder="{{'common.postal-code' | translate}}" (blur)="isCompanyPostalcodeValid($event)" formControlName="postalCode"
+                    id="decPopup_postalcode" class="upperCase fm-txt form-control" />
+                  <show-errors [control]="EditClaimantAddressForm.controls.postalCode"></show-errors>
+                </div>
+                <div class="col-md-3 col-xs-12">
+                  <label>{{'common.city' | translate}}
+                  </label>
+                  <input type="text" placeholder="{{'common.city' | translate}}" (blur)="isCompanyPostalVerifyValid($event, 'city')" formControlName="city"
+                    id="decPopup_city" class="fm-txt form-control" />
+                  <show-errors [control]="EditClaimantAddressForm.controls.city"></show-errors>
+                </div>
+                <div class="col-md-3 col-xs-12">
+                  <label>{{'common.province' | translate}}
+                  </label>
+                  <input type="text" placeholder="{{'common.province' | translate}}" (blur)="isCompanyPostalVerifyValid($event, 'province')"
+                    formControlName="province" id="decPopup_province" class="fm-txt form-control">
+                  <show-errors [control]="EditClaimantAddressForm.controls.province"></show-errors>
+                </div>
+                <div class="col-md-3 col-xs-12">
+                  <label>{{'common.country' | translate}}
+                  </label>
+                  <input type="text" placeholder="{{'common.country' | translate}}" (blur)="isCompanyPostalVerifyValid($event, 'country')"
+                    formControlName="country" id="decPopup_country" class="fm-txt form-control">
+                  <show-errors [control]="EditClaimantAddressForm.controls.country"></show-errors>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </modal-content>
+  <modal-footer>
+    <div class="col-md-3 col-xs-12 form-row text-center">
+
+      <button id="saveClaimantAddressBtn" class="btn green-btn" (click)="saveClaimantAddress(claimantAddressModal)">{{btnText}}</button>
+      <button id="claimantAddressCancelBtn" class="btn red-btn" (click)="closeModal(claimantAddressModal)">{{'common.cancel'|translate}}</button>
+    </div>
+  </modal-footer>
+</modal>
+<div id="showExplanationCode" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Explanation Codes</h4>
+      </div>
+
+      <div class="modal-body" *ngIf="getExplanatoryCodeListObject.length > 0">
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>Explanation Codes</h3>
+          </div>
+          <!-- Grid Heading Ends -->
+          <div class="grid-inner">
+            <div class="form-row">
+              <div class="row">
+                <div class="col-md-12 col-xs-12 table-col">
+                  <div class="table-responsive" id="explanationCode">
+                    <table class="table table-bordered table-stripped ">
+                      <thead>
+                        <tr>
+                          <th width="5%">Code</th>
+                          <th width="10%">Explanation</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let getExplanatoryCodeListSingleObj of getExplanatoryCodeListObject">
+                          <td>{{getExplanatoryCodeListSingleObj.explanatoryCode}}</td>
+                          <td>{{getExplanatoryCodeListSingleObj.textLine}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <!-- Table Ends -->
+                </div>
+              </div>
+            </div>
+            <!-- Form Row ENds -->
+          </div>
+          <!-- Grid Inner Ends -->
+        </div>
+        <!-- Grid Box Ends -->
+      </div>
+
+      <div class="modal-body" *ngIf="getExplanatoryCodeListObject.length == 0">
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>Explanation Codes</h3>
+          </div>
+          <!-- Grid Heading Ends -->
+          <div class="grid-inner">
+            <div class="form-row">
+              <div class="row">
+                <div class="col-md-12 col-xs-12 table-col">
+                  <div class="table-responsive">
+                    <h3 class="success-msg" [innerHTML]="showMessage" style="text-align: center"> </h3>
+                  </div>
+
+                  <!-- Table Ends -->
+                </div>
+              </div>
+            </div>
+            <!-- Form Row ENds -->
+          </div>
+          <!-- Grid Inner Ends -->
+        </div>
+        <!-- Grid Box Ends -->
+
+      </div>
+
+      <!-- Modal Body End-->
+      <div class="modal-footer">
+        <button class="btn grey-btn" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--Submit-Batch Modal -->
+
+<div [hidden]="!showLoader" class="loader-outer">
+  <div class="cube-wrapper">
+    <div class="cube-folding">
+      <span class="leaf1"></span>
+      <span class="leaf2"></span>
+      <span class="leaf3"></span>
+      <span class="leaf4"></span>
+    </div>
+    <span class="loading" data-name="Loading">{{'company.plan.benefits.pleaseWait'|translate}}</span>
+  </div>
+</div>

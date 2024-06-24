@@ -1,0 +1,321 @@
+<nav class="breadcrumb">
+  <span class="breadcrumb-item" (click)="goBack()">{{'rules.addEditViewRule.rules' | translate}}</span> >
+  <span *ngIf="addMode" class="active serviceProviderActive">{{'rules.addEditViewRule.add' | translate}}</span>
+  <span *ngIf="viewMode" class="active serviceProviderActive" [routerLink]="">{{'rules.addEditViewRule.view' | translate}}</span>
+  <span *ngIf="editMode" class="active serviceProviderActive" [routerLink]="">{{'rules.addEditViewRule.edit' | translate}}</span>
+</nav>
+<div class="section-heading">
+  <h2>{{'rules.addEditViewRule.rules' | translate}} -
+    <span *ngIf="addMode">{{'rules.addEditViewRule.add' | translate}}</span>
+    <span *ngIf="viewMode">{{'rules.addEditViewRule.view' | translate}}</span>
+    <span *ngIf="editMode">{{'rules.addEditViewRule.edit' | translate}}</span>
+    <div class="web-reg">
+        <!-- [Start Edit Button] -->
+     <button *ngIf="viewMode && rulesAuthCheck[0].editDentalRule == 'T' && this.disciplineKey == '1' " id="edit_rule" class="btn green-btn-add"
+     (click)="editRule()">{{'rules.addEditViewRule.edit' | translate}}</button>
+   <button *ngIf="viewMode && rulesAuthCheck[0].editVisionRule == 'T' && this.disciplineKey == '2' " id="edit_rule" class="btn green-btn-add"
+     (click)="editRule()">{{'rules.addEditViewRule.edit' | translate}}</button>
+   <button *ngIf="viewMode && rulesAuthCheck[0].editHealthRule == 'T' && this.disciplineKey == '3' " id="edit_rule" class="btn green-btn-add"
+     (click)="editRule()">{{'rules.addEditViewRule.edit' | translate}}</button>
+   <button *ngIf="viewMode && rulesAuthCheck[0].editDrugRule == 'T' && this.disciplineKey == '4' " id="edit_rule" class="btn green-btn-add"
+     (click)="editRule()">{{'rules.addEditViewRule.edit' | translate}}</button>
+   <!-- End Edit Button] -->
+    <!-- [Start Update Button] -->
+    <button id="update_rule" *ngIf="editMode" (click)="updateRule()" class="btn green-btn-add" type="submit">{{'rules.addEditViewRule.update' | translate}}</button>
+    <!-- [End Update Button] -->
+     </div>
+  </h2>
+</div>
+<!-- Section Heading Ends -->
+<div class="grid-box">
+  <div class="grid-heading">
+    <h3 *ngIf="addMode">{{'rules.addEditViewRule.addRule' | translate}}</h3>
+    <h3 *ngIf="viewMode">{{'rules.addEditViewRule.viewRule' | translate}}</h3>
+
+    <h3 *ngIf="editMode">{{'rules.addEditViewRule.editRule' | translate}}</h3>
+    <div class="web-reg">
+        <a *ngIf="ruleSearchBtn" style="cursor: pointer" class="green-btn-add btn" [routerLink]="['/rules/',disciplineKey]" (click)="backToSearch()" ><i class="fa fa-share" aria-hidden="true"></i>Back To Search</a>
+    </div>
+  </div>
+  <!-- Grid Heading Ends -->
+  <div class="grid-inner">
+    <form [formGroup]="addEditRuleForm">
+      <div class="form-row">
+        <div class="row min-ht-sf">
+          <div class="col-md-1 col-xs-12" *ngIf="!addMode">
+            <label>{{'rules.addEditViewRule.rule#' | translate}}</label>
+            <input formControlName="rule_id" class="fm-txt form-control" name="rule_id" id="rule_id" type="text">
+            <show-errors [control]="addEditRuleForm.controls.rule_id"></show-errors>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{'rules.addEditViewRule.ruleType' | translate}}
+                <span class="required">*</span></label>
+            <ng2-completer formControlName="rule_type" [inputName]="'rule_type'" [datasource]="ruleTypeData" [minSearchLength]="0" [openOnFocus]="true"
+              (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Search Rule Type'" [textSearching]="'Please wait...'"
+              [inputClass]="'fm-txt form-control'" [inputId]="'rule_type'" (selected)="onRuleTypeSelected($event)" 
+              [clearUnselected]="true">
+            </ng2-completer>
+            <show-errors [control]="addEditRuleForm.controls.rule_type"></show-errors>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{'rules.addEditViewRule.ruleExecPoint' | translate}}
+                <span class="required">*</span></label>
+            <ng2-completer formControlName="rule_exec_point" [inputName]="'rule_exec_point'" [datasource]="rulesExecPointData" [minSearchLength]="0"
+              [openOnFocus]="true" (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Search Rule Exec Point'"
+              [textSearching]="'Please wait...'" [inputClass]="'fm-txt form-control'" [inputId]="'rule_exec_point'" (selected)="onRuleExecPointSelected($event)" 
+              [clearUnselected]="true">
+            </ng2-completer>
+            <show-errors [control]="addEditRuleForm.controls.rule_exec_point"></show-errors>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{'rules.addEditViewRule.ruleExecOrder' | translate}}
+                <span class="required">*</span></label>
+            <ng2-completer formControlName="rule_exec_order" [inputName]="'rule_exec_order'" [datasource]="rulesExecOrderData" [minSearchLength]="0"
+              [openOnFocus]="true" (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Search Rule Exec Order'"
+              [textSearching]="'Please wait...'" [inputClass]="'fm-txt form-control'" [inputId]="'rule_exec_order'" (selected)="onRuleExecOrderSelected($event)"
+              [clearUnselected]="true">
+            </ng2-completer>
+            <show-errors [control]="addEditRuleForm.controls.rule_exec_order"></show-errors>
+          </div>
+          <div class="col-md-2 col-xs-12">
+            <label>&nbsp;</label>
+            <div class="select-options">
+              <span>
+                <label><span class="custom-check">
+                  <input formControlName="plan_rule" type="checkbox">{{'rules.addEditViewRule.planRule' | translate}}<span></span></span>
+                </label>
+              </span>
+              <span>
+                <label><span class="custom-check">
+                  <input formControlName="rule_status" type="checkbox">{{'rules.addEditViewRule.ruleStatus' | translate}}<span></span></span>
+                </label>
+              </span>
+            </div>
+          </div>
+          <div class="col-md-6 col-xs-12">
+            <label>{{'rules.addEditViewRule.description' | translate}}</label> <!-- issue no 713 -->
+            <textarea name="description" formControlName="description" id="description" class="fm-txt form-control notInCaps" rows="10" cols="150"></textarea>
+          </div>
+          <div class="col-md-6 col-xs-12">
+            <label>{{'rules.addEditViewRule.script' | translate}}</label>
+            <textarea name="script" formControlName="script" id="script" class="fm-txt form-control notInCaps" rows="10" cols="150"></textarea>
+          </div>
+        </div>
+      </div>
+      <!-- Grid Inner Ends -->
+
+      <!-- Mask Start -->
+      <div class="form-row">
+        <label>&nbsp;</label>
+        <div class="pull-right">
+          <button *ngIf="rulesAuthCheck[0].addDentalMask == 'T' && this.disciplineKey == '1' " id="maskAddNew" class="green-btn-add btn" [disabled]="viewMode"
+            (click)="enableAddMask()">
+            <i class="fa fa-plus"></i>{{'rules.addEditViewRule.addNewMask' | translate}}</button>
+          <button *ngIf="rulesAuthCheck[0].addVisionMask == 'T' && this.disciplineKey == '2' " id="maskAddNew" class="green-btn-add btn" [disabled]="viewMode"
+            (click)="enableAddMask()">
+            <i class="fa fa-plus"></i>{{'rules.addEditViewRule.addNewMask' | translate}}</button>
+          <button *ngIf="rulesAuthCheck[0].addHealthMask == 'T' && this.disciplineKey == '3' " id="maskAddNew" class="green-btn-add btn" [disabled]="viewMode"
+            (click)="enableAddMask()">
+            <i class="fa fa-plus"></i>{{'rules.addEditViewRule.addNewMask' | translate}}</button>
+          <button *ngIf="rulesAuthCheck[0].addDrugMask == 'T' && this.disciplineKey == '4' " id="maskAddNew" class="green-btn-add btn" [disabled]="viewMode"
+            (click)="enableAddMask()">
+            <i class="fa fa-plus"></i>{{'rules.addEditViewRule.addNewMask' | translate}}</button>
+        </div>
+        <div class="row">
+          <div class="col-md-12 col-xs-12 table-col">
+            <div class="table-responsive search-table">
+              <!-- Validation Errors Messages for new row -->
+              <div style="color: red" class="alert alert-danger" *ngIf="(new_mask_id.invalid && (new_mask_id.dirty || new_mask_id.touched))">
+                <!-- Validation for new record mask id -->
+                <div *ngIf="new_mask_id.invalid && (new_mask_id.dirty || new_mask_id.touched)">
+                  <div *ngIf="new_mask_id.errors.required">
+                    {{ 'rules.errors.maskReq' | translate }}
+                  </div>
+                  <div *ngIf="!new_mask_id.errors.required && new_mask_id.errors.alphaNumeric">
+                    {{ 'rules.errors.alphaNumeric' | translate }}
+                  </div>
+                  <div *ngIf="!new_mask_id.errors.required && !new_mask_id.errors.alphaNumeric && new_mask_id.errors.maxlength">
+                    {{ 'rules.errors.max5Numbers' | translate }}
+                  </div>
+                  <div *ngIf="!new_mask_id.errors.required && !new_mask_id.errors.alphaNumeric && new_mask_id.errors.minlength">
+                    {{ 'rules.errors.min3Numbers' | translate }}
+                  </div>
+                </div>
+              </div>
+              <!-- Validatoin for old record description -->
+              <div style="color: red" class="alert alert-danger" *ngIf="(old_mask_id.invalid && (old_mask_id.dirty || old_mask_id.touched))">
+                <div *ngIf="old_mask_id.invalid && (old_mask_id.dirty || old_mask_id.touched)">
+                  <div *ngIf="old_mask_id.errors.required">
+                    {{ 'rules.errors.maskReq' | translate }}
+                  </div>
+                  <div *ngIf="!old_mask_id.errors.required && old_mask_id.errors.alphaNumeric">
+                    {{ 'rules.errors.alphaNumeric' | translate }}
+                  </div>
+                  <div *ngIf="!old_mask_id.errors.required && !old_mask_id.errors.alphaNumeric && old_mask_id.errors.maxlength">
+                    {{ 'rules.errors.max5Numbers' | translate }}
+                  </div>
+                  <div *ngIf="!old_mask_id.errors.required && !old_mask_id.errors.alphaNumeric && old_mask_id.errors.minlength">
+                    {{ 'rules.errors.min3Numbers' | translate }}
+                  </div>
+                </div>
+              </div>
+              <!-- Validatoin for old record effective date -->
+              <!-- Validation Errors -->
+              <table class="table table-bordered table-stripped" id="planInfoTable">
+                <thead>
+                  <tr>
+                    <th width="50%">{{'rules.addEditViewRule.mask' | translate}}</th>
+                    <th width="50%" class="text-right">{{'rules.addEditViewRule.action' | translate}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngIf="MaskAddMode">
+                    <td>
+                      <input [formControl]="new_mask_id" class="fm-txt form-control" type="input" (blur)="validateNewMaskId($event)">
+                    </td>
+                    <td class="text-right">
+                      <button *ngIf="rulesAuthCheck[0].editDentalMask == 'T' && this.disciplineKey == '1'" type="button" (click)="addNewMask(newMask)"
+                        class="table-action-btn save-ico " title="{{'common.save' | translate}}">
+                        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                      </button>
+                      <button *ngIf="rulesAuthCheck[0].editVisionMask == 'T' && this.disciplineKey == '2'" id="planInfoAddNew1" type="button" (click)="addNewMask(newMask)"
+                        class="table-action-btn save-ico " title="{{'common.save' | translate}}">
+                        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                      </button>
+                      <button *ngIf="rulesAuthCheck[0].editHealthMask == 'T' && this.disciplineKey == '3'" id="planInfoAddNew1" type="button" (click)="addNewMask(newMask)"
+                        class="table-action-btn save-ico " title="{{'common.save' | translate}}">
+                        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                      </button>
+                      <button *ngIf="rulesAuthCheck[0].editDrugMask == 'T' && this.disciplineKey == '4'" id="planInfoAddNew1" type="button" (click)="addNewMask(newMask)"
+                        class="table-action-btn save-ico " title="{{'common.save' | translate}}">
+                        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                      </button>
+                      <button *ngIf="rulesAuthCheck[0].deleteDentalMask == 'T' && this.disciplineKey == '1'" id="planInfoDelete" type="button"
+                        (click)="resetNewMaskRow()" title="{{'common.cancel' | translate}}" class="table-action-btn cancel-ico">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                      </button>
+                      <button *ngIf="rulesAuthCheck[0].deleteVisionMask == 'T' && this.disciplineKey == '2'" id="planInfoDelete" type="button"
+                        (click)="resetNewMaskRow()" title="{{'common.cancel' | translate}}" class="table-action-btn cancel-ico">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                      </button>
+                      <button *ngIf="rulesAuthCheck[0].deleteHealthMask == 'T' && this.disciplineKey == '3'" id="planInfoDelete" type="button"
+                        (click)="resetNewMaskRow()" title="{{'common.cancel' | translate}}" class="table-action-btn cancel-ico">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                      </button>
+                      <button *ngIf="rulesAuthCheck[0].deleteDrugMask == 'T' && this.disciplineKey == '4'" id="planInfoDelete" type="button" (click)="resetNewMaskRow()"
+                        title="{{'common.cancel' | translate}}" class="table-action-btn cancel-ico">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                      </button>
+                    </td>
+                  </tr>
+                  <!-- Updating Row Data-->
+                  <div *ngIf="MaskList.length > 0 || MaskAddMode; then maskRecordFound else maskRecordNotFound"></div>
+                  <ng-template #maskRecordNotFound>
+                    <tr>
+                      <td colspan="4" class="text-center">{{'rules.addEditViewRule.noData' | translate}}</td>
+                    </tr>
+                  </ng-template>
+                  <ng-template #maskRecordFound>
+                    <tr *ngFor="let mask of MaskList; let rowIndex = index">
+                      <td>
+                        <span *ngIf="rowIndex != selectedMask.rowIndex">{{mask.ruleProcMaskCd}}</span>
+                        <input #focusEditUnitEl class="fm-txt form-control" type="text" [formControl]="old_mask_id" *ngIf="MaskEditMode && rowIndex == selectedMask.rowIndex"
+                          [(ngModel)]="selectedMask.ruleProcMaskCd" (blur)="validateOldMaskId(mask.ruleProcMaskCd)">
+                      </td>
+                      <td class="text-right">
+                        <!-- Display button in View Mode -->
+                        <button id="planInfoEdit" *ngIf="rowIndex != selectedMask.rowIndex && rulesAuthCheck[0].editDentalMask == 'T' && this.disciplineKey == '1' " [disabled]="viewMode"
+                          title="{{'common.edit' | translate}}" type="button" class="table-action-btn edit-ico" (click)="enableEditMask(mask.ruleProcMaskCd, rowIndex)">
+                          <i class="fa fa-pencil"></i>
+                        </button>
+                        <button id="planInfoEdit" *ngIf="rowIndex != selectedMask.rowIndex && rulesAuthCheck[0].editVisionMask == 'T' && this.disciplineKey == '2' " [disabled]="viewMode"
+                          title="{{'common.edit' | translate}}" type="button" class="table-action-btn edit-ico" (click)="enableEditMask(mask.ruleProcMaskCd, rowIndex)">
+                          <i class="fa fa-pencil"></i>
+                        </button>
+                        <button id="planInfoEdit" *ngIf="rowIndex != selectedMask.rowIndex && rulesAuthCheck[0].editHealthMask == 'T' && this.disciplineKey == '3' " [disabled]="viewMode"
+                          title="{{'common.edit' | translate}}" type="button" class="table-action-btn edit-ico" (click)="enableEditMask(mask.ruleProcMaskCd, rowIndex)">
+                          <i class="fa fa-pencil"></i>
+                        </button>
+                        <button id="planInfoEdit" *ngIf="rowIndex != selectedMask.rowIndex && rulesAuthCheck[0].editDrugMask == 'T' && this.disciplineKey == '4' " [disabled]="viewMode"
+                          title="{{'common.edit' | translate}}" type="button" class="table-action-btn edit-ico" (click)="enableEditMask(mask.ruleProcMaskCd, rowIndex)">
+                          <i class="fa fa-pencil"></i>
+                        </button>
+                        <!-- [Start Delete Button(View Mode)] -->
+                        <button id="planInfoDelete1" *ngIf="rowIndex != selectedMask.rowIndex && rulesAuthCheck[0].deleteDentalMask == 'T' && this.disciplineKey == '1' " [disabled]="viewMode"
+                          title="{{'common.delete' | translate}}" type="button" class="table-action-btn del-ico" (click)="deleteMask(rowIndex)">
+                          <i class="fa fa-trash"></i>
+                        </button>
+                        <button id="planInfoDelete1" *ngIf="rowIndex != selectedMask.rowIndex && rulesAuthCheck[0].deleteVisionMask == 'T' && this.disciplineKey == '2' " [disabled]="viewMode"
+                          title="{{'common.delete' | translate}}" type="button" class="table-action-btn del-ico" (click)="deleteMask(rowIndex)">
+                          <i class="fa fa-trash"></i>
+                        </button>
+                        <button id="planInfoDelete1" *ngIf="rowIndex != selectedMask.rowIndex && rulesAuthCheck[0].deleteHealthMask == 'T' && this.disciplineKey == '3' " [disabled]="viewMode"
+                          title="{{'common.delete' | translate}}" type="button" class="table-action-btn del-ico" (click)="deleteMask(rowIndex)">
+                          <i class="fa fa-trash"></i>
+                        </button>
+                        <button id="planInfoDelete1" *ngIf="rowIndex != selectedMask.rowIndex && rulesAuthCheck[0].deleteDrugMask == 'T' && this.disciplineKey == '4' " [disabled]="viewMode"
+                          title="{{'common.delete' | translate}}" type="button" class="table-action-btn del-ico" (click)="deleteMask(rowIndex)">
+                          <i class="fa fa-trash"></i>
+                        </button>
+                        <!-- [Start Delete Button(View Mode)] -->
+
+                        <!-- Display button in Edit Mode -->
+                        <button id="planInfoUpdate1" *ngIf="MaskEditMode && rowIndex == selectedMask.rowIndex" type="button" class="table-action-btn save-ico"
+                          title="{{'common.save' | translate}}" (click)="updateMask(rowIndex)">
+                          <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                        </button>
+                        <button id="planInfoEdit1" *ngIf="MaskEditMode && rowIndex == selectedMask.rowIndex" type="button" class="table-action-btn cancel-ico "
+                          title="{{'common.cancel' | translate}}" (click)="resetMaskInfo()">
+                          <i class="fa fa-times" aria-hidden="true"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  </ng-template>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Mask Ends -->
+    </form>
+  </div>
+  <div class="form-row text-center saveBtn">
+    <!-- [Start Add Button] -->
+    <button id="add_rule" *ngIf="addMode && rulesAuthCheck[0].saveDentalRule == 'T' && this.disciplineKey == '1' " (click)="addNewRule()"
+      type="submit" class="btn green-btn">{{'rules.addEditViewRule.save' | translate}}</button>
+    <button id="add_rule" *ngIf="addMode && rulesAuthCheck[0].saveVisionRule == 'T' && this.disciplineKey == '2' " (click)="addNewRule()"
+      type="submit" class="btn green-btn">{{'rules.addEditViewRule.save' | translate}}</button>
+    <button id="add_rule" *ngIf="addMode && rulesAuthCheck[0].saveHealthRule == 'T' && this.disciplineKey == '3' " (click)="addNewRule()"
+      type="submit" class="btn green-btn">{{'rules.addEditViewRule.save' | translate}}</button>
+    <button id="add_rule" *ngIf="addMode && rulesAuthCheck[0].saveDrugRule == 'T' && this.disciplineKey == '4' " (click)="addNewRule()"
+      type="submit" class="btn green-btn">{{'rules.addEditViewRule.save' | translate}}</button>
+    <!-- [End Add Button] -->
+    <!-- [Start Edit Button] -->
+    <button *ngIf="viewMode && rulesAuthCheck[0].editDentalRule == 'T' && this.disciplineKey == '1' " id="edit_rule" class="btn green-btn"
+      (click)="editRule()">{{'rules.addEditViewRule.edit' | translate}}</button>
+    <button *ngIf="viewMode && rulesAuthCheck[0].editVisionRule == 'T' && this.disciplineKey == '2' " id="edit_rule" class="btn green-btn"
+      (click)="editRule()">{{'rules.addEditViewRule.edit' | translate}}</button>
+    <button *ngIf="viewMode && rulesAuthCheck[0].editHealthRule == 'T' && this.disciplineKey == '3' " id="edit_rule" class="btn green-btn"
+      (click)="editRule()">{{'rules.addEditViewRule.edit' | translate}}</button>
+    <button *ngIf="viewMode && rulesAuthCheck[0].editDrugRule == 'T' && this.disciplineKey == '4' " id="edit_rule" class="btn green-btn"
+      (click)="editRule()">{{'rules.addEditViewRule.edit' | translate}}</button>
+    <!-- End Edit Button] -->
+    <!-- [Start Update Button] -->
+    <button id="update_rule" *ngIf="editMode" (click)="updateRule()" class="btn green-btn" type="submit">{{'rules.addEditViewRule.update' | translate}}</button>
+    <!-- [End Update Button] -->
+  </div>
+</div>
+<!-- Grid Box Ends -->
+
+<div *ngIf="showLoader" class="loader-outer">
+  <div class="cube-wrapper">
+      <div class="cube-folding">
+          <span class="leaf1"></span>
+          <span class="leaf2"></span>
+          <span class="leaf3"></span>
+          <span class="leaf4"></span>
+      </div>
+      <span class="loading" data-name="Loading">{{'common.pleaseWait' | translate}}</span>
+  </div>
+</div>

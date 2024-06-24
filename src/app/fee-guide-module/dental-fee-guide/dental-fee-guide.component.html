@@ -1,0 +1,454 @@
+<!-- Section Heading Starts -->
+<div class="section-heading">
+  <h2>Provincial/Schedule -
+    <span>{{'button.search'|translate}}</span>
+  </h2>
+</div>
+<!-- Section Heading Ends -->
+<div class="grid-box">
+  <div class="grid-heading">
+    <h3>{{'feeGuide.dentalFeeGuide.fee-guide' | translate}}</h3>
+    <div class="web-reg">
+      <button id="feeguide_addnewBtn" data-toggle="modal" *ngIf="DentalFeeGuideList[0].addNew == 'T'"
+        data-target="#DentalFeeGuide" class="green-btn-add btn" [ngClass]="{'disabled':disableAddBtn}"
+        (click)=setDefaultValue()>
+        <i class="fa fa-plus"></i>Add New Fee Guide</button>
+    </div>
+  </div>
+  <!-- Grid Heading Ends -->
+  <div class="grid-inner">
+    <form [formGroup]="filterFeeGuideSearch">
+      <div class="form-row">
+        <div class="row min-ht-sf">
+          <div class="col-md-2 col-xs-12">
+            <label>Fee Guide Name</label>
+            <input type="text" id="fg_name" formControlName="feeGuideName" class="form-control"
+              placeholder="Fee Guide Name" />
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{'feeGuide.dentalFeeGuide.schedule' | translate}}
+            </label>
+            <div id="loadOnScroll">
+              <ng2-completer [inputId]="'searchScheduleFeeGuide'" formControlName="scheduleName"
+                [datasource]="scheduleItemsDataRemote" [minSearchLength]="1" [clearUnselected]="false"
+                [placeholder]="'Search Schedule'" [textSearching]="'Please wait...'" [inputClass]="'form-control'"
+                [fillHighlighted]="false" [autoHighlight]="true" [selectOnFocus]="true"
+                (selected)="onPredictivefeeGuideSelected($event,'scheduleName')">
+              </ng2-completer>
+            </div>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{'feeGuide.dentalFeeGuide.province' | translate}}
+            </label>
+            <ng2-completer [inputId]="'provinceCodeFeeGuide'" id="provinceCodeFeeGuide" formControlName="provinceSearch"
+              [fillHighlighted]="false" [autoHighlight]="true" [selectOnFocus]="true"
+              [datasource]="provinceCodesDataRemote" [minSearchLength]="1" [clearUnselected]="false"
+              [placeholder]="'Search Province'" [textSearching]="'Please wait...'" [inputClass]="'form-control'"
+              [fillHighlighted]="false" (selected)="onPredictivefeeGuideSelected($event,'provinceSearch')">
+            </ng2-completer>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{'feeGuide.dentalFeeGuide.effective-date' | translate}}</label>
+            <div class="calender-field">
+              <my-date-picker id="datepicker36" [options]="myDatePickerOptions"
+                placeholder="{{'common.date-placeholder' | translate}}" [selDate]="dateNameArray['effectiveOn']"
+                name="effectiveOn" formControlName="effectiveOn"
+                (inputFocusBlur)="changeDateFormat($event, 'effectiveOn','filterFeeGuideSearch',true)">
+              </my-date-picker>
+            </div>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>&nbsp;</label>
+            <button id="fg_procSearchFilter" type="submit" class="btn green-btn" (click)="getSearchForm()"
+              title="{{'common.search' | translate}}"> {{ 'button.search' | translate }}</button>
+            <button id="fg_procSearchFilterClear" type="button" class="btn grey-btn" (click)="resetFeeGuideTable()"
+              title="{{'common.clear' | translate}}">{{ 'button.clear' | translate }}</button>
+          </div>
+        </div>
+      </div>
+      <!-- Form Row ENds -->
+    </form>
+  </div>
+  <!-- Grid Inner Ends -->
+</div>
+
+<div [hidden]="!showSearchTable1">
+  <div class="grid-box">
+    <div class="grid-heading">
+      <h3>Provincial/Schedule Listing</h3>
+    </div>
+    <div class="grid-inner">
+      <form>
+        <div class="form-row text-right search-top">
+          <button id="feeguide_searchbtn" title="{{'common.search' | translate}}" class="btn green-btn searchreset"
+            type="submit" (click)="getFeeGuideListByGridFilteration('search-Dental-FeeGuide')">
+            <span class="glyphicon glyphicon-search"></span>
+          </button>
+          <button id="feeguide_resetbtn" title="{{'common.reset' | translate}}" class="btn grey-btn searchreset"
+            (click)="getFeeGuideSearchList()">
+            <span class="glyphicon glyphicon-repeat"></span>
+          </button>
+        </div>
+        <div class="form-row">
+          <div class="row">
+            <div class="col-md-12 col-xs-12 table-col">
+              <div class="table-responsive">
+                <div class="form-group">
+                  <table id="search-Dental-FeeGuide" class="display table table-bordered table-stripped alignRightText">
+                    <thead>
+                    </thead>
+                    <tfoot>
+                      <tr>
+                        <td width="200px">
+                          <input type="text" class="fm-txt form-control inputSearch" name="dentFeeGuideName"
+                            [(ngModel)]="feeGuideNameL"
+                            placeholder="{{'feeGuide.dentalFeeGuide.fee-name' | translate}}">
+                        </td>
+                        <td width="200px">
+                          <div id="loadOnScroll">
+                            <angular2-multiselect tabindex="0" [data]="columnScheduleItems" [(ngModel)]="schedNameL"
+                              [ngModelOptions]="{standalone: true}" (onSelect)="onSelect($event, 'columnSchedule')"
+                              (onDeSelect)="onDeSelect($event, 'columnSchedule')" [settings]="dropdownSettings"
+                              (keydown)="filterSearchOnEnter($event,'search-Dental-FeeGuide')">
+                            </angular2-multiselect>
+                          </div>
+                        </td>
+                        <td width="200px">
+                          <angular2-multiselect tabindex="0" [data]="columnProvinceItems" [(ngModel)]="provinceNameL"
+                            [ngModelOptions]="{standalone: true}" (onSelect)="onSelect($event, 'columnProvince')"
+                            (onDeSelect)="onDeSelect($event, 'columnProvince')" [settings]="dropdownSettings"
+                            (keydown)="filterSearchOnEnter($event,'search-Dental-FeeGuide')">
+                          </angular2-multiselect>
+                        </td>
+                        <td width="300px" class="alignDpRight">
+                          <div class="calender-field">
+                            <my-date-picker id="effective_date" placeholder="{{'common.date-placeholder' | translate}}"
+                              [(ngModel)]="effectiveOn" class="inputSearch" name="effectiveOn" data-type="date"
+                              [options]="myDatePickerOptions" [selDate]="dateNameArray['effective_date']"
+                              (inputFocusBlur)="changeDateFormat1($event, 'effective_date')">
+                            </my-date-picker>
+                          </div>
+                        </td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+                <!-- Table Ends -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div id="DentalFeeGuide" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="dfgm_close" type="button" class="close" data-dismiss="modal"
+          (click)="resetAddForm()">&times;</button>
+        <h4 class="modal-title">Add New Fee Guide</h4>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="addDentalFormGroup">
+          <div class="grid-box">
+            <div class="grid-heading">
+              <h3>{{'feeGuide.dentalFeeGuide.copyFrom' | translate}}</h3>
+            </div>
+            <!-- Grid Heading Ends here -->
+            <div class="grid-inner">
+              <div class="form-row">
+                <div class="row min-ht-half">
+                  <div class="col-md-3 col-xs-12 min-ht-half">
+                    <span>
+                      <label>
+                        <input id="dfgm_blankfg" type="radio" formControlName="Dental_feeGuide"
+                          (change)=radioSelected($event.target.value) name="Dental_feeGuide" value="blank"> Blank Fee
+                        Guide
+                      </label>
+                    </span>
+                  </div>
+                </div>
+                <div class="row min-ht-sf">
+                  <div class="col-md-3 col-xs-12 min-ht-half">
+                    <span>
+                      <label>
+                        <input id="dfgm_schedule/province" type="radio" formControlName="Dental_feeGuide"
+                          (change)=radioSelected($event.target.value) name="Dental_feeGuide" value="province"> Previous
+                        Year’s Schedule/Province
+                      </label>
+                    </span>
+                  </div>
+                  <div [hidden]="selectedradioValue1 || selectedradioValue">
+                    <div class="col-md-3 col-xs-12">
+                      <label>{{'feeGuide.dentalFeeGuide.province' | translate}}<span class="required"> *</span></label>
+                      <ng2-completer (blur)="onBlurCopyFromProvince()" [fillHighlighted]="false" [autoHighlight]="true"
+                        [selectOnFocus]="true" [inputId]="'feeGuideProvince'" formControlName="sorp"
+                        [datasource]="provinceCodesDataRemote" [minSearchLength]="1" [clearUnselected]="false"
+                        [placeholder]="'Search Province'" [textSearching]="'Please wait...'"
+                        [inputClass]="'form-control'" (selected)="onPredictivefeeGuideSelected($event,'sorp')">
+                      </ng2-completer>
+                      <show-errors [control]="addDentalFormGroup.controls.sorp" name="Dental_feeGuide"
+                        value="feeguide"></show-errors>
+                    </div>
+                    <div [hidden]="!selectedProvinceName">
+                      <div class="col-md-6 col-xs-12" id="loadOnScrollFeeGuide">
+                        <label>Schedule Name/Fee Guide Name/Effective Date</label>
+                        <angular2-multiselect tabindex="0" [data]="scheduleandFeeguideItems"
+                          [(ngModel)]="scheduleandFeeguide" formControlName="scheduleandFeeguideControl"
+                          (onSelect)="onSelect($event, 'scheduleandFeeguide')"
+                          (onDeSelect)="onDeSelect($event, 'scheduleandFeeguide')" [settings]="dropdownSettings">
+                        </angular2-multiselect>
+                        <show-errors [control]="addDentalFormGroup.controls.scheduleandFeeguideControl"></show-errors>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row min-ht-sf">
+                  <div class="col-md-3 col-xs-12 min-ht-half">
+                    <div class="select-options">
+                      <span>
+                        <label>
+                          <input id="dfgm_uscls" type="radio" formControlName="Dental_feeGuide"
+                            (change)=radioSelected($event.target.value) name="Dental_feeGuide" class=""
+                            value="feeguide">{{'feeGuide.dentalFeeGuide.usclsFeeGuide' | translate}}
+                        </label>
+                      </span>
+                    </div>
+                  </div>
+                  <div [hidden]="!selectedradioValue" class="row min-ht-half">
+                    <div class="col-md-3 col-xs-12">
+                      <label>{{'feeGuide.USCLSFeeGuide.search-fee-guide.year' | translate }}
+                        <span class="required">*</span>
+                      </label>
+                      <ng2-completer (blur)="onBlurCopyFromUSCLS()" formControlName="year" [datasource]="yearList"
+                        [minSearchLength]="0" [placeholder]="'Search Year'" [fillHighlighted]="true"
+                        [autoHighlight]="true" [selectOnFocus]="true" [textSearching]="'Please wait...'"
+                        [inputClass]="'form-control'" [inputId]="'dfgm_year'" (selected)="onYearSelected($event)"
+                        [clearUnselected]="true">
+                      </ng2-completer>
+                      <show-errors [control]="addDentalFormGroup.controls.year"></show-errors>
+                      <label>&nbsp;</label>
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                      <label>{{'feeGuide.USCLSFeeGuide.search-fee-guide.effective-date'|translate}}
+                        <span class="required">*</span>
+                      </label>
+                      <select class="fm-txt form-control" formControlName="effectiveDate" name="effectiveDate"
+                        (change)=onChangeEffDate($event) id="effectiveDate">
+                        <option value="" disabled hidden>
+                          {{'claims.claims-edit.service-provider.service-provider.general-information.select' |
+                          translate}}</option>
+                        <option *ngFor="let date of effectiveDate" value={{date.dentFeeGuideKey}}>
+                          {{ date.effectiveOn | dateFormate}}
+                        </option>
+                      </select>
+                      <show-errors [control]="addDentalFormGroup.controls.effectiveDate"></show-errors>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Grid Box Ends -->
+
+          <div class="grid-box">
+            <div class="grid-heading">
+              <h3>{{'feeGuide.dentalFeeGuide.copyTo' | translate}}</h3>
+            </div>
+            <!-- Grid Heading Ends here -->
+            <div class="grid-inner">
+              <div class="form-row">
+                <div class="row min-ht-sf">
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'feeGuide.dentalFeeGuide.schedule' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <div id="loadOnScroll">
+                      <ng2-completer (blur)="onFocusCopyToSchedule()" [inputId]="'scheduleFeeGuide'"
+                        formControlName="schedule" [datasource]="scheduleItemsDataRemote" [clearUnselected]="true"
+                        [minSearchLength]="1" [clearUnselected]="false" [placeholder]="'Search Schedule'"
+                        [textSearching]="'Please wait...'" [inputClass]="'form-control'" [fillHighlighted]="false"
+                        [autoHighlight]="true" [selectOnFocus]="true"
+                        (selected)="onPredictivefeeGuideSelected($event,'schedule')">
+                      </ng2-completer>
+                    </div>
+                    <show-errors [control]="addDentalFormGroup.controls.schedule"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'feeGuide.dentalFeeGuide.province' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <ng2-completer (blur)="onFocusCopyToProvince()" [inputId]="'provinceCodeFeeGuide'"
+                      id="provinceCodeFeeGuide" formControlName="province" [fillHighlighted]="false"
+                      [autoHighlight]="true" [selectOnFocus]="true" [datasource]="provinceCodesDataRemote"
+                      [minSearchLength]="1" [clearUnselected]="true" [placeholder]="'Search Province'"
+                      [textSearching]="'Please wait...'" [inputClass]="'form-control'" [fillHighlighted]="false"
+                      (selected)="onPredictivefeeGuideSelected($event,'province')">
+                    </ng2-completer>
+                    <show-errors [control]="addDentalFormGroup.controls.province"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'feeGuide.dentalFeeGuide.effective-date' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <div class="calender-field">
+                      <my-date-picker id="datepicker35" [options]="myDatePickerOptions"
+                        placeholder="{{'common.date-placeholder' | translate}}" name="effectiveOn"
+                        formControlName="effectiveOn"
+                        (inputFocusBlur)="changeDateFormat($event, 'effectiveOn' ,'addDentalFormGroup',true)">
+                      </my-date-picker>
+                    </div>
+                    <show-errors [control]="addDentalFormGroup.controls.effectiveOn"></show-errors>
+                  </div>
+
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'feeGuide.dentalFeeGuide.fee-name' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <input id="dfgm_feeguidename" type="text" class="form-control"
+                      placeholder="{{'feeGuide.dentalFeeGuide.fee-name' | translate}}" formControlName="feeGuideName">
+                    <show-errors [control]="addDentalFormGroup.controls.feeGuideName"></show-errors>
+                  </div>
+
+                  <div [hidden]="selectedradioValue1" class="col-md-12 col-xs-12">
+                    <label>&nbsp;</label>
+                    <div class="select-options">
+                      <span>
+                        <label>
+                          <span class="custom-check">
+                            <input id="dfgm_modifyFeeGuide" type="checkbox" [(ngModel)]="isChecked"
+                              (change)="changeFeeGuide(isChecked?'checked':'unchecked')"
+                              formControlName="modifyFeeGuide"> {{'feeGuide.dentalFeeGuide.modifyFeeGuide' | translate}}
+                            <span></span>
+                          </span>
+                        </label>
+                      </span>
+                    </div>
+
+                  </div>
+                  <div [hidden]="!checkModify || selectedradioValue1">
+                    <div hidden class="col-md-3 col-xs-12">
+                      <label>{{'feeGuide.dentalFeeGuide.procedure-code' | translate}}
+                        <span class="required">*</span>
+                      </label>
+                      <div id="procedureCodeScroll">
+                        <angular2-multiselect tabindex="0" [data]="procedureCodeItems" [(ngModel)]="procedure_code"
+                          [ngModelOptions]="{standalone: true}" (onSelect)="onSelect($event,'procedure_code')"
+                          (onDeSelect)="onDeSelect($event,'procedure_code')"
+                          (onSelectAll)="onSelectAll($event,'procedure_code')"
+                          (onDeSelectAll)="onDeSelectAll($event,'procedure_code')"
+                          [settings]="multiSelectDropdownSettings">
+                        </angular2-multiselect>
+                      </div>
+                      <show-errors [control]="addDentalFormGroup.controls.procedure_code"></show-errors>
+                    </div>
+
+                    <div class="col-md-4 col-xs-12">
+                      <label>{{'feeGuide.dentalFeeGuide.modifyFeeAmounts' | translate}}
+                        <span class="required">*</span>
+                      </label>
+                      <div class="row">
+                        <div class="col-sm-3 col-xs-12">
+                          <label class="rd-middle">
+                            <input type="radio" id="dfgm_modifyFeeFlat" value="Flat" (change)="feeAmountChanged()"
+                              name="modifyFeeAmount" formControlName="modifyFeeAmount">{{'feeGuide.dentalFeeGuide.flat'
+                            | translate}}</label>
+                        </div>
+                        <div class="col-sm-9 col-xs-12">
+                          <div class="row min-ht-sf">
+                            <div class="col-sm-3">
+                              <label class="rd-middle"> %
+                                <input type="radio" id="dfgm_modifyFeePerc" value="Percent"
+                                  (change)="feeAmountChanged()" name="modifyFeeAmount"
+                                  formControlName="modifyFeeAmount">
+                              </label>
+                            </div>
+                            <div class="col-sm-9 do-amount">
+                              <input id="dfgm_modifyFeeText" type="number" placeholder="Modify Fee Amounts"
+                                class="form-control half-txt" formControlName="modifyFee" />
+                              <show-errors [control]="addDentalFormGroup.controls.modifyFee"></show-errors>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-4 col-xs-12">
+                      <label>{{'feeGuide.dentalFeeGuide.modifyLabAmounts' |translate}}
+                        <span class="required">*</span>
+                      </label>
+                      <div class="row min-ht-sf">
+                        <div class="col-sm-3 col-xs-12">
+                          <label class="rd-middle">
+                            <input id="dfgm_modifyLabflat" type="radio" value="Flat" (change)="feeAmountChanged()"
+                              name="modifyLabAmount" formControlName="modifyLabAmount">{{'feeGuide.dentalFeeGuide.flat'
+                            | translate}}</label>
+                        </div>
+                        <div class="col-sm-9 col-xs-12">
+                          <div class="row">
+                            <div class="col-sm-3">
+                              <label class="rd-middle">%
+                                <input id="dfgm_modifyLabperc" type="radio" value="Percent" name="modifyLabAmount"
+                                  (change)="feeAmountChanged()" formControlName="modifyLabAmount">
+                              </label>
+                            </div>
+                            <div class="col-sm-9 do-amount">
+                              <input id="dfgm_modifyLabText" type="number" placeholder="Modify Lab Amounts"
+                                class="form-control half-txt" formControlName="modifyLab" />
+                              <show-errors [control]="addDentalFormGroup.controls.modifyLab"></show-errors>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Form Row ENds -->
+            </div>
+          </div>
+          <!-- Grid Box Ends -->
+        </form>
+      </div>
+      <!-- Modal Body End-->
+
+      <div class="modal-footer">
+        <button id="dfgm_save" class="green-btn btn" (keyup.arrowLeft)="focusNextEle($event,'dfgm_reset')"
+          (keyup.arrowRight)="focusNextEle($event,'dfgm_reset')" (click)="saveDentalDetails()">{{'button.save' |
+          translate}}</button>
+        <button id="dfgm_reset" type="button" (keyup.arrowLeft)="focusNextEle($event,'dfgm_save')"
+          (keyup.arrowRight)="focusNextEle($event,'dfgm_save')" (click)="resetAddForm()" class="btn grey-btn"
+          data-dismiss="modal">{{'button.close' | translate}}</button>
+      </div>
+      <!-- Modal  Footer Ends -->
+    </div>
+  </div>
+</div>
+
+<div [hidden]="!showLoader" class="loader-outer">
+  <div class="cube-wrapper">
+    <div class="cube-folding">
+      <span class="leaf1"></span>
+      <span class="leaf2"></span>
+      <span class="leaf3"></span>
+      <span class="leaf4"></span>
+    </div>
+    <span class="loading" data-name="Loading">{{'company.plan.benefits.pleaseWait'|translate}}</span>
+  </div>
+</div>
+<!-- To show loader until the menu appears-->
+<div [hidden]="!showLoad" class="loader-outer">
+  <div class="cube-wrapper">
+    <div class="cube-folding">
+      <span class="leaf1"></span>
+      <span class="leaf2"></span>
+      <span class="leaf3"></span>
+      <span class="leaf4"></span>
+    </div>
+    <span class="loading" data-name="Loading">{{'company.plan.benefits.pleaseWait'|translate}}</span>
+  </div>
+</div>

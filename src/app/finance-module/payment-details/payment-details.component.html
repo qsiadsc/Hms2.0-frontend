@@ -1,0 +1,297 @@
+<nav class="breadcrumb">
+  <span class="breadcrumb-item" [routerLink]="['/finance/payment-search']">
+    Payment </span> >
+  <a class="active serviceProviderActive"> {{ 'button.view' | translate }}</a>
+</nav>
+<div class="section-heading">
+  <!-- Hyphen place changed-->
+  <h2>Payment - 
+    <span>{{ 'finance.transactionDetails.view' | translate }}</span>
+  </h2>
+</div>
+<!-- Section Heading Ends -->
+<div class="grid-box">
+  <div class="grid-heading">
+    <h3>Payment Details</h3>
+    <div class="web-reg">
+      <a *ngIf="isBackToSearch" style="cursor: pointer" class="green-btn-add btn" (click)="backToSearch()">
+        <i class="fa fa-share" aria-hidden="true"></i>{{'finance.transactionDetails.backToSearch' | translate}}</a>
+    </div>
+  </div>
+  <!-- Grid Heading Ends -->
+
+  <div class="grid-inner">
+    <div class="form-row">
+        <!-- First ID-->
+          <form [formGroup]="paymentDetailsForm">
+            <div class="form-row">
+              <div class="row min-ht-sf">
+                <div class="col-md-3 col-xs-12 ">
+                  <label>{{'finance.transactionDetails.discipline' | translate}}</label>
+                  <input id="transactionDetDiscipline" type="text" class="form-control" name="discipline" formControlName="discipline" placeholder="{{'finance.transactionDetails.discipline' | translate}}"
+                  />
+                </div>
+
+                <div class="col-md-3 col-xs-12 ">
+                  <label>{{'finance.paymentSearch.paymentNo' | translate}}</label>
+                  <input id="transactionDetChequeNo" type="text" class="form-control" name="chequeNo" formControlName="chequeNo" placeholder="{{'finance.paymentSearch.paymentNo' | translate}}"
+                  />
+                </div>
+
+                <div class="col-md-3 col-xs-12 ">
+                  <label>{{'finance.transactionDetails.issuedDate' | translate}}</label>
+                  <div class="calender-field">
+                    <my-date-picker [ngClass]="(paymentViewMode == true) ? 'removeCross':''" id="transactionDetIssuedDate" [options]="myDatePickerOptions"
+                      name="issuedDate" formControlName="issuedDate" (inputFocusBlur)="changeDateFormat($event, 'issuedDate','paymentDetailsForm', true)"
+                      placeholder="{{'common.date-placeholder' | translate}}">
+                    </my-date-picker>
+                    <show-errors [control]="paymentDetailsForm.controls.effectiveOn"></show-errors>
+                  </div>
+                </div>
+
+                <div class="col-md-3 col-xs-12 ">
+                  <label>{{'finance.transactionDetails.transactionType' | translate}}</label>
+                  <input id="transactionDetTransType" type="text" class="form-control" name="transactionType" formControlName="transactionType"
+                    placeholder="{{'finance.transactionDetails.transactionType' | translate}}" />
+                </div>
+
+                <div class="col-md-3 col-xs-12 ">
+                  <label>{{'finance.transactionDetails.transactionStatus' | translate}}</label>
+                  <input id="transactionDetTransStatus" type="text" class="form-control" name="transactionStatus" formControlName="transactionStatus"
+                    placeholder="{{'finance.transactionDetails.transactionStatus' | translate}}" />
+                </div>
+
+                <div class="col-md-3 col-xs-12 ">
+                  <label>{{'finance.transactionDetails.transactionAmount' | translate}}</label>
+                  <div class="calender-field d-amount">
+                    <input id="transactionDet" type="number" class="form-control d-amount" name="transactionAmount" formControlName="transactionAmount"
+                      placeholder="{{'finance.transactionDetails.transactionAmount' | translate}}" />
+                  </div>
+                </div>
+
+                <div class="col-md-3 col-xs-12 ">
+                  <label>{{'finance.transactionDetails.adminFee' | translate}}</label>
+                  <div class="calender-field d-amount">
+                    <input id="transactionDetAdminFee" type="number" class="form-control" name="adminFee" formControlName="adminFee" placeholder="{{'finance.transactionDetails.adminFee' | translate}}"
+                    />
+                  </div>
+                </div>
+
+                <div class="col-md-3 col-xs-12 ">
+                  <label>{{'finance.transactionDetails.debitAmount' | translate}}</label>
+                  <div class="calender-field d-amount">
+                    <input id="transactionDetDebitAmount" type="number" class="form-control" name="debitAmount" formControlName="debitAmount"
+                      placeholder="{{'finance.transactionDetails.debitAmount' | translate}}" />
+                  </div>
+                </div>
+
+                <div class="col-md-3 col-xs-12 ">
+                  <label>{{'finance.transactionDetails.payee' | translate}}</label>
+                  <input id="transactionDetPayee" type="text" class="form-control" name="payee" formControlName="payee" placeholder="{{'finance.transactionDetails.payee' | translate}}"
+                  />
+                </div>
+
+                <div class="col-md-3 col-xs-12 ">
+                  <label>{{addNameLabel}}</label>
+                  <input id="transactionDet" type="text" class="form-control" name="name" formControlName="name" placeholder="{{addNameLabel}}"
+                  />
+                </div>
+
+                <div class="col-md-3 col-xs-12 ">
+                  <label>{{'finance.transactionDetails.planType' | translate}}</label>
+                  <input id="transactionDetPlanType" type="text" class="form-control" name="planType" formControlName="planType" placeholder="{{'finance.transactionDetails.planType' | translate}}"/>
+                </div>
+
+                <div class="col-md-3 col-xs-12 ">
+                  <label>{{'finance.transactionDetails.clearDate' | translate}}</label>
+                  <div class="calender-field">
+                    <my-date-picker [ngClass]="(paymentViewMode == true) ? 'removeCross':''" id="transactionDetClearDate" [options]="myDatePickerOptions"
+                      name="clearDate" formControlName="clearDate" (inputFocusBlur)="changeDateFormat($event, 'clearDate','paymentDetailsForm', true)"
+                      placeholder="{{'common.date-placeholder' | translate}}">
+                    </my-date-picker>
+                    <show-errors [control]="paymentDetailsForm.controls.effectiveOn"></show-errors>
+                  </div>
+                </div>
+
+                <div class="col-md-3 col-xs-12 ">
+                  <label>{{'finance.transactionDetails.eftFileNo' | translate}}</label>
+                  <input id="transactionDetEftFileNo" type="text" class="form-control" name="eftFileNo" formControlName="eftFileNo" placeholder="{{'finance.transactionDetails.eftFileNo' | translate}}"
+                  />
+                </div>
+
+                <div *ngIf="!isFieldShow" class="col-md-3 col-xs-12 ">
+                  <label>{{'finance.transactionDetails.eftRecordNo' | translate}}</label>
+                  <input id="transactionDetEFTRecordNo" type="text" class="form-control" name="eftRecordNo" formControlName="eftRecordNo" placeholder="{{'finance.transactionDetails.eftRecordNo' | translate}}"
+                  />
+                </div>
+              </div>
+            </div>
+            <!-- Form Row ENds -->
+          </form>
+
+          <div class="grid-box">
+            <div class="grid-heading">
+              <h3>Payment Transaction Details</h3>
+            </div>
+            <div class="grid-inner">
+              <div class="form-row">
+                <div class="row">
+                  <div class="col-md-12 col-xs-12 table-col">
+                    <div class="table-responsive search-table">
+                      <table id="claimsAttachedToPaymentList" class="table table-bordered table-stripped"></table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+  </div>
+  <!-- Grid Inner Ends -->
+</div>
+<!-- Grid Box Ends -->
+<!-- Container Ends -->
+<!-- Site Content Ends -->
+
+<div id="paymentPopup" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button title="Close" id="closePaymentForm" (click)="resetPaymentForm()" type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title" *ngIf="adjustmentBtn">{{paymentPopupHeading}}</h4>
+          <h4 class="modal-title" *ngIf="reIssueBtn">{{paymentPopupHeading}}</h4>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="addPaymentForm">
+            <div class="grid-box">
+              <div class="grid-inner">
+                <div class="form-row">
+                    <div class="col-md-3 col-xs-12">
+                      <label>{{'uft.upcomingTransactionsSearch.transactionDate' | translate}}
+                        <span class="required">*</span>
+                      </label>
+                      <div class="calender-field">
+                        <my-date-picker id="payment_transactionDate" [options]="myDatePickerOptions" name="transactionDate" formControlName="transactionDate"
+                          #mydpTransDate="mydatepicker" (inputFocusBlur)="changeDateFormat($event, 'transactionDate','addPaymentForm',true)"
+                          placeholder="{{'common.date-placeholder' | translate}}">
+                        </my-date-picker>
+                        <show-errors [control]="addPaymentForm.controls.transactionDate"></show-errors>
+                      </div>
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                      <label>Comments</label>
+                      <textarea id="payment_comments" class="form-control" formControlName="comment" placeholder="Comments"></textarea>
+                      <show-errors [control]="addPaymentForm.controls.comment"></show-errors>
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                      <label>{{'uft.dashboard.financeReports.documentName' | translate}}</label>
+                      <input style="display: none" type="file" (click)="payFileInput.value = null" (change)="onFileChanged($event)" #payFileInput>
+                      <input formControlName="documentName" class="fm-txt form-control datepicker" type="text" disabled=true>
+                      <ul *ngIf="error.isError==true" class="validation-errors">
+                        <li style="color: red">{{error.errorMessage}}</li>
+                      </ul>
+                      <ul *ngIf="error1.isError==true" class="validation-errors">
+                        <li style="color: red">{{error1.errorMessage}}</li>
+                      </ul>
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                      <label>&nbsp;</label>
+                      <button class="btn green-btn" (click)="payFileInput.click()">{{'button.selectFile' | translate}}</button>
+                      <button *ngIf="showRemoveBtn" (click)="removeExtension()" class="btn red-btn ">{{'button.remove' | translate}}</button>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button id="savePaymentFormBtn" class="green-btn btn" (keyup.arrowLeft)="focusNextEle($event,'closePaymentFormBtn')" (keyup.arrowRight)="focusNextEle($event,'closePaymentFormBtn')"
+            (click)="submitPaymentForm('save')">{{'button.save' | translate }}
+          </button>
+          <button id="closePaymentFormBtn" type="button" class="btn grey-btn" (keyup.arrowLeft)="focusNextEle($event,'savePaymentFormBtn')"
+            (keyup.arrowRight)="focusNextEle($event,'savePaymentFormBtn')" data-dismiss="modal" (click)="resetPaymentForm()">{{'button.close' | translate}}</button>
+        </div>
+        <div class="modal-content" [hidden]="!showGrid">
+          <div class="modal-body">
+            <div class="grid-box">
+              <div class="grid-heading">
+                <h3>{{'uft.dashboard.uft-continuity.reportGrid' | translate}}</h3>
+              </div>
+              <div class="grid-inner">
+                <div class="form-row">
+                  <div class="row">
+                    <div class="col-md-12 col-xs-12 table-col uFTReportList">
+                      <table class="table table-bordered" id="dailyPAPDataTable"></table>
+                      <div class="form-row text-right search-top">
+                        <button type="submit" id="paymentReportGridSearchBtn" class="btn green-btn searchreset" (click)="filterPaymentGridColumnSearch('paymentReportGrid')"
+                          title="{{'common.search' | translate }}">
+                          <span class="glyphicon glyphicon-search"></span>
+                        </button>
+                        <button id="paymentReportGridClearBtn" class="btn grey-btn searchreset" (click)="resetPaymentGridColumnSearch('paymentReportGrid')">
+                          <span class="glyphicon glyphicon-repeat" title="{{'common.clear' | translate }}"></span>
+                        </button>
+                      </div>
+                      <table class="table table-bordered" id="paymentReportGrid">
+                        <tfoot>
+                          <tr>
+                            <td width="50px">
+                              <input id="filterCompanyNameAndNo" class="fm-txt form-control tFootInput inputSearch" type="text" placeholder="Payment Number"
+                                name="cheque" [(ngModel)]="chequeNum"/>
+                            </td>
+                            <td width="50px" class="alignDpRight">
+                              <div class="calender-field">
+                                <my-date-picker id="paymentIssuedDateFilter" class="inputSearch" name="issueDate" data-type="date" [options]="myDatePickerOptions"
+                                  [selDate]="dateNameArray['issueDate']" (inputFocusBlur)="changeFilterDateFormat($event, 'issueDate')"
+                                  placeholder="{{'common.date-placeholder' | translate }}">
+                                </my-date-picker>
+                              </div>
+                            </td>
+                            <td width="50px">
+                              <input id="filterUnitFinancialTransAmt" class="fm-txt form-control tFootInput inputSearch amount_right_grid" type="text" placeholder="{{'uft.dashboard.uft-continuity.transactionAmount' | translate }}"
+                                name="transAmount" />
+                            </td>
+                            <td width="50px">
+                              <input id="filterTranCd" class="fm-txt form-control tFootInput inputSearch amount_right_grid" type="text" placeholder="Admin Fee" name="adminFee"
+                              />
+                            </td>
+                            <td width="50px">
+                              <input id="paymentCommentsFilter" class="fm-txt form-control tFootInput inputSearch amount_right_grid" type="text" placeholder="Debit Amount"
+                                name="debitAmount" />
+                            </td>
+                            <td width="50px" class="alignDpRight">
+                              <div class="calender-field">
+                                <my-date-picker id="paymentAdjustmentDateFilter" class="inputSearch" name="adjustmentDate" data-type="date" [options]="myDatePickerOptions"
+                                  [selDate]="dateNameArray['adjustmentDate']" (inputFocusBlur)="changeFilterDateFormat($event, 'adjustmentDate')"
+                                  placeholder="{{'common.date-placeholder' | translate }}">
+                                </my-date-picker>
+                              </div>
+                            </td>
+                            <td width="50px">
+                              <input id="paymentDocumentFilter" class="fm-txt form-control tFootInput inputSearch amount_right_grid" type="text" placeholder="Transaction Status"
+                                name="transStatus" />
+                            </td>
+                          </tr>
+                        </tfoot>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div [hidden]="!showLoader" class="loader-outer">
+    <div class="cube-wrapper">
+      <div class="cube-folding">
+        <span class="leaf1"></span>
+        <span class="leaf2"></span>
+        <span class="leaf3"></span>
+        <span class="leaf4"></span>
+      </div>
+      <span class="loading" data-name="Loading">{{'company.plan.benefits.pleaseWait'|translate}}</span>
+    </div>
+  </div>

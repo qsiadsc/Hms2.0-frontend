@@ -1,0 +1,117 @@
+<app-dashboard-tab></app-dashboard-tab>
+<div class="section-heading">
+  <h2>{{'uft.dashboard.heading.Dashboard'|translate}} - <span>Data Management</span></h2>
+</div>
+<!-- Section Heading Ends -->
+<div class="form-row">
+  <div class="row">
+    <div class="fd-tabs">
+      <div class="col-md-12">
+        <ul class="nav nav-pills">
+          <li class="active">
+            <!--  Log ticket #1222  fixed -->
+            <button (click)="getServiceProvidersCount()" class="rfrsh-btn" title=""><i class="fa fa-refresh" aria-hidden="true"></i></button>
+            <a style="position: relative;" data-toggle="pill" href="#SPC" (click)="changeTab('SP')">Service Providers
+              (No BAN)
+              <span *ngIf=showSpcLoader class="dash-loader"><span class="dash-loader-inner"></span></span>
+              <span *ngIf=!showSpcLoader>Total Count : {{providerTotalCount}}</span>
+            </a>
+          </li>
+          <!--  Below commented code should not be removed without any permission. discussed by arun sir. -->
+          <!-- start -->
+          <!-- <li> -->
+             <!--  Log ticket #1222  fixed -->
+            <!-- <button (click)="getCardPrintRequestCount()" class="rfrsh-btn" title=""><i class="fa fa-refresh" aria-hidden="true"></i></button>
+            <a style="position: relative;" data-toggle="pill" href="#CPRC" (click)="changeTab('CPR')">Card Print
+              Requests
+              <span *ngIf=showCprLoader class="dash-loader"><span class="dash-loader-inner"></span></span>
+              <span *ngIf=!showCprLoader>Card Not Printed : {{cardPrintReqTotalCount}}</span>
+              <span *ngIf=!showCprLoader>Physical Card : {{phyPrintReqTotalCount}}</span>
+
+            </a>
+          </li>
+          <li> -->
+             <!--  Log ticket #1222  fixed -->
+            <!-- <button (click)="getEligibilityFileCount()" class="rfrsh-btn" title=""><i class="fa fa-refresh" aria-hidden="true"></i></button>
+            <a style="position: relative;" data-toggle="pill" href="#EFC" (click)="changeTab('EF')">Eligibility Files
+              <span *ngIf=showEfLoader class="dash-loader"><span class="dash-loader-inner"></span></span>
+              <span *ngIf="!showEfLoader">Income Support: {{incomeSupport}}</span>
+              <span *ngIf="!showEfLoader">AAHB: {{aahb}}</span>
+              <span *ngIf="!showEfLoader">Learner: {{learner}}</span>
+              <span *ngIf="!showEfLoader">ACHB: {{achb}}</span>
+              <span *ngIf="!showEfLoader">Senior: {{senior}}</span>
+            </a>
+          </li> -->
+          <!-- end -->
+          <li>
+             <!--  Log ticket #1222  fixed -->
+            <button (click)="getCdaCounts()" class="rfrsh-btn" title=""><i class="fa fa-refresh" aria-hidden="true"></i></button>
+            <a style="position: relative;" data-toggle="pill" href="#CNC" (click)="changeTab('CN')">CDA Net
+              <span *ngIf=showCNLoader class="dash-loader"><span class="dash-loader-inner"></span></span>
+              <span>ACDQ: {{acdq}}</span>
+              <span>CDA: {{cda}}</span>
+              <span>DAC: {{dac}}</span>
+            </a>
+          </li>
+          <li>
+             <!--  Log ticket #1222  fixed -->
+            <button (click)="getClaimSecureCount()" class="rfrsh-btn" title=""><i class="fa fa-refresh" aria-hidden="true"></i></button>
+            <a style="position: absolute;" data-toggle="pill" href="#CSC" (click)="changeTab('CS')">Claim Secure
+              <span *ngIf=showCSLoader class="dash-loader"><span class="dash-loader-inner"></span></span>
+              <span> Daily File: {{LOAD_DAILY_FILE}}</span>
+              <span>Payment File: {{qsi_drug}}</span>
+              <span>Export Expenses: {{qsi_ex_ex}}</span>
+              <span>Export Eligibility :{{qsi_elig}}</span>
+            </a>
+          </li>
+          <li>
+            <a style="position: relative;" data-toggle="pill" href="#ADR" (click)="changeTab('ADR')">{{'uft.dashboard.heading.Reports'|translate}}
+              <span class="report-ico"><i class="fa fa-bar-chart" aria-hidden="true"></i></span>
+            </a>
+          </li>
+          <!-- Data Menu moved here -->
+          <li>
+             <!--  Log ticket #1222  fixed -->
+            <button (click)="getDataResult()" class="rfrsh-btn" title=""><i class="fa fa-refresh" aria-hidden="true"></i></button>
+            <a style="position: relative;" data-toggle="pill" href="#dataQSI" (click)="changeTab('DM')">Data
+                <span *ngIf=showDataLoader class="dash-loader"><span class="dash-loader-inner"></span></span>
+              <span *ngIf=!showDataLoader class="report-ico"><i class="fa fa-database" aria-hidden="true"></i></span>
+            </a>
+          </li>
+          <li>
+            <!--  Log ticket #1222  fixed -->
+            <button (click)="getPendingElectronicAdjustmentListData()" class="rfrsh-btn" title=""><i class="fa fa-refresh" aria-hidden="true"></i></button>
+            <a data-toggle="pill" href="#pendingElectronicPaymentAdjustmentDM" (click)="changeTab('PEPA')">Pending Electronic Payment Adjustment
+            </a>
+          </li>
+
+          <!-- Log #1230 Display Groups Missing Information Tile -->
+          <li>
+            <button (click)="getMissingCompanyListData()" class="rfrsh-btn" title=""><i class="fa fa-refresh" aria-hidden="true"></i></button>
+            <a data-toggle="pill" href="#DGMI" (click)="changeTab('DGMI')">Display Groups Missing Information</a>
+          </li>
+        </ul>
+        <div class="tab-content">
+          <app-service-providers id="SPC" class="tab-pane fade in active"></app-service-providers>
+          <app-cda-net id="CNC" class="tab-pane fade"></app-cda-net>
+          <app-claim-secure id="CSC" class="tab-pane fade"></app-claim-secure>
+          <app-app-data-management-report-list id="ADR" class="tab-pane fade"  [ngClass]="{'active in':reportsActiveClass == true,'tab-pane':true,'fade':true}" 
+          (openReportWithReportIdDM) ="callReportWithReportIdDM($event)"></app-app-data-management-report-list>
+          <app-data-qsi-loader id="dataQSI" class="tab-pane fade"></app-data-qsi-loader>
+          <!-- Pending Electronic Payment Adjustment Tile -->
+          <app-pending-electronic-adjustment id="pendingElectronicPaymentAdjustmentDM" class="tab-pane fade"></app-pending-electronic-adjustment>
+          <!-- <app-card-print-request  style="margin-top: -15px;" id="CPRC" class="tab-pane fade"></app-card-print-request> -->
+          <!-- <app-eligibility-files id="EFC" class="tab-pane fade"></app-eligibility-files> -->
+        
+          <!-- Log #1230 Display Groups Missing Information Tile -->
+          <app-groups-missing-information id="DGMI" class="tab-pane fade"></app-groups-missing-information>
+       
+        </div>
+        <!-- Tab Content Ends -->
+      </div>
+    </div>
+  </div>
+</div>
+
+
+

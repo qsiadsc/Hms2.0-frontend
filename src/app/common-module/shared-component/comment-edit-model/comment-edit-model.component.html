@@ -1,0 +1,83 @@
+<div class="grid-inner">
+    <form *ngIf="showCommentForm && enableAddButton != 'F'" [formGroup]="commentForm">
+        <div class="form-row">
+            <label>Add Comment <span class="required"> *</span></label>
+            <div class="add-comments">
+                <div class="row">
+                    <div class="col-sm-5">
+                        <!-- //Added for log 978 -->
+                        <textarea #focusEditCommentEl class="notInCaps fm-txt form-control comment-textarea"
+                            formControlName="commentTxt"></textarea>
+                        <show-errors [control]="commentForm.controls.commentTxt"></show-errors>
+                    </div>
+                    <div class="col-sm-2">
+                        <label class="check-lb"><input type="checkbox" formControlName="isImportant" /><span
+                                class="check-flag"><i class="fa fa-flag" aria-hidden="true"></i></span>
+                            Importance</label>
+                    </div>
+                    <div class="col-sm-2">
+                        <label>Department <span class="required"> *</span></label>
+                        <ng2-completer formControlName="userGroupKey" [datasource]="userGroupData" [minSearchLength]="0"
+                            [openOnFocus]="true" [fillHighlighted]="false" [placeholder]="'Search Department'"
+                            [textSearching]="'Please wait...'" [inputClass]="'form-control'" [clearUnselected]="true"
+                            (selected)="onSelect($event)"> >
+                        </ng2-completer>
+                        <show-errors [control]="commentForm.controls.userGroupKey"></show-errors>
+                    </div>
+                    <div class="col-sm-2">
+                        <label>{{'card.card-eligibility.expirydate' | translate}}</label>
+                        <div class="calender-field">
+                            <my-date-picker id="c_expiryDate" placeholder="{{'common.date-placeholder' | translate}}"
+                                [options]="myDatePickerOptions" name="expiry_date"
+                                [ngClass]="expired  ? 'expired' : 'notExpired'" formControlName="expiry_date"
+                                (inputFocusBlur)="changeDateFormat($event, 'expiry_date' ,'commentForm')">
+                            </my-date-picker>
+                            <show-errors [control]="commentForm.controls.expiry_date"></show-errors>
+                        </div>
+                    </div>
+                    <div class="col-sm-1 text-right">
+                        <button class="green-btn-add btn" (click)="updateComment(commentForm)">
+                            <i class="fa fa-plus"></i> Add </button>
+                    </div>
+                </div>
+                
+                <!-- Below div created to show File Upload field.-->
+                <div class="col-md-3 col-xs-12 fileFieldAlign">
+                    <label>{{'common.documentName' | translate}}</label>
+                    <input style="display: none" type="file" (click)="brokerCommentsFileInput.value = null" (change)="fileUploadBroker($event)" #brokerCommentsFileInput>
+                    <input formControlName="brokerCommentsDocumentName" class="fm-txt form-control datepicker" type="text" disabled>
+                   <ul *ngIf="error.isError==true" class="validation-errors">
+                        <li style="color: red">{{error.errorMessage}}</li>
+                    </ul>
+                    <ul *ngIf="error1.isError==true" class="validation-errors">
+                        <li style="color: red">{{error1.errorMessage}}</li>
+                    </ul>
+                </div>
+                <!-- Below div is for add and remove functionality. -->
+                <div class="col-md-3 col-xs-12">
+                    <button class="btn green-btn" (click)="brokerCommentsFileInput.click()">{{'common.selectFile' | translate}}</button>
+                    <button *ngIf="showRemoveBtn" (click)="removeBrokerCommentsFile()" class="btn red-btn ">{{'common.remove' | translate}}</button>
+                </div>
+
+            </div>
+        </div>
+    </form>
+    <div class="form-row">
+        <div class="row">
+            <div class="col-md-12 col-xs-12 table-col">
+                <div *ngIf="commentFormEditMode == false" class="filter-hdr">
+                    <div class="filter-column">
+                        <div class="pull-left"><label>Filters</label></div>
+                        <div class="pull-right">
+                            <button class="green-btn btn btn-sm">Apply</button>
+                            <button class="btn grey-btn btn-sm">Clear All</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table id="comments" class="display table table-bordered table-stripped"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,211 @@
+<div class="section-heading">
+  <h2>{{'serviceProvider.heading' | translate }} -
+    <span>{{'serviceProvider.serviceProvider-search.search' | translate }}</span>
+  </h2>
+</div>
+<div class="grid-box">
+  <div class="grid-heading">
+    <h3>{{'serviceProvider.serviceProvider-search.grid-heading' | translate }}</h3>
+    <div class="web-reg">
+      <a [routerLink]="['/serviceProvider']" *ngIf="serviceProviderChecks[0].addNewServiceProvider == 'T'"
+        title="Add Service Provider" class="green-btn-add btn">
+        <i class="fa fa-plus"></i>{{'serviceProvider.buttons.addServiceProvider' | translate }}
+      </a>
+    </div>
+  </div>
+  <!-- Grid Heading Ends -->
+  <form [formGroup]="searchServiceProviderForm">
+    <div class="grid-inner">
+      <div class="form-row">
+        <div class="row min-ht-sf">
+          <div class="col-md-2 col-xs-12">
+            <label>{{'serviceProvider.serviceProvider-search.licenseNo' | translate }}</label>
+            <input id="sps_LicenseNo" placeholder="{{'serviceProvider.serviceProvider-search.licenseNo' | translate }}"
+              type="text" OnlyAlphaNumeric="true" class="fm-txt form-control" formControlName="LicenseNo">
+          </div>
+          <div class="col-md-2 col-xs-12">
+            <label>{{'serviceProvider.search-table-column.last-name' | translate }}</label>
+            <input id="sps_lastName" placeholder="{{'serviceProvider.search-table-column.last-name' | translate }}"
+              class="fm-txt form-control" type="text" formControlName="lastName" onkeypress="return (event.charCode > 64 && 
+              event.charCode < 91) || (event.charCode > 96 && event.charCode < 123)" (keydown)=keydownEventAction($event) >
+            <show-errors [control]="searchServiceProviderForm.controls.lastName"></show-errors>
+          </div>
+          <div class="col-md-2 col-xs-12">
+            <label>{{'serviceProvider.search-table-column.first-name' | translate }}</label>
+            <input id="sps_firstName" placeholder="{{'serviceProvider.search-table-column.first-name' | translate }}"
+              class="fm-txt form-control" type="text" formControlName="firstName" onkeypress="return (event.charCode > 64 && 
+              event.charCode < 91) || (event.charCode > 96 && event.charCode < 123)" (keydown)=keydownEventAction($event)>
+            <show-errors [control]="searchServiceProviderForm.controls.firstName"></show-errors>
+          </div>
+          <div class="col-md-2 col-xs-12">
+            <label>{{'serviceProvider.serviceProvider-search.discipline' | translate }}</label>
+            <select class="fm-txt form-control" (change)="getDisciplineType()" name="disciplineType"
+              id="sps_disciplineType" formControlName="disciplineType" (keydown)=keydownEventAction($event)>
+              <option [ngValue]="null" disabled hidden selected>{{'common.select' | translate}}</option>
+              <option *ngFor="let type of claimType" [value]="type.disciplineKey">{{type.disciplineName}}</option>
+            </select>
+          </div>
+          <div class="col-md-2 col-xs-12">
+            <label>{{'serviceProvider.serviceProvider-search.speciality' | translate }}</label>
+            <select [ngClass]="{'disableInput':!hasDiscipline}" class="fm-txt form-control" name="speciality"
+              id="sps_speciality" formControlName="speciality" (keydown)=keydownEventAction($event)>
+              <option [ngValue]="null" disabled hidden selected>{{'common.select' | translate}}</option>
+              <option *ngFor="let speciality of specialityList" [value]="speciality.provSpecialDesc">
+                {{speciality.provSpecialDesc}}</option>
+            </select>
+          </div>
+          <div class="col-md-2 col-xs-12">
+            <label>{{'serviceProvider.serviceProvider-search.postal-code' | translate }}</label>
+            <div class="openSearchSelect">
+              <ng2-completer formControlName="postalCode" [datasource]="postalCodeDataRemote" [minSearchLength]="2"
+                [fillHighlighted]="false" (selected)="onSelectPostalCode($event,'searchFilter')"
+                [placeholder]="'Search Postal Code'" [textSearching]="'Please wait...'"
+                [inputClass]="'upperCase form-control'" [clearUnselected]="false" [autoHighlight]="true"
+                [selectOnFocus]="true" (keydown)=keydownEventAction($event)>
+              </ng2-completer>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="row min-ht-st">
+          <div class="col-md-11 col-xs-12">
+            <button title="Search" id="sps_search" *ngIf="serviceProviderChecks[0].searchSP == 'T' && showSearchButton"
+              (click)="getServiceProviderList()"
+              class="btn green-btn">{{'serviceProvider.serviceProvider-search.search' | translate }}</button>
+            <button title="Clear" id="sps_reset" (click)="resetFormSearch()"
+              class="btn grey-btn">{{'button.clear' | translate }}</button>
+          </div>
+        </div>
+      </div>
+      <!-- Form Row ENds -->
+    </div>
+  </form>
+  <!-- Grid Inner Ends -->
+</div>
+<div [hidden]="!showServiceProviderSearchTable">
+  <div class="grid-box">
+    <div class="grid-heading">
+      <h3>{{'serviceProvider.serviceProvider-search.list' | translate }}</h3>
+    </div>
+    <div class="grid-inner">
+      <form>
+        <div class="form-row text-right search-top">
+          <button id="sps_gridSearch" class="btn green-btn searchreset" type="submit"
+            (click)="getServiceProviderListByGridFilteration('search-serviceProvider-table')" title="Search">
+            <span class="glyphicon glyphicon-search"></span>
+          </button>
+          <button id="sps_resetGridSearch" class="btn grey-btn searchreset" (click)="getServiceProviderList()"
+            title="Reset">
+            <span class="glyphicon glyphicon-repeat"></span>
+          </button>
+        </div>
+        <!-- Form Row Ends -->
+
+        <div class="form-row">
+          <div class="row">
+            <div class="col-md-12 col-xs-12 table-col">
+              <div class="table-responsive">
+                <table id="search-serviceProvider-table" class="display table table-bordered table-stripped">
+                  <thead>
+                  </thead>
+                  <tfoot>
+                    <tr>
+                      <td width="100px">
+                        <input type="text" id="spsg_lastName"
+                          placeholder="{{'serviceProvider.search-table-column.last-name' | translate }}"
+                          class="fm-txt form-control inputSearch" name="lastName" [(ngModel)]="lastName" />
+                      </td>
+                      <td width="100px">
+                        <input type="text" id="spsg_firstName"
+                          placeholder="{{'serviceProvider.search-table-column.first-name' | translate }}"
+                          class="fm-txt form-control inputSearch amount_right_grid" name="firstName"
+                          [(ngModel)]="firstName" />
+                      </td>
+                      <td width="150px">
+                        <select dir="rtl" class="fm-txt form-control inputSearch amount_right_grid"
+                          (keydown)="filterSearchOnEnter($event,'search-serviceProvider-table')"
+                          [(ngModel)]="selectedDiscipline" name="disciplineKey"
+                          (change)="getSpecialityForGridFilteration($event)" id="spsg_disciplineType"
+                          data-type="select">
+                          <option *ngFor="let type of claimType" [value]="type.disciplineKey">{{type.disciplineName}}
+                          </option>
+                        </select>
+                      </td>
+                      <td width="150px">
+                        <select dir="rtl" (keydown)="filterSearchOnEnter($event,'search-serviceProvider-table')"
+                          class="fm-txt form-control inputSearch amount_right_grid" [(ngModel)]="speciality"
+                          name="speciality" id="spsg_speciality" data-type="select">
+                          <option [ngValue]="null" disabled hidden selected>{{'common.select' | translate}}</option>
+                          <option *ngFor="let speciality of specialityListForGrid" [value]="speciality.provSpecialDesc">
+                            {{speciality.provSpecialDesc}}</option>
+                        </select>
+                      </td>
+                      <td width="150px">
+                        <input type="text" [(ngModel)]="licenseNumber" id="spsg_licenseNo " placeholder="License No"
+                          OnlyAlphaNumeric="true" class="fm-txt form-control inputSearch amount_right_grid"
+                          name="licenseNumber" />
+                      </td>
+                      <td width="180px">
+                        <div class="openSearchSelect amount_right_grid">
+                          <ng2-completer [ngModelOptions]="{standalone: true}" [(ngModel)]="postalCode"
+                            [datasource]="postalCodeDataRemoteLower" [minSearchLength]="2" [fillHighlighted]="false"
+                            (selected)="onSelectPostalCode($event,'gridFilteration')"
+                            [placeholder]="'Search Postal Code'" [textSearching]="'Please wait...'"
+                            [inputClass]="'form-control inputSearch amount_right_grid'" [clearUnselected]="true">
+                          </ng2-completer>
+                        </div>
+                      </td>
+                      <td width="150px" class="alignDpRight">
+                        <div class="calender-field">
+                          <my-date-picker id="receivedDate" placeholder="{{ 'common.date-placeholder' | translate }}"
+                            class="inputSearch alignDpRight" name="effectiveDate" data-type="date"
+                            [options]="myDatePickerOptions" [selDate]="dateNameArray['effectiveDate']"
+                            (inputFocusBlur)="changeDateFormat1($event, 'effectiveDate','searchClaimForm')">
+                          </my-date-picker>
+                        </div>
+                      </td>
+                      <td width="150px">
+                        <select dir="rtl" class="fm-txt form-control inputSearch amount_right_grid" name="status" id="spsg_status"
+                          (keydown)="filterSearchOnEnter($event,'search-serviceProvider-table')" data-type="select">
+                          <option value="null" disabled hidden selected>{{'common.select' | translate}}</option>
+                          <option value="ACTIVE">{{'common.active' | translate}}</option>
+                          <option value="INACTIVE">{{'common.inactive' | translate}}</option>
+                        </select>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+              <!-- Table Ends -->
+              <ul class="color-list">
+                <li>
+                  <span class="color-des green-color"></span>
+                  <h5>{{'common.active' | translate}}</h5>
+                </li>
+                <li>
+                  <span class="color-des red-color"></span>
+                  <h5>{{'common.inactive' | translate}}</h5>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!-- Form Row ENds -->
+      </form>
+    </div>
+    <!-- Grid Inner Ends -->
+  </div>
+</div>
+<!-- to wait until all elements gets load before we search anything in search service provider page. -->
+<div [hidden]="!showLoader" class="loader-outer">
+  <div class="cube-wrapper">
+      <div class="cube-folding">
+          <span class="leaf1"></span>
+          <span class="leaf2"></span>
+          <span class="leaf3"></span>
+          <span class="leaf4"></span>
+      </div>
+      <span class="loading" data-name="Loading">{{'company.plan.benefits.pleaseWait'|translate}}</span>
+  </div>
+</div>

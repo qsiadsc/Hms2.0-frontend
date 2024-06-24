@@ -1,0 +1,107 @@
+<div class="section-heading">
+  <h2>{{'user.addEditViewUsers.user' | translate}}
+    <span>{{'user.user-search-filter.searchCap' | translate}}</span>
+  </h2>
+</div>
+<!-- Section Heading Ends -->
+<div class="grid-heading">
+  <h3>{{'user.user-search-filter.listOfUsers' | translate}}</h3>
+  <div class="web-reg">
+    <a *ngIf="usersAuthCheck[0].searchRole == 'T'" id="AddUsers" [routerLink]="['/users/roles']"
+      class="green-btn-add btn">
+      {{'user.user-search-filter.userRoles' | translate}}</a>
+    <a id="AddUsersrole" *ngIf="usersAuthCheck[0].addRole == 'T'" [routerLink]="['/users/roles/add']"
+      class="green-btn-add btn">
+      <i class="fa fa-plus"></i>{{'user.user-search-filter.addNewUserRoles' | translate}}</a>
+    <a *ngIf="usersAuthCheck[0].addUser == 'T'" id="AddUsers" [routerLink]="['/users/addUser']"
+      class="green-btn-add btn">
+      <i class="fa fa-plus"></i>{{'user.user-search-filter.addUser' | translate}}</a>
+  </div>
+</div>
+<!-- Grid Box Ends -->
+<div>
+  <div class="grid-box">
+    <!-- Grid Heading Ends -->
+    <div class="grid-inner">
+      <div class="form-row">
+        <div class="row">
+          <div class="col-md-12 col-xs-12 table-col">
+            <div class="table-responsive">
+              <!-- to stop identical multiple[8(4 without optional)] APIs hitting on server. As per discussed with sir. -->
+              <form>
+                <table table id="users-list" class="table table-bordered table-stripped">
+                  <tfoot>
+                    <tr>
+                      <td width="12%">
+                        <input id="firstName" placeholder="{{'user.user-search-filter.fname' | translate}}"
+                          class="fm-txt form-control tFootInput inputSearch" type="text" name="firstName"
+                          placeholder="">
+                      </td>
+                      <td width="12%">
+                        <input id="lastName" placeholder="{{'user.user-search-filter.lname' | translate}}"
+                          class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="lastName"
+                          placeholder="">
+                      </td>
+                      <td width="12%">
+                        <input id="username" placeholder="{{'user.user-search-filter.email' | translate}}"
+                          class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="username"
+                          placeholder="">
+                      </td>
+                      <td width="12%">
+                        <input [textMask]="{mask: phoneMask}" id="phoneNumber"
+                          placeholder="{{'user.user-search-filter.phonenum' | translate}}"
+                          class="fm-txt form-control tFootInput inputSearch grid_right" type="text" name="phoneNumber"
+                          placeholder="">
+                      </td>
+                      <td width="12%">
+                        <div class="form-row">
+                          <button type="submit" id="usersSearchLower_search" title="{{'common.search' | translate}}"
+                            class="btn green-btn searchreset" (click)="searchUserList('users-list')">
+                            <span class="glyphicon glyphicon-search"></span>
+                          </button>
+                          <button id="usersSearchLower_reset" title="{{'common.reset' | translate}}"
+                            class="btn grey-btn searchreset" (click)="resetUserListFilter()">
+                            <span class="glyphicon glyphicon-repeat"></span>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </form>
+            </div>
+            <!-- Table Ends -->
+          </div>
+        </div>
+      </div>
+      <!-- Form Row ENds -->
+      <ul class="color-list">
+        <li>
+          <span class="color-des green-color"></span>
+          <h5>{{'common.active' | translate }}</h5>
+        </li>
+        <li>
+          <span class="color-des red-color"></span>
+          <h5>{{'common.inactive' | translate }}</h5>
+        </li>
+        <li>
+          <span class="color-des yellow-color"></span>
+          <h5>{{'common.activeLocked' | translate }}</h5>
+        </li>
+      </ul>
+    </div>
+    <!-- Grid Inner Ends -->
+  </div>
+  <!-- Grid Box Ends -->
+</div>
+<div *ngIf="showLoader" class="loader-outer">
+  <div class="cube-wrapper">
+    <div class="cube-folding">
+      <span class="leaf1"></span>
+      <span class="leaf2"></span>
+      <span class="leaf3"></span>
+      <span class="leaf4"></span>
+    </div>
+    <span class="loading" data-name="Loading">{{'user.addEditViewUsers.pleaseWait' | translate}}</span>
+  </div>
+</div>

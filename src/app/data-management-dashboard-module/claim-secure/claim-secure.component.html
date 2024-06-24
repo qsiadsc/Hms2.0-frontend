@@ -1,0 +1,294 @@
+<div class="grid-box">
+  <div class="grid-heading">
+    <h3 style="float: left;">
+      Processed Log
+    </h3>
+
+    <div class='claimsecure' style="float: right;">
+      <input style="display: none" type="file" (change)="onFileChanged($event)" (click)="importFileInput.value = null" value=""
+        #importFileInput>
+      <input style="display: none" type="file" (change)="onPaymentFileChanged($event)" (click)="importPayFileInput.value = null"
+        value="" #importPayFileInput>
+      <button style="display: none;" id="hidePaymentLoadFile" (click)="importPayFileInput.click()" href="javascript:void(0)" class="green-btn btn">
+        auto select Load payment File
+      </button>
+      <button style="float: right; margin:-5px 0px 0 8px!important;padding:5px 5px 5px 5px!important;" class="green-btn btn" (click)="exportElig()">
+        Export Eligibility File
+      </button>
+      <button style="float: right; margin:-5px 0px 0 8px!important;padding:5px 5px 5px 5px!important;" class="green-btn btn" (click)="dailyPayment()">
+        Daily Payment File
+      </button>
+      <button style="float: right; margin:-5px 0px 0 8px!important;padding:5px 5px 5px 5px!important;" (click)="importFileInput.click()"
+        href="javascript:void(0)" class="green-btn btn">
+        <!-- Load Daily File -->
+        Daily claim file
+      </button>
+    
+      <button style="float: right; margin:-5px 0px 0 8px!important;padding:5px 5px 5px 5px!important; display:none" class="green-btn btn"
+        id="lPfile" (click)="loadPaymentFile(loadPayment)">
+        Bi-Weekly Payment File
+      </button>
+        <!-- Load Payment File -->
+
+      <button style="float: right; margin:-5px 0px 0 8px!important;padding:5px 5px 5px 5px!important;" class="green-btn btn" (click)="exportExpense()">
+        Export Expense
+      </button>
+     
+      <!-- form Row Ends  -->
+    </div>
+  </div>
+  <!-- Grid Heading Ends -->
+  <div class="grid-inner">
+    <div class="form-row">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-row">
+            <div id="preloadDailyFileMsgs" *ngIf="preShowLoadDailyMsgs">
+              <span *ngFor="let data of preMsg">
+                <p [innerHtml]="data"></p>
+
+              </span>
+              <a *ngIf='ShowPdf' href="{{pdffile}}" target="_blank">{{pdffile}}</a>
+             
+            </div>
+            <!--[Start Printing Messages For Load Daily File]-->
+
+            <div id="loadDailyFileMsgs" *ngIf="showLoadDailyMsgs">
+              <span *ngFor="let data of msg">
+                <p [innerHtml]="data"></p>
+
+              </span>
+              <a *ngIf='filePath' href="{{filePath}}" target="_blank">{{filePath}}</a>
+
+              <span *ngIf='showExpenseFiles'>
+                <a href="{{posFile}}" target="_blank">{{posFile}}</a>
+                <a href="{{negFile}}" target="_blank">{{negFile}}</a>
+
+              </span>
+            </div>
+
+            <div id="loadDailyFile" *ngIf="showLoadDailyMsgsLoad">
+              <span *ngFor="let data of msg">
+                <p [innerHtml]="data"></p>
+              </span>
+            </div>
+
+            <!--[End Printing Messages For Load Daily File]-->
+          </div>
+          <!-- Form Row Ends -->
+        </div>
+
+      </div>
+    </div>
+    <!-- Form Row Ends -->
+  </div>
+  <!-- Grid Inner Ends -->
+</div>
+
+
+<modal #loadPayment [closeOnEscape]="false" [closeOnOutsideClick]="false" [hideCloseButton]="true" modalClass="modal-sm fixed-modal image-modal">
+  <modal-header>
+    <h4 class="modal-title">{{docName}}</h4>
+    <button type="button" class="close" data-dismiss="modal" (click)="closeModal(loadPayment)">&times;</button>
+  </modal-header>
+  <modal-content>
+    <pdf-viewer [src]="imagePath" style="display: block;" [fit-to-page]="true">
+    </pdf-viewer>
+  </modal-content>
+  <modal-footer>
+    <button id="btnCloseBanModal" class="btn red-btn " (click)="closeModal(loadPayment)">Close</button>
+  </modal-footer>
+</modal>
+
+
+<div class="grid-box">
+  <ul class="nav company-tabs grid-heading nav-pills">
+    <li id="dashboard-tab" class="active">
+      <a id="enterdClaimTab" data-toggle="pill" href="#card1">Claim Secure Files</a>
+    </li>
+    <li>
+      <a data-toggle="pill" href="#card2">QSI Drug Loader Files </a>
+    </li>
+
+  </ul>
+
+
+
+  <div class="tab-content">
+    <div id="card1" class="tab-pane fade in active">
+      <div class="form-row">
+        <div class="grid-box">
+          
+          <form [formGroup]="claimSecureForm">
+            <div class="grid-inner">
+              <div class="form-row">
+                <div class="row min-ht-sf">
+                  <div class="col-md-6 col-xs-12">
+                    <label>File Type<span class="required">*</span></label>
+                    <select class="fm-txt form-control" (change)="onFileTypeChange($event)" name="fileType" id="fileType" formControlName="fileType">
+                      <option value="" selected disabled hidden>{{'common.select' | translate}}</option>
+                      <option *ngFor="let type of fileType" [value]="type.csFileTypeDesc">{{type.csFileTypeDesc}}
+                      </option>
+                    </select>
+                    <show-errors [control]="claimSecureForm.controls.fileType"></show-errors>
+                  </div>
+                  <div style="float: right;margin-top: 20px;" class="col-md-6 col-xs-12">
+                    <button title="Search" id="sps_search" (click)="searchClaimFiles()" class="btn green-btn">{{'serviceProvider.serviceProvider-search.search' | translate }}</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="form-row" *ngIf="showSeachFilesListing">
+        <div class="">
+          <div class="grid-box">
+            <div class="grid-heading">
+              <h3> Claim Secure Files List</h3>
+            </div>
+            <div class="grid-inner">
+              <div class="row">
+                <div class="col-md-12 col-xs-12 table-col">
+                  <div class="table-responsive">
+                    <table id="search-claimSearchFiles-table" class="display table table-bordered table-stripped">
+                      <thead>
+                      </thead>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="card2" class="tab-pane fade in ">
+      <form [formGroup]="qsiFormClaimSecure">
+        <div class="grid-box">
+          
+          <div class="grid-inner">
+            <div class="form-row">
+              <div class="row min-ht-sf">
+                <div class="col-md-7 col-xs-12 min-ht-half">
+                  <div class="select-options">
+                    <span>
+                      <label>
+                        <span class="custom-check">
+                          <input type="radio" formControlName="fileType" value="P" (change)="onChangeFileType($event)">Payment (Unit count) File
+                          <span></span>
+                        </span>
+                      </label>
+                    </span>
+                  </div>
+                  <div class="select-options">
+                    <span>
+                      <label>
+                        <span class="custom-check">
+                          <input type="radio" formControlName="fileType" value="D" (change)="onChangeFileType($event)">DailyFile
+                          <span></span>
+                        </span>
+                      </label>
+                    </span>
+                  </div>
+                  <div class="select-options">
+                    <span>
+                      <label>
+                        <span class="custom-check">
+                          <input type="radio" formControlName="fileType" value="B" (change)="onChangeFileType($event)">Both
+                          <span></span>
+                        </span>
+                      </label>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>QSI Drug Loader Files List </h3>
+
+          </div>
+          <!-- Grid Heading Ends -->
+          <div class="grid-inner">
+            <div class="form-row">
+              <div class="row">
+                <div class="col-md-12 col-xs-12">
+                  <div class="table-responsive ">
+                    <form (submit)="filterFileTypeListClaimSecure('file_type_datatable_claim_secure')">
+                      <div class="form-row text-right search-top">
+                        <div class="form-row">
+                          <button id="filterSearch" type="submit" title="{{'common.search' | translate}}" class="btn green-btn cs_data">
+                            <span class="glyphicon glyphicon-search"></span>
+                          </button>
+                          <button id="filterReset" title="{{'common.reset' | translate}}" class="btn grey-btn cs_data" (click)="resetListingFilter()">
+                            <span class="glyphicon glyphicon-repeat"></span>
+                          </button>
+                        </div>
+                      </div>
+                      <table id="file_type_datatable_claim_secure" class="display table table-bordered table-stripped">
+                        <thead>
+                        </thead>
+                        <!--[Start Grid1 Column Filter]-->
+                        <tfoot>
+                          <tr>
+                            <td>
+                              <input id="cs_fileid" class="fm-txt form-control tFootInput inputSearch" type="text" placeholder="File Id" name="fId"
+                              />
+                            </td>
+                            <td>
+                              <input id="cs_filename" class="fm-txt form-control tFootInput inputSearch in-number" type="text" placeholder="File Name"
+                                name="fileName" />
+                            </td>
+                              
+                              <td class="alignDpRight" width = "16%">
+                              <div class="calender-field">
+                                <my-date-picker id="cs_processedDate" class="inputSearch" name="processedDate" data-type="date" [options]="myDatePickerOptions"
+                                  [selDate]="dateNameArray['processedDate']" [ngClass]="expired  ? 'expired' : 'notExpired'"
+                                  (inputFocusBlur)="changeDateFormat1($event, 'processedDate')" placeholder="{{'common.date-placeholder' | translate}}">
+                                </my-date-picker>
+                              </div>
+                            </td>
+                           
+                            <td class="alignDpRight" width = "16%">
+                              <div class="calender-field">
+                                <my-date-picker id="cs_paidDate" class="inputSearch" name="paidDate" data-type="date" [options]="myDatePickerOptions" [selDate]="dateNameArray['paidDate']"
+                                  [ngClass]="expired  ? 'expired' : 'notExpired'" (inputFocusBlur)="changeDateFormat1($event, 'paidDate')"
+                                  placeholder="{{'common.date-placeholder' | translate}}">
+                                </my-date-picker>
+                              </div>
+                            </td>
+
+                          </tr>
+                        </tfoot>
+                        <!--[End Grid1 Column Filter]-->
+                      </table>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+  </div>
+
+</div>
+
+<div *ngIf="showLoader" class="loader-outer">
+  <div class="cube-wrapper">
+    <div class="cube-folding">
+      <span class="leaf1"></span>
+      <span class="leaf2"></span>
+      <span class="leaf3"></span>
+      <span class="leaf4"></span>
+    </div>
+    <span class="loading" data-name="Loading">Please wait....</span>
+  </div>
+</div>

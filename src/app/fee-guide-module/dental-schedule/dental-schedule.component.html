@@ -1,0 +1,238 @@
+<div class="container">
+    <nav class="breadcrumb">
+        <span *ngIf="dentalScheduleList[0].viewSchedule == 'F'"
+            class="breadcrumb-item">{{'feeGuide.dentalSchedule.dentalSchedule' | translate}} > </span>
+        <span *ngIf="dentalScheduleList[0].viewSchedule == 'T'" [routerLink]="['/feeGuide/dentalSchedule']"
+            class="breadcrumb-item">{{'feeGuide.dentalSchedule.dentalSchedule' | translate}} > </span>
+        <a *ngIf="scheduleAddMode" class="active serviceProviderActive" href="javascript:void(0)">{{breadCrumbText}}</a>
+        <a class="active serviceProviderActive" *ngIf="!scheduleAddMode"
+            href="javascript:void(0)">{{breadCrumbText}}</a>
+    </nav>
+    <div class="section-heading">
+        <h2>{{'feeGuide.dentalSchedule.schedule' | translate }}
+            <span>{{'feeGuide.dentalSchedule.feeGuide' | translate}}</span>
+        </h2>
+    </div>
+    <!-- Section Heading Ends -->
+
+    <div class="grid-box">
+        <div class="grid-heading">
+            <h3>{{'feeGuide.dentalSchedule.generalInformation' | translate}}</h3>
+        </div>
+        <!-- Grid Heading Ends   -->
+        <div class="grid-inner">
+            <form [formGroup]="dentalScheduleForm">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-6 col-xs-12">
+                            <label>{{'feeGuide.dentalSchedule.description' | translate}}
+                                <span class="required">*</span>
+                            </label>
+                            <textarea id="dentalScheduleDescription" name="description" formControlName="description"
+                                class="form-control"
+                                placeholder="{{'feeGuide.dentalSchedule.description' | translate}}"></textarea>
+                            <show-errors [control]="dentalScheduleForm.controls.description"></show-errors>
+                        </div>
+                        <div class="col-md-3 col-xs-12">
+                            <label>{{'feeGuide.dentalSchedule.effectiveDate' | translate}}
+                                <span class="required">*</span>
+                            </label>
+                            <div class="calender-field">
+                                <my-date-picker [ngClass]="(scheduleViewMode == true) ? 'removeCross':''"
+                                    id="dentalScheduleEffectiveDate" [options]="myDatePickerOptions" name="effectiveOn"
+                                    formControlName="effectiveOn"
+                                    (inputFocusBlur)="changeDateFormat($event, 'effectiveOn','dentalScheduleForm', true)"
+                                    placeholder="{{'common.date-placeholder' | translate}}">
+                                </my-date-picker>
+                                <show-errors [control]="dentalScheduleForm.controls.effectiveOn"></show-errors>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-xs-12">
+                            <label>&nbsp;</label>
+                            <div class="select-options">
+                                <span>
+                                    <label>
+                                        <span class="custom-check">
+                                            <input id="dentalScheduleApplyAdult" name="applyAdult"
+                                                formControlName="applyAdult"
+                                                type="checkbox">{{'feeGuide.dentalSchedule.applyAdult' | translate}}
+                                            <span></span>
+                                        </span>
+                                    </label>
+                                </span>
+                                <span>
+                                    <label>
+                                        <span class="custom-check">
+                                            <input id="dentalScheduleApplyChild" name="applyChild"
+                                                formControlName="applyChild"
+                                                type="checkbox">{{'feeGuide.dentalSchedule.applyChild' | translate}}
+                                            <span></span>
+                                        </span>
+                                    </label>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- From Group Ends -->
+            </form>
+
+            <div *ngIf="!scheduleAddMode" class="grid-box">
+                <div class="grid-heading">
+                    <h3>{{'feeGuide.dentalSchedule.dentalSpeciality' | translate}}</h3>
+                    <div class="web-reg">
+                        <button id="addNewSpecialityBtn"
+                            *ngIf="scheduleViewMode && dentalScheduleList[0].addSpeciality == 'T'" disabled
+                            class="green-btn-add btn" (click)="AddNew()">
+                            <i class="fa fa-plus"></i>{{'button.addNewSpeciality' | translate}}</button>
+                        <button id="addNewSpecialityBtnEn"
+                            *ngIf="scheduleEditMode && dentalScheduleList[0].addSpeciality == 'T'"
+                            class="green-btn-add btn" (click)="AddNew()">
+                            <i class="fa fa-plus"></i>{{'button.addNewSpeciality' | translate}}</button>
+                    </div>
+                </div>
+                <!-- Grid Heading Ends -->
+                <div class="grid-inner">
+                    <div class="form-row">
+                        <div class="row">
+                            <div class="col-md-12 col-xs-12 table-col">
+                                <div class="table-responsive">
+                                    <table id="dentalSpecialityList" datatable
+                                        [dtOptions]="dtOptions['dentalSpecialityList']"
+                                        [dtTrigger]="dtTrigger['dentalSpecialityList']"
+                                        class="table table-bordered table-stripped alignRightText">
+                                        <thead>
+                                            <tr>
+                                                <th width="40%">{{'feeGuide.dentalSchedule.dentalSpeciality' |
+                                                    translate}}</th>
+                                                <th width="40%">{{'feeGuide.dentalSchedule.effectiveDate' | translate}}
+                                                </th>
+                                                <th width="20%">{{'common.action' | translate}}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let dataRow of arrData;let i = index">
+                                                <td>
+                                                    <span
+                                                        *ngIf="dataRow.dentProvSpecSchedKey != selectedRowId">{{dataRow.dentProvSpecialDesc}}</span>
+                                                    <ng2-completer
+                                                        *ngIf="editMode && dataRow.dentProvSpecSchedKey == selectedRowId"
+                                                        [formControl]="dentl_speciality"
+                                                        [datasource]="dentSpecialityData" [minSearchLength]="0"
+                                                        [fillHighlighted]="false" [autoHighlight]="true"
+                                                        [selectOnFocus]="true"
+                                                        (selected)="ondentalSpecialitySelected($event)"
+                                                        [placeholder]="'Search Dental Speciality'"
+                                                        [textSearching]="'Please wait...'" [inputClass]="'form-control'"
+                                                        [clearUnselected]="true">
+                                                    </ng2-completer>
+                                                </td>
+                                                <td>
+                                                    <span
+                                                        *ngIf="dataRow.dentProvSpecSchedKey != selectedRowId">{{dataRow.effectiveOn
+                                                        | dateFormate}}</span>
+                                                    <my-date-picker id="txtEffectiveOn{{i}}"
+                                                        [options]="myDatePickerOptions"
+                                                        placeholder="{{'common.date-placeholder' | translate}}"
+                                                        name="EffectiveOn{{i}}"
+                                                        (inputFocusBlur)="ChangeInputDateFormat($event,i, 'effectiveOn')"
+                                                        [ngClass]="{ 'error_field': newRecordValidate && dataRow.effectiveOn }"
+                                                        [(ngModel)]="updateEffectiveRow[i]"
+                                                        *ngIf="dataRow.dentProvSpecSchedKey == selectedRowId ">
+                                                    </my-date-picker>
+                                                </td>
+                                                <td>
+                                                    <a (click)="EditInfo(dataRow, i)"
+                                                        title="{{'common.edit' | translate}}"
+                                                        [ngClass]="{ 'edit_row': true,'table-action-btn': true,'edit-ico': true, 'disabled': scheduleViewMode}"
+                                                        *ngIf="dataRow.dentProvSpecSchedKey != selectedRowId && dentalScheduleList[0].editSpeciality == 'T'">
+                                                        <i class='fa fa-pencil'></i>
+                                                    </a>
+                                                    <a (click)="SaveInfo(dataRow, i)"
+                                                        title="{{'common.save' |translate}}"
+                                                        class="save_row table-action-btn edit-ico"
+                                                        *ngIf="dataRow.dentProvSpecSchedKey == selectedRowId">
+                                                        <i class="fa fa-save"></i>
+                                                    </a>
+                                                    <a href="javascript:void(0)" title="{{'common.cancel' | translate}}"
+                                                        class="delete_row table-action-btn del-ico"
+                                                        (click)="CancelInfo()"
+                                                        *ngIf="dataRow.dentProvSpecSchedKey == selectedRowId">
+                                                        <i class="fa fa-times"></i>
+                                                    </a>
+                                                    <a title="{{'common.delete' | translate}}"
+                                                        [ngClass]="{ 'delete_row': true,'table-action-btn': true,'del-ico': true, 'disabled': scheduleViewMode, 'hide': dataRow.dentProvSpecSchedKey == selectedRowId}"
+                                                        (click)="DeleteInfo(dataRow)"
+                                                        *ngIf="dataRow.cardMaxKey != selectedRowId && dentalScheduleList[0].deleteSpeciality == 'T'">
+                                                        <i class="fa fa-trash"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            <tr class="tableRow" *ngIf="addMode">
+                                                <td>
+                                                    <ng2-completer [datasource]="dentSpecialityData"
+                                                        [minSearchLength]="0" [fillHighlighted]="false"
+                                                        [autoHighlight]="true" [selectOnFocus]="true"
+                                                        (selected)="ondentalSpecialitySelected($event)"
+                                                        [placeholder]="'Search Maximum Period Type'"
+                                                        [textSearching]="'Please wait...'"
+                                                        [inputClass]="{'error_field': newRecordValidate && arrNewRow.dentProvSpecialKey == '','fm-txt': true, 'form-control':true}"
+                                                        [clearUnselected]="true">
+                                                    </ng2-completer>
+                                                </td>
+                                                <td>
+                                                    <my-date-picker id="txtEffectiveOn" [options]="myDatePickerOptions"
+                                                        placeholder="{{'common.date-placeholder' | translate}}"
+                                                        name="effectiveOn"
+                                                        (inputFocusBlur)="ChangeInputDateFormat($event,0, 'effectiveOn')"
+                                                        [ngClass]="{ 'error_field': newRecordValidate && arrNewRow.effectiveOn == '' }"
+                                                        [(ngModel)]="arrNewRow.effectiveOn">
+                                                    </my-date-picker>
+                                                </td>
+                                                <td>
+                                                    <a href="javascript:void(0)" title="{{'common.save' |translate}}"
+                                                        class="save_row table-action-btn edit-ico" (click)="SaveInfo()">
+                                                        <i class="fa fa-save"></i>
+                                                    </a>
+                                                    <a href="javascript:void(0)" title="{{'common.cancel' | translate}}"
+                                                        class="delete_row table-action-btn del-ico"
+                                                        (click)="DeleteInfo()"
+                                                        *ngIf="dentalScheduleList[0].deleteSpeciality == 'T'">
+                                                        <i class="fa fa-times"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- Table Ends -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Form Row ENds -->
+
+            <div class="form-row text-center">
+                <div class="row">
+                    <div class="col-md-12 col-xs-12">
+                        <label>&nbsp;</label>
+                        <button *ngIf="scheduleAddMode" id="saveDentalSchedule" class="btn green-btn" type="submit"
+                            (click)="submitDentalScheduleForm()">{{'button.save' | translate}}</button>
+                        <button *ngIf="scheduleViewMode && dentalScheduleList[0].editSchedule == 'T' "
+                            id="editDentalSchedule" class="btn green-btn" (click)="enableEditMode()">{{'button.edit' |
+                            translate}}</button>
+                        <button *ngIf="scheduleEditMode && dentalScheduleList[0].editSchedule == 'T'"
+                            id="updateDentalSchedule" class="btn green-btn" [disabled]="editMode || addMode"
+                            (click)="submitDentalScheduleForm()">{{'button.update' | translate}}</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Form Row ENds -->
+
+        </div>
+        <!-- Grid Inner Ends -->
+    </div>
+    <!-- Grid Box Ends -->
+</div>
+<!-- Container Ends -->

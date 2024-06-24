@@ -1,0 +1,6 @@
+/* #704 issue */
+table.inlinePopupTable tr td:last-child a {
+    display: inline;
+    width: 30px;
+    height: 30px;
+}

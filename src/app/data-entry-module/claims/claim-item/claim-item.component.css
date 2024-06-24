@@ -1,0 +1,99 @@
+#explanationCode{
+    overflow: scroll;
+    height: 250px;
+    overflow-x: hidden;
+}
+#explanationCode table th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+:host ::ng-deep .dropdown-item{
+    display: block;
+    width: 100%;
+    padding: .25rem 1.5rem;
+    clear: both;
+    font-weight: 400;
+    color: #212529;
+    text-align: inherit;
+    white-space: nowrap;
+    background-color: transparent;
+    border: 0;
+}
+.btndangerright{
+    display: flex;
+    justify-content: flex-end;
+}
+.button-pad .col-md-12, .button-pad .col-md-6{
+padding: 0px;
+}
+/* Log #1112 */
+tr.border_top td {
+    border-top: 1px solid black !important
+}
+
+/* Log #1112 */
+.total_amt:before {
+    content: "$";
+    position: absolute;
+    /* top: 4px; */
+    color: #404040;
+    left: 1px;
+}
+
+/* Log #11105 */
+.field_group {
+    display: flex;
+}
+.form-control.claim_item {
+    border-radius: 4px 0 0 4px;
+    border-right: 0;
+}
+.form-control.claim_digit {
+    border-radius: 0 4px 4px 0;
+}
+.completer-input.ng-valid.ng-dirty.ng-touched .completer-holder input{
+    border: 0;
+}
+input.completer-input.ng-untouched.ng-pristine.ng-valid{
+    border: 0;
+}
+.multi-col {
+    overflow: visible;
+}
+
+.data-entry-claim {
+    background-color: #FFFFFF;
+    padding: 6.5% !important;
+}
+
+.data-entry-claim-item{
+    background-color: #FFFFFF;
+    font-weight: 400 !important;
+}
+.d-flex{
+    display: flex;
+}
+.custom-table-ui table thead tr th{
+    padding: 4px !important;
+}
+.custom-table-ui table tbody tr td input{
+    padding: 4px !important;
+    height: 30px !important;
+}
+
+.input-override .form-control {
+    padding: 4px !important;
+    height: 30px !important;
+}
+.custom-table-ui ::ng-deep .form-control{
+    padding: 4px !important;
+    height: 30px !important;
+} 
+.number-digit-box{
+    border: 1px solid #acacac !important;
+    padding: 3px 13px 3px 0px !important;
+    border-radius: 0px 4px 4px 0 !important;
+    margin-left: 3px;
+}

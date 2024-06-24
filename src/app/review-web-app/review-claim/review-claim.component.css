@@ -1,0 +1,7 @@
+.DropC-list{
+    width: calc(100% - 20px);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 40;
+}

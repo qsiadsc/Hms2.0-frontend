@@ -1,0 +1,9 @@
+#setFocus { outline: 0;}
+
+.setCursor{
+    cursor: default;
+}
+
+.pay-to-input-box{
+    width: auto;
+}

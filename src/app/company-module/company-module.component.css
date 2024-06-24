@@ -1,0 +1,13 @@
+.rightAlignFlag
+{
+    float:  right!important;
+}
+
+.resultsDropdown{
+    margin: 0px 0px 8px 5px;
+}
+
+.termBtn {
+    margin-top: -15px !important;
+    margin-bottom: 5px !important
+}

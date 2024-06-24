@@ -1,0 +1,336 @@
+<div class="grid-box">
+    <div class="grid-heading collapse-heading" aria-expanded="false" data-toggle="collapse"
+        data-target="#financialForm">
+        <h3 aria-expanded="false" data-toggle="collapse" data-target="#financialForm">
+            {{ 'company.company-financial-data.add-financial-data' | translate }}</h3>
+    </div>
+    <!-- Grid Heading Ends -->
+    <div class="collapse" id="financialForm">
+        <div class="grid-inner">
+            <form [formGroup]="financialDataForm">
+                <div class="form-row">
+                    <div class="row min-ht-sf">
+                        <div class="col-md-2 col-xs-12">
+                            <label>{{ 'company.company-financial-data.admin-rate' | translate }}
+                                <span class="required">*</span>
+                            </label>
+                            <div class="search-field">
+                                <input type="text" class="fm-txt form-control" name="adminrate"
+                                    id="company-financial-data_adminrate" formControlName="adminrate"
+                                    placeholder="{{ 'company.company-financial-data.admin-rate' | translate }}"
+                                    (blur)="addDecimal($event,'adminrate')">
+                                <span *ngIf="!financialFormAddMode && hideAdminRateButton=='T'">
+                                    <app-history-icons [attr.data-toggle]="dataToggle"
+                                        [attr.data-target]="admitRateDataTarget" [id]="admitRateId"
+                                        [class]="admitRateClass" [title]="admitRateTitle" (click)="adminRateHistory()">
+                                    </app-history-icons>
+                                </span>
+                                <show-errors [control]="financialDataForm.controls.adminrate"></show-errors>
+                            </div>
+                            <!-- Search Field Ends -->
+                        </div>
+                        <div class="col-md-2 col-xs-12">
+                            <label>{{ 'company.company-financial-data.standard-pap-amount' | translate }}</label>
+                            <div class="calender-field d-amount"
+                                [ngClass]="(!financialFormAddMode && hidePapButton=='T') ? 'hMHistory':''">
+                                <input id="company-financial-data_standard_pap_amount" type="text" min="0" step="1"
+                                    step="any" oninput="validity.valid||(value='');"
+                                    class="fm-txt form-control datepicker in-number" name="standardpapamount"
+                                    formControlName="standardpapamount"
+                                    placeholder="{{ 'company.company-financial-data.standard-pap-amount' | translate }}"
+                                    (blur)="addDecimal($event,'standardpapamount')" maxlength="10" (keypress)="numericOnly($event)">
+                                <span *ngIf="!financialFormAddMode && hidePapButton=='T'">
+                                    <app-history-icons [attr.data-toggle]="dataToggle"
+                                        [attr.data-target]="standardPapDataTarget" [id]="standardPapId"
+                                        [class]="standardPapClass" [title]="standardPapTitle"
+                                        (click)="standardPapAmount()">
+                                    </app-history-icons>
+                                </span>
+                                <show-errors [control]="financialDataForm.controls.standardpapamount"></show-errors>
+                            </div>
+                        </div>
+                        <div [hidden]="alberta" class="col-md-2 col-xs-12">
+                            <label>{{ 'company.company-financial-data.adjusted-pap-amount' | translate }}</label>
+                            <div class="calender-field d-amount"
+                                [ngClass]="(!financialFormAddMode && hideAdjButton=='T') ? 'hMHistory':''">
+                                <input type="text" min="0" step="1" step="any" oninput="validity.valid||(value='');"
+                                    class="fm-txt form-control datepicker in-number"
+                                    id="company-financial-data_adjusted_pap_amount" name="adjustedpapamount"
+                                    formControlName="adjustedpapamount"
+                                    placeholder="{{ 'company.company-financial-data.adjusted-pap-amount' | translate }}"
+                                    (blur)="isAdjustedFilled()" 
+                                    (blur)="addDecimal($event,'adjustedpapamount')" maxlength="10" (keypress)="numericOnly($event)">
+                                <span *ngIf="!financialFormAddMode && hideAdjButton=='T'">
+                                    <app-history-icons [attr.data-toggle]="dataToggle"
+                                        [attr.data-target]="adjustedPapDataTarget" [id]="adjustedPapId"
+                                        [class]="adjustedPapClass" [title]="adjustedPapTitle"
+                                        (click)="adjustedPapAmount()">
+                                    </app-history-icons>
+                                </span>
+                                <show-errors [control]="financialDataForm.controls.adjustedpapamount"></show-errors>
+                            </div>
+                        </div>
+                        <div [hidden]="alberta" class="col-md-2 col-xs-12">
+                            <label>{{ 'company.company-financial-data.adjusted-pap-end-date' | translate }}</label>
+                            <div class="calender-field">
+                                <my-date-picker [ngClass]="(financialFormEditMode == false) ? 'removeCross':''"
+                                    id="company-financial-data_adjusted_pap_enddate" [options]="myDatePickerOptions"
+                                    name="adjustedpapenddate" formControlName="adjustedpapenddate"
+                                    (inputFocusBlur)="changeDateFormat($event, 'adjustedpapenddate','financialDataForm','currentDate')"
+                                    placeholder="{{ 'company.company-financial-data.dd/mm/yyyy' | translate }}">
+                                </my-date-picker>
+                                <show-errors [control]="financialDataForm.controls.adjustedpapenddate"></show-errors>
+                            </div>
+                            <!-- Calendar Field Ends -->
+                        </div>
+                        <div [hidden]="alberta" class="col-md-4 col-xs-12 min-ht-half">
+                            <label>&nbsp;</label>
+                            <div class="select-options">
+                                <span>
+                                    <label class="papComment">
+                                        <span class="custom-check">
+                                            <input type="checkbox" data-toggle="modal" data-target="#PapComments"
+                                                id="pap_Suspended" formControlName="papSuspended"
+                                                (click)="papCommentHistory()">{{ 'company.company-financial-data.pap-suspended' | translate }}
+                                            <span></span>
+                                        </span>
+                                    </label>
+                                    <a [ngClass]="{'disabled':!financialFormEditMode && !financialFormAddMode}">
+                                        <i *ngIf="((!financialFormAddMode && showPapComments )|| showPapComments1)"
+                                            data-toggle="modal" data-target="#PapComments" id="pap_SuspendedComments"
+                                            (click)="papCommentHistory()" class="fa fa-comments" aria-hidden="true"></i>
+                                    </a>
+                                </span>
+                                <show-errors [control]="financialDataForm.controls.papSuspended"></show-errors>
+                                <span>
+                                    <label>
+                                        <span class="custom-check">
+                                            <input type="checkbox" id="exempt_Gst"
+                                                formControlName="exemptGst">{{ 'company.company-financial-data.exempt-gst' | translate }}
+                                            <span></span>
+                                        </span>
+                                    </label>
+                                </span>
+                                <show-errors [control]="financialDataForm.controls.exemptGst"></show-errors>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Form Row ENds -->
+            </form>
+            <!-- Form Row ENds -->
+        </div>
+        <!-- Grid Inner Ends -->
+    </div>
+</div>
+<!-- Adjusted  PAP Amount  -->
+<!--History of Adjust PAP Amount  Modal-->
+<div id="AdjustedPapAmount" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button id="company-financial_adjusted" type="button" class="close"
+                    data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">
+                    {{ 'company.company-financial-data.history-of-adjusted-pAP-amount' | translate }}</h4>
+            </div>
+            <div class="modal-body">
+                <!-- Company General Information Start -->
+                <app-company-general-information></app-company-general-information>
+                <!-- Company General Information End -->
+                <div class="grid-box">
+                    <div class="grid-inner">
+                        <div class="form-row">
+                            <div class="row">
+                                <div class="col-md-12 col-xs-12 table-col">
+                                    <div class="table-responsive">
+                                        <table id="adjusted-pap-amount" class="table table-bordered table-stripped">
+                                        </table>
+                                    </div>
+                                    <!-- Table Ends -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Form Row ENds -->
+                    </div>
+                    <!-- Grid Inner Ends -->
+                </div>
+                <!-- Grid Box Ends -->
+            </div>
+            <!-- Modal Body End-->
+            <div class="modal-footer">
+                <button id="company-financial_close" type="button" class="btn grey-btn" data-dismiss="modal">
+                    {{ 'button.close' | translate }}</button>
+            </div>
+            <!-- Modal Footer Ends-->
+        </div>
+    </div>
+</div>
+<!--History of Standard PAP Amount  Modal-->
+<div id="StandardPapAmount" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button id="company-financial_standard" type="button" class="close"
+                    data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">
+                    {{ 'company.company-financial-data.history-of-standard-pAP-amount' | translate }}</h4>
+            </div>
+            <div class="modal-body">
+                <!-- Company General Information Start -->
+                <app-company-general-information></app-company-general-information>
+                <!-- Company General Information End -->
+                <div class="grid-box">
+                    <div class="grid-inner">
+                        <div class="form-row">
+                            <div class="row">
+                                <div class="col-md-12 col-xs-12 table-col">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-stripped" id="standard-pap-amount">
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Form Row ENds -->
+                    </div>
+                    <!-- Grid Inner Ends -->
+                </div>
+                <!-- Grid Box Ends -->
+            </div>
+            <!-- Modal Body End-->
+            <div class="modal-footer">
+                <button id="financial-close" type="button" class="btn grey-btn" data-dismiss="modal">
+                    {{ 'button.close' | translate }}</button>
+            </div>
+            <!-- Modal Footer Ends-->
+        </div>
+    </div>
+</div>
+<!--History of Admin Rate  Modal-->
+<div id="adminRateHistory" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button id="company-financial_admin_rate" type="button" class="close"
+                    data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">{{ 'company.company-financial-data.history-of-admin-rate' | translate }}</h4>
+            </div>
+            <div class="modal-body">
+                <!-- Company General Information Start -->
+                <app-company-general-information></app-company-general-information>
+                <!-- Company General Information End -->
+                <div class="grid-box">
+                    <div class="grid-inner">
+                        <div class="form-row">
+                            <div class="row">
+                                <div class="col-md-12 col-xs-12 table-col">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-stripped" id="admit-rate-history">
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Form Row ENds -->
+                    </div>
+                    <!-- Grid Inner Ends -->
+                </div>
+                <!-- Grid Box Ends -->
+            </div>
+            <!-- Modal Body End-->
+            <div class="modal-footer">
+                <button id="financial-close" type="button" class="btn grey-btn" data-dismiss="modal">
+                    {{ 'button.close' | translate }}</button>
+            </div>
+            <!-- Modal Footer Ends-->
+        </div>
+    </div>
+</div>
+<div id="PapComments" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button id="CreditLimitClose" type="button" class="close" data-dismiss="modal"
+                    (click)="resetPapForm()">&times;</button>
+                <h4 class="modal-title">Add Comment</h4>
+            </div>
+            <div class="modal-body">
+                <div class="grid-inner grid-box">
+                    <div class="form-row">
+                        <form [formGroup]="PapCommentPopUpForm">
+                            <div class="form-row">
+                                <label>{{'common.addcomment' | translate}}<span class="required"> *</span></label>
+                                <div class="add-comments">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <textarea id="cch_addComments" class="notInCaps fm-txt form-control comment-textarea"
+                                                formControlName="commentTxt"></textarea>
+                                            <show-errors [control]="PapCommentPopUpForm.controls.commentTxt">
+                                            </show-errors>
+                                        </div>
+                                        <div *ngIf="showDepartment" class="col-sm-2" style="margin-top: -5px;">
+                                            <label>Department</label>
+                                            <ng2-completer formControlName="PapCommentGroupKey"
+                                                [datasource]="userGroupData" [minSearchLength]="0" [openOnFocus]="true"
+                                                [fillHighlighted]="false" [placeholder]="'Search Department'"
+                                                [textSearching]="'Please wait...'" [inputClass]="'form-control'"
+                                                [clearUnselected]="true" (selected)="onSelect($event)">
+                                            </ng2-completer>
+                                            <show-errors [control]="PapCommentPopUpForm.controls.PapCommentGroupKey">
+                                            </show-errors>
+                                        </div>
+                                        <div class="col-sm-1 text-right">
+                                            <button id="btnUpdateComment" class="green-btn-add btn"
+                                                (click)="updateComment(PapCommentPopUpForm)">
+                                                <i class="fa fa-plus"></i> {{'button.add' | translate}} </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <table *ngIf="!financialFormAddMode" datatable [dtOptions]="dtOptions['PapComment']"
+                    [dtTrigger]="dtTrigger['PapComment']" id="PapComment"
+                    class="table table-bordered table-stripped inlinePopupTable">
+                </table>
+                <div *ngIf="financialFormAddMode" class="form-row">
+                    <div class="row">
+                        <div class="col-md-12 col-xs-12 table-col">
+                            <div class="table-responsive">
+                                <table id="PapAddComment" *ngIf="financialFormAddMode" datatable
+                                    [dtOptions]="dtOptions['PapAddComment']" [dtTrigger]="dtTrigger['PapAddComment']"
+                                    class="table table-bordered table-stripped">
+                                    <thead>
+                                        <tr>
+                                            <th width="10%">Date</th>
+                                            <th class="amount_right_grid" width="10%">User Name</th>
+                                            <th class="amount_right_grid" width="10%">Department</th>
+                                            <th class="amount_right_grid" width="20%">Comments</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let dataRow of papSuspendComments;">
+                                            <td>{{dataRow.createdOn| dateFormate}}</td>
+                                            <td class="amount_right_grid">{{dataRow.username}}</td>
+                                            <td class="amount_right_grid">{{dataRow.department}}</td>
+                                            <td class="amount_right_grid">{{dataRow.commentTxt}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="companyReset" type="button" class="btn grey-btn" data-dismiss="modal"
+                    (click)="resetPapForm()">{{ 'button.close' | translate }}</button>
+            </div>
+        </div>
+    </div>
+</div>

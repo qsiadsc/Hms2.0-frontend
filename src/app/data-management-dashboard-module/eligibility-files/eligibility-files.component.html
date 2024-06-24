@@ -1,0 +1,281 @@
+<!--[Start Filters]-->
+<div class="form-row">
+  <div class="">
+
+    <div class="grid-box">
+      <div class="grid-heading">
+        <h3>Eligibility Files - Search</h3>
+        <button (click)="fileUpload()" class="green-btn btn" style="float: right; margin:-5px -10px 0 8px!important;padding:5px 5px 5px 5px!important;">Upload File
+        </button>
+        <button (click)="summery()" id="summary" class="green-btn btn" style="padding: 5px; margin: -5px -5px;float: right;"
+          data-target="#openSummaryPopUp" data-toggle="modal">Summary</button>
+      </div>
+      <form [formGroup]="eligibilityFileForm" class="eligForm">
+        <div class="grid-inner">
+          <div class="form-row">
+            <div class="row min-ht-sf">
+              <div class="col-md-3 col-xs-12">
+                <label>File Type</label>
+                <select class="fm-txt form-control" (change)="onFileTypeChange($event,true,false)" name="fileType" id="fileType" formControlName="fileType">
+                  <option [ngValue]="null" disabled hidden selected>{{'common.select' | translate}}</option>
+                  <option *ngFor="let type of fileType" [value]="type.govEligFileTypeKey">{{type.eligFileTypeDesc}}
+                  </option>
+                </select>
+                <show-errors [control]="eligibilityFileForm.controls.fileType"></show-errors>
+              </div>
+              <div class="col-md-3 col-xs-12">
+                <label>File Type Category</label>
+                <select class="fm-txt form-control" name="fileCategory" id="fileCategory" formControlName="fileCategory" (change)="onFileCategoryChange($event)">
+                  <option *ngIf="showLoadingText" value="">Loading....</option>
+                  <option *ngIf="!showLoadingText" [ngValue]="null" disabled hidden selected>
+                    {{'common.select' | translate}}</option>
+                  <option *ngFor="let category of fileCategorypopup" [value]="category.govtEligCatKey">
+                    {{category.eligFileTypeCatDesc}}</option>
+                </select>
+                <show-errors [control]="eligibilityFileForm.controls.fileCategory"></show-errors>
+              </div>
+              <div class="col-md-3 col-xs-12">
+                <label>From Date<span class="required">*</span></label>
+                <div  class="calender-field">
+                  <my-date-picker id="fromDateEligibility" [options]="myDatePickerOptions" name="fromDate" formControlName="fromDate" (inputFocusBlur)="changeDateFormat($event, 'fromDate','eligibilityFileForm',true)"
+                  placeholder="{{'common.date-placeholder' | translate}}">
+                </my-date-picker>
+                <show-errors [control]="eligibilityFileForm.controls.fromDate"></show-errors>
+
+                </div>
+                
+              </div>
+              <div class="col-md-3 col-xs-12">
+                <label>To Date<span class="required">*</span></label>
+                <div  class="calender-field">
+                <my-date-picker id="toDateEligibility" [options]="myDatePickerOptions" placeholder="{{'common.date-placeholder' | translate}}" name="toDate"
+                  formControlName="toDate" (inputFocusBlur)="changeDateFormat($event, 'toDate' ,'eligibilityFileForm',true)">
+                </my-date-picker>
+                <show-errors [control]="eligibilityFileForm.controls.toDate"></show-errors>
+              </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="row min-ht-st">
+              <div class="col-md-11 col-xs-12">
+                <button title="Search" id="sps_search" (click)="searchEligibilityFiles()" class="btn green-btn">{{'serviceProvider.serviceProvider-search.search' | translate }}</button>
+                <button title="Clear" id="sps_reset" (click)="resetFormSearch()" class="btn grey-btn">{{'button.clear' | translate }}</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!--[End Filters]-->
+<!--[Start Listing]-->
+<div class="form-row" *ngIf="showSeachFilesListing">
+  <div class="col-md-12 col-xs-12">
+    <div class="grid-box">
+      <div class="grid-heading">
+        <h3>Eligibility Files List</h3>
+      </div>
+      <div class="grid-inner">
+        <div class="row">
+          <div class="col-md-12 col-xs-12 table-col">
+            <div class="table-responsive">
+              <table id="search-eligibilityFiles-table" class="display table table-bordered table-stripped">
+                <thead>
+                </thead>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--[End Listing]-->
+
+
+<!--[Start File Upload Pop Up]-->
+<button class="green-btn-add btn" data-toggle="modal" id="uploadGovEligFilesPopUp" data-target="#openUploadGovEligFilesPopUp"
+  style="display:none"></button>
+
+<div id="openUploadGovEligFilesPopUp" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" (click)="resetGovEligFileForm()">&times;</button>
+        <h4 class="modal-title">Government Eligibility Files</h4>
+      </div>
+      <div class="modal-body">
+        <div class="grid-box">
+          <!-- Grid Heading Ends -->
+          <div class="grid-inner">
+            <form [formGroup]="uploadGovEligFileFormGroup">
+              <div class="grid-inner">
+                <div class="form-row">
+                  <div class="row min-ht-sf">
+                    <div class="col-md-3 col-xs-12">
+                      <label>File Type</label>
+                      <select class="fm-txt form-control" (change)="onFileTypeChange($event,false,false)" name="fileType" id="fileType" formControlName="fileType">
+                        <option value="" selected disabled hidden>{{'common.select' | translate}}</option>
+                        <option *ngFor="let type of fileType" [value]="type.govEligFileTypeKey">
+                          {{type.eligFileTypeDesc}}
+                        </option>
+                      </select>
+                      <show-errors [control]="uploadGovEligFileFormGroup.controls.fileType"></show-errors>
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                      <label>File Type Category</label>
+                      <select class="fm-txt form-control" name="fileCategory" id="fileCategory" formControlName="fileCategory" (change)="onFileCategoryChange($event)">
+                        <option *ngIf="showLoadingText1" value="">Loading....</option>
+                       
+                        <option *ngIf="!showLoadingText1" value="" selected disabled hidden>
+                          {{'common.select' | translate}}</option>
+                        <option *ngFor="let category of fileCategory" [value]="category.govtEligCatKey">
+                          {{category.eligFileTypeCatDesc}}</option>
+                      </select>
+                      <show-errors [control]="uploadGovEligFileFormGroup.controls.fileCategory"></show-errors>
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                      <label>File Name</label>
+                      <input style="display: none" type="file" (click)="crFileInput.value = null" (change)="onFileChanged($event)" #crFileInput>
+                      <input formControlName="selectedFileName" name="selectedFileName" disabled class="fm-txt form-control datepicker" type="text">
+                      <show-errors [control]="uploadGovEligFileFormGroup.controls.selectedFileName"></show-errors>
+                      <ul *ngIf="error.isError==true" class="validation-errors">
+                        <li style="color: red">{{error.errorMessage}}</li>
+                      </ul>
+                      <ul *ngIf="error3.isError==true" class="validation-errors">
+                        <li style="color: red">{{error3.errorMessage}}</li>
+                      </ul>
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                      <label>&nbsp;</label>
+                      <button class="btn green-btn" (click)="crFileInput.click()">Select File</button>
+                      <button *ngIf="this.selectedFileName" (click)="removeExtension()" class="btn red-btn ">Remove</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="row min-ht-st">
+                    <div class="col-md-11 col-xs-12">
+                      <button (click)="onSubmitUploadGovEligFileForm()" class="btn green-btn">Upload</button>
+                     
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+
+            <!--[Start Files Grid]-->
+            <div class="form-row">
+              <div class="table-responsive">
+                <table id="gov-elig-file-upload-doc" class="table table-bordered table-stripped text-left col-lt-search" style="width: 100%"></table>
+              </div>
+            </div>
+            <!--[End Files Grid]-->
+
+          </div>
+        </div>
+       
+        <!-- Grid Box Ends -->
+      </div>
+      <!-- Modal Body End-->
+      <div class="modal-footer">
+        <button id="ReportResetFooterButton" type="button" class="btn grey-btn" data-dismiss="modal" (click)="resetGovEligFileForm()">{{ 'button.close' | translate }}</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+<!--[End File Upload Pop Up]-->
+
+<!-- Summary Popup Start-->
+<div id="openSummaryPopUp" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" (click)="resetFileSummary()">&times;</button>
+        <h4 class="modal-title">File Summary List</h4>
+      </div>
+      <div class="modal-body">
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>File Summary</h3>
+          </div>
+          <div class="grid-inner">
+            <form [formGroup]="fileSummaryFormGroup">
+              <div class="grid-inner">
+                <div class="form-row">
+                  <div class="row min-ht-sf">
+                    <div class="col-md-3 col-xs-12">
+                      <label>File Type</label>
+                      <select class="fm-txt form-control" (change)="onFileTypeChange($event,false,true)" name="fileType" id="fileType" formControlName="fileType">
+                        <option value="" selected disabled hidden>{{'common.select' | translate}}</option>
+                        <option *ngFor="let type of fileType" [value]="type.govEligFileTypeKey">
+                          {{type.eligFileTypeDesc}}
+                        </option>
+                      </select>
+                      <show-errors [control]="fileSummaryFormGroup.controls.fileType"></show-errors>
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                      <label>File Type Category</label>
+                      <select class="fm-txt form-control" name="fileCategory" id="fileCategory" formControlName="fileCategory" (change)="onFileCategoryChange($event)">
+                        <option *ngIf="showLoadingText2" value="">Loading....</option>
+                        <option *ngIf="!showLoadingText2" value="" selected disabled hidden>
+                        yuyi  {{'common.select' | translate}}</option>
+                        <option *ngFor="let category of fileCategorysummaryPopup" [value]="category.govtEligCatKey">
+                          {{category.eligFileTypeCatDesc}}</option>
+                      </select>
+                      <show-errors [control]="fileSummaryFormGroup.controls.fileCategory"></show-errors>
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                      <label>&nbsp;</label>
+                      <button title="Search" id="sps_search" (click)="searchFileSummaryList()" class="btn green-btn">Search</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div [hidden]="!showSummaryList">
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>File Summary List</h3>
+          </div>
+          <div class="grid-inner">
+            <div class="row">
+              <div class="col-md-12 col-xs-12 table-col">
+                <div class="table-responsive">
+                  <table id="summaryList" class="display table table-bordered table-stripped">
+                    <thead>
+                    </thead>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+      <!-- Modal Body End-->
+      <div class="modal-footer">
+        <button id="closeSummaryBtn" type="button" class="btn grey-btn" data-dismiss="modal" (click)="resetFileSummary()">{{ 'button.close' | translate }}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="showLoader" class="loader-outer">
+  <div class="cube-wrapper">
+    <div class="cube-folding">
+      <span class="leaf1"></span>
+      <span class="leaf2"></span>
+      <span class="leaf3"></span>
+      <span class="leaf4"></span>
+    </div>
+    <span class="loading" data-name="Loading">{{loaderPlaceHolder}}</span>
+  </div>
+</div>

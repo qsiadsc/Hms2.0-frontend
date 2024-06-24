@@ -1,0 +1,113 @@
+{
+	"Header": {
+        "Title": "HAM"
+    },
+	"Register": {
+        "Title": "enregistrement",
+		"Email": "Email",
+		"Emailvalidation": "Le courriel est requis.",
+		"Password": "Mot de passe",
+		"Passwordvalidation": "Mot de passe requis.",
+		"Submitbutton": "Soumettre"
+    },
+    "Intro": "Bonjour je m'appelle {{name}}, j'ai {{age}} ans.",
+    "Startpage": {
+        "TranslationSections": "Bonjour Monde"
+    },
+    "Aboutpage": {
+        "TranslationSections": "Nous sommes letsboot"
+    },
+	"Footer": {
+        "Copyright": "2018 Tous droits réservés avec Quick Card Services"
+    },
+
+    "toaster":{
+        "msg":"Company Updated Successfully!"   
+    },
+    
+
+    "general-information": {
+        "company-name": "Nom de l'entreprise",
+        "active":"Actif",
+        "program":"Programme",
+        "Quikcard":"Quikcard",
+        "employee-pin":"Employé/Épingle#",
+        "auto-generate":"Générer automatiquement",
+        "card-id":"ID de carte",
+        "employment-date":"Date d'emploi",
+        "communication-language":"Langage de communication",
+        "card-type":"Type de carte",
+        "family":"Famille" 
+    },
+    "card eligibility": {
+        "plan-div-unit":"Planifier # / Div # / Unité # / Nom de l'unité",
+        "max-type":"Max Type",
+        "effective-date":"Date d'effet",
+        "expiry-date":"Date d'expiration"
+    },
+    "button":{
+        "generate-password":"Créer un mot de passe",
+        "overrides":"Overrides",
+        "view-plan-details":"Afficher les détails du plan",
+        "add-extra-benefits":"Ajouter des avantages supplémentaires",
+        "view-maximums":"Voir Maximums",
+        "add-new":"Ajouter un nouveau",
+        "print":"Impression",
+        "terminate":"Mettre fin",
+        "claim-items":"Articles de réclamation",
+        "edit":"modifier",
+        "delete":"Effacer"
+    },
+    "card-contact-address":{
+        "line-1":"Ligne 1",
+        "line-2":"Ligne 2",
+        "postal-code":"Code postal",
+        "city":"Ville",
+        "province":"Province",
+        "country":"Pays",
+        "fax-#":"Fax #",
+        "phone":"Téléphone",
+        "email-address":"Adresse e-mail",
+        "effective-date":"Date d'effet",
+        "expiry-date":"Date d'expiration"
+    },
+    "card-holder":{
+        "max-type":"Max Type",
+        "$-666":"666 $",
+        "amount-available":"Montant disponible",
+        "$-600":"600 $ ",
+        "data-tables":{
+            "last-name":"Nom de famille",
+            "first-name":"Prénom",
+            "date-of-birth":"Date de naissance",
+            "role":"Rôle",
+            "status":"Statut",
+            "action":"Action"
+        }
+    },
+    "bank-account":{
+        "bank-name":"Nom de la banque",
+        "bank-#":"Banque #",  
+        "branch-no.":"No de succursale",
+        "branch-#" :"Branche # ",
+        "account-no.":"Numéro de compte",
+        "account-#":"Compte #",
+        "client-name":"Nom du client",
+        "effective-date":"Date d'effet",
+        "effective-on":"Efficace sur",
+        "expiry-date":"Date d'expiration",
+        "expired-on":"Expiré le",
+        "action":"Action"
+    },
+    "comments":{
+        "add-notes":"Ajouter des notes",
+        "importance":"Importance",
+        "data-tables":{ 
+            "date":"Rendez-vous amoureux",   
+            "user-id":"ID utilisateur",
+            "notes":"Remarques",
+            "importance":"Importance",
+            "action":"Action"       
+        }
+    }
+}

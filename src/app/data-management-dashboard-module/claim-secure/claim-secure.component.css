@@ -1,0 +1,35 @@
+:host ::ng-deep  p>a {
+    color: #337ab7;
+    font-size: small;
+}
+
+.claimsecure .green-btn-add {
+    font-size: 0.9rem !important;
+}
+
+:host ::ng-deep #card2 .unprocessedData {
+    display: none !important;
+}
+
+:host ::ng-deep #card2  .section-heading {
+    display: none !important;
+
+}
+
+:host ::ng-deep .company-tabs { 
+    margin-bottom: 5px;
+    background: #f3f3f3;
+    padding: 0 15px;
+
+}
+
+.min-ht-half{
+    display: flex;
+    align-items: center;
+}
+
+input[type="checkbox"], input[type="radio"] {
+    display: inline-block;
+    margin-right: 7px;
+    vertical-align: top;
+}

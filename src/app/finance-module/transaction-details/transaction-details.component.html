@@ -1,0 +1,307 @@
+<nav class="breadcrumb">
+  <span class="breadcrumb-item" [routerLink]="['/finance/transaction-search']">
+    {{'finance.transactionDetails.transaction' | translate}} </span> >
+  <a class="active serviceProviderActive"> {{ 'button.view' | translate }}</a>
+</nav>
+<!-- <div class="container"> -->
+<div class="section-heading">
+  <h2>{{'finance.transactionDetails.transaction' | translate}}
+    <span>- {{ 'finance.transactionDetails.view' | translate }}</span>
+  </h2>
+</div>
+<!-- Section Heading Ends -->
+<div class="grid-box">
+  <div class="grid-heading">
+    <h3>{{'finance.transactionDetails.transactionDetail' | translate}}</h3>
+    <div class="web-reg">
+			<a *ngIf="companySearchBtn" style="cursor: pointer" class="green-btn-add btn" (click)="backToSearch()" ><i class="fa fa-share" aria-hidden="true"></i>{{'finance.transactionDetails.backToSearch' | translate}}</a>
+		</div>
+  </div>
+  <!-- Grid Heading Ends -->
+  <div class="grid-inner">
+    <div  class="form-row">
+      <ul class="nav company-tabs nav-pills">
+        <li class="active"><a data-toggle="pill" href="#home" id="planTab" (click)="resetTableSearch('plan-datatable')">{{'finance.transactionDetails.attachClaims' | translate}}</a></li>
+        <li><a data-toggle="pill" href="#menu1" (click)="resetTableSearch('unAttachedClaims')">{{'finance.transactionDetails.unattachClaims' | translate}}</a></li>
+      </ul>
+
+      <div class="tab-content tab-mtb">
+          <!-- First ID-->
+          <div id="home" class="tab-pane fade in active">
+              <form [formGroup]="transactionDetailsForm">
+                  <div class="form-row">
+                    <div class="row min-ht-sf">
+            
+                      <div class="col-md-3 col-xs-12 ">
+                        <label>{{'finance.transactionDetails.discipline' | translate}}</label>
+                        <input id="transactionDetDiscipline" type="text" class="form-control" name="discipline" formControlName="discipline" placeholder="{{'finance.transactionDetails.discipline' | translate}}" />
+                      </div>
+            
+                      <div class="col-md-3 col-xs-12 ">
+                        <label>{{'finance.transactionDetails.transactionNo' | translate}}</label>
+                        <input id="transactionDetTransactionNo" type="text" class="form-control" name="transactionNo"
+                          formControlName="transactionNo" placeholder="{{'finance.transactionDetails.transactionNo' | translate}}" />
+                      </div>
+            
+                      <div class="col-md-3 col-xs-12 ">
+                        <label>{{'finance.transactionDetails.generatedDate' | translate}}</label>
+                        <div class="calender-field">
+                          <my-date-picker  [ngClass]="(viewtransMode == true) ? 'removeCross':''"  id="transactionDetGeneratedDate" [options]="myDatePickerOptions" name="generatedDate"
+                            formControlName="generatedDate" (inputFocusBlur)="changeDateFormat($event, 'generatedDate','transactionDetailsForm', true)"
+                            placeholder="{{'common.date-placeholder' | translate}}">
+                          </my-date-picker>
+                          <show-errors [control]="transactionDetailsForm.controls.effectiveOn"></show-errors>
+                        </div>
+                      </div>
+            
+                      <div class="col-md-3 col-xs-12 ">
+                        <label>{{'finance.transactionDetails.issuedDate' | translate}}</label>
+                        <div class="calender-field">
+                          <my-date-picker  [ngClass]="(viewtransMode == true) ? 'removeCross':''" id="transactionDetIssuedDate" [options]="myDatePickerOptions" name="issuedDate"
+                            formControlName="issuedDate" (inputFocusBlur)="changeDateFormat($event, 'issuedDate','transactionDetailsForm', true)"
+                            placeholder="{{'common.date-placeholder' | translate}}">
+                          </my-date-picker>
+                          <show-errors [control]="transactionDetailsForm.controls.effectiveOn"></show-errors>
+                        </div>
+                      </div>
+            
+                      <div class="col-md-3 col-xs-12 ">
+                        <label>{{'finance.transactionDetails.transactionType' | translate}}</label>
+                        <input id="transactionDetTransType" type="text" class="form-control" name="transactionType" formControlName="transactionType"
+                          placeholder="{{'finance.transactionDetails.transactionType' | translate}}" />
+                      </div>
+            
+                      <div class="col-md-3 col-xs-12 ">
+                        <label>{{'finance.transactionDetails.transactionStatus' | translate}}</label>
+                        <input id="transactionDetTransStatus" type="text" class="form-control" name="transactionStatus"
+                          formControlName="transactionStatus" placeholder="{{'finance.transactionDetails.transactionStatus' | translate}}" />
+                      </div>
+            
+                      <div class="col-md-3 col-xs-12 ">
+                        <label>{{'finance.transactionDetails.transactionAmount' | translate}}</label>
+                        <div class="calender-field d-amount">
+                          <input id="transactionDet" type="number" class="form-control d-amount" name="transactionAmount" formControlName="transactionAmount"
+                          placeholder="{{'finance.transactionDetails.transactionAmount' | translate}}" />
+                        </div>
+                      </div>
+            
+                      <div class="col-md-3 col-xs-12 ">
+                        <label>{{'finance.transactionDetails.adminFee' | translate}}</label>
+                        <div class="calender-field d-amount">
+                          <input id="transactionDetAdminFee" type="number" class="form-control" name="adminFee" formControlName="adminFee"
+                          placeholder="{{'finance.transactionDetails.adminFee' | translate}}" />
+                        </div>
+                      </div>
+            
+                      <div class="col-md-3 col-xs-12 ">
+                        <label>{{'finance.transactionDetails.debitAmount' | translate}}</label>
+                        <div class="calender-field d-amount">
+                          <input id="transactionDetDebitAmount" type="number" class="form-control" name="debitAmount" formControlName="debitAmount"
+                          placeholder="{{'finance.transactionDetails.debitAmount' | translate}}" />
+                        </div>
+                      </div>
+            
+                      <div class="col-md-3 col-xs-12 ">
+                        <label>{{'finance.transactionDetails.payee' | translate}}</label>
+                        <input id="transactionDetPayee" type="text" class="form-control" name="payee" formControlName="payee"
+                          placeholder="{{'finance.transactionDetails.payee' | translate}}" />
+                      </div>
+            
+                      <div class="col-md-3 col-xs-12 ">
+                        <label>{{addNameLabel}}</label>
+                        <input id="transactionDet" type="text" class="form-control" name="name" formControlName="name" placeholder="{{addNameLabel}}" />
+                      </div>
+            
+                      <div class="col-md-3 col-xs-12 ">
+                        <label>{{'finance.transactionDetails.planType' | translate}}</label>
+                        <input id="transactionDetPlanType" type="text" class="form-control" name="planType" formControlName="planType"
+                          placeholder="{{'finance.transactionDetails.planType' | translate}}" />
+                      </div>
+            
+                      <div class="col-md-3 col-xs-12 ">
+                        <label>{{'finance.transactionDetails.clearDate' | translate}}</label>
+                        <div class="calender-field">
+                          <my-date-picker  [ngClass]="(viewtransMode == true) ? 'removeCross':''" id="transactionDetClearDate" [options]="myDatePickerOptions" name="clearDate"
+                            formControlName="clearDate" (inputFocusBlur)="changeDateFormat($event, 'clearDate','transactionDetailsForm', true)"
+                            placeholder="{{'common.date-placeholder' | translate}}">
+                          </my-date-picker>
+                          <show-errors [control]="transactionDetailsForm.controls.effectiveOn"></show-errors>
+                        </div>
+                      </div>
+            
+                      <div class="col-md-3 col-xs-12 ">
+                        <label>{{'finance.transactionDetails.chequeNo' | translate}}</label>
+                        <input id="transactionDetChequeNo" type="text" class="form-control" name="chequeNo" formControlName="chequeNo"
+                          placeholder="{{'finance.transactionDetails.chequeNo' | translate}}" />
+                      </div>
+            
+                      <div class="col-md-3 col-xs-12 ">
+                        <label>{{'finance.transactionDetails.eftFileNo' | translate}}</label>
+                        <input id="transactionDetEftFileNo" type="text" class="form-control" name="eftFileNo" formControlName="eftFileNo"
+                          placeholder="{{'finance.transactionDetails.eftFileNo' | translate}}" />
+                      </div>
+            
+                      <div class="col-md-3 col-xs-12 ">
+                        <label>{{'finance.transactionDetails.eftRecordNo' | translate}}</label>
+                        <input id="transactionDetEFTRecordNo" type="text" class="form-control" name="eftRecordNo" formControlName="eftRecordNo"
+                          placeholder="{{'finance.transactionDetails.eftRecordNo' | translate}}" />
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Form Row ENds -->
+              </form>
+          
+              <div class="grid-box">
+                  <div class="grid-heading">
+                    <h3>{{'finance.transactionDetails.claimsAttachedTransaction' | translate}}</h3>
+                  </div>
+                  <!-- Grid Heading Ends -->
+                  <div class="grid-inner">                
+                    <div class="form-row">
+                      <div class="row">
+                        <div class="col-md-12 col-xs-12 table-col">
+                          <div class="table-responsive search-table">
+                            <table id="claimsAttachedToTransactionList" class="table table-bordered table-stripped"></table>
+                          </div>
+                          <!-- Table Ends -->
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Form Row ENds -->                
+                    <div class="form-row text-center">
+                      <div class="row">
+                        <div class="col-md-12 col-xs-12">
+                            <button [attr.disabled]="isDisable == false ? '' : null" id="transactionIssueTransactionBtn" class="btn green-btn"
+                              (click)="transactionIssue()">{{'finance.transactionDetails.issueTransaction' | translate}}</button>
+                            <button [attr.disabled]="isDisable == false ? '' : null" id="transactionDetachClaimBtn" class="btn green-btn"
+                              (click)="detachClaim()">{{'finance.transactionDetails.detachClaim' | translate}}</button>
+                            <button [attr.disabled]="isDisable == false ? '' : null" id="transactionAtachClaimBtn" class="btn green-btn"
+                              (click)="attachClaim()">{{'finance.transactionDetails.attachClaim' | translate}}</button>
+                          </div>
+                      </div>
+                      <!-- Form Row ENds -->
+                    </div>
+                    <!-- Grid Inner Ends -->
+                  </div>
+                  <!-- Grid Box Ends -->
+              </div>
+          </div>
+
+          <!-- Second Id -->
+          <div id="menu1" class="tab-pane fade">
+              <form [formGroup]="unattachedClaimsForm" (ngSubmit)="unattachedClaimsSearch(unattachedClaimsForm)">
+                  <div class="form-row">
+                    <div class="row min-ht-sf">
+                      <div class="col-md-5 col-xs-12">
+                        <label>{{'finance.transactionDetails.discipline' | translate}}</label>
+                        <div class="select-options">
+                          <span>
+                            <label>
+                              <input id="ucDental" type="checkbox" name="dental" formControlName="dental"> {{'finance.paymentGenerate.dental' | translate}}</label>
+                          </span>
+                          <span>
+                            <label>
+                              <input id="ucVision" class="txt-top" type="checkbox" name="vision" formControlName="vision">{{'finance.paymentGenerate.vision' | translate}} </label>
+                          </span>
+                          <span>
+                            <label>
+                              <input id="ucHealth" class="txt-top" type="checkbox" name="health" formControlName="health"> {{'finance.paymentGenerate.health' | translate}} </label>
+                          </span>
+                          <span>
+                            <label>
+                              <input id="ucDrug" class="txt-top" type="checkbox" name="drug" formControlName="drug">{{'finance.paymentGenerate.drug' | translate}} </label>
+                          </span>
+                          <span>
+                            <label>
+                              <input id="ucSupplement" class="txt-top" type="checkbox" name="supplement" formControlName="supplement"> {{'finance.paymentGenerate.supplement' | translate}} </label>
+                          </span>
+                        </div>
+                      </div>
+                      <div class="col-md-7 col-xs-12">
+                          <label>{{'finance.transactionDetails.payees' | translate}}</label>
+                          <div class="select-options">
+                            <span>
+                              <label>
+                                <input id="ucProvider" type="checkbox" name="dental" formControlName="provider">{{'finance.transactionDetails.provider' | translate}}</label>
+                            </span>
+                            <span>
+                              <label>
+                                <input id="ucCardholder" class="txt-top" type="checkbox" name="vision" formControlName="cardholder">{{'finance.transactionDetails.cardholder' | translate}}</label>
+                            </span>
+                            <span>
+                              <label>
+                                <input id="ucOther" class="txt-top" type="checkbox" name="health" formControlName="other">{{'finance.transactionDetails.other' | translate}}</label>
+                            </span>
+                          </div>
+                      </div>
+                      <div class="col-md-3 col-xs-12">
+                          <label>{{'finance.transactionDetails.planType' | translate}}</label>
+                          <ng2-completer [inputName]="'planType'" name="planType" formControlName="planType" [datasource]="planTypeListData" [minSearchLength]="0" [openOnFocus]="true"
+                        (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Plan Type'" [textSearching]="'Please wait...'"
+                        [inputClass]="'form-control inputSearch'" data-type="predective" [inputId]="'planType'" id="planType"
+                        (selected)="onPlanTypeSelected($event)" [clearUnselected]="true">
+                        </ng2-completer>
+                      </div>
+                      <div class="col-md-3 col-xs-12">
+                          <label>{{'finance.transactionDetails.referenceNumber' | translate}}</label>
+                          <input type="text" formControlName="confirmation" class="form-control inputSearch" placeholder="{{'finance.transactionDetails.referenceNumber' | translate}}">
+                      </div>
+                      <div class="col-md-3 col-xs-12">
+                          <label>{{'finance.transactionDetails.company' | translate}}</label>
+                          <input type="text" formControlName="company" class="form-control inputSearch" placeholder="{{'finance.transactionDetails.company' | translate}}">
+                      </div>
+
+                    </div>
+                    <div class="form-row">
+                        <button id="unattachedClaimsSearch" type="submit" class="btn green-btn" (keyup)="onKeyPress($event)"> {{ 'button.search' | translate }}</button>
+                        <button id="unattachedClaimsClear" type="button" class="btn grey-btn" (click)="resetUnattachedClaimsForm()">{{ 'button.clear' | translate }}</button>
+                      </div>
+                  </div>
+                  <!-- Form Row ENds -->
+              </form>
+               
+              <div [hidden]="!isUnattachedClaim">
+                <div class="grid-box">
+                    <div class="grid-heading">
+                      <h3>{{'finance.transactionDetails.claimsAttachedTransaction' | translate}}</h3>
+                    </div>
+                    <!-- Grid Heading Ends -->
+                    <div class="grid-inner">                
+                      <div class="form-row">
+                        <div class="row">
+                          <div class="col-md-12 col-xs-12 table-col">
+                            <div class="table-responsive search-table">
+                              <table id="unattachedClaimsList" class="table table-bordered table-stripped"></table>
+                            </div>
+                            <!-- Table Ends -->
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Form Row ENds -->                
+                      <div class="form-row text-center">
+                        <div class="row">
+                          <div class="col-md-12 col-xs-12">
+                              <button [attr.disabled]="true" id="unattachClaimIssueTransactionBtn"  (click)="unattacheClaimTransactionIssue()" class="btn green-btn">{{'finance.transactionDetails.issueTransaction' | translate}}</button>
+                              <button [attr.disabled]="true" id="unattachClaimDetachClaimBtn" class="btn green-btn"
+                                (click)="detachUnattachedClaim()">{{'finance.transactionDetails.detachClaim' | translate}}</button>
+                              <button [attr.disabled]="true" id="unattachClaimDetachClaimBtn" class="btn green-btn"
+                                (click)="attachUnattacheClaim()">{{'finance.transactionDetails.attachClaim' | translate}}</button>
+                            </div>
+                        </div>
+                        <!-- Form Row ENds -->
+                      </div>
+                      <!-- Grid Inner Ends -->
+                    </div>
+                    <!-- Grid Box Ends -->
+                </div>
+              </div>
+          </div>
+      </div>     
+    </div>    
+  </div>
+  <!-- Grid Inner Ends -->
+</div>
+<!-- Grid Box Ends -->
+<!-- Container Ends -->
+<!-- </div> -->
+<!-- Site Content Ends -->

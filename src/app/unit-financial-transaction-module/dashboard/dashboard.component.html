@@ -1,0 +1,153 @@
+<app-dashboard-tab></app-dashboard-tab>
+<div class="section-heading" *ngIf="dashboardHeading">
+  <h2>{{'uft.dashboard.heading.Dashboard'|translate}} -
+    <span>{{'uft.dashboard.heading.Finance'|translate}}</span>
+  </h2>
+</div>
+<!-- Section Heading Ends -->
+<div class="form-row">
+  <div class="row">
+    <div class="fd-tabs">
+      <div class="col-md-12">
+        <ul class="nav nav-pills">
+          <li id="uftContinuity" *ngIf="uftDashboardArray[0].uftContinuity == 'T'" class="active">
+            <button [disabled]=showSpanLoader (click)="getUftConectivityCount('T')" class="rfrsh-btn" title="{{uftTabTimeStamp}}">
+              <i class="fa fa-refresh" aria-hidden="true"></i>
+            </button>
+            <a style="position: relative;" data-toggle="pill" href="#uftc" (click)="changeTab('uft')">{{'uft.dashboard.heading.Uft'|translate}}
+              <span *ngIf=showSpanLoader class="dash-loader">
+                <span class="dash-loader-inner"></span>
+              </span>
+              <span *ngIf=!showSpanLoader>{{'uft.dashboard.main-tabs.OpenBal'|translate}} {{openingBalance | currency:'CAD':'symbol-narrow':'1.2-2'}}</span>
+              <span *ngIf=!showSpanLoader>{{'uft.dashboard.main-tabs.CloseBal'|translate}} {{closingBalance | currency:'CAD':'symbol-narrow':'1.2-2'}}</span>
+              <span *ngIf=!showSpanLoader>{{'uft.dashboard.main-tabs.DateRange'|translate}} {{currentMonth}}</span>
+            </a>
+          </li>
+          <li id="compAndCardholderContinuity" *ngIf="uftDashboardArray[0].compAndCardholderContinuity == 'T'">
+            <button [disabled]=showSpanLoader1 (click)="getCompanyAndCardHolderCount('T')" class="rfrsh-btn" title="{{companyAndCardHolderTime}}">
+              <i class="fa fa-refresh" aria-hidden="true"></i>
+            </button>
+            <a style="position: relative;" data-toggle="pill" href="#ccc" (click)="changeTab('ccc')">{{'uft.dashboard.heading.CompCardholder'|translate}}
+              <span *ngIf=showSpanLoader1 class="dash-loader">
+                <span class="dash-loader-inner"></span>
+              </span>
+              <span *ngIf=!showSpanLoader1>{{'uft.dashboard.main-tabs.TotalCardHolder'|translate}} {{totalCardHolders}}</span>
+              <span *ngIf=!showSpanLoader1>{{'uft.dashboard.main-tabs.CompCount'|translate}} {{countOfCompanies}}</span>
+              <span *ngIf=!showSpanLoader1>{{'uft.dashboard.main-tabs.DateRange'|translate}} {{currentMonth}}</span>
+            </a>
+          </li>
+          <!-- commenting comp bal tab -->
+          <li id="companyBalances" *ngIf="uftDashboardArray[0].companyBalances == 'T'">
+            <button [disabled]=showSpanLoader2 (click)="getCompanyBalanceCounts('T')" class="rfrsh-btn" title="{{companyBalanceTimestamp}}">
+              <i class="fa fa-refresh" aria-hidden="true"></i>
+            </button>
+            <a style="position: relative;" data-toggle="pill" href="#cbalances" (click)="changeTab('cb')">{{'uft.dashboard.heading.CompBal'|translate}}
+              <span *ngIf=showSpanLoader2 class="dash-loader">
+                <span class="dash-loader-inner"></span>
+              </span>
+              <span *ngIf=!showSpanLoader2>{{'uft.dashboard.main-tabs.TotalComp'|translate}} {{totalCompanies}}</span>
+              <span *ngIf=!showSpanLoader2>{{'uft.dashboard.main-tabs.Active'|translate}} {{activeCompanies}} &nbsp; &nbsp; &nbsp; &nbsp;{{'uft.dashboard.main-tabs.Inactive'|translate}}
+                {{inActiveCompanies}}</span>
+              <span *ngIf=!showSpanLoader2>{{'uft.dashboard.main-tabs.servingGracePeriod'|translate}} {{gracePeriod}}</span>
+            </a>
+          </li>
+          <!-- end -->
+          <li id="pendingClaims" *ngIf="uftDashboardArray[0].pendingClaims == 'T'">
+            <button [disabled]=showSpanLoader3 (click)="getPendingClaimCount('T')" class="rfrsh-btn" title="{{pendingClaimTimestamp}}">
+              <i class="fa fa-refresh" aria-hidden="true"></i>
+            </button>
+            <a style="position: relative;" data-toggle="pill" href="#pnfunds" (click)="changeTab('pf')">{{'uft.dashboard.heading.PendingFunds'|translate}}
+              <span *ngIf=showSpanLoader3 class="dash-loader">
+                <span class="dash-loader-inner"></span>
+              </span>
+              <span *ngIf=!showSpanLoader3>{{'uft.dashboard.main-tabs.PendingClaimEb'|translate}} {{pendingClaimsEB}}</span>
+              <span *ngIf=!showSpanLoader3>{{'uft.dashboard.main-tabs.PendingClaimOcl'|translate}} {{pendingClaimsOCL}}</span>
+            </a>
+          </li>
+          <li id="payables" *ngIf="uftDashboardArray[0].payables == 'T'">
+            <button [disabled]=showSpanLoader4 (click)="allPayableCounts('T')" class="rfrsh-btn" title="{{payableTimestamp}}">
+              <i class="fa fa-refresh" aria-hidden="true"></i>
+            </button>
+            <a style="position: relative;" data-toggle="pill" href="#bpayments" (click)="changeTab('bpp')">{{'uft.dashboard.heading.Payables'|translate}}
+              <span *ngIf=showSpanLoader4 class="dash-loader">
+                <span class="dash-loader-inner"></span>
+              </span>
+              <span *ngIf=!showSpanLoader4>{{'uft.dashboard.main-tabs.broker' | translate }} {{brokerBalance | currency:'CAD':'symbol-narrow':'1.2-2'}}</span>
+              <span *ngIf=!showSpanLoader4>{{'uft.dashboard.main-tabs.companyRefund' | translate}} {{refundBalance | currency:'CAD':'symbol-narrow':'1.2-2'}}</span>
+              <span *ngIf=!showSpanLoader4>{{'uft.dashboard.main-tabs.DateRange'|translate}} {{currentMonth}}</span>
+            </a>
+          </li>
+          <li id="reports" *ngIf="uftDashboardArray[0].reports == 'T'">
+            <a data-toggle="pill" href="#financeReports" (click)="changeTab('fR')">{{'uft.dashboard.heading.Reports'|translate}}
+              <span class="report-ico">
+                <i class="fa fa-bar-chart" aria-hidden="true"></i>
+              </span>
+            </a>
+          </li>
+          <li id="bankContinuity" *ngIf="uftDashboardArray[0].uftContinuity == 'T'">
+            <button [disabled]=showSpanLoaderBank (click)="getBankTotals('T')" class="rfrsh-btn" title="Bank Reconciliation">
+              <i class="fa fa-refresh" aria-hidden="true"></i>
+            </button>
+            <a style="position: relative;" data-toggle="pill" href="#bank-reconcilation" (click)="changeTab('bankReconcilation')">Bank Reconciliation
+              <span *ngIf=showSpanLoaderBank class="dash-loader">
+                <span class="dash-loader-inner"></span>
+              </span>
+              <span *ngIf=!showSpanLoaderBank>Opening Cheques : {{opUncChqAmt | currency:'CAD':'symbol-narrow':'1.2-2'}}</span>
+              <span *ngIf=!showSpanLoaderBank>Closing Cheques : {{clUncChqAmt | currency:'CAD':'symbol-narrow':'1.2-2'}}</span>
+              <span *ngIf=!showSpanLoaderBank>{{'uft.dashboard.main-tabs.DateRange'|translate}} {{currentMonth}}</span>
+            </a>
+          </li>
+          <li id="call" *ngIf="uftDashboardArray[0].reports == 'T'">
+            <a data-toggle="pill" href="#financeCall" (click)="changeTab('call')">{{'uft.dashboard.heading.call'|translate}}
+            </a>
+          </li>
+          <!-- Log #1027: Termination Refund tile -->
+          <li *ngIf="uftDashboardArray[0].reports == 'T'">
+            <a data-toggle="pill" href="#terminationRefunds" (click)="changeTab('TR')">Termination Refunds</a>
+          </li>
+          <!-- Pending Electronic Adjustment Tile -->
+          <li *ngIf="uftDashboardArray[0].reports == 'T'">
+            <a data-toggle="pill" href="#pendingElectronicPaymentAdjustment" (click)="changeTab('PEA')">Pending Electronic Payment Adjustment</a>
+          </li>
+        </ul>
+        <div class="tab-content">
+          <app-uft-continuty id="uftc" [ngClass]="{'active in':uftContinuityActiveClass == true,'tab-pane':true,'fade':true}" (hideMainLoader)="hideLoader($event)"
+            (uftParentComponent)="uftContinuityReport($event)" (uftSubTypeParentComponent)="uftContinuitySubTypeReport($event)"
+            (uftOpenClosingParentComponent)="openingClosingBalance($event)">
+          </app-uft-continuty>
+          <app-comp-card-holder-continuty [ngClass]="{'active in':compAndCardholderContinuityActiveClass == true,'tab-pane':true,'fade':true}"
+            id="ccc"></app-comp-card-holder-continuty>
+          <app-comp-balance [ngClass]="{'active in':companyBalancesActiveClass == true,'tab-pane':true,'fade':true}" id="cbalances"
+            (unpaidClaimReport)="unpaidClaimReport($event)"></app-comp-balance>
+          <app-pending-funds [ngClass]="{'active in':pendingClaimsActiveClass == true,'tab-pane':true,'fade':true}" id="pnfunds"></app-pending-funds>
+          <app-uft-financepayble [ngClass]="{'active in':payablesActiveClass == true,'tab-pane':true,'fade':true}" id="bpayments"></app-uft-financepayble>
+          <app-finance-report-list [ngClass]="{'active in':reportsActiveClass == true,'tab-pane':true,'fade':true}" id="financeReports"
+            (openReportWithReportId)="callReportWithReportId($event)"></app-finance-report-list>
+          <bank-reconcilation id="bank-reconcilation" [ngClass]="{'active in':bankReconcilationActiveClass == true,'tab-pane':true,'fade':true}"
+            (hideMainLoader)="hideLoader($event)" [bankRecol]="dataSet" (uftParentComponent)="uftContinuityReport($event)"
+            (uftSubTypeParentComponent)="uftContinuitySubTypeReport($event)" (uftOpenClosingParentComponent)="openingClosingBalance($event)">
+          </bank-reconcilation>
+          <app-finance-call [ngClass]="{'active in':financeCallActiveClass == true,'tab-pane':true,'fade':true}" id="financeCall">
+          </app-finance-call>
+          <app-termination-refunds id="terminationRefunds" [ngClass]="{'active in':terminationRefundsActiveClass == true,'tab-pane':true,'fade':true}"></app-termination-refunds>
+          <app-pending-electronic-adjustment id="pendingElectronicPaymentAdjustment" [ngClass]="{'active in':pendingElectronicPaymentAdjustmentActiveClass == true,'tab-pane':true,'fade':true}"></app-pending-electronic-adjustment>
+        </div>
+        <app-finance-reports></app-finance-reports>
+        <!-- Tab Content Ends -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Form Row Ends -->
+<div [hidden]="!showPageLoader" class="loader-outer">
+  <div class="cube-wrapper">
+    <div class="cube-folding">
+      <span class="leaf1"></span>
+      <span class="leaf2"></span>
+      <span class="leaf3"></span>
+      <span class="leaf4"></span>
+    </div>
+    <span class="loading" data-name="Loading">{{'company.plan.benefits.pleaseWait'|translate}}</span>
+  </div>
+</div>

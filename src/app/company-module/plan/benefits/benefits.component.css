@@ -1,0 +1,53 @@
+
+span.chk-bg {
+    display:flex;
+    width: 100px;
+    padding: 8px;
+    border-right: 1px solid #fff;
+    background: #1a2942;
+    color:#fff;
+}
+.chk-table {
+    display: flex;
+    align-items: center;
+}
+span.chk-bg input{
+    margin-left: auto;
+}
+.right_margin{
+    margin-left: 0px !important; 
+}
+
+:host ::ng-deep .mydp .caltable thead > tr > th:nth-child(1){
+    width: initial !important;
+}
+:host ::ng-deep table tr.hactive-row:hover td {
+    background: initial !important;
+    background-color: initial !important;
+}
+
+:host ::ng-deep table tr.hactive-row:hover > td {
+    background: rgba(10, 243, 107, 0.3) !important;
+    background-color: rgba(10, 243, 107, 0.3) !important;
+}
+
+.loader-service{
+    position: relative;
+    min-height: 300px;
+}
+
+.loader-service .loader-outer{
+    position: absolute
+}
+
+.loader-service .loader-outer .cube-wrapper {
+    position: absolute;
+
+}
+
+:host ::ng-deep table.undefined {
+    
+    position: relative;
+    min-height: 100px;
+
+}

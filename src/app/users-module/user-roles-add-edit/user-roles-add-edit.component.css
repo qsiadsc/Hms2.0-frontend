@@ -1,0 +1,225 @@
+.tabs-left { margin-top: 0 }
+.tabs-left .nav-tabs>li.active>a,
+.tabs-left .nav-tabs>li.active>a:hover,
+.tabs-left .nav-tabs>li.active>a:focus {
+  border:0;
+}
+.tabs-left .list-group {
+  line-height: 11px;
+  width: 100%;
+}
+.tabs-left .list-group .list-group-item {
+  height: 50px;
+}
+.tabs-left .list-group .list-group-item h4, span {
+  line-height: 11px;
+}
+.tabs-left .tab-content {
+     margin-left: 26%;
+    width: 100%;
+    max-width: 72%;
+}
+.tabs-left .tab-content .tab-pane.active {
+  display: block;
+}
+.tabs-left .tab-content .tab-pane { 
+  display: none;
+  background-color: #fff;
+  overflow-y: auto;
+}
+.tabs-left .nav-tabs {
+	float: left;
+  border-bottom: 0;
+  width: 16%;
+  overflow-y: auto;
+  max-height: 300px; 
+}
+.tabs-left .nav-tabs li {
+	float: none;
+	margin: 0;
+}
+.tabs-left .nav-tabs li a {
+	margin-right: 0;
+	border: 0;
+	border-radius: 0;
+	background-color: #ececec;
+}
+.tabs-left .nav-tabs li a:hover {
+	background-color: #000;
+}
+.tabs-left .switch {
+  position: relative;
+  display: inline-block;
+  width: 35px;
+  height: 18px;
+}
+.tabs-left li.actionsParent .switch{
+  margin-right: 20px;
+  float: right;
+}
+.tabs-left .slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #acacac;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+.tabs-left .slider:before {
+  position: absolute;
+  content: "";
+  height: 12px;
+  width: 12px;
+  left: 3px;
+  bottom: 3.5px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+.tabs-left input:checked + .slider {
+  background-color: #26a69a;
+}
+.tabs-left input:checked + .slider.round.fewSelected {
+  background-color:#d6a62f !important;
+}
+.tabs-left input:checked + .slider.round.allSelected {
+  background-color:#26a69a !important;
+}
+.tabs-left .slider.round.allUnselected {
+  background-color: #acacac;
+}
+.tabs-left input:checked + .slider:before {
+  -webkit-transform: translateX(16px);
+  -ms-transform: translateX(16px);
+  transform: translateX(16px);
+}
+/* Rounded sliders */
+.tabs-left .slider.round {
+  border-radius: 34px;
+}
+.tabs-left .slider.round:before {
+  border-radius: 50%;
+}
+.tabs-left .actions-list {
+  border: 1px solid #cccccc;
+  padding:10px;
+  margin: 0 0 5px 0;
+}
+.tabs-left .align-top label.switch {
+  float: right;
+  top: -20px;
+  right: 89%;
+}
+.tabs-left .actions-list label.switch {
+  float: right;
+  right: 10px;
+}
+.tabs-left .checkBox {
+  margin-left:5px;
+}
+.tabs-left input[type="checkbox"]:disabled {
+  cursor: no-drop;
+}
+.tabs-left .slider.round {
+  pointer-events: none;
+}
+.tabs-left .menuButtons {
+  border: 1px solid #cccccc;
+  border-top:0;
+}
+.tabs-left .menuButtons a {
+  font-size: 14px;
+  color: #000000;
+}
+.tabs-left li.menuButtons a:hover {
+  background-color: #26a69a !important;
+  color: #ffffff;
+}
+.tabs-left li.menuButtons.active a {
+  background: #26a69a !important;
+  color: #ffffff !important;
+}
+.tabs-left li.actionsParent {
+  padding: 10px 0 10px 10px;
+  font-weight: 600;
+}
+.tabs-left label > input[type="checkbox"]{
+  margin-left: 5px;
+}
+.expandable-list{
+  max-width: 215px;
+  float: left;
+}
+.fn-tabs .panel-heading {
+    padding: 0;
+}
+.fn-tabs .panel-title a {
+    display: block;
+    padding: 14px 15px;
+    background: #006281;
+    color: #fff;
+    font-weight: 500;
+    position: relative;
+}
+.fn-tabs .panel-title a:after {
+    position: absolute;
+    content: "\f067";
+    right: 10px;
+    top: 35%;
+    font-family: FontAwesome;
+}
+.fn-tabs .panel-title a[aria-expanded="false"]:after {
+    position: absolute;
+    content: "\f067";
+    right: 10px;
+    top: 35%;
+    font-family: FontAwesome;
+}
+.fn-tabs .panel-title a[aria-expanded="true"]:after {
+    position: absolute;
+    content: "\f068";
+    right: 10px;
+    top: 35%;
+    font-family: FontAwesome;
+}
+.user-role-list .panel-body{
+    padding: 8px;
+}
+.user-role-list .panel-group .panel-group {
+    margin-bottom: 5px;
+}
+.user-role-list  .panel-group .panel-group .panel-title > a{
+padding: 12px 10px;
+font-size: 14px;
+background: #404040;
+}  
+.tabs-left .list-group .list-group-item{
+    height: auto;
+    padding:12px 15px;
+    cursor: pointer;
+    border: none;
+}
+.user-role-list .list-group-item.active,.user-role-list .list-group-item.active:focus,.user-role-list .list-group-item.active:hover{
+        background-color: #006281;
+}
+.fixedSideBar .tab-content{
+  position: fixed;
+  top: 120px;
+  width: 68.75% !important;
+  left: 15px;
+  max-height: 375px;
+  overflow-y: auto;
+}
+.disableView {
+  cursor: not-allowed;
+}
+.selectAll {   
+z-index: 98;
+margin-left: 0px;
+float: right;
+top: 10px;
+right: 25px;
+}

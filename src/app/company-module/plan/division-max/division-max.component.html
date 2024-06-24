@@ -1,0 +1,675 @@
+<div class="form-row">
+    <div class="row">
+        <div class="col-md-12 col-xs-12 table-col">
+            <div class="table-hdr">
+                <h3>{{'company.plan.division-max.divMax' | translate}}</h3>
+                <span *ngIf="isDivisionMaximumHistoryExist == true && planEditMode == true">
+                    <app-history-icons [attr.data-toggle]="dataToggle" [attr.data-target]="divisionMaxHistoryDataTarget"
+                        [id]="divisionMaxHistoryId" [title]="divisionMaxHistoryTitle" [class]="divisionMaxHistoryClass"
+                        (click)="getDivisionMaximumHistory()">
+                    </app-history-icons>
+                </span>
+                <span *ngIf="isDivisionMaximumHistoryExist == false && planEditMode == true"></span>
+                <div class="web-reg">
+                    <button id="planDivisionMaxAddNew" class="green-btn-add btn" (click)="enableAddDivisionMax()"><i
+                            class="fa fa-plus"></i> Add New</button>
+                </div>
+            </div>
+
+            <div class="table-responsive clear">
+                <!-- Validation Errors Messages for new row -->
+                <div style="color: red" class="alert alert-danger" *ngIf="(new_maximum_amount.invalid && (new_maximum_amount.dirty || new_maximum_amount.touched))
+                    || (new_maximum_type.invalid && (new_maximum_type.dirty || new_maximum_type.touched))
+                    || (new_maximum_period_type.invalid && (new_maximum_period_type.dirty || new_maximum_period_type.touched))
+                    || (new_wellness_percentage.invalid && (new_wellness_percentage.dirty || new_wellness_percentage.touched))
+                    || (new_carry_forward_years.invalid && (new_carry_forward_years.dirty || new_carry_forward_years.touched)) || (new_effective_date.invalid && (new_effective_date.dirty || new_effective_date.touched))
+                    || (new_expiry_date.invalid && (new_expiry_date.dirty || new_expiry_date.touched))">
+
+                    <!-- Validatoin for new record unit id -->
+                    <div *ngIf="new_maximum_amount.invalid && (new_maximum_amount.dirty || new_maximum_amount.touched)">
+                        <div *ngIf="new_maximum_amount.errors.required">
+                            {{ 'company.plan.division-max.maxAmtReq' | translate }}
+                        </div>
+                        <div *ngIf="!new_maximum_amount.errors.required && new_maximum_amount.errors.numberWithDot">
+                            {{new_maximum_amount.errors.numberWithDot.message}}
+                        </div>
+                        <div
+                            *ngIf="!new_maximum_amount.errors.required && !new_maximum_amount.errors.numberWithDot && new_maximum_amount.errors.maxlength">
+                            {{ 'company.plan.division-max.max9NumAllowed' | translate }}
+                        </div>
+                        <div
+                            *ngIf="!new_maximum_amount.errors.required && !new_maximum_amount.errors.numberWithDot && !new_maximum_amount.errors.maxlength && new_maximum_amount.errors.digitWithDecimal">
+                            {{ 'company.plan.division-max.enterThreeDigitsAfterDecimal' | translate }}
+                        </div>
+                    </div>
+
+                    <div *ngIf="new_maximum_type.invalid && (new_maximum_type.dirty || new_maximum_type.touched)">
+                        <div *ngIf="new_maximum_type.errors.required">
+                            {{ 'company.plan.division-max.maxTypeReq' | translate }}
+                        </div>
+                    </div>
+
+                    <div
+                        *ngIf="new_maximum_period_type.invalid && (new_maximum_period_type.dirty || new_maximum_period_type.touched)">
+                        <div *ngIf="new_maximum_period_type.errors.required">
+                            {{ 'company.plan.division-max.maxPeriodReq' | translate }}
+                        </div>
+                    </div>
+
+                    <!-- Validation for wellness percentage -->
+                    <div
+                        *ngIf="new_wellness_percentage.invalid && (new_wellness_percentage.dirty || new_wellness_percentage.touched)">
+                        <div *ngIf="new_wellness_percentage.errors.required">
+                            {{ 'company.plan.division-max.wellnessPertReq' | translate }}
+                        </div>
+                        <div
+                            *ngIf="!new_wellness_percentage.errors.required && new_wellness_percentage.errors.percValue">
+                            {{ 'company.plan.division-max.wellnessPertValue' | translate }}
+                        </div>
+                    </div>
+
+                    <!-- Validatoin for new record effective date -->
+                    <div
+                        *ngIf="new_carry_forward_years.invalid && (new_carry_forward_years.dirty || new_carry_forward_years.touched)">
+                        <div *ngIf="new_carry_forward_years.errors.vaildCarryForwardYear">
+                            {{ 'company.plan.division-max.enterValues1or2' | translate }}
+                        </div>
+                    </div>
+                    <div *ngIf="planEditMode == true 
+                        && (new_effective_date.invalid && (new_effective_date.dirty || new_effective_date.touched))
+                        || (new_expiry_date.invalid && (new_expiry_date.dirty || new_expiry_date.touched))">
+
+                        <div
+                            *ngIf="new_effective_date.invalid && (new_effective_date.dirty || new_effective_date.touched)">
+                            <div *ngIf="new_effective_date.errors.required">
+                                {{ 'company.plan.division-max.effeDateisReq' | translate }}
+                            </div>
+
+                            <div *ngIf="new_effective_date.errors.dateNotValid">
+                                {{ 'company.plan.division-max.validDate' | translate }}
+                            </div>
+                            <div *ngIf="new_effective_date.errors.EffectiveDateNotValid">
+                                {{ 'company.plan.division-max.effectiveDateCantbeLess' | translate }}
+                            </div>
+                        </div>
+
+                        <div *ngIf="new_expiry_date.invalid && (new_expiry_date.dirty || new_expiry_date.touched)">
+                            <div *ngIf="new_expiry_date.errors.dateNotValid">
+                                {{ 'company.plan.division-max.validDate' | translate }}
+                            </div>
+
+                            <div *ngIf="!new_expiry_date.errors.required && new_expiry_date.errors.ExpiryDateNotValid">
+                                {{ 'company.plan.division-max.expiryDateShouldBeGreater' | translate }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Validation Errors Messages for Update row -->
+
+                <div style="color: red" class="alert alert-danger" *ngIf="(old_maximum_amount.invalid && (old_maximum_amount.dirty || old_maximum_amount.touched)) 
+                    || (old_wellness_percentage.invalid && (old_wellness_percentage.dirty || old_wellness_percentage.touched))
+                    || (old_carry_forward_years.invalid && (old_carry_forward_years.dirty || old_carry_forward_years.touched)) 
+                    || (old_effective_date.invalid && (old_effective_date.dirty || old_effective_date.touched))
+                    || (old_expiry_date.invalid && (old_expiry_date.dirty || old_expiry_date.touched))">
+
+                    <!-- Validatoin for old record unit id -->
+                    <div *ngIf="old_maximum_amount.invalid && (old_maximum_amount.dirty || old_maximum_amount.touched)">
+                        <div *ngIf="old_maximum_amount.errors.required">
+                            {{ 'company.plan.division-max.maxAmtReq' | translate }}
+                        </div>
+
+                        <div *ngIf="!old_maximum_amount.errors.required && old_maximum_amount.errors.numberWithDot">
+                            {{ 'company.plan.division-max.enterNumOnly' | translate }}
+                        </div>
+
+                        <div *ngIf="!old_maximum_amount.errors.required && old_maximum_amount.errors.numberWithDot">
+                            {{old_maximum_amount.errors.numberWithDot.message}}
+                        </div>
+
+                        <div
+                            *ngIf="!old_maximum_amount.errors.required && !old_maximum_amount.errors.numberWithDot && old_maximum_amount.errors.maxlength">
+                            {{ 'company.plan.division-max.max9NumAllowed' | translate }}
+                        </div>
+
+                        <div
+                            *ngIf="!old_maximum_amount.errors.required && !old_maximum_amount.errors.numberWithDot && !old_maximum_amount.errors.maxlength && old_maximum_amount.errors.digitWithDecimal">
+                            {{ 'company.plan.division-max.enterThreeDigitsAfterDecimal' | translate }}
+                        </div>
+                    </div>
+
+                    <div *ngIf="old_maximum_type.invalid && (old_maximum_type.dirty || old_maximum_type.touched)">
+                        <div *ngIf="old_maximum_type.errors.required">
+                            {{ 'company.plan.division-max.maxTypeReq' | translate }}
+                        </div>
+                    </div>
+
+                    <div
+                        *ngIf="old_maximum_period_type.invalid && (old_maximum_period_type.dirty || old_maximum_period_type.touched)">
+                        <div *ngIf="old_maximum_period_type.errors.required">
+                            {{ 'company.plan.division-max.maxPeriodReq' | translate }}
+                        </div>
+                    </div>
+
+                    <!-- Validation for wellness percentage old record -->
+                    <div
+                        *ngIf="old_wellness_percentage.invalid && (old_wellness_percentage.dirty || old_wellness_percentage.touched)">
+                        <div *ngIf="old_wellness_percentage.errors.required">
+                            {{ 'company.plan.division-max.wellnessPertReq' | translate }}
+                        </div>
+                        <div
+                            *ngIf="!old_wellness_percentage.errors.required && old_wellness_percentage.errors.percValue">
+                            {{ 'company.plan.division-max.wellnessPertValue' | translate }}
+                        </div>
+                    </div>
+
+                    <!-- Validatoin for old record effective date -->
+                    <div
+                        *ngIf="old_carry_forward_years.invalid && (old_carry_forward_years.dirty || old_carry_forward_years.touched)">
+                        <div *ngIf="old_carry_forward_years.errors.vaildCarryForwardYear">
+                            {{ 'company.plan.division-max.enterValues1or2' | translate }}
+                        </div>
+                    </div>
+
+                    <div *ngIf="planEditMode == true 
+                        && (old_effective_date.invalid && (old_effective_date.dirty || old_effective_date.touched))
+                        || (old_expiry_date.invalid && (old_expiry_date.dirty || old_expiry_date.touched))">
+
+                        <div
+                            *ngIf="old_effective_date.invalid && (old_effective_date.dirty || old_effective_date.touched)">
+                            <div *ngIf="old_effective_date.errors.required">
+                                {{ 'company.plan.division-max.effeDateisReq' | translate }}
+                            </div>
+
+                            <div *ngIf="old_effective_date.errors.dateNotValid">
+                                {{ 'company.plan.division-max.validDate' | translate }}
+                            </div>
+                            <div *ngIf="old_effective_date.errors.EffectiveDateNotValid">
+                                {{ 'company.plan.division-max.dateCantBeLess' | translate }}
+                            </div>
+                        </div>
+
+                        <div *ngIf="old_expiry_date.invalid && (old_expiry_date.dirty || old_expiry_date.touched)">
+                            <div *ngIf="old_expiry_date.errors.dateNotValid">
+                                {{ 'company.plan.division-max.validDate' | translate }}
+                            </div>
+
+                            <div *ngIf="!old_expiry_date.errors.required && old_expiry_date.errors.ExpiryDateNotValid">
+                                {{ 'company.plan.division-max.expiryDateShouldBeGreater' | translate }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Validation Error  -->
+
+                <table id="divisionMaxtable" class="table table-bordered table-stripped">
+                    <thead>
+                        <tr>
+                            <th width="9%"> {{ 'company.plan.division-max.maxAmt' | translate }} </th> 
+                            <th width="9%" class="amount_right">{{ 'company.plan.division-max.maxType' | translate }}
+                            </th>
+                            <th width="14%" class="amount_right">
+                                {{ 'company.plan.division-max.maxPeriodType' | translate }}</th>
+                            <th width="5.5%" class="amount_right">{{ 'company.plan.division-max.dental' | translate }}
+                            </th>
+                            <th width="5.5%" class="amount_right">{{ 'company.plan.division-max.vision' | translate }}
+                            </th>
+                            <th width="5.5%" class="amount_right">{{ 'company.plan.division-max.health' | translate }}
+                            </th>
+                            <th width="5.5%" class="amount_right">{{ 'company.plan.division-max.drug' | translate }}</th>
+                            <th width="5.5%" class="amount_right">{{ 'company.plan.division-max.wellness' | translate }}
+                            </th>
+                            <th width="7%" class="amount_right" [hidden]="showWellnessPert == false">
+                                {{ 'company.plan.division-max.wellnessPert' | translate }}</th>
+                            <th width="8%" class="text-center">
+                                {{ 'company.plan.division-max.carryForwardYears' | translate }}</th>
+                            <th *ngIf="planEditMode" width="9%" class="text-center amount_right">
+                                {{ 'company.plan.division-max.effectiveDate' | translate }}</th>
+                            <th *ngIf="planEditMode" width="9%" class="text-center amount_right">
+                                {{ 'company.plan.division-max.expiryDate' | translate }}</th>
+                            <th width="15%" class="text-center amount_right">
+                                {{ 'company.plan.division-max.action' | translate }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Adding New Row Data Here-->
+                        <tr *ngIf="DivisionMaxAddMode">
+                            <td>
+                                <input #focusAddDivisionMaxEl class="fm-txt form-control amount_right" type="text"
+                                    [formControl]="new_maximum_amount">
+                            </td>
+                            <td class="amount_right">
+                                <ng2-completer [formControl]="new_maximum_type" [datasource]="divMaxMaximumTypeData"
+                                    [minSearchLength]="0" [openOnFocus]="true" (opened)="onOpened($event)"
+                                    [fillHighlighted]="false" [placeholder]="'Search Maximum Type'"
+                                    [textSearching]="'Please wait...'" [inputClass]="'form-control '"
+                                    (selected)="onDivMaxTypeSelected($event)" [clearUnselected]="true">
+                                </ng2-completer>
+                            </td>
+                            <td class="amount_right">
+                                <ng2-completer [formControl]="new_maximum_period_type"
+                                    [datasource]="divMaxMaximumPeriodTypeData" [minSearchLength]="0"
+                                    [openOnFocus]="true" (opened)="onOpened($event)" [fillHighlighted]="false"
+                                    [placeholder]="'Search Maximum Period Type'" [textSearching]="'Please wait...'"
+                                    [inputClass]="'form-control amount_right'"
+                                    (selected)="onDivMaxPeriodTypeSelected($event)"
+                                    (change)="setCarryForwardYear('addRow', $event.target.value)"
+                                    [clearUnselected]="true">
+                                </ng2-completer>
+                            </td>
+                            <td class="amount_right">
+                                <input id="divisionMaxNewDental" class="fm-txt form-control amount_right"
+                                    type="checkbox" (blur)="selectedCategoriesForDivisionMax()"
+                                    [formControl]="new_dental">
+                            </td>
+                            <td class="amount_right">
+                                <input id="divisionMaxNewVision" class="fm-txt form-control amount_right"
+                                    type="checkbox" (blur)="selectedCategoriesForDivisionMax()"
+                                    [formControl]="new_vision">
+                            </td>
+                            <td class="amount_right">
+                                <input id="divisionMaxNewHealth" class="fm-txt form-control amount_right"
+                                    type="checkbox" (blur)="selectedCategoriesForDivisionMax()"
+                                    [formControl]="new_health">
+                            </td>
+                            <td class="amount_right">
+                                <input id="divisionMaxNewDrug" class="fm-txt form-control amount_right" type="checkbox"
+                                    (blur)="selectedCategoriesForDivisionMax()" [formControl]="new_drug">
+                            </td>
+                            <td class="amount_right">
+                                <input id="divisionMaxNewWellness" class="fm-txt form-control amount_right"
+                                    type="checkbox" (change)="selectedCategoriesForDivisionMax()"
+                                    [formControl]="new_wellness">
+                            </td>
+                            <td class="amount_right" [hidden]="showWellnessPert == false">
+                                <input id="divisionMaxWellnessPercentage" (keyup)="newWellnessPercentageValid(new_wellness_percentage.value)"
+                                    class="fm-txt form-control text-center amount_right" type="number" OnlyNumber="true"
+                                    [formControl]="new_wellness_percentage" [ngClass]=" getError ? 'wellnessBorder_errorField' : '' ">
+                            </td>
+                            <td class="amount_right">
+                                <input id="divisionMaxNewCarryForwardYears"
+                                    class="fm-txt form-control text-center amount_right" type="text"
+                                    [formControl]="new_carry_forward_years">
+                            </td>
+
+                            <td *ngIf="planEditMode" class="text-center alignDpRight">
+                                <div class="calender-field">
+                                    <my-date-picker id="NewDivisionMaxEffectiveOn" [formControl]="new_effective_date"
+                                        [options]="myDatePickerOptions" [placeholder]="myDatePlaceholder"
+                                        [selDate]="dateNameArray['NewDivisionMaxEffectiveDate']"
+                                        (inputFocusBlur)="changeFilterDateFormat($event, 'new_effective_date', 'NewDivisionMaxEffectiveDate', true)">
+                                    </my-date-picker>
+                                </div>
+                            </td>
+
+                            <td *ngIf="planEditMode" class="text-center amount_right alignDpRight expiryDate">
+                            
+                                <div class="calender-field">
+                                    <my-date-picker id="NewDivisionMaxExpiryDate" [formControl]="new_expiry_date"
+                                        [options]="myDatePickerOptions" [placeholder]="myDatePlaceholder"
+                                        [selDate]="dateNameArray['NewDivisionMaxExpiryDate']"
+                                        [ngClass]="expired  ? 'expired' : 'notExpired'"
+                                        (inputFocusBlur)="changeFilterDateFormat($event, 'new_expiry_date', 'NewDivisionMaxExpiryDate')">
+                                    </my-date-picker>
+                                </div>
+                            </td>
+                            <td class="text-center amount_right">
+                                <button id="divisionMaxmaxSave" title="Save" type="button" (click)="addNewDivisionMax()"
+                                    class="table-action-btn save-ico" title="Save"><i class="fa fa-floppy-o"
+                                        aria-hidden="true"></i></button>
+                                <button id="divisionMaxmaxCancel" title="Cancel" type="button"
+                                    (click)="resetNewDivisionMaxRow()" class="table-action-btn cancel-ico"
+                                    title="Cancel"><i class="fa fa-times" aria-hidden="true"></i></button>
+                            </td>
+                        </tr>
+
+                        <!-- Updating Row Data-->
+
+                        <div
+                            *ngIf="DivisionMaxList.length > 0 || DivisionMaxAddMode; then recordFound else recordNotFound ">
+                        </div>
+                        <ng-template #recordNotFound>
+                            <tr>
+                                <td colspan="12" class="text-center">
+                                    {{ 'company.plan.division-max.no_data_available' | translate }}</td>
+                            </tr>
+                        </ng-template>
+
+                        <ng-template #recordFound>
+                            <tr *ngFor="let row of DivisionMaxList; let rowIndex = index">
+                                <td class="amount_right_grid">
+                                    <div *ngIf="rowIndex != selectedDivisionMax.rowIndex">
+                                        <span *ngIf="rowIndex != selectedDivisionMax.rowIndex">$</span>{{row.divMaxAmt  | number: '1.2'}}
+                                    </div>
+                                    
+                                    <input #focusEditDivisionMaxEl class="fm-txt form-control" type="text"
+                                        [formControl]="old_maximum_amount"
+                                        *ngIf="DivisionMaxEditMode && rowIndex == selectedDivisionMax.rowIndex"
+                                        [(ngModel)]="selectedDivisionMax.divMaxAmt">
+                                </td>
+                                <td class="amount_right" dir="rtl">
+                                    <div *ngIf="rowIndex != selectedDivisionMax.rowIndex">
+                                        <div *ngFor="let maximumtype of MaximumTypeList">
+                                            <span *ngIf="maximumtype.maxTypeKey == row.maxTypeKey">
+                                                {{maximumtype.maxTypeDesc}}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <ng2-completer
+                                        *ngIf="DivisionMaxEditMode && rowIndex == selectedDivisionMax.rowIndex"
+                                        [formControl]="old_maximum_type" [datasource]="divMaxMaximumTypeData"
+                                        [minSearchLength]="0" [openOnFocus]="true" (opened)="onOpened($event)"
+                                        [fillHighlighted]="false" [placeholder]="'Search Maximum Type'"
+                                        [textSearching]="'Please wait...'" [inputClass]="'form-control'"
+                                        (selected)="onDivMaxTypeSelected($event)" [clearUnselected]="true">
+                                    </ng2-completer>
+                                </td>
+                                <td class="amount_right" dir="rtl">
+                                    <div *ngIf="rowIndex != selectedDivisionMax.rowIndex">
+                                        <div *ngFor="let periodtype of MaximumPeriodTypeList">
+                                            <span *ngIf="periodtype.maxPeriodTypeKey == row.maxPeriodTypeKey">
+                                                {{periodtype.maxPeriodTypeCd}}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <ng2-completer
+                                        *ngIf="DivisionMaxEditMode && rowIndex == selectedDivisionMax.rowIndex"
+                                        [formControl]="old_maximum_period_type"
+                                        [datasource]="divMaxMaximumPeriodTypeData" [minSearchLength]="0"
+                                        [openOnFocus]="true" (opened)="onOpened($event)" [fillHighlighted]="false"
+                                        [placeholder]="'Search Maximum Period Type'" [textSearching]="'Please wait...'"
+                                        [inputClass]="'form-control'" (selected)="onDivMaxPeriodTypeSelected($event)"
+                                        [clearUnselected]="true">
+                                    </ng2-completer>
+                                </td>
+                                <td class="amount_right">
+                                    <span
+                                        *ngIf="rowIndex != selectedDivisionMax.rowIndex">{{row.dentalInd == 'T' || row.dentalInd == true ? 'Yes' : 'No'}}</span>
+                                    <input id="divisionMaxDentalInd" class="fm-txt form-control" type="checkbox"
+                                        (change)="selectedCategoriesForDivisionMaxEditMode()" [formControl]="old_dental"
+                                        *ngIf="DivisionMaxEditMode && rowIndex == selectedDivisionMax.rowIndex"
+                                        [(ngModel)]="selectedDivisionMax.dentalInd">
+                                </td>
+                                <td class="amount_right">
+                                    <span
+                                        *ngIf="rowIndex != selectedDivisionMax.rowIndex">{{row.visionInd == 'T' || row.visionInd == true ? 'Yes' : 'No'}}</span>
+                                    <input id="divisionMaxVision" class="fm-txt form-control" type="checkbox"
+                                        (change)="selectedCategoriesForDivisionMaxEditMode()" [formControl]="old_vision"
+                                        *ngIf="DivisionMaxEditMode && rowIndex == selectedDivisionMax.rowIndex"
+                                        [(ngModel)]="selectedDivisionMax.visionInd">
+                                </td>
+                                <td class="amount_right">
+                                    <span
+                                        *ngIf="rowIndex != selectedDivisionMax.rowIndex">{{row.healthInd == 'T' || row.healthInd == true ? 'Yes' : 'No'}}</span>
+                                    <input id="divisionMaxHealth" class="fm-txt form-control" type="checkbox"
+                                        (change)="selectedCategoriesForDivisionMaxEditMode()" [formControl]="old_health"
+                                        *ngIf="DivisionMaxEditMode && rowIndex == selectedDivisionMax.rowIndex"
+                                        [(ngModel)]="selectedDivisionMax.healthInd">
+                                </td>
+                                <td class="amount_right">
+                                    <span
+                                        *ngIf="rowIndex != selectedDivisionMax.rowIndex">{{row.drugInd == 'T' || row.drugInd == true ? 'Yes' : 'No'}}</span>
+                                    <input id="deleteDivisionMaxDrugSlug" class="fm-txt form-control" type="checkbox"
+                                        (change)="selectedCategoriesForDivisionMaxEditMode()" [formControl]="old_drug"
+                                        *ngIf="DivisionMaxEditMode && rowIndex == selectedDivisionMax.rowIndex"
+                                        [(ngModel)]="selectedDivisionMax.drugInd">
+                                </td>
+
+                                <td class="amount_right">
+                                    <span
+                                        *ngIf="rowIndex != selectedDivisionMax.rowIndex">{{row.wellnessInd == 'T' || row.wellnessInd == true ? 'Yes' : 'No'}}</span>
+                                    <input id="deleteDivisionMaxWellnessSlug" class="fm-txt form-control"
+                                        type="checkbox" (change)="selectedCategoriesForDivisionMaxEditMode()"
+                                        [formControl]="old_wellness"
+                                        *ngIf="DivisionMaxEditMode && rowIndex == selectedDivisionMax.rowIndex"
+                                        [(ngModel)]="selectedDivisionMax.wellnessInd">
+                                </td>
+
+                                <td class="text-center amount_right" [hidden]="showWellnessPert == false">
+                                    <span
+                                        *ngIf="rowIndex != selectedDivisionMax.rowIndex">{{row.wellnessPercentage}}</span>
+                                    <input id="divisionMaxWellnessSlug" class="fm-txt form-control" type="number"
+                                        OnlyNumber="true" [formControl]="old_wellness_percentage" [ngClass]=" getError ? 'wellnessBorder_errorField' : '' "
+                                        *ngIf="DivisionMaxEditMode && rowIndex == selectedDivisionMax.rowIndex"
+                                        [(ngModel)]="selectedDivisionMax.wellnessPercentage" (keyup)="oldWellnessPercentageValid(selectedDivisionMax.wellnessPercentage)">
+                                </td>
+
+                                <td class="text-center amount_right">
+                                    <span *ngIf="rowIndex != selectedDivisionMax.rowIndex">{{row.carryFrwdYrs}}
+                                        <span *ngIf="isCarryForwardHistoryExist == true && planEditMode == true">
+                                            <app-history-icons [attr.data-toggle]="dataToggle"
+                                                [attr.data-target]="divisionMaxHistoryDataTarget"
+                                                [id]="divisionMaxHistoryId" [title]="divisionMaxHistoryTitle"
+                                                [class]="divisionMaxHistoryClass" (click)="getCarryForwardHistory()">
+                                            </app-history-icons>
+                                        </span>
+                                        <span
+                                            *ngIf="isCarryForwardHistoryExist == false && planEditMode == true"></span>
+                                    </span>
+                                    <input id="divisionMaxNewCarryForwardYears1" class="fm-txt form-control text-center"
+                                        type="text" [formControl]="old_carry_forward_years"
+                                        *ngIf="DivisionMaxEditMode && rowIndex == selectedDivisionMax.rowIndex"
+                                        [(ngModel)]="selectedDivisionMax.carryFrwdYrs">
+                                </td>
+                                <td *ngIf="planEditMode" class="amount_right">
+                                    <span
+                                        *ngIf="rowIndex != selectedDivisionMax.rowIndex">{{row.effectiveOn | dateFormate}}</span>
+                                    <div *ngIf="rowIndex == selectedDivisionMax.rowIndex" class="calender-field">
+                                        <my-date-picker id="OldDivisionMaxEffectiveOn" [options]="myDatePickerOptions"
+                                            [formControl]="old_effective_date" [placeholder]="myDatePickerPlaceholder"
+                                            [(ngModel)]="selectedDivisionMax.effectiveOn"
+                                            [selDate]="dateNameArray['OldDivisionMaxEffectiveDate']"
+                                            (inputFocusBlur)="changeFilterDateFormat($event, 'old_effective_date', 'OldDivisionMaxEffectiveDate', true)">
+                                        </my-date-picker>
+                                    </div>
+                                </td>
+                                <td *ngIf="planEditMode" class="amount_right expiryDate">
+                                    
+                                    <span
+                                        *ngIf="rowIndex != selectedDivisionMax.rowIndex">{{row.expiredOn | dateFormate}}</span>
+                                    <div *ngIf="rowIndex == selectedDivisionMax.rowIndex" class="calender-field">
+                                        <my-date-picker id="OldDivisionMaxExpiryDate" [options]="myDatePickerOptions"
+                                            [formControl]="old_expiry_date" [(ngModel)]="selectedDivisionMax.expiredOn"
+                                            [placeholder]="myDatePickerPlaceholder"
+                                            [selDate]="dateNameArray['OldDivisionMaxExpiryDate']"
+                                            [ngClass]="expired  ? 'expired' : 'notExpired'"
+                                            (inputFocusBlur)="changeFilterDateFormat($event, 'old_expiry_date', 'OldDivisionMaxExpiryDate')">
+                                        </my-date-picker>
+                                    </div>
+                                </td>
+                                <td class="text-center amount_right">
+                                    <!-- Display button in View Mode -->
+                                    <button id="divisionMaxEdit" title="Edit"
+                                        *ngIf="rowIndex != selectedDivisionMax.rowIndex" type="button"
+                                        class="table-action-btn edit-ico"
+                                        (click)="enableEditDivisionMax(row, rowIndex)"><i
+                                            class="fa fa-pencil"></i></button>
+                                    <button id="divisionMaxDelte" title="Delete"
+                                        *ngIf="rowIndex != selectedDivisionMax.rowIndex" type="button"
+                                        class="table-action-btn del-ico" (click)="deleteDivisionMax(rowIndex)"><i
+                                            class="fa fa-trash"></i></button>
+
+                                    <!-- Display button in Edit Mode -->
+                                    <button id="divisionMaxUpdate" title="Update"
+                                        *ngIf="DivisionMaxEditMode && rowIndex == selectedDivisionMax.rowIndex"
+                                        type="button" class="table-action-btn save-ico" title="Save"
+                                        (click)="updateDivisionMax(rowIndex)"><i class="fa fa-floppy-o"
+                                            aria-hidden="true"></i></button>
+                                    <button id="divisionMaxCancel" title="Cancel"
+                                        *ngIf="DivisionMaxEditMode && rowIndex == selectedDivisionMax.rowIndex"
+                                        type="button" class="table-action-btn cancel-ico" title="Cancel"
+                                        (click)="resetDivisionMaxInfo()"><i class="fa fa-times"
+                                            aria-hidden="true"></i></button>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </tbody>
+                </table>
+            </div>
+            <!-- Table Ends -->
+        </div>
+    </div>
+</div>
+
+<!-- Carry Forward History  Modal -->
+<div id="CarryForwardHistory" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button id="CarryForwardHistoryClose" type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">{{ 'company.plan.plan-info.proTypeHistory' | translate }}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="grid-box">
+                    <div class="grid-inner">
+                        <div class="form-row">
+                            <div class="row">
+                                <div class="col-md-12 col-xs-12 table-col">
+                                    <div class="table-responsive">
+                                        <table id="carry_forward" class="table table-bordered table-stripped">
+                                        </table>
+                                    </div>
+                                    <!-- Table Ends -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Form Row ENds -->
+                    </div>
+                    <!-- Grid Inner Ends -->
+                </div>
+                <!-- Grid Box Ends -->
+            </div>
+            <!-- Modal Body End-->
+            <div class="modal-footer">
+                <button id="CarryForwardHistoryClose1" type="button" class="btn grey-btn"
+                    data-dismiss="modal">{{ 'button.close' | translate }}</button>
+            </div>
+            <!-- Modal Footer Ends-->
+        </div>
+    </div>
+</div>
+<!-- Carry Forward History Modal End -->
+
+<!-- Prorating Type History  Modal -->
+<div id="ProratingTypeHistoryDivMax" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button id="ProratingTypeHistoryClose" type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">{{ 'company.plan.plan-info.proTypeHistory' | translate }}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="grid-box">
+                    <div class="grid-inner">
+                        <div class="form-row">
+                            <div class="row">
+                                <div class="col-md-12 col-xs-12 table-col">
+                                    <div class="table-responsive">
+                                        <table id="prorating_type_div_max" class="table table-bordered table-stripped">
+                                        </table>
+                                    </div>
+                                    <!-- Table Ends -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Form Row ENds -->
+                    </div>
+                    <!-- Grid Inner Ends -->
+                </div>
+                <!-- Grid Box Ends -->
+            </div>
+            <!-- Modal Body End-->
+            <div class="modal-footer">
+                <button id="ProratingTypeHistoryClose1" type="button" class="btn grey-btn"
+                    data-dismiss="modal">{{ 'button.close' | translate }}</button>
+            </div>
+            <!-- Modal Footer Ends-->
+        </div>
+    </div>
+</div>
+<!-- Prorating Type History Modal End -->
+
+<!-- Division Maximum History  Modal -->
+<div id="divisionMaximumHistoryDivMax" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button id="divisionMaximumHistoryClose" type="button" class="close"
+                    data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">{{ 'company.plan.division-max.divMaxHistoryTableTitle' | translate }}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="grid-box">
+                    <div class="grid-inner">
+                        <div class="form-row">
+                            <div class="row">
+                                <div class="col-md-12 col-xs-12 table-col">
+                                    <div class="table-responsive">
+                                        <table id="division_max_history" class="table table-bordered table-stripped">
+                                        </table>
+                                    </div>
+                                    <!-- Table Ends -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Form Row ENds -->
+                    </div>
+                    <!-- Grid Inner Ends -->
+                </div>
+                <!-- Grid Box Ends -->
+            </div>
+            <!-- Modal Body End-->
+            <div class="modal-footer">
+                <button id="divisionMaximumHistoryClose1" type="button" class="btn grey-btn"
+                    data-dismiss="modal">{{ 'button.close' | translate }}</button>
+            </div>
+            <!-- Modal Footer Ends-->
+        </div>
+    </div>
+</div>
+<!-- Division Maximum History Modal End -->
+
+<!-- Division Details History  Modal -->
+<div id="DivisionDetailsHistoryDivMax" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button id="DivisionDetailsHistoryClose" type="button" class="close"
+                    data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">{{ 'company.plan.plan-info.proTypeHistory' | translate }}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="grid-box">
+                    <div class="grid-inner">
+                        <div class="form-row">
+                            <div class="row">
+                                <div class="col-md-12 col-xs-12 table-col">
+                                    <div class="table-responsive">
+                                        <table id="division_details" class="table table-bordered table-stripped">
+                                        </table>
+                                    </div>
+                                    <!-- Table Ends -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Form Row ENds -->
+                    </div>
+                    <!-- Grid Inner Ends -->
+                </div>
+                <!-- Grid Box Ends -->
+            </div>
+            <!-- Modal Body End-->
+            <div class="modal-footer">
+                <button id="DivisionDetailsHistoryClose1" type="button" class="btn grey-btn"
+                    data-dismiss="modal">{{ 'button.close' | translate }}</button>
+            </div>
+            <!-- Modal Footer Ends-->
+        </div>
+    </div>
+</div>
+<!-- Division Details History Modal End -->

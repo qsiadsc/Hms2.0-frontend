@@ -1,0 +1,553 @@
+<!-- Section Heading Ends -->
+<div class="container">
+  <div class="section-heading">
+    <h2>{{'feeGuide.dentalFeeGuide.fee-guide' | translate }} -
+      <span>{{pageMode}}</span>
+    </h2>
+  </div>
+
+  <div class="grid-box">
+    <!-- Grid Heading Ends -->
+    <div class="grid-heading">
+      <h3>{{'feeGuide.dentalFeeGuide.dental-fee-guide' | translate }}</h3>
+    </div>
+    <div class="grid-inner">
+      <form [formGroup]="viewDentalFormGroup">
+        <div class="form-row">
+          <div class="row min-ht-sf">
+            <div class="col-md-3 col-xs-12">
+              <label>{{'feeGuide.dentalFeeGuide.fee-name' | translate }}
+                <span class="required">*</span>
+              </label>
+              <input id="DentalFeeGuideName" type="text" class="fm-txt form-control" formControlName="feeGuideName"
+                placeholder="{{'feeGuide.dentalFeeGuide.fee-name' | translate }}">
+              <show-errors [control]="viewDentalFormGroup.controls.feeGuideName"></show-errors>
+            </div>
+            <div class="col-md-3 col-xs-12 paddingRight">
+              <label>{{'feeGuide.dentalFeeGuide.schedule' | translate }}
+                <span class="required">*</span>
+              </label>
+              <ng2-completer [inputId]="'dentalScheduleFeeGuide'" formControlName="columnSchedule"
+                [datasource]="scheduleItemsDataRemote" [fillHighlighted]="false" [autoHighlight]="true"
+                [selectOnFocus]="true" [minSearchLength]="1" [clearUnselected]="false"
+                [placeholder]="'Search Schedule Items'" [textSearching]="'Please wait...'" [inputClass]="'form-control'"
+                (selected)="onPredictivefeeGuideSelected($event,'schedule')" [disableInput]="viewMode">
+              </ng2-completer>
+              <show-errors [control]="viewDentalFormGroup.controls.columnSchedule"></show-errors>
+            </div>
+            <div class="col-md-3 col-xs-12">
+              <label>{{'feeGuide.dentalFeeGuide.province' | translate }}
+                <span class="required">*</span>
+              </label>
+              <ng2-completer [inputId]="'columnProvinceFeeGuide'" id="columnProvinceFeeGuide"
+                formControlName="columnProvince" [datasource]="provinceCodesDataRemote" [minSearchLength]="1"
+                [clearUnselected]="false" [placeholder]="'Search Province Codes'" [textSearching]="'Please wait...'"
+                [inputClass]="'form-control'" [fillHighlighted]="false" [autoHighlight]="true" [selectOnFocus]="true"
+                (selected)="onPredictivefeeGuideSelected($event,'province')" [disableInput]="viewMode">
+              </ng2-completer>
+              <show-errors [control]="viewDentalFormGroup.controls.columnProvince"></show-errors>
+            </div>
+            <div class="col-md-2 col-xs-12">
+              <label>{{'feeGuide.dentalFeeGuide.effective-date' | translate }}
+                <span class="required">*</span>
+              </label>
+              <div class="calender-field">
+                <my-date-picker [ngClass]="(viewMode == true)||(editMode == true) ? 'removeCross':''"
+                  id="dfg_createdDate" placeholder="{{'common.date-placeholder' | translate}}" class="inputSearch"
+                  formControlName="effective_on" [options]="myDatePickerOptions"
+                  (inputFocusBlur)="changeDateFormatBanNumber($event, 'effective_on' ,'viewDentalFormGroup',true)">
+                </my-date-picker>
+                <show-errors [control]="viewDentalFormGroup.controls.effective_on"></show-errors>
+              </div>
+              <!-- Calendar Field Ends -->
+            </div>
+            <div class="col-md-1 col-xs-12">
+              <label>&nbsp;</label>
+              <button id="dfg_update" *ngIf="editMode && DentalFeeGuideCheck[0].editFeeGuide == 'T'"
+                (click)="updateDentalFeeGuide()" data-target="#updateProcedureCodeForm"
+                class="btn green-btn-add">{{'feeGuide.dentalFeeGuide.buttons.update' | translate }}</button>
+              <button id="dfg_edit" *ngIf="viewMode && DentalFeeGuideCheck[0].editFeeGuide == 'T'"
+                (click)="enableEditMode()" class="btn green-btn-add">{{'feeGuide.dentalFeeGuide.buttons.edit' |
+                translate }}</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <!-- Grid Inner Ends -->
+  </div>
+  <!-- Grid Box Ends -->
+  <div>
+    <div class="grid-box">
+      <div class="grid-heading">
+        <h3>{{'feeGuide.dentalFeeGuide.proc-code-list' | translate }}</h3>
+        <div class="web-reg">
+
+          <input style="display: none" type="file" (change)="onFileChanged($event)"
+            (click)="importFileInput.value = null" value="" #importFileInput>
+          <button [disabled]="editTableMode" id="dfg_addnew" *ngIf="DentalFeeGuideCheck[0].addNewProc == 'T'"
+            title="Add Procedure Code" class="btn green-btn-add addNewProcedureCode" (click)="AddNew()">
+            <i class="fa fa-plus"></i>{{'button.addnew'| translate }}
+          </button>
+
+          <button id="dfg_updateFeeguide" *ngIf="DentalFeeGuideCheck[0].updateFeeGuide == 'T'" class="btn green-btn-add"
+            data-toggle="modal" (click)="updateFeeGuide()" data-target="#UpdateFee">Update Procedure Amount</button>
+
+          <div class="dropdown pull-right">
+            <button style="margin-left:7px;font-size: 12px;padding: 6px 10px;" id="fee_guide_import"
+              class="btn green-btn dropdown-toggle" type="button" data-toggle="dropdown">
+              Import/Download
+              <h5 class="caret"></h5>
+            </button>
+            <ul class="dropdown-menu" style="top:30px;min-width:135px !important;font-size:12px;">
+              <li><a (click)="downloadFile()" href="javascript:void(0)">Download Sample</a></li>
+              <li><a (click)="importFileInput.click()" href="javascript:void(0)">Import File</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="grid-inner">
+        <div [ngClass]="{'tableLoader': showtableLoader}">
+          <form>
+            <div class="form-row">
+              <div class="col-md-12 col-xs-12 table-col">
+                <div class="table-responsive alignDpRight" [hidden]="showtableLoader">
+                  <table id="view-Dental-FeeGuide" datatable [dtOptions]="dtOptions['view-Dental-FeeGuide']"
+                    [dtTrigger]="dtTrigger['view-Dental-FeeGuide']"
+                    class="table table-bordered table-stripped dataTable">
+                    <thead>
+                      <tr>
+                        <td>
+                          <ng2-completer [(ngModel)]="arrSearch.procKey" [ngModelOptions]="{standalone: true}"
+                            [datasource]="procIdsData" [minSearchLength]="1" [openOnFocus]="true"
+                            (opened)="onOpened($event)" [fillHighlighted]="false" [autoHighlight]="true"
+                            [selectOnFocus]="true" [placeholder]="'Enter Proc ID'" [textSearching]="'Please wait...'"
+                            [inputClass]="'form-control'" (selected)="onColumnProcIdSelected($event)"
+                            (keydown)="filterSearchOnEnter($event,'view-Dental-FeeGuide')">
+                          </ng2-completer>
+                        </td>
+                        <td>
+                          <input type="text" class="fm-txt form-control amount_right_grid"
+                            [(ngModel)]="arrSearch.procFeeAmt" id="grid_procFeeGuide" name="procFeeGuide"
+                            placeholder="Proc. Fee Amount" [ngModelOptions]="{standalone: true}"
+                            (keydown)="filterSearchOnEnter($event,'view-Dental-FeeGuide')" />
+                        </td>
+                        <td>
+                          <input type="text" class="fm-txt form-control amount_right_grid"
+                            placeholder="Proc. Lab Amount" [(ngModel)]="arrSearch.procLabAmt"
+                            [ngModelOptions]="{standalone: true}"
+                            (keydown)="filterSearchOnEnter($event,'view-Dental-FeeGuide')" />
+                        </td>
+                        <td>
+                          <div class="calender-field">
+                            <my-date-picker id="txtEffDate" placeholder="{{ 'common.date-placeholder' | translate }}"
+                              [(ngModel)]="arrSearch.effDate" [options]="myDatePickerOptions"
+                              [selDate]="dateNameArray['effDate']" [ngModelOptions]="{standalone: true}"
+                              (inputFocusBlur)="ChangeSearchDateFormat($event, 'effDate','')"
+                              (keydown)="filterSearchOnEnter($event,'view-Dental-FeeGuide')">
+                            </my-date-picker>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="calender-field">
+                            <my-date-picker id="txtExpDate" placeholder="{{ 'common.date-placeholder' | translate }}"
+                              [(ngModel)]="arrSearch.expDate" [options]="myDatePickerOptions"
+                              [selDate]="dateNameArray['expDate']" [ngModelOptions]="{standalone: true}"
+                              (inputFocusBlur)="ChangeSearchDateFormat($event, 'expDate','')"
+                              (keydown)="filterSearchOnEnter($event,'view-Dental-FeeGuide')">
+                            </my-date-picker>
+                          </div>
+                        </td>
+                        <td class="amount_right_grid">
+                          <button id="dfg_searchbtn" type="button" title="{{'common.search' | translate}}"
+                            class="btn green-btn searchreset" (click)="searchProcIdGrid()">
+                            <span class="glyphicon glyphicon-search"></span>
+                          </button>
+                          <button id="dfg_resetbtn" type="button" title="{{'common.reset' | translate}}"
+                            class="btn grey-btn searchreset" (click)="resetTableSearch('view-Dental-FeeGuide')">
+                            <span class="glyphicon glyphicon-repeat"></span>
+                          </button>
+                        </td>
+                      </tr>
+                    </thead>
+                    <thead>
+                      <tr>
+                        <th width="15%">Proc Id</th>
+                        <th *ngIf="!editTableMode" width="15%" class="amount_right_grid">Proc Fee Amount</th>
+                        <th *ngIf="editTableMode" width="15%" class="amount_right_grid">Fee Amount to be Added</th>
+                        <th *ngIf="!editTableMode" width="15%" class="amount_right_grid">Proc Lab Amount</th>
+                        <th *ngIf="editTableMode" width="15%" class="amount_right_grid">Lab Amount to be Added</th>
+                        <th width="20%" class="amount_right_grid">{{
+                          'card.card-eligibility.over-rides.card-maximums.top-up-maximums.effective-date' | translate }}
+                        </th>
+                        <th width="20%" class="amount_right_grid">{{
+                          'card.card-eligibility.over-rides.card-maximums.top-up-maximums.expiry-date' | translate }}
+                        </th>
+                        <th width="15%" class="amount_right_grid">{{
+                          'card.card-eligibility.over-rides.card-maximums.top-up-maximums.action' | translate }}</th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      <tr *ngIf="arrData.length == 0 && !addNewRecord" class="odd" style="text-align:center">
+                        <td valign="top" colspan="6" class="dataTables_empty">{{'card.card-holder.data-tables.datamsg' |
+                          translate}}</td>
+                      </tr>
+                      <tr class="tableRow" *ngIf="addNewRecord">
+                        <td width="15%">
+                          <ng2-completer (blur)="onBlur($event)" [fillHighlighted]="false" [autoHighlight]="true"
+                            [selectOnFocus]="true" [formControl]="procIds" [datasource]="procIdsData"
+                            [minSearchLength]="1" [openOnFocus]="true" (opened)="onOpened($event)"
+                            [placeholder]="'Enter Proc ID'" [textSearching]="'Please wait...'"
+                            [inputClass]="{'error_field': newRecordValidate && (procID == ''||procID.length != 5),'form-control':true}"
+                            [inputId]="'procId'" (selected)="onProcIdSelected($event)">
+                          </ng2-completer>
+
+                        </td>
+                        <td width="15%">
+                          <div class="d-amount edit-amt-row calender-field">
+                            <input type="number" name="dentalProcedureFeeAmt" OnlyNumber="true"
+                              (blur)="ValidateControls($event,'Proc Fee Amount')"
+                              [(ngModel)]="arrNewRow.dentalProcedureFeeAmt" class="fm-txt form-control"
+                              id="txtProcFeeAmt" [ngClass]="{'fm-txt': true, 'form-control':true }"
+                              (keyup.enter)="onEnterSaveInfo(0)" (keydown.ArrowDown)="onDownAddMode('txtProcFeeAmt')"
+                              (keydown.ArrowUp)="onUpAddMode('txtProcFeeAmt')">
+                          </div>
+                        </td>
+                        <td width="15%">
+                          <div class="d-amount edit-amt-row calender-field">
+                            <input type="number" name="txtProcLabAmt" OnlyNumber="true"
+                              (blur)="ValidateControls($event,'Proc Lab Amount')"
+                              [(ngModel)]="arrNewRow.dentalProcedureLabFeeAmt" class="fm-txt form-control"
+                              id="txtProcLabAmt" [ngClass]="{'fm-txt': true, 'form-control':true }"
+                              (keyup.enter)="onEnterSaveInfo(0)" (keydown.ArrowDown)="onDownAddMode('txtProcLabAmt')"
+                              (keydown.ArrowUp)="onUpAddMode('txtProcLabAmt')">
+                          </div>
+                        </td>
+                        <td width="20%" id="claimDOB">
+                          <div class="calender-field">
+                            <my-date-picker [options]="myDatePickerOptions"
+                              placeholder="{{'common.date-placeholder' | translate}}" #mydp="mydatepicker"
+                              name="effectiveOn" (inputFocusBlur)="ChangeInputDateFormat($event,0, 'effectiveOn')"
+                              [ngClass]="{'fm-txt': true,'removeCross':true}" [(ngModel)]="arrNewRow.effectiveOn"
+                              (keyup.enter)="onEnterSaveInfo(0)" (keydown.ArrowDown)="onDownAddMode('effectiveOn')"
+                              (keydown.ArrowUp)="onUpAddMode('effectiveOn')">
+                            </my-date-picker>
+                          </div>
+                        </td>
+                        <td width="20%" id="expiryField">
+                          <div class="calender-field">
+                            <my-date-picker id="expiredOn" [options]="myDatePickerOptions"
+                              placeholder="{{'common.date-placeholder' | translate}}" name="expiredOn"
+                              (inputFocusBlur)="ChangeInputDateFormat($event,0, 'expiredOn')"
+                              [(ngModel)]="arrNewRow.expiredOn" #mydp1="mydatepicker" (keyup.enter)="onEnterSaveInfo(0)"
+                              (keydown.ArrowDown)="onDownAddMode('expiredOn')"
+                              (keydown.ArrowUp)="onUpAddMode('expiredOn')">
+                            </my-date-picker>
+                          </div>
+                        </td>
+                        <td width="15%" style="text-align: right !important;">
+                          <a href="javascript:void(0)" title="{{'common.save' | translate}}"
+                            class="save_row table-action-btn edit-ico" (click)="SaveInfo(1)">
+                            <i class="fa fa-save"></i>
+                          </a>
+                          <a href="javascript:void(0)" title="{{'common.cancel' | translate}}"
+                            class="delete_row table-action-btn del-ico ashwani" (click)="CancelInfo(i,dataRow,0)"
+                            (blur)="CancelInfo(i,dataRow,2)">
+                            <i class="fa fa-times"></i>
+                          </a>
+                          <a href="javascript:void(0)"></a>
+                        </td>
+                      </tr>
+
+                      <tr class="view-dntal-tb" *ngFor="let dataRow of arrData;let i = index">
+                        <td width="15%">
+                          <div *ngIf="dataRow.dentalProcedureFeeKey != selectedRowId">
+                            <span *ngIf="!searchFilter">{{dataRow.dentalProcedureId}}</span>
+                            <span *ngIf="searchFilter">{{dataRow.dentalProcedureId}}</span>
+                          </div>
+                          <div [hidden]="searchFilter"
+                            *ngIf="!addMode && dataRow.dentalProcedureFeeKey == selectedRowId && !searchFilter">
+                            <ng2-completer (blur)="onBlur($event)" [(ngModel)]="dataRow.dentalProcedureId"
+                              [fillHighlighted]="false" [autoHighlight]="true" [selectOnFocus]="true"
+                              [inputId]="'procId'+i" [ngModelOptions]="{standalone: true}" [datasource]="procIdsData"
+                              [minSearchLength]="1" [openOnFocus]="true" (opened)="onOpened($event)"
+                              [placeholder]="'Enter Proc ID'" [textSearching]="'Please wait...'"
+                              [inputClass]="{'error_field':procID =='' || procID.length !=5,'form-control':true}"
+                              (selected)="onProcIdSelected($event)">
+                            </ng2-completer>
+                          </div>
+                          <div [hidden]="!searchFilter"
+                            *ngIf="!addMode && dataRow.dentalProcedureFeeKey == selectedRowId">
+                            <ng2-completer (blur)="onBlur($event)" [(ngModel)]="dataRow.dentalProcedureId"
+                              [fillHighlighted]="false" [autoHighlight]="true" [selectOnFocus]="true"
+                              [ngModelOptions]="{standalone: true}" [datasource]="procIdsData" [minSearchLength]="1"
+                              [inputId]="'procId'+i" [openOnFocus]="true" (opened)="onOpened($event)"
+                              [placeholder]="'Enter Proc ID'" [textSearching]="'Please wait...'"
+                              [inputClass]="{'error_field':procID ==''|| procID.length !=5,'form-control':true}"
+                              (selected)="onProcIdSelected($event)">
+                            </ng2-completer>
+                          </div>
+                        </td>
+                        <td (click)="onRowClick(i)" width="15%" class="amount_right">
+                          <div [ngClass]="{'edit-amt-row': dataRow.dentalProcedureFeeKey == selectedRowId}"
+                            class="d-amount calender-field">
+                            <span *ngIf="dataRow.dentalProcedureFeeKey != selectedRowId"
+                              (click)="onRowClick(i)">{{dataRow.dentalProcedureFeeAmt | number:'1.2'}}</span>
+                            <input type="text" name="dentalProcedureFeeAmt{{i}}" OnlyNumber="true"
+                              value="{{dataRow.dentalProcedureFeeAmt}}" [(ngModel)]="dataRow.dentalProcedureFeeAmt"
+                              id="txtProcFeeAmt{{i}}" *ngIf="dataRow.dentalProcedureFeeKey == selectedRowId"
+                              (blur)="ValidateControls($event,'Proc Fee Amount')"
+                              [ngClass]="{'fm-txt': true, 'form-control':true ,'amount_right':true}"
+                              (keyup.enter)="OnEnterPress(i,dataRow,1)"
+                              (keydown.ArrowUp)="onUp(i,dataRow,'txtProcFeeAmt')"
+                              (keydown.ArrowDown)="onDown(i,dataRow,'txtProcFeeAmt')">
+                          </div>
+                        </td>
+                        <td (click)="onRowClick(i)" class="amount_right">
+                          <div [ngClass]="{'edit-amt-row': dataRow.dentalProcedureFeeKey == selectedRowId}"
+                            class="d-amount calender-field">
+                            <span
+                              *ngIf="dataRow.dentalProcedureFeeKey != selectedRowId">{{dataRow.dentalProcedureLabFeeAmt
+                              | number:'1.2'}}</span>
+                            <input type="text" name="txtProcLabAmt{{i}}" OnlyNumber="true"
+                              value="{{dataRow.dentalProcedureLabFeeAmt}}"
+                              [(ngModel)]="dataRow.dentalProcedureLabFeeAmt" id="txtProcLabAmt{{i}}"
+                              *ngIf="dataRow.dentalProcedureFeeKey == selectedRowId"
+                              (blur)="ValidateControls($event,'Proc Lab Amount')"
+                              [ngClass]="{'fm-txt': true, 'form-control':true,'amount_right':true }"
+                              (keyup.enter)="OnEnterPress(i,dataRow,1)"
+                              (keydown.ArrowUp)="onUp(i,dataRow,'txtProcLabAmt')"
+                              (keydown.ArrowDown)="onDown(i,dataRow,'txtProcLabAmt')">
+                          </div>
+                        </td>
+                        <td (click)="onRowClick(i)" id="claimDOB{{i}}">
+                          <div style="text-align:right" class="calender-field">
+                            <span *ngIf="dataRow.dentalProcedureFeeKey != selectedRowId">{{dataRow.effectiveOn |
+                              dateFormate}}</span>
+                            <my-date-picker id="effectiveOn{{i}}" [options]="myDatePickerOptions"
+                              placeholder="{{'common.date-placeholder' | translate}}" #mydp="mydatepicker"
+                              name="EffectiveOn{{i}}" (inputFocusBlur)="ChangeInputDateFormat($event,i, 'effectiveOn')"
+                              [ngClass]="{'fm-txt': true,'removeCross':true}" [(ngModel)]="dataRow.effectiveOn"
+                              *ngIf="dataRow.dentalProcedureFeeKey == selectedRowId "
+                              (keyup.enter)="OnEnterPress(i,dataRow,1)"
+                              (keydown.ArrowUp)="onUp(i,dataRow,'effectiveOn')"
+                              (keydown.ArrowDown)="onDown(i,dataRow,'effectiveOn')">
+                            </my-date-picker>
+                          </div>
+                        </td>
+                        <td (click)="onRowClick(i)" id="expiryField{{i}}">
+                          <div style="text-align:right" class="calender-field">
+                            <span style=" text-align: right"
+                              *ngIf="dataRow.dentalProcedureFeeKey != selectedRowId">{{dataRow.expiredOn | dateFormate}}
+                            </span>
+                            <my-date-picker class="expiredOn" id="expiredOn{{i}}" [options]="myDatePickerOptions"
+                              placeholder="{{'common.date-placeholder' | translate}}" name="expiredOn{{i}}"
+                              (inputFocusBlur)="ChangeInputDateFormat($event,i, 'expiredOn')"
+                              [(ngModel)]="dataRow.expiredOn" *ngIf="dataRow.dentalProcedureFeeKey == selectedRowId "
+                              #mydp1="mydatepicker" (keyup.enter)="OnEnterPress(i,dataRow,1)"
+                              (keydown.ArrowUp)="onUp(i,dataRow,'expiredOn')"
+                              (keydown.ArrowDown)="onDown(i,dataRow,'expiredOn')">
+                            </my-date-picker>
+                          </div>
+                        </td>
+                        <td style="text-align: right !important;">
+                          <button href="javascript:void(0)" [disabled]="addTableMode"
+                            (click)="EditInfo(dataRow, i,true)" title="{{'common.edit' | translate}}"
+                            [ngClass]="{ 'edit_row': true,'table-action-btn': true,'edit-ico': true}"
+                            *ngIf="(editMode || viewMode || editTableMode) && dataRow.dentalProcedureFeeKey != selectedRowId && this.DentalFeeGuideCheck[0].editProcCode == 'T'">
+                            <i class='fa fa-pencil'></i>
+                          </button>
+                          <a href="javascript:void(0)" title="{{'common.update' | translate}}"
+                            (click)="UpdateInfo(dataRow, i,1)" class="save_row table-action-btn edit-ico"
+                            *ngIf="dataRow.dentalProcedureFeeKey == selectedRowId">
+                            <i class="fa fa-save"></i>
+                          </a>
+                          <a href="javascript:void(0)" title="{{'common.cancel' | translate}}"
+                            class="delete_row table-action-btn del-ico kaushal" (click)="CancelInfo(i,dataRow,0)"
+                            (blur)="CancelInfo(i,dataRow,1)" *ngIf="dataRow.dentalProcedureFeeKey == selectedRowId">
+                            <i class="fa fa-times"></i>
+                          </a>
+                          <a href="javascript:void(0)"></a>
+                          <a href="javascript:void(0)" title="{{'common.delete' | translate}}"
+                            *ngIf="dataRow.dentalProcedureFeeKey != selectedRowId  && this.DentalFeeGuideCheck[0].deleteProcCode == 'T'"
+                            class="table-action-btn del-ico" (click)="DeleteInfo(dataRow, i)">
+                            <i class="fa fa-trash"></i>
+                          </a>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </form>
+          <span *ngIf="showtableLoader" class="loading" style="font-size: 1.2em;text-align: center;"
+            data-name="Loading">Processing...</span>
+        </div>
+
+        <div class="form-row text-center">
+          <div class="row">
+            <div class="col-md-12 col-xs-12">
+              <div class="dropdown pull-right">
+                <button id="companySearchExport" class="btn green-btn dropdown-toggle" type="button"
+                  data-toggle="dropdown">Export
+                  <span class="caret"></span></button>
+                <ul class="dropdown-menu">
+                  <li><a href="javascript:void(0)" (click)="exportFeeguide()">Excel</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Grid Inner Ends -->
+      </div>
+    </div>
+  </div>
+  <!-- Grid Box Ends -->
+
+  <!-- Dental Fee Guide Modal -->
+
+  <!-- Update Fee Guide Modal-->
+  <div id="UpdateFee" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button id="dfg_modalcloseicon" type="button" (click)="resetUpdateForm()" class="close"
+            data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">{{'feeGuide.dentalFeeGuide.update-fee-guide' | translate }}</h4>
+        </div>
+        <div class="modal-body">
+          <div class="grid-box">
+            <div class="grid-inner">
+              <div class="form-row">
+                <form [formGroup]="updateProcedureCodeForm">
+                  <div class="row min-ht-sf">
+                    <div class="col-md-12 col-xs-12">
+                      <div class="row">
+                        <div class="col-sm-2 col-xs-12">
+                          <label>
+                            <input #procIDFocus autofocus id="dfg_procCode" type="radio" formControlName="procCodeType"
+                              value="individual" (change)=procCodeType() (keydown)="onIndividualRadioButtonChange()"
+                              name="procCodeType">
+                            Individual
+                          </label>
+                        </div>
+
+                        <div class="col-sm-10 col-xs-12">
+                          <label>
+                            <input id="dfg_gProcCode" type="radio" formControlName="procCodeType" value="group"
+                              (change)=procCodeType() (keydown)="triggerRuleDropDownWhenEff($event)"
+                              name="procCodeType"> Series of Proc Code
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-3 col-xs-12">
+                      <label>Procedure Code
+                        <span class="required">*</span>
+                      </label>
+                      <div id="updateprocedureCodeScroll">
+                        <angular2-multiselect *ngIf="singleProc" id="procId" #setFocus [data]="procedureCodeItems"
+                          [(ngModel)]="updateprocedure_code" [ngModelOptions]="{standalone: true}"
+                          svg="angular2-multiselect" (onSelect)="onSelect($event,'updateprocedure_code')"
+                          (onDeSelect)="onDeSelect($event,'updateprocedure_code')"
+                          (keydown)="triggerRuleDropDownWhenEff1($event)"
+                          (onSelectAll)="onSelectAll($event,'updateprocedure_code')"
+                          (onDeSelectAll)="onDeSelectAll($event,'updateprocedure_code')"
+                          [settings]="multiSelectDropdownSettings" (blur)="onBlur1(updateprocedure_code,$event)">
+                        </angular2-multiselect>
+                        <show-errors [control]="updateProcedureCodeForm.controls.updateprocedure_code"></show-errors>
+                        <angular2-multiselect #setFocus *ngIf="groupProc" [data]="groupProcedureCodeItems"
+                          [(ngModel)]="groupProcCode" [ngModelOptions]="{standalone: true}"
+                          (keydown)="triggerRuleDropDownWhenEff1($event)" (onSelect)="onSelect($event,'groupProcCode')"
+                          (onDeSelect)="onDeSelect($event,'groupProcCode')"
+                          (onSelectAll)="onSelectAll($event,'groupProcCode')"
+                          (onDeSelectAll)="onDeSelectAll($event,'groupProcCode')"
+                          [settings]="multiSelectDropdownSettings">
+                        </angular2-multiselect>
+                        <show-errors [control]="updateProcedureCodeForm.controls.groupProcCode"></show-errors>
+                      </div>
+                    </div>
+                    <div id="procedureCode1" class="col-md-4 col-xs-12">
+                      <label>Proc. Fee/Lab Amount
+                        <span class="required">*</span>
+                      </label>
+                      <angular2-multiselect [data]="amountItems" (keydown)="triggerRuleDropDownWhenEff2($event)"
+                        [(ngModel)]="updateamount" [ngModelOptions]="{standalone: true}"
+                        (onSelect)="onSelect($event,'updateamount')" (onDeSelect)="onDeSelect($event,'updateamount')"
+                        (onSelectAll)="onSelectAll($event,'updateamount')"
+                        (onDeSelectAll)="onDeSelectAll($event,'updateamount')" [settings]="multiSelectDropdownSettings">
+                      </angular2-multiselect>
+                      <show-errors [control]="updateProcedureCodeForm.controls.updateamount"></show-errors>
+
+                    </div>
+                    <div class="col-md-4 col-xs-12">
+                      <label>{{'feeGuide.dentalFeeGuide.buttons.update' | translate }} by
+                        <span class="required">*</span>
+                      </label>
+                      <div class="row">
+                        <div class="col-sm-3 col-xs-12">
+                          <span>
+                            <label>
+                              <input id="dfg_flat" type="radio" formControlName="feeFlat" value="F" (change)=feeType()
+                                (blur)="onFeeRadioButtonChange()" name="feeFlat"> {{'feeGuide.dentalFeeGuide.flat' |
+                              translate }}
+                            </label>
+                          </span>
+                        </div>
+                        <div class="col-sm-3 col-xs-12">
+                          %
+                          <input id="dfg_perc" type="radio" formControlName="feeFlat" value="P" (change)=feeType()
+                            name="feeFlat">
+                        </div>
+                        <show-errors [control]="updateProcedureCodeForm.controls.feeFlat"></show-errors>
+                        <div class="col-sm-6 col-xs-12">
+                          <div class="row">
+                            <div class="col-sm-9 d-amount" style="padding-left: 0px !important">
+                              <input id="dfg_amount" type="text" (keyup)="onKeyPress1($event)" OnlyNumber="true"
+                                class="form-control half-txt amount_right_grid" placeholder="Amount"
+                                formControlName="empty" (blur)="onRadioButtonsChange()" />
+                              <show-errors [control]="updateProcedureCodeForm.controls.empty"></show-errors>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <!-- Form Row ENds -->
+            </div>
+          </div>
+        </div>
+        <!-- Modal Body End-->
+        <div class="modal-footer">
+          <button id="dfg_updateproceduercode" class="green-btn btn" (click)="updateProcedureCodeDetails()">
+            {{'feeGuide.dentalFeeGuide.buttons.update' | translate }}</button>
+          <button id="viewFeeguideClose" type="button" class="btn grey-btn" data-dismiss="modal"
+            (click)="resetUpdateForm()">{{'feeGuide.dentalFeeGuide.buttons.close' | translate }}</button>
+        </div>
+        <!-- Modal  Footer Ends -->
+      </div>
+    </div>
+  </div>
+  <!-- Update Fee Guide Modal-->
+
+  <!-- add proc code Modal -->
+  <div [hidden]="!showLoader" class="loader-outer">
+    <div class="cube-wrapper">
+      <div class="cube-folding">
+        <span class="leaf1"></span>
+        <span class="leaf2"></span>
+        <span class="leaf3"></span>
+        <span class="leaf4"></span>
+      </div>
+      <span class="loading" data-name="Loading">{{'company.plan.benefits.pleaseWait'|translate}}</span>
+    </div>
+  </div>
+  <!-- Loader  -->

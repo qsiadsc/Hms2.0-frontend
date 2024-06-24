@@ -1,0 +1,98 @@
+<!-- #1043: File Menu moved to Reports tile under Finance Dashboard in form of Tab -->
+<!-- Existing code(16-Feb-2021) -->
+<div class="grid-box" *ngIf="reportListShowHide">
+    <div class="grid-heading">
+      <h3>{{'uft.dashboard.financeReports.selectReport' | translate}} </h3>
+      <div class="web-reg">
+        <button id="finPayableReport_finace" title="Reports" class="btn green-btn-add" type="button" (click)="payableReports_finance()" data-toggle="modal" data-target="#reportList_finance">Financial Payable Reports</button>
+      </div>
+    </div>
+    <div class="grid-inner">
+      <div class="form-row">
+        <div class="table-responsive hms-loading-table">
+          <table id="reportsList" class="display table table-bordered table-stripped">
+            <thead>
+            </thead>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- Grid Box Ends -->
+
+<div id="reportList_finance" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="closeModalCCMaxTotal" type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Report List</h4>
+      </div>
+      <div class="modal-body">
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>Payable Report</h3>
+          </div>
+          <div class="grid-inner">
+            <div class="form-row">
+              <div class="row">
+                <div class="col-md-12 col-xs-12 table-col">
+                  <div class="table-responsive">
+                        <table id="payableReportList_finance" class="display table table-bordered table-stripped">
+                          <tfoot>
+                            <tr>
+                              <td width="">
+                                <input placeholder="Name" class="fm-txt form-control tFootInput inputSearch notInCaps" type="text" id="paramName_finance" name="paramName"
+                                 />
+                              </td>
+                              <td width="">
+                                <input placeholder="Type" class="fm-txt form-control tFootInput inputSearch notInCaps amount_right_grid" type="text" id="paramType_finance" name="paramType"
+                                  />
+                              </td>
+                              <td width="" class="alignDpRight">
+                                <div class="calender-field">
+                                  <my-date-picker id="payableSearchExpiredOn_finance" class="inputSearch" name="paramIssuedDate"
+                                  data-type="date" [options]="myDatePickerOptions" [selDate]="dateNameArray['paramIssuedDate']"
+                                  [ngClass]="expired  ? 'expired' : 'notExpired'"
+                                  (inputFocusBlur)="changeDateFormat1($event, 'paramIssuedDate')"
+                                  placeholder="{{'common.date-placeholder' | translate}}">
+                                </my-date-picker>
+                                </div>
+                              </td>
+                              <td class="grid_right">
+                                <div class="form-row">
+                                  <button id="payableReportSearchBtn" type="submit" title="{{'common.search' | translate}}" class="btn green-btn search_rpt" (click)="searchPayableReport('payableReportList')">
+                                    <span class="glyphicon glyphicon-search"></span>
+                                  </button>
+                                  <button id="payableReportClearBtn" title="{{'common.reset' | translate}}" class="btn grey-btn search_rpt" (click)="resetPayableReport()">
+                                    <span class="glyphicon glyphicon-repeat"></span>
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          </tfoot>
+                        </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+          <button id="closeSummaryBtn" type="button" class="btn grey-btn" data-dismiss="modal" (click)="resetPayableReport()">{{ 'button.close' | translate }}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div [hidden]="!showPageLoader" class="loader-outer">
+  <div class="cube-wrapper">
+    <div class="cube-folding">
+      <span class="leaf1"></span>
+      <span class="leaf2"></span>
+      <span class="leaf3"></span>
+      <span class="leaf4"></span>
+    </div>
+    <span class="loading" data-name="Loading">{{'company.plan.benefits.pleaseWait'|translate}}</span>
+  </div>
+</div>

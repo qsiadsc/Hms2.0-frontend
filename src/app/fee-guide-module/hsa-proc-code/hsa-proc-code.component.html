@@ -1,0 +1,199 @@
+<div class="section-heading">
+    <h2>{{'feeGuide.procedureCode.heading.proc-code'|translate}} -
+        <span>{{'button.search'|translate}}</span>
+    </h2>
+</div>
+<!-- Section Heading Ends -->
+
+<div class="grid-box">
+    <div class="grid-heading">
+        <h3>HSA Procedure Code</h3>
+        <div class="web-reg">
+            <a class="green-btn-add btn" *ngIf="hsaProcCodeCheck[0].addHsaProcCode == 'T'" data-toggle="modal"
+                data-target="#addHSAProcCode" (click)="enableAddMode()">
+                <i class="fa fa-plus"></i>Add HSA Procedure Code</a>
+        </div>
+    </div>
+    <!-- Grid Heading Ends -->
+    <div class="grid-inner">
+        <form [formGroup]="hsaProcCode">
+            <div class="form-row">
+                <div class="col-md-2 col-xs-12">
+                    <label>Procedure ID</label>
+                    <input id="hsa_procId" type="text" class="fm-txt form-control" placeholder="Procedure ID"
+                        formControlName="procId" (keydown)="isNumberKey($event)" (keyup.enter)="isEnterKey($event)">
+                </div>
+                <div class="col-md-3 col-xs-12">
+                    <label>Procedure Description</label>
+                    <ng2-completer [inputId]="'hsa_procDesc'" id="hsa_procDesc" formControlName="hsaProcDesc"
+                        [datasource]="procDescRemote" [minSearchLength]="3" [clearUnselected]="false"
+                        [placeholder]="'Search Procedure Description'" [textSearching]="'Please wait...'"
+                        [inputClass]="'form-control'" [fillHighlighted]="true" [autoHighlight]="true"
+                        [selectOnFocus]="true" (selected)="onProcDescSelect($event)">
+                    </ng2-completer>
+                </div>
+                <div class="col-md-3 col-xs-12">
+                    <label>&nbsp;</label>
+                    <button id="btnHSAProc" *ngIf="hsaProcCodeCheck[0].searchHsaProcCode == 'T'" class="btn green-btn"
+                        (click)="getHsaProc()">{{'button.search'|translate}}</button>
+                    <button id="btnClearHSAProc" class="btn grey-btn"
+                        (click)="resetVissionProc()">{{'button.clear'|translate}}</button>
+                </div>
+                <!-- Form Row ENds -->
+            </div>
+            <!-- Grid Inner Ends -->
+        </form>
+    </div>
+    <div [hidden]="!showSearchTable">
+        <div class="grid-box">
+            <div class="grid-heading">
+                <h3>{{'feeGuide.procedureCode.heading.proc-code-list'|translate}}</h3>
+            </div>
+            <div class="grid-inner">
+                <form>
+                    <div class="form-row">
+                        <div class="row">
+                            <div class="col-md-12 col-xs-12 table-col">
+                                <div class="table-responsive">
+                                    <table id="hsaProcedureCode"
+                                        class="display table table-bordered table-stripped alignRightText">
+                                        <thead>
+                                        </thead>
+                                        <tfoot>
+                                            <tr>
+                                                <td width="100px">
+                                                    <input [(ngModel)]="hsaProcIdL" id="hsapc_ProcId" type="text"
+                                                        class="fm-txt form-control inputSearch" name="hsaProcedureId"
+                                                        placeholder="{{'feeGuide.procedureCode.proc-code-listing.proc-id' | translate}}">
+                                                </td>
+                                                <td width="100px">
+                                                    <input [(ngModel)]="hsaProcedureDescL" id="hsapc_ProcDesc"
+                                                        type="text"
+                                                        class="fm-txt form-control inputSearch amount_right_grid"
+                                                        name="hsaProcedureDesc"
+                                                        placeholder="{{'feeGuide.procedureCode.proc-code-listing.desc-short' | translate}}">
+                                                </td>
+                                                <td width="200px">
+                                                    <input [(ngModel)]="hsaProcedureLongDescL" id="hsapc_ProcDescLong"
+                                                        type="text"
+                                                        class="fm-txt form-control inputSearch amount_right_grid"
+                                                        name="hsaProcedureLongDesc"
+                                                        placeholder="{{'feeGuide.procedureCode.proc-code-listing.desc-long' | translate}}">
+                                                </td>
+                                                <td width="50px">
+                                                    <div class="form-row text-right">
+                                                        <button title="{{'common.search' | translate}}"
+                                                            id="hsa_searchbtn" class="btn green-btn searchreset"
+                                                            type="submit"
+                                                            (click)="getProcCodeListByGridFilteration('hsaProcedureCode')">
+                                                            <span class="glyphicon glyphicon-search"></span>
+                                                        </button>
+                                                        <button title="{{'common.reset' | translate}}" id="hsa_resetbtn"
+                                                            class="btn grey-btn searchreset" (click)="getHsaProc()">
+                                                            <span class="glyphicon glyphicon-repeat"></span>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                                <!-- Table Ends -->
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="addHSAProcCode" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button id="vpca_close" type="button" class="close" data-dismiss="modal"
+                        (click)="resetaddProCodeOnClose()">&times;</button>
+                    <h4 class="modal-title">HSA Procedure Code</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="grid-box">
+                        <div class="grid-inner">
+                            <div class="form-row">
+                                <form [formGroup]="addHsaProcCodeForm">
+                                    <div class="row min-ht-sf">
+                                        <div class="col-md-3 col-xs-12">
+                                            <label>HSA Service
+                                                <span class="required">*</span>
+                                            </label>
+                                            <ng2-completer [inputId]="'hsapc_service'" formControlName="hsaService"
+                                                [datasource]="hsaProcDataRemote" [minSearchLength]="1"
+                                                [clearUnselected]="true" [placeholder]="'Search HSA Service'"
+                                                [textSearching]="'Please wait...'" [inputClass]="'form-control'"
+                                                [fillHighlighted]="true" [autoHighlight]="true" [selectOnFocus]="true"
+                                                (selected)="onSelect($event)">
+                                            </ng2-completer>
+                                            <show-errors
+                                                [control]="addHsaProcCodeForm.controls.hsaService"></show-errors>
+                                        </div>
+
+                                        <div class="col-md-3 col-xs-12">
+                                            <label>{{'feeGuide.procedureCode.proc-code-listing.proc-id'|translate}}
+                                                <span class="required">*</span>
+                                            </label>
+                                            <input id="hsapc_procID" type="text" OnlyNumber="true"
+                                                formControlName="procId" class="form-control"
+                                                placeholder="{{'feeGuide.procedureCode.proc-code-listing.proc-id'|translate}}"
+                                                (keydown)="isNumberKey($event)" />
+                                            <show-errors [control]="addHsaProcCodeForm.controls.procId"></show-errors>
+                                        </div>
+
+                                        <div class="col-md-6 col-xs-12 txtarea-height">
+                                            <label>{{'feeGuide.procedureCode.proc-code-listing.desc-short'|translate}}</label>
+                                            <textarea id="hsapc_sdesc" class="form-control notInCaps"
+                                                formControlName="descShort"
+                                                placeholder="{{'feeGuide.procedureCode.proc-code-listing.desc-short'|translate}}"></textarea>
+                                            <show-errors [control]="addHsaProcCodeForm.controls.descShort">
+                                            </show-errors>
+                                        </div>
+
+                                        <div class="col-md-6 col-xs-12 txtarea-height">
+                                            <label>{{'feeGuide.procedureCode.proc-code-listing.desc-long'|translate}}</label>
+                                            <textarea id="hsapc_ldesc" class="form-control notInCaps"
+                                                formControlName="descLong"
+                                                placeholder="{{'feeGuide.procedureCode.proc-code-listing.desc-long'|translate}}"></textarea>
+                                            <show-errors [control]="addHsaProcCodeForm.controls.descLong"></show-errors>
+                                        </div>
+
+                                    </div>
+                                </form>
+                            </div>
+                            <!-- Form Row ENds -->
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal Body End-->
+                <div class="modal-footer">
+                    <button id="hsapc_Update" class="green-btn btn" *ngIf="!viewMode"
+                        (keyup.arrowLeft)="focusNextEle($event,'fgpc_addDentalProcedure_close')"
+                        (keyup.arrowRight)="focusNextEle($event,'fgpc_addDentalProcedure_close')"
+                        (click)="saveProcedureCode()">{{buttonText}}</button>
+                    <button class="btn grey-btn" id="fgpc_addDentalProcedure_close" data-dismiss="modal"
+                        (keyup.arrowLeft)="focusNextEle($event,'hsapc_Update')"
+                        (keyup.arrowRight)="focusNextEle($event,'hsapc_Update')"
+                        (click)="resetaddProCodeOnClose()">{{'button.close'|translate}}</button>
+                </div>
+                <!-- Modal  Footer Ends -->
+            </div>
+        </div>
+    </div>
+    <div *ngIf="showLoader" class="loader-outer">
+        <div class="cube-wrapper">
+            <div class="cube-folding">
+                <span class="leaf1"></span>
+                <span class="leaf2"></span>
+                <span class="leaf3"></span>
+                <span class="leaf4"></span>
+            </div>
+            <span class="loading" data-name="Loading">{{loaderPlaceHolder}}</span>
+        </div>
+    </div>

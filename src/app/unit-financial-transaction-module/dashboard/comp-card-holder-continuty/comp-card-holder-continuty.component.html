@@ -1,0 +1,406 @@
+<div class="grid-box">
+  <div class="grid-heading">
+    <h3>{{'uft.dashboard.comp-cardholder-continuity.companyCardholderContinuity' | translate}}</h3>
+    <div *ngIf="showLastUpdated" class="web-reg">
+      <h3 class="lst-updated">{{'uft.dashboard.comp-cardholder-continuity.lastUpdated' | translate}} {{dateTime}}</h3>
+      <button [disabled]=showtableLoader (click)="ngOnInit()" class="claim-status btn status-btn"
+        style="cursor: pointer"><i class="fa fa-refresh" aria-hidden="true"></i></button>
+    </div>
+  </div>
+  <!-- Grid Heading Ends -->
+
+  <div class="grid-inner">
+    <div class="form-row">
+      <form [formGroup]="compCardholderData">
+        <div class="row min-ht-sf">
+          <div class="col-md-12 col-xs-12">
+            <div class="col-md-10 col-xs-12">
+              <div class="row">
+                <div class="col-md-3 col-xs-12">
+                  <label>
+                    <input id="uft_dashboardEffDate" type="radio" value="ED" (change)="enableDateField()" tabindex='0'
+                      formControlName="date">{{'uft.dashboard.comp-cardholder-continuity.CompEffDate'|translate}}
+                  </label>
+                  <label class="rd-middle">
+                    <input id="uft_dashboardSoldDate" tabindex="1" type="radio" value="SD" (change)="enableDateField()"
+                      formControlName="date">{{'uft.dashboard.comp-cardholder-continuity.CompSoldDate'|translate}}
+                  </label>
+                </div>
+                <div class="col-md-8 col-xs-12">
+                  <div class="row">
+                    <div class="col-md-6 col-xs-12">
+                      <label>{{'uft.dashboard.comp-cardholder-continuity.fromDate' | translate }}<span class="required">*</span></label>
+                      <div class="calender-field">
+                        <my-date-picker id="comp_cardFromDate" placeholder="{{'common.date-placeholder' | translate}}"
+                          [options]="myDatePickerOptions" name="fromDate"
+                          (inputFocusBlur)="changeDateFormat($event, 'fromDate' ,'compCardholderData')"
+                          formControlName="fromDate" #mydp="mydatepicker">
+                        </my-date-picker>
+                        <show-errors [control]="compCardholderData.controls.fromDate"></show-errors>
+                      </div>
+                    </div>
+                    <div class="col-md-6 col-xs-12">
+                      <label>{{'uft.dashboard.comp-cardholder-continuity.toDate' | translate }}<span class="required">*</span></label>
+                      <div class="calender-field">
+                        <my-date-picker id="comp_cardToDate" placeholder="{{'common.date-placeholder' | translate}}"
+                          [options]="myDatePickerOptions" name="toDate"
+                          (inputFocusBlur)="changeDateFormat($event, 'toDate' ,'compCardholderData')"
+                          formControlName="toDate" #mydpToDate="mydatepicker">
+                        </my-date-picker>
+                        <show-errors [control]="compCardholderData.controls.toDate"></show-errors>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-3 col-xs-12 min-ht-half">
+                <label>{{'uft.dashboard.comp-cardholder-continuity.brokerNameNum' | translate}}</label>
+                <div class="calender-field">
+                  <ng2-completer formControlName="broker" [datasource]="brokerData" [minSearchLength]="1"
+                    [openOnFocus]="true" (opened)="onOpened($event)" [fillHighlighted]="false"
+                    [placeholder]="'Search Broker Number-Name'" [textSearching]="'Please wait...'"
+                    [inputClass]="'form-control'" (selected)="onBrokerSelected($event)" [inputId]="'brokerNumberName'"
+                    [clearUnselected]="true">
+                  </ng2-completer>
+                  <show-errors [control]="compCardholderData.controls.broker"></show-errors>
+                </div>
+              </div>
+              <div class="col-md-3 col-xs-12 min-ht-half">
+                <label>{{'uft.dashboard.comp-cardholder-continuity.province' | translate}}</label>
+                <ng2-completer [inputName]="'provinceKey'" formControlName="provinceKey"
+                  [datasource]="provinceDataRemote" [minSearchLength]="0" [openOnFocus]="true"
+                  (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Search Province'"
+                  [textSearching]="'Please wait...'" [inputClass]="'form-control inputSearch'" data-type="predective"
+                  [inputId]="'finTaxRatesProvinceFooter'" id="finTaxRatesProvinceFooter"
+                  (selected)="onProvinceSelected($event)" [clearUnselected]="true">
+                </ng2-completer>
+              </div>
+              <div class="col-md-3 col-xs-12">
+                <label>&nbsp;</label>
+                <button class="btn green-btn" tabindex='0'
+                  (click)="getMainTableData('search','F')">{{'button.search'|translate}}</button>
+                <button class="grey-btn btn" tabindex='0'
+                  (click)="resetCompCardholderSearch()">{{'button.reset' | translate}}</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <!-- Form Row ENds -->
+  </div>
+</div>
+<!-- Grid Inner Ends -->
+<div class="grid-box">
+  <div class="grid-inner">
+    <div class="form-row">
+      <div class="row">
+        <div class="col-md-12 col-xs-12 table-col">
+          <div [ngClass]="{'tableLoader': showtableLoader}">
+            <div class="table-responsive">
+              <table id="card-continuity" class="table table-bordered table-stripped"
+                style="border: 2px solid#ddd !important;">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th class="amount_right_grid">
+                      {{'uft.dashboard.comp-cardholder-continuity.countOfCompanies' | translate}}</th>
+                    <th class="amount_right_grid">
+                      {{'uft.dashboard.comp-cardholder-continuity.countOfCardholders' | translate}}</th>
+                    <th class="amount_right_grid">
+                      {{'uft.dashboard.comp-cardholder-continuity.countOfCompaniesIncludeDept' | translate}}</th>
+                  </tr>
+                </thead>
+                <tbody *ngIf="mainTableData && !showtableLoader">
+                  <tr *ngIf="mainTableData.openingBalance">
+                    <th>{{'uft.dashboard.comp-cardholder-continuity.openingBal' | translate}}</th>
+                    <td class="amount_right_grid" style="cursor: pointer;" (click)="totalCompaniesList('OB')">
+                      {{mainTableData.openingBalance.countOfCompanies}}</td>
+                    <td class="amount_right_grid" style="cursor: pointer;" (click)="primaryCardholderList('OB')">
+                      {{mainTableData.openingBalance.countOfCardHolders}}</td>
+                    <td class="amount_right_grid" style="cursor: pointer;" (click)="dependentCardholderList('OB')">
+                      {{mainTableData.openingBalance.countOfCardHoldersDependents}}</td>
+                  </tr>
+                  <tr *ngIf="mainTableData.addedDuringDateRange">
+                    <th>{{'uft.dashboard.comp-cardholder-continuity.addDuringDateRange' | translate}}</th>
+                    <td class="amount_right_grid" style="cursor: pointer;" (click)="totalCompaniesList('AD')">
+                      {{mainTableData.addedDuringDateRange.countOfCompanies}}</td>
+                    <td class="amount_right_grid" style="cursor: pointer;" (click)="primaryCardholderList('AD')">
+                      {{mainTableData.addedDuringDateRange.countOfCardHolders}}</td>
+                    <td class="amount_right_grid" style="cursor: pointer;" (click)="dependentCardholderList('AD')">
+                      {{mainTableData.addedDuringDateRange.countOfCardHoldersDependents}}</td>
+                  </tr>
+                  <tr *ngIf="mainTableData.lostDuringDateRange">
+                    <th>{{'uft.dashboard.comp-cardholder-continuity.lostDuringDateRange' | translate}}</th>
+                    <td class="amount_right_grid" style="cursor: pointer;" (click)="totalCompaniesList('LD')">
+                      {{mainTableData.lostDuringDateRange.countOfCompanies > 0 ? '-'+mainTableData.lostDuringDateRange.countOfCompanies :0}}
+                    </td>
+                    <td class="amount_right_grid" style="cursor: pointer;" (click)="primaryCardholderList('LD')">
+                      {{mainTableData.lostDuringDateRange.countOfCardHolders > 0 ? '-'+mainTableData.lostDuringDateRange.countOfCardHolders : 0}}
+                    </td>
+                    <td class="amount_right_grid" style="cursor: pointer;" (click)="dependentCardholderList('LD')">
+                      {{mainTableData.lostDuringDateRange.countOfCardHoldersDependents > 0 ? '-'+mainTableData.lostDuringDateRange.countOfCardHoldersDependents : 0}}
+                    </td>
+                  </tr>
+                  <tr *ngIf="mainTableData.changesToCompany">
+                    <th>{{'uft.dashboard.comp-cardholder-continuity.changeToExistCompanies' | translate}}</th>
+                    <td class="amount_right_grid">{{mainTableData.changesToCompany.countOfCompanies}}</td>
+                    <td class="amount_right_grid" style="cursor: pointer;" (click)="primaryCardholderList('CTC')">
+                      {{mainTableData.changesToCompany.countOfCardHolders}}</td>
+                    <td class="amount_right_grid" style="cursor: pointer;" (click)="dependentCardholderList('CTC')">
+                      {{mainTableData.changesToCompany.countOfCardHoldersDependents}}</td>
+                  </tr>
+                  <tr *ngIf="mainTableData.closingBalance" class="total-row">
+                    <th>{{'uft.dashboard.comp-cardholder-continuity.closingBal' | translate}}</th>
+                    <td class="amount_right_grid" style="cursor: pointer;" (click)="totalCompaniesList('CB')">
+                      {{mainTableData.closingBalance.countOfCompanies}}</td>
+                    <td class="amount_right_grid" style="cursor: pointer;" (click)="primaryCardholderList('CB')">
+                      {{mainTableData.closingBalance.countOfCardHolders}}</td>
+                    <td class="amount_right_grid" style="cursor: pointer;" (click)="dependentCardholderList('CB')">
+                      {{mainTableData.closingBalance.countOfCardHoldersDependents}}</td>
+                  </tr>
+                  <tr *ngIf="mainTableData.length == 0 && !showtableLoader" class="odd">
+                    <td valign="top" colspan="5" style="text-align: center" class="dataTables_empty">
+                      {{'card.card-holder.data-tables.datamsg' | translate}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- Table Ends -->
+            <span *ngIf="showtableLoader" class="loading" data-name="Loading">{{'common.processing' | translate}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Form Row ENds -->
+  </div>
+  <!-- Grid Inner Ends -->
+</div>
+
+<div [hidden]="!showCompanyTable">
+  <div class="grid-box">
+    <div class="grid-heading">
+      <h3>{{'uft.dashboard.comp-cardholder-continuity.listOfCompanies' | translate}}</h3>
+    </div>
+    <!-- Grid Heading Ends -->
+    <div class="grid-inner">
+      <form (submit)="filterListOfCompaniesSearch('uftDashboard_totalCompany')">
+        <div class="form-row text-right search-top">
+          <button type="submit" id="companySearchFilterSearch" class="btn green-btn searchreset"
+            (click)="filterListOfCompaniesSearch('uftDashboard_totalCompany')" title="{{'common.search' | translate }}">
+            <span class="glyphicon glyphicon-search"></span>
+          </button>
+          <button id="companySearchFilterReset" class="btn grey-btn searchreset"
+            (click)="resetListOfCompanyiesFilter('uftDashboard_totalCompany')">
+            <span class="glyphicon glyphicon-repeat" title="{{'common.clear' | translate }}"></span>
+          </button>
+        </div>
+        <div class="form-row">
+          <div class="row">
+            <div class="col-md-12 col-xs-12 table-col">
+              <div class="table-responsive">
+                <table id="uftDashboard_totalCompany" class="display table table-bordered table-stripped addPointer">
+                  <thead>
+                  </thead>
+                  <!--[Start Grid Column Filter]-->
+                  <tfoot>
+                    <tr>
+                      <td width="50px">
+                        <input id="filterCompanyName" class="fm-txt form-control tFootInput inputSearch" type="text"
+                          placeholder="{{'uft.dashboard.comp-cardholder-continuity.companyNumName' | translate }}" name="company" [(ngModel)]="company" />
+                      </td>
+                      <td width="143px">
+                        <input id="filterBrokerName" class="fm-txt form-control tFootInput inputSearch in-number"
+                          type="text" placeholder="{{'uft.dashboard.comp-cardholder-continuity.brokerNoName' | translate }}" name="brokerName" [(ngModel)]="brokerName" />
+                      </td>
+                      <td width="50px">
+                        <input id="filterProvinceName" class="fm-txt form-control tFootInput inputSearch in-number" type="text"
+                          placeholder="{{'uft.dashboard.comp-cardholder-continuity.provinceName' | translate }}" name="provinceName" [(ngModel)]="provinceName" />
+                      </td>
+                      <td width="143px">
+                        <input id="filterPrimaryCardholderName"
+                          class="fm-txt form-control tFootInput inputSearch in-number" type="text"
+                          placeholder="{{'uft.dashboard.comp-cardholder-continuity.countOfPrimaryCardholders' | translate }}" name="primaryCardholder"
+                          [(ngModel)]="primaryCardholder" />
+                      </td>
+                      <td width="143px">
+                        <input id="filterCardholders" class="fm-txt form-control tFootInput inputSearch in-number"
+                          type="text" placeholder="{{'uft.dashboard.comp-cardholder-continuity.countOfCardholdersIncludingDependents' | translate }}" name="dependentCardholder"
+                          [(ngModel)]="dependentCardholder" />
+                      </td>
+                    </tr>
+                  </tfoot>
+                  <!--[End Grid Column Filter]-->
+                </table>
+                <div class="dropdown pull-right">
+                  <button class="btn green-btn dropdown-toggle" data-toggle="dropdown"
+                    style="float: right;margin-bottom:15px">{{'common.export' | translate}}
+                    <span class="caret"></span></button>
+                  <ul class="dropdown-menu">
+                    <li><a href="javascript:void(0)"
+                        (click)="exportCompanyContinuityData()">{{'common.excel' | translate}}</a></li>
+                  </ul>
+                </div>
+              </div>
+              <!-- Table Ends -->
+            </div>
+          </div>
+        </div>
+        <!-- Form Row ENds -->
+      </form>
+    </div>
+  </div>
+</div>
+
+<div [hidden]="!showPrimaryTable">
+  <div class="grid-box">
+    <div class="grid-heading">
+      <h3>{{'uft.dashboard.comp-cardholder-continuity.listOfPrimaryCardHolders' | translate}}</h3>
+    </div>
+    <!-- Grid Heading Ends -->
+    <div class="grid-inner">
+      <form (submit)="filterListOfPrimaryCardHolderSearch('uftDashboard_primaryCardholder')">
+        <div class="form-row text-right search-top">
+          <button type="submit" id="companySearchFilterSearch" class="btn green-btn searchreset"
+            (click)="filterListOfPrimaryCardHolderSearch('uftDashboard_primaryCardholder')" title="{{'common.search' | translate }}">
+            <span class="glyphicon glyphicon-search"></span>
+          </button>
+          <button id="primaryCardHolderReset" class="btn grey-btn searchreset"
+            (click)="resetPrimaryCardHolderFilter('uftDashboard_primaryCardholder')">
+            <span class="glyphicon glyphicon-repeat" title="{{'common.clear' | translate }}"></span>
+          </button>
+        </div>
+        <div class="form-row">
+          <div class="row">
+            <div class="col-md-12 col-xs-12 table-col">
+              <div class="table-responsive">
+                <table id="uftDashboard_primaryCardholder" class="display table table-bordered table-stripped">
+                  <thead>
+                  </thead>
+                  <!--[Start Grid Column Filter]-->
+                  <tfoot>
+                    <tr>
+                      <td width="50px">
+                        <input id="filterCompanyName" class="fm-txt form-control tFootInput inputSearch" type="text"  [(ngModel)]="pcCompany"
+                          placeholder="{{'uft.dashboard.comp-cardholder-continuity.companyNumName' | translate }}" name="company" />
+                      </td>
+                      <td width="143px">
+                        <input id="filterBrokerName" class="fm-txt form-control tFootInput inputSearch in-number"  [(ngModel)]="pcCardholderName"
+                          type="text" placeholder="{{'uft.dashboard.comp-cardholder-continuity.cardholderName' | translate }}" name="cardHolderName" />
+                      </td>
+                      <td width="50px">
+                        <input id="filterCountDependent" class="fm-txt form-control tFootInput inputSearch in-number" type="text"  [(ngModel)]="pcCountDependent"
+                          placeholder="{{'uft.dashboard.comp-cardholder-continuity.countDependent' | translate }}" name="countDependent" />
+                      </td>
+                    </tr>
+                  </tfoot>
+                  <!--[End Grid Column Filter]-->
+                </table>
+                <div class="dropdown pull-right">
+                  <button class="btn green-btn dropdown-toggle" data-toggle="dropdown"
+                    style="float: right;margin-bottom:15px">{{'common.export' | translate}}
+                    <span class="caret"></span></button>
+                  <ul class="dropdown-menu">
+                    <li><a href="javascript:void(0)"
+                        (click)="exportCardholderContinuityData('primary')">{{'common.excel' | translate}}</a></li>
+                  </ul>
+                </div>
+              </div>
+              <!-- Table Ends -->
+              <div *ngIf="showPrimaryColors">
+                <ul class="color-list">
+                  <li>
+                    <span class="color-des green-color"></span>
+                    <h5>{{'uft.dashboard.comp-cardholder-continuity.added' | translate}}</h5>
+                  </li>
+                  <li>
+                    <span class="color-des red-color"></span>
+                    <h5>{{'uft.dashboard.comp-cardholder-continuity.lost' | translate}}</h5>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Form Row ENds -->
+      </form>
+    </div>
+  </div>
+</div>
+<div [hidden]="!showDependentTable">
+  <div class="grid-box">
+    <div class="grid-heading">
+      <h3>{{'uft.dashboard.comp-cardholder-continuity.listOfDependCardHolders' | translate}}</h3>
+    </div>
+    <!-- Grid Heading Ends -->
+    <div class="grid-inner">
+      <form (submit)="filterListOfDependentCardHolderSearch('uftDashboard_dependentCardholder')">
+        <div class="form-row text-right search-top">
+          <button type="submit" id="companySearchFilterSearch" class="btn green-btn searchreset"
+            (click)="filterListOfDependentCardHolderSearch('uftDashboard_dependentCardholder')" title="{{'common.search' | translate }}">
+            <span class="glyphicon glyphicon-search"></span>
+          </button>
+          <button id="primaryCardHolderReset" class="btn grey-btn searchreset"
+            (click)="resetDependentCardHolderFilter('uftDashboard_dependentCardholder')">
+            <span class="glyphicon glyphicon-repeat" title="{{'common.clear' | translate }}"></span>
+          </button>
+        </div>
+        <div class="form-row">
+          <div class="row">
+            <div class="col-md-12 col-xs-12 table-col">
+              <div class="table-responsive">
+                <table id="uftDashboard_dependentCardholder" class="display table table-bordered table-stripped">
+                  <thead>
+                  </thead>
+                  <!--[Start Grid Column Filter]-->
+                  <tfoot>
+                    <tr>
+                      <td width="50px">
+                        <input id="filterCompanyName" class="fm-txt form-control tFootInput inputSearch" type="text" [(ngModel)]="dcCompany"
+                          placeholder="{{'uft.dashboard.comp-cardholder-continuity.companyNumName' | translate }}" name="company" />
+                      </td>
+                      <td width="143px">
+                        <input id="filterBrokerName" class="fm-txt form-control tFootInput inputSearch in-number"  [(ngModel)]="dcCardholderName"
+                          type="text" placeholder="{{'uft.dashboard.comp-cardholder-continuity.cardholderName' | translate }}" name="cardHolderName" />
+                      </td>
+                      <td width="50px">
+                        <input id="filterCountDependent" class="fm-txt form-control tFootInput inputSearch in-number" type="text" [(ngModel)]="dcCountDependent"
+                          placeholder="{{'uft.dashboard.comp-cardholder-continuity.countDependent' | translate }}" name="countDependent" />
+                      </td>
+                    </tr>
+                  </tfoot>
+                  <!--[End Grid Column Filter]-->
+                </table>
+                <div class="dropdown pull-right">
+                  <button class="btn green-btn dropdown-toggle" data-toggle="dropdown"
+                    style="float: right;margin-bottom:15px">{{'common.export' | translate}}
+                    <span class="caret"></span></button>
+                  <ul class="dropdown-menu">
+                    <li><a href="javascript:void(0)"
+                        (click)="exportCardholderContinuityData('dependent')">{{'common.excel' | translate}}</a></li>
+                  </ul>
+                </div>
+              </div>
+              <!-- Table Ends -->
+              <div *ngIf="showColors">
+                <ul class="color-list">
+                  <li>
+                    <span class="color-des green-color"></span>
+                    <h5>{{'uft.dashboard.comp-cardholder-continuity.added' | translate}}</h5>
+                  </li>
+                  <li>
+                    <span class="color-des red-color"></span>
+                    <h5>{{'uft.dashboard.comp-cardholder-continuity.lost' | translate}}</h5>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Form Row ENds -->
+      </form>
+    </div>
+  </div>
+</div>

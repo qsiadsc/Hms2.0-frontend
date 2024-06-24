@@ -1,0 +1,29 @@
+a#suspend_division_history {
+  bottom: 0px;
+  right: 20px;
+}
+
+a#coverage_rule_history {
+  bottom: 22px;
+  position: inherit;
+}
+
+a#unit_comment_history,
+a#division_maximum_history {
+  position: inherit;
+}
+
+#div_comment_history {
+  bottom: 25px !important;
+  position: absolute !important;
+  float: right !important;
+  right: 20px !important;
+}
+
+#standard_pap_history,
+#admin_rate_history,
+#adjusted_pap_history {
+  top: 7px !important;
+  position: absolute !important;
+  right: 0px !important;
+}

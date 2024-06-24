@@ -1,0 +1,257 @@
+<div class="col-sm-6 col-xs-12">
+  <div class="form-row">
+    <div class="grid-box">
+      <div class="grid-heading">
+        <h3>{{'serviceProvider.serviceProvider-search.speciality'|translate}}</h3>
+        <div class="web-reg">
+          <button id="addNewTopUpMax" *ngIf="serviceProviderChecks[0].addNewSpeciality == 'T'"
+            title="Add New Specialty History" class="green-btn-add btn upperCase" (click)="AddNew()"><i
+              class="fa fa-plus"></i>{{'button.add-new'|translate}}</button>
+        </div><!-- Web Reg Ends -->
+      </div><!-- Grid HEading Ends -->
+
+      <div class="grid-inner">
+        <div class="form-row">
+          <div class="row">
+            <div class="col-md-12 col-xs-12 table-col">
+              <div class="table-responsive">
+                <table id="SPGridSpeciality" datatable [dtOptions]="dtOptions['SPGridSpeciality']"
+                  [dtTrigger]="dtTrigger['SPGridSpeciality']" class="table table-bordered table-stripped dataTable">
+                  <thead>
+                    <tr>
+                      <th width="20%">{{'serviceProvider.serviceProvider-search.speciality'|translate}}</th>
+                      <th class="amount_right" width="20%">{{'claim-service-provider.licenseNumber'|translate}}</th>
+                      <th class="amount_right" width="20%">
+                        {{ 'card.card-eligibility.over-rides.card-maximums.top-up-maximums.effective-date' | translate }}
+                      </th>
+                      <th class="amount_right" width="20%">
+                        {{ 'card.card-eligibility.over-rides.card-maximums.top-up-maximums.expiry-date' | translate }}
+                      </th>
+                      <th class="amount_right" width="20%">
+                        {{ 'card.card-eligibility.over-rides.card-maximums.top-up-maximums.action' | translate }}</th>
+                    </tr>
+                  </thead>
+                  <tbody *ngIf="serviceProviderAddMode">
+                    <tr *ngIf="arrData.length == 0 && !addMode" class="odd">
+                      <td valign="top" colspan="6" class="dataTables_empty">
+                        {{'card.card-holder.data-tables.datamsg' | translate}}</td>
+                    </tr>
+
+                    <tr *ngFor="let dataRow of arrData;let i = index">
+                      <td>
+                        <span *ngIf="dataRow.idx != selectedRowId">{{dataRow.provSpecialDesc}}</span>
+                        <select [(ngModel)]="dataRow.provSpecKey" class="form-control" id="ddlSpProvSpecKey{{i}}"
+                          [ngClass]="{ 'error_field': dataRow.provSpecKey == ''}" *ngIf="dataRow.idx == selectedRowId">
+                          <option hidden value="">{{'common.select' | translate}}</option>
+                          <option value="{{periodType.provSpecialKey}}" *ngFor="let periodType of arrSplDiscType">
+                            {{periodType.provSpecialDesc}}
+                          </option>
+                        </select>
+                      </td>
+                      <td class="amount_right">
+                        <span *ngIf="dataRow.idx != selectedRowId">{{dataRow.provLicenseNum}}</span>
+                        <input type="text" name="provLicenseNum{{i}}" OnlyAlphaNumeric="true" minlength="5"
+                          maxlength="20" value="{{dataRow.provLicenseNum}}" [(ngModel)]="dataRow.provLicenseNum"
+                          id="txtProvLicenseNum{{i}}" *ngIf="dataRow.idx == selectedRowId"
+                          (blur)="ValidateControls($event,'License Number')"
+                          [ngClass]="{ 'error_field': dataRow.provLicenseNum == '' || dataRow.provLicenseNum.length < 5 || dataRow.provLicenseNum.length >20, 'fm-txt': true, 'form-control':true }">
+                      </td>
+                      <td class="amount_right">
+                        <span *ngIf="dataRow.idx != selectedRowId">{{dataRow.effectiveOn  | dateFormate}}</span>
+                        <my-date-picker id="txtEffectiveOn{{i}}" [options]="myDatePickerOptions"
+                          placeholder="{{'common.date-placeholder' | translate}}" name="EffectiveOn{{i}}"
+                          (inputFocusBlur)="ChangeInputDateFormat($event,i, 'effectiveOn')"
+                          [ngClass]="{ 'error_field': newRecordValidate && dataRow.effectiveOn == '' }"
+                          [(ngModel)]="updateEffectiveRow[i]" *ngIf="dataRow.idx == selectedRowId ">
+                        </my-date-picker>
+                      </td>
+                        <td class="amount_right">
+                        <span *ngIf="dataRow.idx != selectedRowId && dataRow.checkDate" style="color: rgb(235, 87, 87);font-weight: bold;">{{dataRow.expiredOn  | dateFormate}}</span>
+                        <span *ngIf="dataRow.idx != selectedRowId && !dataRow.checkDate">{{dataRow.expiredOn  | dateFormate}}</span>
+                        <my-date-picker id="txtExpireOn{{i}}" [options]="myDatePickerOptions"
+                          placeholder="{{'common.date-placeholder' | translate}}" name="expiredOn{{i}}"
+                          (inputFocusBlur)="ChangeInputDateFormat($event,i, 'expiredOn')"
+                          [(ngModel)]="updateExpiredRow[i]" *ngIf="dataRow.idx == selectedRowId " [ngClass]="expired ? 'expired' : 'notExpired'">
+                        </my-date-picker>
+                      </td>
+
+                      <td class="amount_right">
+                        <a (click)="EditInfo(dataRow, i)" title="{{'common.edit' | translate}}"
+                          [ngClass]="{ 'edit_row': true,'table-action-btn': true,'edit-ico': true, 'disabled': serviceProviderViewMode}"
+                          *ngIf="serviceProviderAddMode && dataRow.idx != selectedRowId && serviceProviderChecks[0].editSpeciality == 'T'">
+                          <i class='fa fa-pencil'></i>
+                        </a>
+                        <a (click)="UpdateInfo(dataRow, i)" class="save_row table-action-btn edit-ico"
+                          *ngIf="dataRow.idx == selectedRowId && serviceProviderChecks[0].editSpeciality == 'T'">
+                          <i class="fa fa-save"></i>
+                        </a>
+                        <a href="javascript:void(0)" title="{{'common.delete' | translate}}"
+                          class="delete_row table-action-btn del-ico" (click)="CancelInfo()"
+                          *ngIf="dataRow.idx == selectedRowId && serviceProviderChecks[0].deleteSpeciality == 'T'">
+                          <i class="fa fa-times"></i></a>
+                      </td>
+                    </tr>
+
+                    <tr class="tableRow" *ngIf="addMode">
+                      <td>
+                        <select [(ngModel)]="arrNewRow.provSpecKey" class="form-control" id="ddlSpProvSpecKey"
+                          [ngClass]="{ 'error_field': newRecordValidate && arrNewRow.provSpecKey == ''}">
+                          <option hidden value="">{{'common.select' | translate}}</option>
+                          <option value="{{periodType.provSpecialKey}}" *ngFor="let periodType of arrSplDiscType">
+                            {{periodType.provSpecialDesc}}
+                          </option>
+                        </select>
+                      </td>
+                      <td>
+                        <input type="text" name="ProvLicenseNum" OnlyAlphaNumeric="true" minlength="5" maxlength="20"
+                          (blur)="ValidateControls($event,'License Number')" [(ngModel)]="arrNewRow.provLicenseNum"
+                          class="fm-txt form-control" id="txtProvLicenseNum"
+                          [ngClass]="{ 'error_field': newRecordValidate && (arrNewRow.provLicenseNum == '' || arrNewRow.provLicenseNum.length < 5 || arrNewRow.provLicenseNum.length >20), 'fm-txt': true, 'form-control':true }">
+                      </td>
+                      <td>
+                        <my-date-picker id="txtEffectiveOn" [options]="myDatePickerOptions"
+                          placeholder="{{'common.date-placeholder' | translate}}" name="effectiveOn"
+                          (inputFocusBlur)="ChangeInputDateFormat($event,0, 'effectiveOn')"
+                          [ngClass]="{ 'error_field': newRecordValidate && arrNewRow.effectiveOn == '' }"
+                          [(ngModel)]="arrNewRow.effectiveOn">
+                        </my-date-picker>
+                      </td>
+                      <td class="expiryDate">
+                        <my-date-picker id="txtExpireOn" [options]="myDatePickerOptions"
+                          placeholder="{{'common.date-placeholder' | translate}}" name="expiredOn"
+                          [ngClass]="expired  ? 'expired' : 'notExpired'"
+                          (inputFocusBlur)="ChangeInputDateFormat($event,0, 'expiredOn')"
+                          [(ngModel)]="arrNewRow.expiredOn">
+                        </my-date-picker>
+                      </td>
+                      <td>
+                        <a href="javascript:void(0)" title="{{'common.save' | translate}}"
+                          class="save_row table-action-btn edit-ico" (click)="SaveInfo()">
+                          <i class="fa fa-save"></i>
+                        </a>
+                        <a href="javascript:void(0)" title="{{'common.delete' | translate}}"
+                          class="delete_row table-action-btn del-ico"
+                          *ngIf="serviceProviderChecks[0].deleteSpeciality == 'T'" (click)="DeleteInfo()">
+                          <i class="fa fa-times"></i>
+                        </a>
+                      </td>
+                    </tr>
+                  </tbody>
+
+                  <tbody *ngIf="serviceProviderEditMode || serviceProviderViewMode">
+                    <tr *ngIf="arrData.length == 0 && !addMode" class="odd">
+                      <td valign="top" colspan="6" class="dataTables_empty">
+                        {{'card.card-holder.data-tables.datamsg' | translate}}</td>
+                    </tr>
+                    <tr *ngFor="let dataRow of arrData;let i = index">
+                      <td>
+                        <span *ngIf="dataRow.provSpecAssgnKey != selectedRowId">{{dataRow.provSpecialDesc}}</span>
+                        <select [(ngModel)]="dataRow.provSpecKey" class="form-control" id="ddlSpProvSpecKey{{i}}"
+                          [ngClass]="{ 'error_field': dataRow.provSpecKey == ''}"
+                          *ngIf="dataRow.provSpecAssgnKey == selectedRowId">
+                          <option hidden value="">Select</option>
+                          <option value="{{periodType.provSpecialKey}}" *ngFor="let periodType of arrSplDiscType">
+                            {{periodType.provSpecialDesc}}
+                          </option>
+                        </select>
+                      </td>
+                      <td class="amount_right">
+                        <span *ngIf="dataRow.provSpecAssgnKey != selectedRowId">{{dataRow.provLicenseNum}}</span>
+                        <input type="text" name="provLicenseNum{{i}}" OnlyAlphaNumeric="true" minlength="5"
+                          maxlength="20" value="{{dataRow.provLicenseNum}}" [(ngModel)]="dataRow.provLicenseNum"
+                          id="txtProvLicenseNum{{i}}" *ngIf="dataRow.provSpecAssgnKey == selectedRowId"
+                          (blur)="ValidateControls($event,'License Number')"
+                          [ngClass]="{ 'error_field': dataRow.provLicenseNum == '' || dataRow.provLicenseNum.length < 5 || dataRow.provLicenseNum.length >20, 'fm-txt': true, 'form-control':true }">
+                      </td>
+                      <td class="amount_right">
+                        <span
+                          *ngIf="dataRow.provSpecAssgnKey != selectedRowId">{{dataRow.effectiveOn  | dateFormate}}</span>
+                        <my-date-picker id="txtEffectiveOn{{i}}" [options]="myDatePickerOptions"
+                          placeholder="{{'common.date-placeholder' | translate}}" name="EffectiveOn{{i}}"
+                          (inputFocusBlur)="ChangeInputDateFormat($event,i, 'effectiveOn')"
+                          [ngClass]="{ 'error_field': newRecordValidate && dataRow.effectiveOn == '' }"
+                          [(ngModel)]="updateEffectiveRow[i]" *ngIf="dataRow.provSpecAssgnKey == selectedRowId ">
+                        </my-date-picker>
+                      </td>
+                        <td class="amount_right">
+                        <span *ngIf="dataRow.provSpecAssgnKey != selectedRowId && dataRow.checkDate" style="color: rgb(235, 87, 87);font-weight: bold;">{{dataRow.expiredOn  | dateFormate}}</span>
+                        <span *ngIf="dataRow.provSpecAssgnKey != selectedRowId && !dataRow.checkDate">{{dataRow.expiredOn  | dateFormate}}</span>
+                        <my-date-picker id="txtExpireOn{{i}}" [options]="myDatePickerOptions"
+                          placeholder="{{'common.date-placeholder' | translate}}" name="expiredOn{{i}}"
+                          [ngClass]="expired  ? 'expired' : 'notExpired'"
+                          (inputFocusBlur)="ChangeInputDateFormat($event,i, 'expiredOn')"
+                          [(ngModel)]="updateExpiredRow[i]" *ngIf="dataRow.provSpecAssgnKey == selectedRowId ">
+                        </my-date-picker>
+                      </td>
+                      <td class="amount_right">
+                        <a dir="rtl" (click)="EditInfo(dataRow, i)" title="{{'common.edit' | translate}}"
+                          [ngClass]="{ 'edit_row': true,'table-action-btn': true,'edit-ico': true, 'disabled': serviceProviderViewMode}"
+                          *ngIf="(serviceProviderEditMode || serviceProviderViewMode) && dataRow.latest == 'latest' && dataRow.provSpecAssgnKey != selectedRowId && serviceProviderChecks[0].editSpeciality == 'T'">
+                          <i dir="rtl" class='fa fa-pencil'></i>
+                        </a>
+                        <a (click)="UpdateInfo(dataRow, i)" class="save_row table-action-btn edit-ico"
+                          *ngIf="dataRow.provSpecAssgnKey == selectedRowId && serviceProviderChecks[0].editSpeciality == 'T'">
+                          <i dir="rtl" class="fa fa-save"></i>
+                        </a>
+                        <a href="javascript:void(0)" title="{{'common.delete' | translate}}"
+                          class="delete_row table-action-btn del-ico" (click)="CancelInfo(i, dataRow)"
+                          *ngIf="dataRow.provSpecAssgnKey == selectedRowId && serviceProviderChecks[0].deleteSpeciality == 'T'">
+                          <i class="fa fa-times"></i></a>
+                      </td>
+                    </tr>
+
+                    <tr class="tableRow" *ngIf="addMode">
+                      <td>
+                        <select [(ngModel)]="arrNewRow.provSpecKey" class="form-control" id="ddlSpProvSpecKey"
+                          [ngClass]="{ 'error_field': newRecordValidate && arrNewRow.provSpecKey == ''}">
+                          <option hidden value="">{{'common.select' | translate}}</option>
+                          <option value="{{periodType.provSpecialKey}}" *ngFor="let periodType of arrSplDiscType">
+                            {{periodType.provSpecialDesc}}
+                          </option>
+                        </select>
+                      </td>
+                      <td>
+                        <input type="text" name="ProvLicenseNum" OnlyAlphaNumeric="true" minlength="5" maxlength="20"
+                          (blur)="ValidateControls($event,'License Number')" [(ngModel)]="arrNewRow.provLicenseNum"
+                          class="fm-txt form-control" id="txtProvLicenseNum"
+                          [ngClass]="{ 'error_field': newRecordValidate && (arrNewRow.provLicenseNum == '' || arrNewRow.provLicenseNum.length < 5 || arrNewRow.provLicenseNum.length >20), 'fm-txt': true, 'form-control':true }">
+                      </td>
+                      <td>
+                        <my-date-picker id="txtEffectiveOn" [options]="myDatePickerOptions"
+                          placeholder="{{'common.date-placeholder' | translate}}" name="effectiveOn"
+                          (inputFocusBlur)="ChangeInputDateFormat($event,0, 'effectiveOn')"
+                          [ngClass]="{ 'error_field': newRecordValidate && arrNewRow.effectiveOn == '' }"
+                          [(ngModel)]="arrNewRow.effectiveOn">
+                        </my-date-picker>
+                      </td>
+                      <td>
+                        <my-date-picker id="txtExpireOn" [options]="myDatePickerOptions"
+                          placeholder="{{'common.date-placeholder' | translate}}" name="expiredOn"
+                          [ngClass]="expired  ? 'expired' : 'notExpired'"
+                          (inputFocusBlur)="ChangeInputDateFormat($event,0, 'expiredOn')"
+                          [(ngModel)]="arrNewRow.expiredOn">
+                        </my-date-picker>
+                      </td>
+                      <td>
+                        <a href="javascript:void(0)" title="{{'common.save' | translate}}"
+                          class="save_row table-action-btn edit-ico" (click)="SaveInfo()">
+                          <i class="fa fa-save"></i>
+                        </a>
+                        <a href="javascript:void(0)" title="{{'common.delete' | translate}}"
+                          class="delete_row table-action-btn del-ico"
+                          *ngIf="serviceProviderChecks[0].deleteSpeciality == 'T'" (click)="DeleteInfo()">
+                          <i class="fa fa-times"></i>
+                        </a>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <!-- Form Row ENds -->
+        </div>
+        <!-- Grid Inner Ends -->
+      </div>
+      <!-- Grid Box Ends -->
+    </div><!-- Form Row Ends -->

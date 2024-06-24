@@ -1,0 +1,227 @@
+<div class="form-row">
+        <ul class="nav sub-tabs nav-pills" id="rule-tabs">
+            <li *ngFor="let val of tabTitle; let first=first" (click)="tabClick(val.key)" id="{{val.key}}-rule"
+                [ngClass]="{ active: selectedItem ==  val.key }">
+                <a data-toggle="pill" href="#rule-{{val.key}}">{{val.title}}</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div *ngFor="let val of tabTitle; let first=first" id="rule-{{val.key}}" class="tab-pane fade in active"
+                [ngClass]="{ active: selectedItem ==  val.key}">
+                <div class="form-row" *ngIf="checkBenefitCat">
+                    <div *ngIf="rulesList == true">
+                        <div class="row min-ht-sf">
+                            <form [formGroup]="FormGroup">
+                                <div class="col-md-3 col-xs-12">
+                                    <label>{{'company.plan.rules.coverage' | translate}}</label>
+                                    <select id="planRulesCoverageCategory" class="fm-txt form-control"
+                                        formControlName="coverageCat" (change)="covCatChange($event)"
+                                        [(ngModel)]='selectedCovCatValue'>
+                                        <option *ngFor="let covCat of coverageCategory;" [value]="covCat.covCatKey"
+                                            [attr.data-coverageCatName]="covCat.covCatDesc"
+                                            [selected]="selectedCovCatValue == covCat.covCatKey">{{covCat.covCatDesc}}
+                                        </option>
+                                    </select>
+                                    <show-errors [control]="FormGroup.controls.coverageCat"></show-errors>
+                                </div>
+                                <div class="col-md-3 col-xs-12">
+                                    <label>{{'company.plan.plan-view.effective-date' | translate}}</label>
+                                    <div class="calender-field">
+                                        <my-date-picker id="planRulesEffectiveOn" [options]="myDatePickerOptions"
+                                            name="effectiveDate" placeholder="dd/mmm/yyyy" formControlName="effectiveDate"
+                                            (inputFocusBlur)="changeDateFormat($event, 'effectiveDate', 'FormGroup',true);triggerRuleDropDownWhenEff($event,val.key)">
+                                        </my-date-picker>
+                                        <show-errors [control]="FormGroup.controls.effectiveDate"></show-errors>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-xs-12" *ngIf="isUpdateRule">
+                                    <label>{{'company.plan.plan-view.expiry-date' | translate}}</label>
+                                    <div class="calender-field">
+                                        <my-date-picker id="planRulesExpiredOn" [options]="myDatePickerOptions"
+                                            name="expiryDate" [ngClass]="expired  ? 'expired' : 'notExpired'"
+                                            placeholder="dd/mmm/yyyy" formControlName="expiryDate"
+                                            (inputFocusBlur)="changeDateFormat($event, 'expiryDate', 'FormGroup',true);">
+                                        </my-date-picker>
+                                        <show-errors [control]="FormGroup.controls.expiryDate"></show-errors>
+                                    </div>
+                                </div>
+                                <div class="col-md-8 col-xs-12">
+                                    <label>{{'company.plan.rules.rules' | translate}}</label>
+                                    <div id="rulesSelect-{{val.key}}">
+                                        <angular2-multiselect tabindex="0" class="form-control" [data]="rulesDropDown"
+                                            [(ngModel)]="selectedItems" formControlName="rules" #setFocus
+                                            [settings]="dropdownSettings" ng-click="showDropDown(true)">
+                                        </angular2-multiselect>
+                                    </div>
+                                    <show-errors [control]="FormGroup.controls.rules"></show-errors>
+                                </div>
+                                <!-- Changes made in below div to correct (add button active behind pop-up) Problem  -->
+                                <div class="col-md-2 col-xs-12 text-right alignAddRuleButton me-4" *ngIf="!isUpdateRule">
+                                    <label>&nbsp;</label>
+                                    <button class="btn green-btn m-0"
+                                        (click)="addRules(FormGroup)">{{'button.add-rule' | translate}}</button>
+                                </div>
+                                <!-- Changes made in below div to correct (Update button active behind pop-up) Problem  -->
+                                <div class="col-md-2 col-xs-12 text-right alignUpdateRuleButton me-1 p-0" *ngIf="isUpdateRule">
+                                    <label>&nbsp;</label>
+                                    <button class="btn green-btn m-0"
+                                        (click)="updateRule(FormGroup)">{{'button.update-rule' | translate}}</button>
+                                </div>
+                                <!-- for issue number 708 . start -->
+                                <!-- Changes made in below div to align button  -->
+                                <div class="col-md-2 col-xs-12 text-right alignSearchRuleButton " *ngIf="val.key === 'dentalRule'"> 
+                                    <label>&nbsp;</label>
+                                    <button class="btn green-btn m-0" (click) ="openRulesPage(val.key)">{{'company.plan.search-rule' | translate}}</button>
+                                </div>
+                                <!-- for issue number 708 . end -->
+                            </form>
+                            
+                          <div class="col-xs-12 min-ht-half" *ngIf="deletedItemsExist">
+                                <div class="pull-right">
+                                    <button id="planRulesDelete" class="btn red-btn" [disabled]="disableDelete"
+                                        (click)="deleteAllRules()">{{'button.delete-rules' | translate}}</button>
+                                </div>
+                            </div>
+                            <div class="grid-box" *ngIf="isCoverageRuleHistoryExist == true && isEditMode">
+                                <div class="grid-heading">
+                                    <h3>Rules Coverage History</h3>
+                                    <span id="history_coverage_rule">
+                                        <app-history-icons [attr.data-toggle]="dataToggle"
+                                            [attr.data-target]="coverageRuleDataTarget" [id]="coverageRuleId"
+                                            [title]="coverageRuleTitle" [class]="coverageRuleClass"
+                                            (click)="getCoverageRuleHistory()">
+                                        </app-history-icons>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-xs-12 table-col">
+                                <div class="table-responsive" id="plan-table">
+                                    <!-- Task 99 Dropdown to select items per page in rules table -->
+                                    <div class="resultsDropdown" style="margin-bottom: 1%;">Show
+                                        <select [(ngModel)]='defaultSelectDropDown' (change)='itemsPerPageCountChange($event.target.value)'>
+                                            <option value="5">5</option>
+                                            <option value="10">10</option>
+                                            <option value="15">15</option>
+                                            <option value="20">20</option>
+                                        </select> entries
+                                    </div>
+                                    <!-- Task 99 offset added and value of limit changed -->
+                                    <ngx-datatable id="rulesTable" [offset]="tableOffset" [rows]="rows" [columns]='columns1' [headerHeight]="50"
+                                        [footerHeight]="50" [rowHeight]="'auto'" [messages]="{emptyMessage: 'No data available in table'}" [limit]="this.itemsPerPageCount">
+                                        <ngx-datatable-column [sortable]="false" prop="covDesc"
+                                            name="{{this.dataTableColumnName}} Coverage" [width]="300">
+                                        </ngx-datatable-column>
+                                        <ngx-datatable-column [sortable]="false" prop="ruleDesc" name="Rule Description">
+                                        </ngx-datatable-column>
+                                        <ngx-datatable-column [sortable]="false" prop="effectiveOn" name="Effective Date"
+                                            [cellClass]="my-custom-cell">
+                                            <ng-template let-row="row" let-value="value" let-rowIndex="rowIndex"
+                                                ngx-datatable-cell-template>
+                                                {{value | dateFormate}}
+                                            </ng-template>
+                                        </ngx-datatable-column>
+                                        <ngx-datatable-column *ngIf="isEditMode" [sortable]="false" prop="expireOn"
+                                            name="Expiry Date">
+                                            <ng-template let-row="row" let-value="value" let-rowIndex="rowIndex"
+                                                ngx-datatable-cell-template>
+                                                {{value | dateFormate}}
+                                            </ng-template>
+                                        </ngx-datatable-column>
+    
+                                        <ngx-datatable-column [sortable]="false" name="Action" sortable="false"
+                                            prop="covKey">
+                                            <ng-template let-row="row" let-value="value" let-rowIndex="rowIndex"
+                                                ngx-datatable-cell-template>
+                                                <!-- Condition of show/hide removed because has to show in edit and copy division both modes. -->
+                                                <button md-icon-button (click)="editRule(row,rowIndex)"
+                                                    class="edit-ico">
+                                                    <i class="fa fa-pencil"></i>
+                                                </button>
+                                                <!-- issue no 339 jagveer -->
+                                                <button *ngIf='row.covRuleAssgnKey' [disabled]="disableDelete" md-icon-button
+                                                (click)="deleteRule(row.coverageKey,row.ruleKey,rowIndex)"
+                                                class="del-ico">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                            <button *ngIf='!row.covRuleAssgnKey' md-icon-button
+                                                (click)="deleteRule(row.coverageKey,row.ruleKey,rowIndex)"
+                                                class="del-ico">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                               <!-- issue no 339 -->
+                                            </ng-template>
+                                        </ngx-datatable-column>
+                                        
+                                    </ngx-datatable>
+                                    <!-- Task 99 Below 2 lines to show count of pagination in rules of plan in company -->
+                                    <h3 [hidden]="showZeroCount" style="position: relative; z-index: 2; margin-top: -34px; background: white; width: 200px">{{totalMessage}}</h3>
+                                    <h3 [hidden]="!showZeroCount" style="position: relative; z-index: 2; margin-top: -34px; background: white; width: 200px">Showing 0 to 0 of 0 entries</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="blank-message" *ngIf="rulesList == false">
+                        {{'common.no-rule-available' | translate}}
+                    </div>
+                </div>
+                <ng-template #CovCatMsg>
+                    <div *ngIf="!checkBenefitCat" class="blank-message">
+                        {{'company.plan.rules.select-coverage-cat' | translate}}</div>
+                </ng-template>
+                <ng-template #pageComingSoon>
+                    <div *ngIf="!checkBenefitCat" class="blank-message">
+                        {{'company.plan.rules.page-coming-soon' | translate}}</div>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+    <!-- Coverage Rule History  Modal -->
+    <div id="coverageRuleHistory" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button id="coverageRuleHistoryClose" type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">{{ 'company.plan.rules.coverageRuleHistory' | translate }}</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="grid-box">
+                        <div class="grid-inner">
+                            <div class="form-row">
+                                <div class="row">
+                                    <div class="col-md-12 col-xs-12 table-col">
+                                        <div class="table-responsive">
+                                            <table id="coverage_rule" class="table table-bordered table-stripped">
+                                            </table>
+                                        </div>
+                                        <!-- Table Ends -->
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Form Row ENds -->
+                        </div>
+                        <!-- Grid Inner Ends -->
+                    </div>
+                    <!-- Grid Box Ends -->
+                </div>
+                <!-- Modal Body End-->
+                <div class="modal-footer">
+                    <button id="coverageRuleHistoryClose1" type="button" class="btn grey-btn"
+                        data-dismiss="modal">{{ 'button.close' | translate }}</button>
+                </div>
+                <!-- Modal Footer Ends-->
+            </div>
+        </div>
+    </div>
+    <!-- Coverage Rule History Modal End -->
+    <div *ngIf="showLoader" class="loader-outer">
+        <div class="cube-wrapper">
+            <div class="cube-folding">
+                <span class="leaf1"></span>
+                <span class="leaf2"></span>
+                <span class="leaf3"></span>
+                <span class="leaf4"></span>
+            </div>
+            <span class="loading" data-name="Loading">Please wait...</span>
+        </div>
+    </div>

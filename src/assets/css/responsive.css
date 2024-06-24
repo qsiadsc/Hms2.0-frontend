@@ -1,0 +1,84 @@
+/******* Responsive code ******/
+@media (max-width:1199px){
+  .button-tab .col-md-3 {width: 41.6667%;}
+  .Cardholder-list .col-md-4:last-child {width: 100%;}
+  .card-pagination {text-align: right;}
+  .Cardholder-list .Export-btn button {width: 20%;}
+  .count {padding-top: 40px;}
+}
+
+@media (min-width:1024px) and (max-width: 1199px){
+  .cardholder-pagination .col-md-4 {width: 50%;}
+}
+@media (max-width:1024px){
+  .card-pagination .pagination > li > a, .card-pagination .pagination > li > span {padding: 6px 8px;}
+  /** SEARCH TYPE-CARD HOLDER  **/
+  .form-control::-moz-placeholder{ font-size:12px;}
+  .form-control:-ms-input-placeholder{ font-size:12px;}
+  .form-control::-webkit-input-placeholder{ font-size:12px;}
+  .form-control {padding: 0 5px;}
+  .Search-btn, .gender-heading, .gender-btn {margin-right: 10px;}
+  .gender-btn span {margin-right: 5px;}
+}
+@media (max-width:991px){
+  .dashboard-report {padding-top: 30px;}
+}
+
+@media (max-width:768px) and (max-width:1024px){
+  .Cardholder-list .Export-btn button {width: 30%;}
+  .button-tab .col-md-3 {width: 32%;}
+}
+@media (max-width:767px){
+  button.navbar-toggle::after {display: none;}
+  .navigation button.navbar-toggle {background-color: #f56565;float: none;padding: 10px;position: absolute;right: 20px;top: 45px;}
+  .navigation .navbar-toggle .icon-bar {background: #ffffff none repeat scroll 0 0;}
+  .top-head button.navbar-toggle {display: none;}
+  aside.left-panel, .content {margin: 0 !important;position: relative;width: 100% !important;}
+  .logo-text {display: none;}
+  .logo {float: left;padding: 25px 15px;text-align: center;width: 100%;}
+  .left-panel.collapsed .logo-text {display: none!important;}
+  /** header ** main heading **/
+  .top-head > ul {float: right;margin: 10px 0;}
+
+  /** SEARCH TYPE-CARD HOLDER  **/
+  .form-control::-moz-placeholder{ font-size:12px;}
+  .form-control:-ms-input-placeholder{ font-size:12px;}
+  .form-control::-webkit-input-placeholder{ font-size:12px;}
+  .form-control {padding: 0 5px;}
+  .button-tab .col-xs-6 {width: 50%;}
+  .gi-btns.button-tab .btn.btn-danger {max-width: 49%;}
+}
+@media (max-width:360px){
+  .dashboard ul > li .dashboard-graph {padding: 10px;width: 260px;}
+  .left-panel .logo .main-logo {max-width: 150px;}
+  .navigation button.navbar-toggle {top: 32px;}
+  .top-head > ul {text-align: center;width: 100%;}
+  .navbar-right .dropdown-menu {margin-top: 15px;min-width: 285px;right: auto;}
+  .navbar-right .dropdown-menu#bell-menu {left: -94px;}
+  .navbar-right #cog-menu.dropdown-menu {left: -131px;}
+  .navbar-right #user-menu.dropdown-menu {left:-165px;}
+  .top-head .heading-top {display: block;text-align: center;}
+  /** SEARCH TYPE-CARD HOLDER  **/
+  .col-xs-6{width: 100%;}
+  .Cardholder-list .Export-btn button {margin: 10px 5px;width: 45%;}
+  .Export-btn {text-align: center;}
+  .btn-danger {font-size: 14px;}
+  .count {padding-top: 0;}
+  .card-pagination .pagination {margin: 0;}
+  .card-pagination .pagination > li > a, .card-pagination .pagination > li > span {padding: 6px 10px;}
+  .Cardholder-list .col-xs-6.col-sm-4.col-md-4 {width: 100%;}
+  .gi-btns.button-tab .btn.btn-danger {max-width: 100%;}
+  .btn-danger, .Cardholder-list .Export-btn button {max-width: 100%;padding: 7px;margin: 10px 0 0;width: 100%;}
+  .cardholder-pagination .col-xs-8 {width: 100%;text-align: center;}
+}
+@media (min-width:768px){
+  .left-panel button.navbar-toggle {display: none;}
+  .navbar-collapse.collapse {padding: 0;}
+  .Card-Eligibility .btn.btn-danger {font-size: 13px;}
+  .button-tab .col-xs-6.col-sm-3.col-md-3 {padding: 0 8px;}
+  header{position: fixed;z-index: 999; width: 100%; top: 0;}
+  section.content{padding-top: 50px;}
+  .navbar-right{margin: 5px 20px;}
+/*  .Account-information {min-height: 735px;}*/
+  
+}

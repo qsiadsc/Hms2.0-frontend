@@ -1,0 +1,25 @@
+.tabCheckBox{
+text-transform: capitalize;
+}
+.uslcs span{
+  padding:11px;
+}
+
+.form-row .btn {
+  margin-bottom: 1px;
+}
+
+/* Below 3 classes written by designer to correct extra spacing in Disciplines */
+.company-tabs .web-reg {
+  margin-top: 0px;
+}
+
+.wrap-li{
+  margin-top: 20px;
+  margin-bottom: 20px;
+} 
+
+.custom-nav-pills{
+  padding-left: 20px;
+  padding-right: 20px;
+} 

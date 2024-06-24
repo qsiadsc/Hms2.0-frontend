@@ -1,0 +1,336 @@
+<!-- Pending Electronic Payment Adjustment Start -->
+<div class="grid-box">
+  <div class="grid-heading">
+    <h3>Pending Electronic Payment Adjustment</h3>
+  </div>
+  <div class="grid-inner">
+    <div class="form-row">
+      <div class="row">
+        <div class="col-md-12 col-xs-12">
+          <div class="table-responsive ">
+            <table id="pendingElectronicAdjustmentList" class="display table table-bordered table-stripped">
+              <thead>
+              </thead>
+              <tfoot>
+                <tr>
+                  <td width="12%">
+                    <input id="pendingEcsAdjPaymentNumber" class="fm-txt form-control tFootInput inputSearch" placeholder="{{'uft.dashboard.pendingElectronicAdjustment.paymentNumber' | translate}}"
+                      type="text" name="chequeRefNo" />
+                  </td>
+                  <td class="alignDpRight" width="5%">
+                    <div class="calender-field">
+                      <my-date-picker id="pendingEcsAdjIssuedDate" class="inputSearch" name="issueDate" data-type="date" [options]="myDatePickerfilterOptions"
+                        [selDate]="dateNameArray['issueDate']" (inputFocusBlur)="changeDateFormatFooter($event, 'issueDate')"
+                        placeholder="{{ 'company.company-tab-datatable.contact-datatables.dd/mm/yyyy' | translate }}">
+                      </my-date-picker>
+                    </div>
+                  </td>
+                  <td width="8%">
+                    <input id="pendingEcsAdjTransactionAmt" class="fm-txt form-control tFootInput inputSearch in-number" placeholder="{{'uft.dashboard.pendingElectronicAdjustment.transactionAmount' | translate}}"
+                      type="text" name="transAmount" />
+                  </td>
+                  <!-- remove admin fee and debit amount column and add payee number column discuss by Arun sir -->
+                  <!-- <td width="10%">
+                    <input id="pendingEcsAdjAdminFee" class="fm-txt form-control tFootInput inputSearch in-number" placeholder="{{'uft.dashboard.pendingElectronicAdjustment.adminFee' | translate}}"
+                      type="text" name="adminFee" />
+                  </td> -->
+                  <!-- <td width="10%">
+                    <input id="pendingEcsAdjDebitAmt" class="fm-txt form-control tFootInput inputSearch in-number" placeholder="{{'uft.dashboard.pendingElectronicAdjustment.debitAmount' | translate}}"
+                      type="text" name="debitAmount" />
+                  </td> -->
+                  <td width="10%">
+                    <input id="pendingEcsAdjPayeeNumber" class="fm-txt form-control tFootInput inputSearch in-number" placeholder="{{'uft.dashboard.pendingElectronicAdjustment.payeeNumber' | translate}}"
+                      type="text" name="payeeNumber" />
+                  </td>
+                  <td class="alignDpRight" width="5%">
+                    <div class="calender-field">
+                      <my-date-picker id="pendingEcsAdjAdjustmentDate" class="inputSearch" name="cancelDate" data-type="date" [options]="myDatePickerfilterOptions"
+                        [selDate]="dateNameArray['cancelDate']" (inputFocusBlur)="changeDateFormatFooter($event, 'cancelDate')"
+                        placeholder="{{ 'company.company-tab-datatable.contact-datatables.dd/mm/yyyy' | translate }}">
+                      </my-date-picker>
+                    </div>
+                  </td>
+                  <td width="8%">
+                    <ng2-completer name="payee" [(ngModel)]="payee" class="predictiveSearchLower" [inputName]="'payee'" [datasource]="payeeData"
+                      [minSearchLength]="0" [openOnFocus]="true" (opened)="onOpened($event)" [fillHighlighted]="false"
+                      [placeholder]="'Search Payee'" [textSearching]="'Please wait...'" [inputClass]="'form-control inputSearch grid_right'"
+                      data-type="predective" id="pendingEcsAdjPayee" [clearUnselected]="true">
+                    </ng2-completer>
+                  </td>                 
+                  <td width="8%">
+                    <div class="form-row text-right search-top">
+                      <button id="terminateCompanySearchBtn" type="submit" title="{{'common.search' | translate}}" class="btn green-btn searchreset"
+                        (click)="pendingEcsPaymentAdjustmentSearch('pendingElectronicAdjustmentList')">
+                        <span class="glyphicon glyphicon-search"></span>
+                      </button>
+                      <button id="resetTerminateCompanyBtn" title="{{'common.reset' | translate}}" class="btn grey-btn searchreset" (click)="resetPendingEcsPaymentAdjustmentList('pendingElectronicAdjustmentList')">
+                        <span class="glyphicon glyphicon-repeat"></span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-row text-center">
+      <div class="row">
+        <div class="col-md-12 col-xs-12">
+          <div class="dropdown pull-right">
+            <button id="pendingElectronicAdjPaymentExport" class="btn green-btn dropdown-toggle hideGPRunButton" type="button"
+              data-toggle="dropdown">{{'button.export' | translate}}
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+              <li>
+                <a href="javascript:void(0)" (click)="downloadPEPAReport()">{{ 'common.pdf' | translate }}</a>
+              </li>
+              <li>
+                <a href="javascript:void(0)" (click)="exportPendingElectronicPaymentAdjustmentList()">{{'common.excel' | translate }}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Pending Electronic Payment Adjustment End -->
+
+<!-- Bank Details Popup Start -->
+<button data-toggle="modal" id="openPaymentBankAccount" data-target="#electronicPaymentBankDetail" style="display:none">
+    {{'button.openpopUp' | translate}}</button>
+<div id="electronicPaymentBankDetail" class="modal fade double-modal" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button title="{{'button.close' | translate }}" id="closeOTPBankDetail" (click)="resetBankDetail()" type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">{{ 'uft.upcomingTransactionsSearch.otp-bank-account.bank-account-detail' | translate }}
+        </h4>
+      </div>
+      <div class="modal-body">
+        <div class="grid-box">
+          <div class="grid-inner">
+            <form [formGroup]="bankAccountDetailForm">
+              <div class="form-row">
+                <div class="row">
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{ 'uft.upcomingTransactionsSearch.otp-bank-account.bank-no' | translate }}
+                      <span class="required">*</span>
+                    </label>
+                    <input [ngClass]="{'disableInput':editMode}" type="text" name="bankNumber" #otpBankAccountName formControlName="bankNumber" class="fm-txt form-control" placeholder="{{'uft.upcomingTransactionsSearch.otp-bank-account.bank-no' | translate }}"
+                      (blur)="getBankName()"/>
+                    <show-errors [control]="bankAccountDetailForm.controls.bankNumber"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{ 'uft.upcomingTransactionsSearch.otp-bank-account.branch-no.' | translate }}
+                      <span class="required">*</span>
+                    </label>
+                    <input [ngClass]="{'disableInput':editMode}" type="text" name="branch" id="company_bank_account_branch" formControlName="branch" class="fm-txt form-control" placeholder="{{ 'uft.upcomingTransactionsSearch.otp-bank-account.branch-no.' | translate }}"
+                      (blur)="getBankName()"/>
+                    <show-errors [control]="bankAccountDetailForm.controls.branch"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{ 'uft.upcomingTransactionsSearch.otp-bank-account.bank-name' | translate }}
+                      <span class="required">*</span>
+                    </label>
+                    <input [ngClass]="{'disableInput':editMode}" type="text" class="fm-txt form-control" name="bankName" id="company_bank_account_bank_name" formControlName="bankName"
+                      placeholder="{{'uft.upcomingTransactionsSearch.otp-bank-account.bank-name' | translate }}"/>
+                    <show-errors [control]="bankAccountDetailForm.controls.bankName"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{ 'uft.upcomingTransactionsSearch.otp-bank-account.account-no.' | translate }}
+                      <span class="required">*</span>
+                    </label>
+                    <input [ngClass]="{'disableInput':editMode}" type="text" name="account" id="company_bank_account_account" formControlName="account" class="fm-txt form-control"
+                      placeholder="{{ 'uft.upcomingTransactionsSearch.otp-bank-account.account-no.' | translate }}"/>
+                    <show-errors [control]="bankAccountDetailForm.controls.account"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{ 'uft.upcomingTransactionsSearch.otp-bank-account.effective-date' | translate }}
+                      <span class="required">*</span>
+                    </label>
+                    <div class="calender-field">
+                      <my-date-picker id="company-bank-account_effective_on" [options]="myDatePickerOptions" name="effectiveOn" formControlName="effectiveOn" [ngClass]="{'disableInput':editMode, 'removeCross':editMode }"
+                        (inputFocusBlur)="changeDateFormat($event, 'effectiveOn', 'bankAccountDetailForm', true)" placeholder="{{ 'uft.upcomingTransactionsSearch.otp-bank-account.dd/mm/yyyy' | translate }}">
+                      </my-date-picker>
+                      <show-errors [control]="bankAccountDetailForm.controls.effectiveOn"></show-errors>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{ 'uft.upcomingTransactionsSearch.otp-bank-account.expiry-date' | translate }}</label>
+                    <div class="calender-field">
+                      <my-date-picker id="company-bank-account_expired_on" [options]="myDatePickerOptions" name="expiredOn" formControlName="expiredOn"
+                        (inputFocusBlur)="changeDateFormat($event, 'expiredOn', 'bankAccountDetailForm', false)" placeholder="{{ 'uft.upcomingTransactionsSearch.otp-bank-account.dd/mm/yyyy' | translate }}">
+                      </my-date-picker>
+                      <show-errors [control]="bankAccountDetailForm.controls.expiredOn"></show-errors>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>&nbsp;</label>
+                    <button id="savePaymentBankAccountDetail" class="btn green-btn" (click)="submitBankDetail(bankAccountDetailForm)">{{buttonText}}</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <!-- Bank Account Details -->
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{'common.listOfBankAccounts' | translate}}</h3>
+            <!-- Web Reg Ends -->
+          </div>
+          <div class="grid-inner">
+            <div class="form-row">
+              <div class="row">
+                <div class="col-md-12 col-xs-12 table-col">
+                  <div class="table-responsive">
+                    <table id='bankAccountDetailList' datatable [dtOptions]="dtOptions['bankAccountDetailList']"
+                      [dtTrigger]="dtTrigger['bankAccountDetailList']"
+                      class="inlinePopupTable table table-bordered table-stripped">
+                      <thead>
+                        <tr>
+                          <th>{{'common.bank-#' | translate}}</th>
+                          <th class="amount_right_grid">{{'common.branch-#' | translate}}</th>
+                          <th class="amount_right_grid">{{'common.bank-name' | translate}}</th>
+                          <th class="amount_right_grid">{{'common.account-#' | translate}}</th>
+                          <th class="amount_right_grid">{{'common.effectivedate' | translate}}</th>
+                          <th class="amount_right_grid">{{'common.expireddate' | translate}}</th>
+                          <th class="amount_right_grid">{{'common.action' | translate}}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <ng-container *ngIf="isPayeeCardholder">
+                          <tr class="tableRow" id="{{'row_'+i}}"
+                          *ngFor="let dataRow of bankDetailData; let i = index">
+                            <td>
+                              {{dataRow['cardBankNum']}}
+                            </td>
+                            <td class="amount_right">
+                              {{dataRow['cardBankBranchNum']}}
+                            </td>
+                            <td class="amount_right">
+                              {{dataRow['bankName']}}
+                            </td>
+                            <td class="amount_right">
+                              {{dataRow['cardBankAccountNum']}}
+                            </td>
+                            <td class="amount_right">
+                              {{dataRow['cardBaEffectiveOn']}}
+                            </td>
+                            <td class="amount_right" [ngClass]="expired ? 'expired' : 'notExpired'">
+                              {{dataRow['cardExpiredOn']}}
+                            </td>
+                            <td class="amount_right"><button (click)="setBankAccountForm(dataRow)"
+                                class='form_edit_row table-action-btn edit-ico'><i class='fa fa-pencil'></i></button>
+                            </td>
+                          </tr>
+                        </ng-container>
+                        <ng-container *ngIf="isPayeeCompany">
+                          <tr class="tableRow" id="{{'row_'+i}}"
+                          *ngFor="let dataRow of bankDetailData; let i = index">
+                            <td>
+                              {{dataRow['coBankNum']}}
+                            </td>
+                            <td class="amount_right">
+                              {{dataRow['coBankBranchNum']}}
+                            </td>
+                            <td class="amount_right">
+                              {{dataRow['coBankName']}}
+                            </td>
+                            <td class="amount_right">
+                              {{dataRow['coBankAccountNum']}}
+                            </td>
+                            <td class="amount_right">
+                              {{dataRow['effectiveOn']}}
+                            </td>
+                            <td class="amount_right" [ngClass]="expired ? 'expired' : 'notExpired'">
+                              {{dataRow['expiredOn']}}
+                            </td>
+                            <td class="amount_right"><button (click)="setBankAccountForm(dataRow)"
+                                class='form_edit_row table-action-btn edit-ico'><i class='fa fa-pencil'></i></button>
+                            </td>
+                          </tr>
+                        </ng-container>
+                        <ng-container *ngIf="isPayeeBroker">
+                          <tr class="tableRow" id="{{'row_'+i}}"
+                          *ngFor="let dataRow of bankDetailData; let i = index">
+                            <td>
+                              {{dataRow['brokerBankNum']}}
+                            </td>
+                            <td class="amount_right">
+                              {{dataRow['brokerBankBranchNum']}}
+                            </td>
+                            <td class="amount_right">
+                              {{dataRow['brokerBankName']}}
+                            </td>
+                            <td class="amount_right">
+                              {{dataRow['brokerBankAccNum']}}
+                            </td>
+                            <td class="amount_right">
+                              {{dataRow['effectiveOn']}}
+                            </td>
+                            <td class="amount_right" [ngClass]="expired ? 'expired' : 'notExpired'">
+                              {{dataRow['expiredOn']}}
+                            </td>
+                            <td class="amount_right"><button (click)="setBankAccountForm(dataRow)"
+                                class='form_edit_row table-action-btn edit-ico'><i class='fa fa-pencil'></i></button>
+                            </td>
+                          </tr>
+                        </ng-container>
+                        <ng-container *ngIf="isPayeeProvider">
+                          <tr class="tableRow" id="{{'row_'+i}}"
+                            *ngFor="let dataRow of bankDetailData; let i = index">
+                            <td>
+                              {{dataRow['provBankNum']}}
+                            </td>
+                            <td class="amount_right">
+                              {{dataRow['provBankBranchNum']}}
+                            </td>
+                            <td class="amount_right">
+                              {{dataRow['bankName']}}
+                            </td>
+                            <td class="amount_right">
+                              {{dataRow['provBankAcctNum']}}
+                            </td>
+                            <td class="amount_right">
+                              {{dataRow['effectiveOn']}}
+                            </td>
+                            <td class="amount_right" [ngClass]="expired ? 'expired' : 'notExpired'">
+                              {{dataRow['expiredOn']}}
+                            </td>
+                            <td class="amount_right"><button (click)="setBankAccountForm(dataRow)"
+                                class='form_edit_row table-action-btn edit-ico'><i class='fa fa-pencil'></i></button>
+                            </td>
+                          </tr>
+												</ng-container>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="closePaymentBnakAccountDetail" type="button" class="btn grey-btn" data-dismiss="modal" (click)="resetBankDetail()">{{ 'button.close' | translate }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Bank Details Popup Ends -->
+<div [hidden]="!showPageLoader" class="loader-outer">
+  <div class="cube-wrapper">
+    <div class="cube-folding">
+      <span class="leaf1"></span>
+      <span class="leaf2"></span>
+      <span class="leaf3"></span>
+      <span class="leaf4"></span>
+    </div>
+    <span class="loading" data-name="Loading">{{'company.plan.benefits.pleaseWait'|translate}}</span>
+  </div>
+</div>

@@ -1,0 +1,41 @@
+<div class="section-heading">
+    <h2>Account   <span></span></h2>
+</div>
+<div class="row">
+  <div class="col-sm-12">
+    <div class="grid-box">
+      <div class="grid-heading">
+        <h3>{{'dataEntry.account.account-setup' | translate}}</h3>
+      </div>
+      <!-- Grid Heading Ends -->
+      <div class="grid-inner">
+        <form [formGroup]="accountSetUpForm">
+          <div class="form-row">
+            <div class="row">
+              <div class="col-md-3 col-xs-12">
+                <label>{{'dataEntry.account.old-password' | translate}} <span class="required">*</span></label>
+                <input  type="password" placeholder="{{'dataEntry.account.old-password' | translate}}" class="fm-txt form-control" formControlName="oldPassword" />
+                <show-errors [control]="accountSetUpForm.controls.oldPassword"></show-errors>
+              </div>
+              
+              <div class="col-md-3 col-xs-12">
+                <label>{{'dataEntry.account.new-password' | translate}} <span class="required">*</span></label>
+                <input type="password" placeholder="{{'dataEntry.account.new-password' | translate}}"  class="fm-txt form-control" formControlName="newPassword" (blur)="validateConfirmPassword(accountSetUpForm)"/>
+                <show-errors [control]="accountSetUpForm.controls.newPassword"></show-errors>
+              </div>
+              
+              <div class="col-md-3 col-xs-12">
+                <label>{{'dataEntry.account.confirm-password' | translate}} <span class="required">*</span></label>
+                <input type="password" placeholder="{{'dataEntry.account.confirm-password' | translate}}"  class="fm-txt form-control" formControlName="confirmPassword" (blur)="validateConfirmPassword(accountSetUpForm)"/>
+                <show-errors [control]="accountSetUpForm.controls.confirmPassword"></show-errors>
+              </div>
+              <div class="col-md-3 col-xs-12 claim-btn" style= "margin-top: 20px;">
+                <button title="Update Password" class="btn green-btn btn-lg" (click)="updatePassword(accountSetUpForm)" type="submit" >{{'button.save' | translate}}</button>
+              </div>
+            </div>
+          </div>
+        </form>  
+      </div>
+    </div>
+  </div>
+</div>

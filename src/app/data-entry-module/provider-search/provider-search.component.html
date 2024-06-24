@@ -1,0 +1,119 @@
+<div class="container">
+
+    <div class="section-heading">
+        <h2>{{'dataEntry.headings.provider' | translate }} 
+            <span>{{'dataEntry.headings.search' | translate}}</span>
+        </h2>
+    </div>
+    <!-- Section Heading Ends -->
+
+    <div class="grid-box">
+        <div class="grid-heading">
+            <h3>{{'dataEntry.provider-search.locateDentistsBy' | translate}}</h3>
+            <div class="web-reg">
+                <a *ngIf = "authCheck[0].addDentist == 'T'" class="green-btn-add btn" [routerLink]="['/dataEntry/dentist']">
+                    <i class="fa fa-plus" ></i>
+                    {{'button.addDentist' | translate}}
+                </a> 
+            </div>
+        </div>
+        <!-- Grid Heading Ends -->
+
+        <div class="grid-inner">
+            <form [formGroup]="providerSearchForm">
+            <div class="form-row">
+                <div class="row min-ht-sf">
+
+                    <div class="col-md-3 col-xs-12">
+                        <label>{{'dataEntry.provider-search.uliNo' | translate}}</label>
+                        <input id="providerSearch_uli" type="text" class="fm-txt form-control" maxlength="9" formControlName="uliNo" placeholder="{{'dataEntry.provider-search.uliNo' | translate}}" />
+                        <show-errors [control]="providerSearchForm.controls.uliNo"></show-errors>
+                    </div>
+
+                    <div class="col-md-3 col-xs-12">
+                        <label>{{'dataEntry.provider-search.licenseNo' | translate}}</label>
+                        <input id="providerSearch_licenseNo" type="text" class="fm-txt form-control" formControlName="licenseNo" placeholder="{{'dataEntry.provider-search.licenseNo' | translate}}" />
+                    </div>
+
+                    <div class="col-md-3 col-xs-12">
+                        <label>{{'dataEntry.provider-search.lastName' | translate}}</label>
+                        <input id="providerSearch_lastName" type="text" class="fm-txt form-control" formControlName="lastName" placeholder="{{'dataEntry.provider-search.lastName' | translate}}" />
+                    </div>
+
+                    <div class="col-md-3 col-xs-12">
+                        <label>{{'dataEntry.provider-search.firstName' | translate}}</label>
+                        <input id="providerSearch_firstName" type="text" class="fm-txt form-control" formControlName="firstName" placeholder="{{'dataEntry.provider-search.firstName' | translate}}" />
+                    </div>
+
+                    <div class="col-md-3 col-xs-12">
+                        <label>&nbsp;</label>
+                        <button *ngIf = "authCheck[0].dataEntryProviderSearch == 'T'" id="providerSearch_search" class="btn green-btn" (click)="onSubmit()">{{'button.search' | translate}}</button>
+                        <button id="providerSearch_clear" class="btn grey-btn" (click)="resetProviderSearchForm()">{{'button.clear' | translate}}</button>
+                    </div>
+
+                </div>
+            </div>
+            <!-- Form Row ENds -->
+            </form>
+        </div>
+        <!-- Grid Inner Ends -->
+    </div>
+    <!-- Grid Box Ends -->
+
+    <div [hidden]="!showProviderList">
+    <div class="grid-box">
+        <div class="grid-heading">
+            <h3>{{'dataEntry.headings.searchResults' | translate }}</h3>
+        </div>
+        <!-- Grid Heading Ends -->
+        <div class="grid-inner">
+            <form>
+            <div class="form-row text-right search-top">
+                <button id="providerSearchLower_search" class="btn green-btn searchreset" type="submit" (click)="searchProviderList('provider-list')">
+                    <span class="glyphicon glyphicon-search"></span>
+                </button>
+                <button id="providerSearchLower_reset" class="btn grey-btn searchreset" (click)="resetProviderListFilter()">
+                    <span class="glyphicon glyphicon-repeat"></span>
+                </button>
+            </div>
+            <div class="form-row">
+                <div class="row">
+
+                    <div class="col-md-12 col-xs-12 table-col">
+                        <div class="table-responsive">  
+                            <table id="provider-list" class="table table-bordered table-stripped">
+                                <tfoot>
+                                    <tr>
+                                        <td width="25%">
+                                            <input id="providerSearchLower_uliNo" class="fm-txt form-control tFootInput inputSearch" type="text" name="providerUliString"  placeholder="{{'dataEntry.provider-search.uliNo' | translate}}">
+                                        </td>
+
+                                        <td width="25%">
+                                            <input id="providerSearchLower_licenseNo" class="fm-txt form-control tFootInput inputSearch amount_right_grid" type="text" name="licenseNo" placeholder="{{'dataEntry.provider-search.licenseNo' | translate}}">
+                                        </td>
+
+                                        <td width="25%">
+                                            <input id="providerSearchLower_lastName" class="fm-txt form-control tFootInput inputSearch amount_right_grid" type="text" name="providerLastName" placeholder="{{'dataEntry.provider-search.lastName' | translate}}">
+                                        </td>
+
+                                        <td width="25%">
+                                            <input id="providerSearchLower_firstName" class="fm-txt form-control tFootInput inputSearch amount_right_grid" type="text" name="providerFirstName" placeholder="{{'dataEntry.provider-search.firstName' | translate}}">
+                                        </td>
+                                    </tr>
+                                </tfoot>
+
+                            </table>
+                        </div>
+                        <!-- Table Ends -->
+                    </div>
+                </div>
+            </div>
+        </form>
+            <!-- Form Row ENds -->
+        </div>
+        <!-- Grid Inner Ends -->
+    </div>
+    <!-- Grid Box Ends -->
+    </div>
+</div>
+<!-- Container Ends -->

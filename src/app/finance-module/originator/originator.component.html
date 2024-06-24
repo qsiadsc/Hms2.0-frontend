@@ -1,0 +1,268 @@
+<div class="section-heading">
+    <h2>{{'finance.originator.originator' | translate}} -
+        <span>{{'finance.originator.search' | translate}}</span>
+        <span></span>
+    </h2>
+</div>
+<div class="grid-box">
+    <div class="grid-heading">
+        <h3>{{'finance.originator.searchOriginator' | translate}}</h3>
+        <div class="web-reg">
+            <a id="orgAddBtn" *ngIf="originatorArray[0].addOriginator == 'T'" data-toggle="modal" data-target="#addOriginator" (click)="enableAddMode()" class="green-btn-add btn">
+                <i class="fa fa-plus"></i>{{'button.addnew' | translate}}</a>
+        </div>
+    </div>
+    <!-- Grid Heading Ends -->
+    <div class="grid-inner">
+        <form [formGroup]="originatorSearchForm">
+            <div class="form-row">
+                <div class="row min-ht-sf">
+                    <div class="col-md-3 col-xs-12">
+                        <label>{{'finance.originator.originatorNo' | translate}}</label>
+                        <input id="orgNumber" type="number" OnlyNumber="true" formControlName="originatorNumber" class="form-control" placeholder="{{'finance.originator.originatorNo' | translate}}"
+                        />
+                        <show-errors [control]="originatorSearchForm.controls.originatorNumber"></show-errors>
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                        <label>{{'finance.originator.originatorName' | translate}}</label>
+                        <div class="calender-field">
+                            <input id="orgName" type="text" formControlName="originatorName" class="form-control" placeholder="{{'finance.originator.originatorName' | translate}}"
+                            />
+                            <show-errors [control]="originatorSearchForm.controls.originatorName"></show-errors>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                        <label>&nbsp;</label>
+                        <button id="orgSearchBtn" *ngIf="originatorArray[0].searchOriginator == 'T'" type="submit" class="btn green-btn" (click)="searchOriginator()">{{'button.search' | translate}}</button>
+                        <button id="orgClearBtn" type="button" class="btn grey-btn" (click)="clearOriginatorSearch()">{{'button.clear' | translate}}</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Form Row ENds -->
+        </form>
+    </div>
+    <!-- Grid Inner Ends -->
+</div>
+<!-- Grid Box Ends -->
+<div [hidden]="!showOriginatorList">
+    <div class="grid-box">
+        <div class="grid-heading">
+            <h3>{{'finance.originator.originatorList' | translate}}</h3>
+        </div>
+        <!-- Grid Heading Ends -->
+        <div class="grid-inner">
+            <div class="form-row">
+                <div class="row">
+                    <div class="col-md-12 col-xs-12 table-col">
+                        <div class="table-responsive full-table">
+                            <table id="originatorList" class="table table-bordered table-stripped">
+                            </table>
+                        </div>
+                        <!-- Table Ends -->
+                    </div>
+                </div>
+            </div>
+            <!-- Form Row ENds -->
+        </div>
+        <!-- Grid Inner Ends -->
+    </div>
+</div>
+<!-- Grid Box Ends -->
+<!-- Container Ends -->
+
+<div id="addOriginator" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-header">
+            <button title="Close" id="originatorClose" (click)="resetOriginatorForm()" type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 *ngIf="addMode" class="modal-title">{{'finance.originator.addOriginator' | translate}}</h4>
+            <h4 *ngIf="editMode" class="modal-title">{{'finance.originator.editOriginator' | translate}}</h4>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="addOriginatorForm">
+                <div class="grid-box">
+                    <div class="grid-heading">
+                        <h3>{{'finance.originator.originator' | translate}}</h3>
+                    </div>
+                    <div class="grid-inner">
+                        <div class="form-row">
+                            <div class="row min-ht-sf">
+                                <div class="col-md-3 col-xs-12">
+                                    <label>{{'finance.originator.originatorNo' | translate}}
+                                        <span class="required">*</span>
+                                    </label>
+                                    <input id="originatorNum" type="text" formControlName="originatorNo" OnlyNumber="true" class="form-control" placeholder="{{'finance.originator.originatorNo' | translate}}"
+                                    />
+                                    <show-errors [control]="addOriginatorForm.controls.originatorNo"></show-errors>
+                                </div>
+                                <div class="col-md-3 col-xs-12">
+                                    <label>{{'finance.originator.originatorName' | translate}}</label>
+                                    <input id="originatorName" type="text" formControlName="originatorName" class="form-control" placeholder="{{'finance.originator.originatorName' | translate}}"
+                                    />
+                                    <show-errors [control]="addOriginatorForm.controls.originatorName"></show-errors>
+                                </div>
+                                <div class="col-md-3 col-xs-12">
+                                    <label>{{'finance.originator.bussProgramType' | translate}}
+                                        <span class="required">*</span>
+                                    </label>
+                                    <ng2-completer formControlName="businessType" name="businessType" [datasource]="businessTypeData" [minSearchLength]="0" [openOnFocus]="true"
+                                        (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Search Business Type'"
+                                        [textSearching]="'Please wait...'" [inputClass]="'form-control inputSearch'" data-type="predective"
+                                        [inputId]="'adminInfoPlanType'" id="originatorBusinessType" (selected)="onSelectedBusinessType($event)"
+                                        [clearUnselected]="true">
+                                    </ng2-completer>
+                                    <show-errors [control]="addOriginatorForm.controls.businessType"></show-errors>
+                                </div>
+                                <div class="col-md-3 col-xs-12">
+                                    <label>{{'finance.originator.defaultDictory' | translate}}</label>
+                                    <input id="originatorDefDictory" type="text" formControlName="defaultDirectory" class="form-control" placeholder="{{'finance.originator.defaultDictory' | translate}}"
+                                    />
+                                    <show-errors [control]="addOriginatorForm.controls.defaultDirectory"></show-errors>
+                                </div>
+                                <div class="col-md-3 col-xs-12">
+                                    <label>{{'finance.originator.description' | translate}}</label>
+                                    <textarea id="originatorDesc" class="form-control" formControlName="description" placeholder="{{'finance.originator.description' | translate}}"></textarea>
+                                    <show-errors [control]="addOriginatorForm.controls.description"></show-errors>
+                                </div>
+                                <div class="col-md-3 col-xs-12">
+                                    <label>{{'finance.originator.effDate' | translate}}
+                                        <span class="required">*</span>
+                                    </label>
+                                    <div class="calender-field">
+                                        <my-date-picker id="originatorEffectiveDate" [options]="myDatePickerOptions" name="effectiveOn" formControlName="effectiveOn"
+                                            (inputFocusBlur)="changeDateFormat($event, 'effectiveOn','addOriginatorForm', true)"
+                                            placeholder="{{'common.date-placeholder' | translate}}">
+                                        </my-date-picker>
+                                        <show-errors [control]="addOriginatorForm.controls.effectiveOn"></show-errors>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-xs-12">
+                                    
+                                    <label>{{'finance.originator.expiryDate' | translate}}</label>
+                                    <div class="calender-field">
+                                        <my-date-picker id="originatorExpiryDate" [options]="myDatePickerOptions" name="expiredOn" formControlName="expiredOn" [ngClass]="expired  ? 'expired' : 'notExpired'" (inputFocusBlur)="changeDateFormat($event, 'expiredOn','addOriginatorForm', false)"
+                                            placeholder="{{'common.date-placeholder' | translate}}">
+                                        </my-date-picker>
+                                        <show-errors [control]="addOriginatorForm.controls.expiredOn"></show-errors>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Grid Inner Ends -->
+                </div>
+                <div class="grid-box">
+                    <div class="grid-heading">
+                        <h3>{{'finance.originator.bankingInstructions' | translate}}</h3>
+                    </div>
+                    <div class="grid-inner">
+                        <div class="form-row">
+                            <div class="row min-ht-sf">
+                                <div class="col-md-3 col-xs-12">
+                                    <label>{{'finance.originator.bankNo' | translate}}
+                                        <span class="required">*</span>
+                                    </label>
+                                    <input id="originatorBankNum" type="text" formControlName="bankNo" class="form-control" placeholder="{{'finance.originator.bankNo' | translate}}"
+                                        (blur)="getBankName(addOriginatorForm.controls.bankNo,addOriginatorForm.controls.branchNo)"
+                                    />
+                                    <show-errors [control]="addOriginatorForm.controls.bankNo"></show-errors>
+                                </div>
+
+                                <div class="col-md-3 col-xs-12">
+                                    <label>{{'finance.originator.branchNo' | translate}}
+                                        <span class="required">*</span>
+                                    </label>
+                                    <input id="originatorBranchNum" type="text" formControlName="branchNo" class="form-control" placeholder="{{'finance.originator.branchNo' | translate}}"
+                                        (blur)="getBankName(addOriginatorForm.controls.bankNo,addOriginatorForm.controls.branchNo)"
+                                    />
+                                    <show-errors [control]="addOriginatorForm.controls.branchNo"></show-errors>
+                                </div>
+
+                                <div class="col-md-3 col-xs-12">
+                                    <label>{{'finance.originator.bankName' | translate}}</label>
+                                    <input id="originatorBankName" type="text" formControlName="bankName" class="form-control" placeholder="{{'finance.originator.bankName' | translate}}"
+                                    />
+                                    <show-errors [control]="addOriginatorForm.controls.bankName"></show-errors>
+                                </div>
+
+                                <div class="col-md-3 col-xs-12">
+                                    <label>{{'finance.originator.accountNo' | translate}}
+                                        <span class="required">*</span>
+                                    </label>
+                                    <input id="originatorAccNum" type="text" formControlName="accountNo" OnlyNumber="true" class="form-control" placeholder="{{'finance.originator.accountNo' | translate}}"
+                                    />
+                                    <show-errors [control]="addOriginatorForm.controls.accountNo"></show-errors>
+                                </div>
+
+                                <div class="col-md-3 col-xs-12">
+                                    <label>{{'finance.originator.recCentreNo' |translate}}
+                                        <span class="required">*</span>
+                                    </label>
+                                    <input id="originatorRecCentreNum" type="text" formControlName="recCentreNo" class="form-control" placeholder="{{'finance.originator.recCentreNo' |translate}}"
+                                    />
+                                    <show-errors [control]="addOriginatorForm.controls.recCentreNo"></show-errors>
+                                </div>
+
+                                <div class="col-md-3 col-xs-12">
+                                    <label>{{'finance.originator.chequeSignTop' | translate}}
+                                        <span class="status-label active">
+                                            <a *ngIf="isTopVal" (click)="removeExtension('top')" title="Remove File">
+                                                <i class="fa fa-remove"></i>
+                                            </a>
+                                        </span>
+                                    </label>
+                                    <input style="display: none" type="file" (change)="onFileChanged($event,'chqSignTop')" (click)="$event.target.value=null" #originatorChequeSignTop>
+                                    <input class="fm-txt form-control datepicker" (click)="originatorChequeSignTop.click()" type="text" formControlName="chqSignTop"
+                                        placeholder="{{'finance.originator.chequeSignTop' | translate}}" onkeypress="return false;">
+                                    <show-errors [control]="addOriginatorForm.controls.chqSignTop"></show-errors>
+                                </div>
+                                <div class="col-md-3 col-xs-12">
+                                    <label>{{'finance.originator.chequeSignBottom' | translate}}
+                                        <span class="status-label active">
+                                            <a *ngIf="isBottomVal" (click)="removeExtension('bottom')" title="Remove File">
+                                                <i class="fa fa-remove"></i>
+                                            </a>
+                                        </span>
+                                    </label>
+                                    <input style="display: none" type="file" (change)="onFileChanged($event,'chqSignBottom')" (click)="$event.target.value=null" #originatorChequeSignBottom>
+                                    <input class="fm-txt form-control datepicker" (click)="originatorChequeSignBottom.click()" type="text" formControlName="chqSignBottom"
+                                        placeholder="{{'finance.originator.chequeSignBottom' | translate}}" onkeypress="return false;">
+                                    <show-errors [control]="addOriginatorForm.controls.chqSignBottom"></show-errors>
+                                </div>
+
+                                <div class="col-md-3 col-xs-12">
+                                    <label>{{'finance.originator.bankPostalAddress' | translate}}</label>
+                                    <textarea id="originatorBankPostalAdd" class="form-control" formControlName="bankPostalAddress" placeholder="{{'finance.originator.bankPostalAddress' | translate}}"></textarea>
+                                    <show-errors [control]="addOriginatorForm.controls.bankPostalAddress"></show-errors>
+                                </div>
+
+                                <div class="col-md-4 col-xs-12">
+                                    <label>{{'finance.originator.bankMailAddress' | translate}}</label>
+                                    <textarea id="originatorBankMailAdd" class="form-control" formControlName="bankMailAddress" placeholder="{{'finance.originator.bankMailAddress' | translate}}"></textarea>
+                                    <show-errors [control]="addOriginatorForm.controls.bankMailAddress"></show-errors>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Grid Inner Ends -->
+                </div>
+            </form>
+            <div class="modal-footer">
+                <button id="originatorSaveBtn" *ngIf="originatorArray[0].saveOriginator == 'T'" class="btn green-btn" (keyup.arrowLeft) = "focusNextEle($event,'originatorCloseForm')" (keyup.arrowRight) = "focusNextEle($event,'originatorCloseForm')"  (click)="submitOriginatorForm()">{{buttonText}}</button>
+                <button id="originatorCloseForm" class="btn grey-btn" data-dismiss="modal" (keyup.arrowLeft) = "focusNextEle($event,'originatorSaveBtn')" (keyup.arrowRight) = "focusNextEle($event,'originatorSaveBtn')" (click)="resetOriginatorForm()">{{'button.close' | translate}}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div [hidden]="!showLoader" class="loader-outer">
+    <div class="cube-wrapper">
+        <div class="cube-folding">
+            <span class="leaf1"></span>
+            <span class="leaf2"></span>
+            <span class="leaf3"></span>
+            <span class="leaf4"></span>
+        </div>
+        <span class="loading" data-name="Loading">{{'company.plan.benefits.pleaseWait'|translate}}</span>
+    </div>
+</div>

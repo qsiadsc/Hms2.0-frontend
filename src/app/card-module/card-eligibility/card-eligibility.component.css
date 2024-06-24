@@ -1,0 +1,7 @@
+table.rightAlignTable thead tr th:not(:first-child) {
+    text-align: right !important
+}
+
+table td div.amount_right_grid > span{
+    float: left;
+}

@@ -1,0 +1,343 @@
+<div class="grid-box">
+ 
+  <div class="accordion" id="accordionCardComment">
+    <div class="accordion-group">
+      
+      <div class="grid-heading collapse-heading" [attr.aria-expanded]="false" data-toggle="collapse"
+        data-target="#CardCommentAccording">
+        <h3 [attr.aria-expanded]="false" data-toggle="collapse" data-target="#CardCommentAccording">
+          {{'claims.review-claim.scnd-documents'|translate}}</h3>      
+      </div>
+    </div>
+  </div>
+  <!-- Grid Heading Ends -->
+  <div id="CardCommentAccording" class="collapse">
+  <div class="grid-inner">
+    <div *ngIf="!isReviewer" class="form-row">
+      <label>&nbsp;</label>
+      <div class="row">
+        <div class="col-md-3 col-xs-12 min-ht-half">
+          <label>{{'claims.review-claim.document-name'|translate}}</label>
+          <input style="display: none" type="file" (change)="onFileChanged($event)" onclick="this.value=null"
+            #crFileInput>
+          <input [(ngModel)]="selectedFileName" class="fm-txt form-control datepicker" type="text">
+          <ul *ngIf="error.isError==true" class="validation-errors">
+            <li style="color: red">{{error.errorMessage}}</li>
+          </ul>
+          <ul *ngIf="error3.isError==true" class="validation-errors">
+            <li style="color: red">{{error3.errorMessage}}</li>
+          </ul>
+        </div>
+        <div class="col-md-4 col-xs-12 min-ht-half">
+          <label>&nbsp;</label>
+        
+           <button [disabled]="viewMode || disablSendDocbtn" class="btn green-btn"
+            (click)="crFileInput.click()">{{'claims.review-claim.select-file'|translate}}</button>
+          <button [disabled]="viewMode || disablSendDocbtn" (click)="onUpload()"
+            class="btn green-btn">{{'serviceProvider.general-information.upload'|translate}}</button>
+          <button *ngIf="showRemoveButton" [disabled]="viewMode || disablSendDocbtn" (click)="removeExtension()"
+            class="btn red-btn ">{{'claims.review-claim.remove'|translate}}</button> 
+        
+        </div>
+      </div>
+    </div>
+    <!-- Form Row End -->
+    <div class="form-row">
+      <div class="table-responsive">
+        <table id="scanClaimDocument" datatable [dtOptions]="dtOptions['scanClaimDocument']"
+          [dtTrigger]="dtTrigger['scanClaimDocument']" class="table table-bordered table-stripped">
+          <thead>
+            <tr>
+              <th width="10%">{{'claims.review-claim.name-document'|translate}}</th>
+              <th class="amount_right" width="10%">{{'claims.review-claim.scan-date'|translate}}</th>
+              <th class="amount_right" width="10%">{{'reviewApp.claim-search.action'|translate}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let scannedDocument of scannedDocumentList">
+              <td>{{scannedDocument.docName}}</td>
+              <td class="amount_right">{{scannedDocument.createdOn | dateFormate }}</td>
+              <td class="amount_right">
+                <a class="table-action-btn view-ico"
+                  (click)="viewDocuments(scannedDocument.disciplineKey,scannedDocument.claimScanDocKey,viewClaimDoc)"
+                  title="View"><i class="fa fa-eye"></i>
+                </a>
+                <a id="claimDoc" style="display:none;" href="#{{blobUrl}}" download="docName"></a>
+                <a *ngIf="userRole == ''"
+                  [ngClass]="{'table-action-btn':true, 'del-ico':true, 'disabled':viewMode || disableDctrBtn}"
+                  (click)="deleteDocuments(scannedDocument.disciplineKey,scannedDocument.claimScanDocKey)"
+                  title="Delete"> <i class="fa fa-trash-o"></i>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- Form Row End -->
+  </div>
+</div>
+  <!-- Grid Inner Ends -->
+</div>
+<!-- Grid Box Ends -->
+
+<div class="grid-box" *ngIf="!showReviewDiv ">
+
+
+  <div class="grid-inner">
+    <form [formGroup]="reviewClaim">
+      <div class="form-row">
+        <label>&nbsp;</label>
+        <div class="row min-ht-sf" *ngIf="!hideForOp">
+          <div class="col-md-4 col-xs-12">
+            <label>{{'serviceProvider.search-table-column.status'|translate}}</label>
+            <select name="reviewstatus" (change)="getAdditionalInfo($event)" id="rc_status" class="fm-txt form-control"
+              formControlName="reviewstatus">
+              <option hidden value="null">{{'claims.claims-edit.service-provider.select' | translate}}</option>
+              <option *ngFor="let status of doctorStatusList" [value]="status.dentalReviewStatusKey">
+                {{status.claimReviewStatusDesc}}</option>
+            </select>
+            <show-errors [control]="reviewClaim.controls.reviewstatus"></show-errors>
+          </div>
+          <div *ngIf="showdropDown && (userRole == 'reviewer' ||userRole == 'referReviwer')" class="col-md-8 col-xs-12">
+            <label>{{'claims.review-claim.denyReason'|translate}}</label>
+            <angular2-multiselect [data]="additonalInfoList" [(ngModel)]="selectedItems"
+              [ngModelOptions]="{standalone: true}" (onSelect)="onSelectDropDown($event)"
+              (onDeSelect)="onDeSelectDropDown($event,'additionalInfo')" [settings]="dropdownSettings">
+            </angular2-multiselect>
+            <ul *ngIf="error1.isError==true" class="validation-errors">
+              <li style="color: red">{{error1.errorMessage}}</li>
+            </ul>
+          </div>
+          <div *ngIf="showAdditonalInfo && (userRole == 'reviewer' ||userRole == 'referReviwer')" class="col-md-8 col-xs-12">
+            <label>{{'claims.review-claim.addition-info'|translate}}</label>
+            <div class="select-options add-info">
+              <span *ngFor="let option of additionalInfo">
+                <label>
+                  <input type="checkbox" class="fm-txt" name="options" value="{{option.additionalInfoKey}}"
+                    (change)="onCheckboxChange(option, $event)" /> {{option.additionalInfoDesc}}
+                </label>
+              </span>
+            </div>
+            <ul *ngIf="error2.isError==true" class="validation-errors">
+              <li style="color: red">{{error2.errorMessage}}</li>
+            </ul>
+            <div class="select-options add-info">
+              <span *ngFor="let optionSubType of additionalInfoSubType">
+                <label>
+                  <input type="radio" class="fm-txt " name="additionalSubTypeKey" formControlName="additionalSubTypeKey"
+                    value="{{optionSubType.additionalSubKey}}" /> {{optionSubType.additionalSubDesc}}
+                </label>
+              </span>
+            </div>
+          </div>
+          <div *ngIf="showLineItem && (userRole == 'reviewer' ||userRole == 'referReviwer')" class="col-md-2 col-xs-12">
+            <label>{{'claims.review-claim.deny-items'|translate}}</label>
+            <angular2-multiselect id="deniedLineItem" [data]="lineItemDropDown" [ngModelOptions]="{standalone: true}"
+              [(ngModel)]="selectedLineItem" (onSelect)="onSelectLineItem($event)"
+              (onDeSelect)="onDeSelectDropDown($event,'deniedLineItem')" [settings]="lineItemSettings">
+            </angular2-multiselect>
+          </div>
+          <div class="col-md-4 col-xs-12">
+              <label>{{'claims.review-claim.processorComments'|translate}}</label>  <!-- Log #1030 resolved -->
+            
+            <textarea id="rc_internalComment" class=" notInCaps fm-txt form-control" name="internalComment"
+              formControlName="internalComment" [attr.disabled]="disableIC ? true : null" ></textarea>
+          </div>
+          <div *ngIf="userRole == 'reviewer' ||userRole == 'referReviwer'" class="col-md-4 col-xs-12">
+            <label>{{'claims.review-claim.consult-comment'|translate}}</label>
+            <textarea id="rc_externalComment" class="notInCaps fm-txt form-control" name="externalComment"
+              formControlName="externalComment" [attr.disabled]="disableCC ? true : null"></textarea>
+          </div>
+          <div class="col-md-2 col-xs-12">
+            <label>&nbsp;</label>
+            <button [disabled]="disableReviewButon" id="rc_saveReview" class="btn green-btn"
+              (click)="saveReview()">{{'claims.review-claim.save-review'|translate}}</button>
+          </div>
+        </div>
+      </div>
+      <!-- Form Row End -->
+    </form>
+
+    <div class="grid-box" *ngIf="reviewClaimList.length > 0">
+      <div class="grid-heading">
+        <h3>{{'claims.review-claim.doctor-review'|translate}}</h3>
+      </div>
+    </div>
+    <div class="form-group" *ngIf="reviewClaimList.length > 0">
+      <div class="table-responsive ">
+        <table id="reviewClaim" class="table table-bordered table-stripped">    <!-- Changes to resolve 393,  394, 395, 396, 397 points. -->
+          <thead>
+            <tr>
+              <th width="10%">{{'common.date'|translate}}</th>
+              <th class="amount_right" width="10%">{{'serviceProvider.search-table-column.status'|translate}}</th>
+              <th class="amount_right" width="10%">{{'claims.review-claim.reviewer'|translate}}</th>
+              <th class="amount_right" width="10%">{{'claims.review-claim.internal-comment'|translate}}</th>
+              <th class="amount_right" width="10%">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let reviewClaim of reviewClaimList">
+              <td>{{reviewClaim.createdOn | dateFormate }}</td>
+              <td class="amount_right">{{reviewClaim.reviewStatusDesc}}</td>
+              <td class="amount_right">{{reviewClaim.reviewerName}}</td>
+              <!-- internal comments are replaced to external comments because internal comments are missing in doctor Accordion and consultant popup are blank showing issues are fixed(point no -264, 270) -->
+              <td class="amount_right">{{reviewClaim.externalComments}}</td> 
+              <td class="amount_right">
+                <a class="table-action-btn" (click)="getConsultantClaim(reviewClaim.detailKey,viewConsultantComment)"
+                  title="Consultant Comments">
+                  <i class="fa fa-comment"></i>
+                </a>
+                <a *ngIf="userRole == 'reviewer'" class="table-action-btn del-ico"
+                  (click)="deleteReview(reviewClaim.detailKey)" title="Delete">
+                  <i class="fa fa-trash-o"></i>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- Form Row End -->
+   
+      <div *ngIf=" reviewRefRevClaimList.length > 0">
+
+      <div class="grid-box">
+        <div class="grid-heading">
+          <h3>{{'claims.review-claim.reviewer'|translate}}</h3>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="table-responsive ">
+          <table id="reviewGovClaim" datatable [dtOptions]="dtOptions['reviewGovClaim']"
+            [dtTrigger]="dtTrigger['reviewGovClaim']" class="table table-bordered table-stripped">
+            <thead>
+              <tr>
+                <th width="10%">{{'common.date'|translate}}</th>
+                <th class="amount_right" width="10%">{{'serviceProvider.search-table-column.status'|translate}}</th>
+                <th class="amount_right" width="10%">{{'claims.review-claim.reviewer'|translate}}</th>
+                <th class="amount_right" width="10%">{{'claims.review-claim.internal-comment'|translate}}</th>
+                
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let reviewGovClaim of reviewRefRevClaimList">
+                <td>{{reviewGovClaim.createdOn | dateFormate }}</td>
+                <td class="amount_right">{{reviewGovClaim.reviewStatusDesc}}</td>
+                <td class="amount_right">{{reviewGovClaim.reviewerName}}</td>
+                <td class="amount_right">{{reviewGovClaim.internalComments}}</td>
+              
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <!-- Form Row End -->
+    </div>
+
+  </div>
+  <!-- Grid Inner Ends -->
+
+</div>
+<!-- Grid Box Ends -->
+<div *ngIf="showLoader" class="loader-outer">
+  <div class="cube-wrapper">
+    <div class="cube-folding">
+      <span class="leaf1"></span>
+      <span class="leaf2"></span>
+      <span class="leaf3"></span>
+      <span class="leaf4"></span>
+    </div>
+    <span class="loading" data-name="Loading">{{loaderPlaceHolder}}</span>
+  </div>
+</div>
+
+<modal #viewClaimDoc [closeOnEscape]="false" [closeOnOutsideClick]="false" [hideCloseButton]="true"
+  modalClass="modal-sm fixed-modal image-modal">
+  <modal-header>
+    <h4 class="modal-title">{{docName}}</h4>
+    <button type="button" class="close" data-dismiss="modal" (click)="closeModal(viewClaimDoc)">&times;</button>
+  </modal-header>
+  <modal-content>
+    <div class="text-center">
+      <img *ngIf="docType == 'jpg' || docType == 'image/jpeg' || docType == 'image/png'" id="imageTest"
+        [src]="'data:image/jpg;base64,'+imagePath" />
+    </div>
+
+    <pdf-viewer *ngIf="docType == 'application/pdf' || docType == 'pdf' "
+      [src]="'data:application/pdf;base64,'+imagePath" style="display: block;" [fit-to-page]="true">
+    </pdf-viewer>
+  </modal-content>
+  <modal-footer>
+    <button id="btnCloseBanModal" class="btn red-btn " (click)="closeModal(viewClaimDoc)">Close</button>
+  </modal-footer>
+</modal>
+
+<modal #viewConsultantComment [closeOnEscape]="false" [closeOnOutsideClick]="false" [hideCloseButton]="true"
+  modalClass="modal-sm">
+  <modal-header>
+    <h4 class="modal-title">{{'claims.review-claim.consult-comment'|translate}}</h4>
+    <button type="button" class="close" data-dismiss="modal"
+      (click)="closeModal(viewConsultantComment)">&times;</button>
+  </modal-header>
+  <modal-content>
+    <div class="grid-inner">
+      <div *ngIf="editComment" class="form-row">
+        <label>{{'common.updatecomment'|translate}}</label>
+        <div class="add-comments">
+          <div class="row">
+            <div class="col-sm-8">
+              <textarea id="editCoTxt" class="notInCaps fm-txt form-control" [ngModelOptions]="{standalone: true}"
+                [(ngModel)]="consltantComment" name="editCoTxt"></textarea>
+              <ul *ngIf="externalCommentError.isError==true" class="validation-errors">
+                <li style="color: red">{{externalCommentError.errorMessage}}</li>
+              </ul>
+            </div>
+            <div class="col-sm-2 text-right">
+              <button id="btnUpdtCnsltntCmnt" type="submit" class="green-btn-add btn"
+                (click)="updateConsultantClaim(viewConsultantComment)">
+                {{'card.button-update'|translate}}</button>
+              <button id="btnUpdtCnsltntCmnt" class="green-btn-add btn" (click)="clearConsultantClaim()">
+                {{'button.clear'|translate}}</button>
+            </div>
+          </div>
+        </div>
+        <!-- Add Comments Ends -->
+      </div>
+      <div class="form-row">
+        <div *ngIf="showDeniedLineItem" class="form-group">
+          <div class="row min-ht-tt">
+            <div class="col-sm-2"><label>{{'claims.review-claim.deny-line-item'|translate}}:</label></div>
+            <div class="col-sm-10"><label>{{lineItemDenied}}</label></div>
+          </div>
+        </div>
+        <div *ngIf="commentList.externalComments" class="table-responsive">
+          <table id="consultantComments" class="table table-bordered table-stripped">
+            <thead>
+              <tr>
+                <th>{{'claims.review-claim.notes'|translate}}</th>
+                <th  class="amount_right"  *ngIf="userRole != 'govOfficial'" width="10%">{{'reviewApp.claim-search.action'|translate}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{{commentList.externalComments}}</td>
+                <td class="amount_right" *ngIf="userRole != 'govOfficial'">
+                  <a class="table-action-btn amount_right"
+                    (click)="editConsultantClaim(commentList.detailKey,commentList.externalComments)"
+                    title="Edit Comments">
+                    <i class="fa fa-pencil-square-o"></i>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </modal-content>
+  <modal-footer>
+    <button id="btnCloseBanModal" class="btn red-btn "
+      (click)="closeModal(viewConsultantComment)">{{'button.close'|translate}}</button>
+  </modal-footer>
+</modal>

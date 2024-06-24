@@ -1,0 +1,80 @@
+<div class="grid-box">
+  <div class="grid-heading">
+    <h3>{{'card.card-holder.cob.otherplan' | translate}}
+      <a href="javascript:;" title="Other Plan(COB) History" *ngIf="!addMode" class="history-ico" alt="History"
+      data-toggle="modal" (click)="CobHistory()">
+      <i class="fa fa-history" aria-hidden="true"></i>
+      </a>
+    </h3>
+  </div>
+<div class="grid-inner">
+  <form  [formGroup]="CardHolderCobFormGroup"  (blur)="onBlur()" >
+    <div class="form-row">
+      <div class="row min-ht-sf">
+        <div class="col-md-3 col-xs-12">
+          <label>{{'card.card-holder.cob.carrier' | translate}} </label>
+          <select class="fm-txt form-control" [ngClass]="{'disableInput': viewMode}" placeholder="Carrier" id="cch_cobCarrier" formControlName="carrier"  (blur)="onBlur()" (change)="onKeyPress($event)">
+            <option hidden value="">{{'common.select' | translate}}</option>
+            <option *ngFor="let carrier of arrCarrierList" [value]="carrier.otherPlanKey">
+              {{carrier.otherPlanDesc}}
+            </option>
+          </select>
+          <show-errors [control]="CardHolderCobFormGroup.controls.carrier"></show-errors> 
+        </div>
+        <div class="col-md-3 col-xs-12">
+          <label>{{'card.card-holder.cob.policyno' | translate}}</label>
+          <input type="text" [ngClass]="{'disableInput': viewMode}" title="Policy" id="cch_cobPolicy" formControlName="policy" class="fm-txt form-control" 
+          (blur)="onBlur()"  (keydown)="onlyNumberKey($event)"  (keyup)="onKeyPress($event)" maxlength="15"/>
+          <show-errors [control]="CardHolderCobFormGroup.controls.policy"></show-errors> 
+        </div>  
+        <div class="col-md-3 col-xs-12">
+          <label>{{'common.effectivedate' | translate}}</label>
+          <div class="calender-field"> 
+          <my-date-picker id="cch_cobdatepicker1" [ngClass]="{'disableInput': viewMode}" [options]="myDatePickerOptions" name="effective_date" placeholder="{{'common.date-placeholder' | translate}}" formControlName="effective_date" (inputFocusBlur)="changeDateFormat($event, 'effective_date' ,'CardHolderCobFormGroup',true)">
+          </my-date-picker>
+          <show-errors [control]="CardHolderCobFormGroup.controls.effective_date"></show-errors> 
+        </div>
+        
+      </div>
+      <div class="col-md-3 col-xs-12">
+        <label>{{'common.expirydate' | translate}}</label>
+        <div class="calender-field">
+        <my-date-picker          
+          [ngClass]="{'disableInput': viewMode}"
+          id="cch_cobdatepicker2"
+          [options]="myDatePickerOptions"
+          name="expiry_date" placeholder="{{'common.date-placeholder' | translate}}"
+          formControlName="expiry_date" 
+          (inputFocusBlur)="changeDateFormat($event, 'expiry_date' ,'CardHolderCobFormGroup')">
+        </my-date-picker>
+        <show-errors [control]="CardHolderCobFormGroup.controls.expiry_date"></show-errors>
+      </div>
+      <show-errors [control]="CardHolderCobFormGroup.controls.exp"></show-errors> 
+    </div>
+    <div class="col-md-12 col-xs-12">
+      <label>{{'card.card-holder.cob.coordinationbenefits' | translate}}</label>
+        <div class="select-options hhh" [ngClass]="{'disableInput': viewMode}">
+        <span><label><span class="custom-check"><input type="checkbox" id="cch_cobDental" formControlName="cobDental" (change)="onKeyPress($event)"
+          (blur)="onBlur()"> {{'card.card-holder.cob.dental' | translate}}<span></span></span></label></span>
+
+          <span *ngIf="!alberta"><label><span class="custom-check"><input type="checkbox" id="cch_cobHealth" formControlName="cobHealth"  (change)="onKeyPress($event)" 
+            (blur)="onBlur()" value="Health"> {{'card.card-holder.cob.health' | translate}}<span></span></span></label></span>
+
+          <span *ngIf="!alberta"><label><span class="custom-check"><input type="checkbox" id="cch_cobVision" formControlName="cobVision" (change)="onKeyPress($event)" 
+             (blur)="onBlur()" value="Vision"> {{'card.card-holder.cob.vision' | translate}}<span></span></span></label></span>
+
+            <span *ngIf="!alberta"><label><span class="custom-check"><input type="checkbox" id="cch_cobHSA" formControlName="cobHSA"  (change)="onKeyPress($event)"
+              (blur)="onBlur()" value="HSA"> {{'card.card-holder.cob.supplemental' | translate}}<span></span></span></label></span>
+              
+              <span *ngIf="!alberta"><label><span class="custom-check"><input type="checkbox" id="cch_cobDrug"  formControlName="cobDrug"  (change)="onKeyPress($event)"
+                (blur)="onBlur()" value="Drug"> {{'card.card-holder.cob.drug' | translate}}<span></span></span></label></span>
+                </div>
+                <ul class="validation-errors" *ngIf="isBenifitError">
+                  <li style="color: red">{{'card.card-holder.cob.fieldReq' | translate}}</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>

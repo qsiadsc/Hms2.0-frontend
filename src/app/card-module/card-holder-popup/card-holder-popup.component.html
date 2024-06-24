@@ -1,0 +1,93 @@
+<input type="hidden" id="cardHolderKey" value="{{cardHolderKey}}">
+<div id="CardHolderEligibility" class="modal fade dbPopup" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="btnCloseCardholderPopup" type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">{{'card.card-holder.eligibility.add-eligibility' | translate}}</h4>
+      </div>
+      <div class="modal-body">
+        <card-holder-popup-general-information (cardHolderKey)="cardHolderKey" [CardHolderGeneralInfo]="CardHolderGeneralInfo"></card-holder-popup-general-information>
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{'card.card-holder.eligibility.eligibility-history' | translate}}</h3>
+            <div class="web-reg">
+              <button id="btnAddNewEligibilityPopup" class="green-btn-add btn" title="Add New" (click)="addEligibilityFieldValue()">
+                <i class="fa fa-plus"></i> {{'button.addnew' | translate}} </button>
+            </div>
+            </div>
+            <div class="grid-inner">
+              <div class="form-row">
+                <div class="row">
+                  <div class="col-md-12 col-xs-12 table-col">
+                    <div class="table-responsive">
+                      <table id='cardholder-eligibility-history-table' datatable [dtOptions]="dtOptions['cardholder-eligibility-history-table']" 
+                      [dtTrigger]="dtTrigger['cardholder-eligibility-history-table']" class="table table-bordered table-stripped">
+                        <thead>
+                          <tr>
+                            <th width="20%">{{'common.plan' | translate}}sdsd</th>
+                            <th width="10%">{{'common.effectivedate' | translate}}</th>
+                            <th width="10%">{{'common.expirydate' | translate}}</th>
+                            <th width="20%">{{'common.action' | translate}}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr class="tableRow" *ngFor="let dataRow of eligibilityHistorytableData; let i = index" id="{{'row_'+i}}">
+                            <td>
+                              <label class='editableLabel' *ngIf="dataRow['chIgnorePlanAge'] == 'T'">{{'common.yes' |translate}}</label>
+                              <label class='editableLabel' *ngIf="dataRow['chIgnorePlanAge'] == 'F'">{{'common.no' | translate}}</label>
+                              <label class='editableLabel' *ngIf="dataRow['chIgnorePlanAge'] != 'T' && dataRow['chIgnorePlanAge'] != 'F'"></label>
+                              <input id="{{'cardholder-eligibility-history-table'+i+'chIgnorePlanAge'}}" type="checkbox" value="{{dataRow['chIgnorePlanAge']}}"
+                              class="editableInput" [checked]="dataRow['chIgnorePlanAge'] == 'T'" data-updateid="chIgnorePlanAge">
+                            </td>
+                            <td>
+                              <label class='editableLabel'>{{dataRow['eligibilityEffectiveOn']}}</label>
+                              
+                              <my-date-picker id="{{'cardholder-eligibility-history-table'+i+'eligibilityEffectiveOn'}}" [ngClass]="{'editableInput':true,'required':true}"
+                              data-type="date" placeholder="{{'common.date-placeholder' | translate}}" data-rowIndex="1" data-updateid="eligibilityEffectiveOn" [options]="myDatePickerOptions"
+                              [selDate]="eligibilityArray['cardholder-eligibility-history-table'+i+'eligibilityEffectiveOn']"                              
+                              (inputFocusBlur)="changeDateFormatWithoutCompare($event, 'cardholder-eligibility-history-table'+i+'eligibilityEffectiveOn','eligibility')"
+                              ></my-date-picker>
+                            </td>
+                            <td>
+                              <label class='editableLabel'>{{dataRow['eligibilityExpiryOn']}}</label>
+                              <my-date-picker id="{{'cardholder-eligibility-history-table'+i+'eligibilityExpiryOn'}}" 
+                              [ngClass]="{'editableInput':true}"
+                              data-type="date"  placeholder="{{'common.date-placeholder' | translate}}" data-rowIndex="1" data-updateid="eligibilityExpiryOn" [options]="myDatePickerOptions"
+                              [selDate]="eligibilityArray['cardholder-eligibility-history-table'+i+'eligibilityExpiryOn']"
+                              (inputFocusBlur)="EligibilityDateExpenseFormat($event, 'cardholder-eligibility-history-table'+i+'eligibilityExpiryOn', 'cardholder-eligibility-history-table'+i+'eligibilityEffectiveOn', 'eligibilityEffectiveOn')"
+                              ></my-date-picker>
+                            </td>
+                            <td>
+                              <input id="cch_popupEligibilityKey" type="hidden"  data-type="hidden"  class="editableInput" name="chEligibilityKey"
+                              data-updateid="chEligibilityKey" value="{{dataRow['chEligibilityKey']}}">
+                              <div class="tb-actions tb-actions-right" *ngIf="i == 0">
+                                <a href="javascript:void(0)" class="edit_row table-action-btn edit-ico">
+                                  <i class="fa fa-pencil"></i>
+                                </a>
+                                
+                                <a href="javascript:void(0)" class="save_row table-action-btn save-ico">
+                                  <i class="fa fa-save"></i>
+                                </a>
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Grid Box Ends -->
+        </div>
+        <!-- Modal Body End-->
+        <div class="modal-footer">
+          <button id="closePopup" class="btn grey-btn" title="Close" data-dismiss="modal">{{'button.close' | translate}}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<button id="btnEligibilityHistory" (click)="getEligibilityHistory()" value="" style="display:none"></button>

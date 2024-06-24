@@ -1,0 +1,115 @@
+<div class="container">
+    <!-- Grid Heading Ends -->
+            <div class="grid-inner">
+              <form [formGroup]="refundChequeForm" class="ref">
+                <div class="form-row">
+                  <div class="row min-ht-sf">
+            <div class="col-md-3 col-xs-12">
+              <label> {{'uft.refundCheque.chequeNo' | translate}} </label>
+              <input id="uftrcChequeNo" type="text" class="form-control" name="chequeNo" formControlName="chequeNo" placeholder=" {{'uft.refundCheque.chequeNo' | translate}} "
+              />
+              <show-errors [control]="refundChequeForm.controls.companyNameOrId"></show-errors>
+            </div>
+            <div class="col-md-3 col-xs-12">
+              <label> {{'uft.refundCheque.companyNo' | translate}} </label>
+              <input id="uftrcCompanyNo" type="text" class="form-control" name="companyNo" formControlName="companyNo" placeholder=" {{'uft.refundCheque.companyNo' | translate}} "
+              />
+              <show-errors [control]="refundChequeForm.controls.companyNo"></show-errors>
+            </div>
+            <div class="col-md-3 ">
+              <div class="calender-field">
+                <label> {{'uft.refundCheque.accountTransactionDateFrom' | translate}} </label>
+                <my-date-picker id="uftrcAccTransDateFrom" [options]="myDatePickerOptions" name="accTransDateFrom" formControlName="accTransDateFrom"
+                  (inputFocusBlur)="changeDateFormat($event, 'accTransDateFrom','refundChequeForm')" placeholder="{{'common.date-placeholder' | translate}}">
+                </my-date-picker>
+                <show-errors [control]="refundChequeForm.controls.accTransDateFrom"></show-errors>
+              </div>
+            </div>
+            <div class="col-md-3 ">
+              <div class="calender-field">
+                <label> {{'uft.refundCheque.accountTransactionDateTo' | translate}} </label>
+                <my-date-picker id="uftrcAccTransDateTo" [options]="myDatePickerOptions" name="accTransDateTo" formControlName="accTransDateTo"
+                  (inputFocusBlur)="changeDateFormat($event, 'accTransDateTo','refundChequeForm')" placeholder="{{'common.date-placeholder' | translate}}">
+                </my-date-picker>
+                <show-errors [control]="refundChequeForm.controls.accTransDateTo"></show-errors>
+              </div>
+            </div>
+            <div class="col-md-3 col-xs-12">
+              <label> {{'uft.refundCheque.transactionStatus' | translate}} </label>
+              <ng2-completer
+              formControlName="transStatus"
+              [datasource]="transactionStatusData"
+              [minSearchLength]="0"
+              [openOnFocus]="false"
+              (opened)="onOpened($event)"
+              [fillHighlighted]="false"
+              [placeholder]="'Search Transaction Status'"
+              [textSearching]="'Please wait...'"
+              [inputClass]="'form-control'"
+              [clearUnselected]="true">
+              </ng2-completer>
+              <show-errors [control]="refundChequeForm.controls.transStatus"></show-errors>
+            </div>
+            <div class="col-md-3 col-xs-12">
+              <label> {{'uft.refundCheque.transactionType' | translate}}</label>
+              <ng2-completer
+              formControlName="transType"
+              [datasource]="transactionTypeData"
+              [minSearchLength]="0"
+              [openOnFocus]="false"
+              (opened)="onOpened($event)"
+              [fillHighlighted]="false"
+              [placeholder]="'Search Transaction Type'"
+              [textSearching]="'Please wait...'"
+              [inputClass]="'form-control'"
+              [clearUnselected]="true">
+              </ng2-completer>
+              <show-errors [control]="refundChequeForm.controls.transType"></show-errors>
+            </div>
+            <div class="col-md-3 col-xs-12">
+              <label>&nbsp;</label>
+              <button id="uftrcSearchBtn" class="btn green-btn" (click)="getRefundChequeListBySearch()"> {{'uft.refundCheque.search' | translate}}</button>
+              <button id="uftrcClearBtn" class="grey-btn btn" data-toggle="modal" data-target="" (click)="clearRefundCheque()"> {{'uft.refundCheque.clearAll' | translate}}</button>
+            </div>
+          </div>
+        </div>
+        <!-- Form Row ENds -->
+      </form>
+    </div>
+    <!-- Grid Inner Ends -->
+  <!-- Grid Box Ends -->
+  <div [hidden]="!showRefundCheckList">
+      <div class="grid-heading">
+        <h3> {{'uft.refundCheque.refundChequeList' | translate}}</h3>
+      </div>
+      <!-- Grid Heading Ends -->
+      <div class="grid-inner">
+        <div class="form-row text-right search-top sr-btns">
+        </div>
+        <div class="form-row">
+          <div class="row">
+            <div class="col-md-12 col-xs-12 table-col">
+              <div class="table-responsive table-overflow-sc">
+                <table id="refundChequeList" class="table table-bordered table-stripped">
+                </table>
+              </div>
+              <!-- Table Ends -->
+            </div>
+          </div>
+        </div>
+        <!-- Form Row ENds -->
+        <div class="form-row text-center modal-footer">
+          <div class="row">
+            <div class="col-md-12 col-xs-12">
+              <button id="stopCheque"  [disabled]="!stopChequeBtn"  class="btn green-btn" (click)=stopCheque()>{{'uft.dashboard.bankReconciliation.stopCheque' | translate }}</button>
+              <button id="broker-edit_comment_form_close" (click)="closeModal()" type="button" class="btn grey-btn" data-dismiss="modal">{{ 'button.close' | translate }}</button>
+            </div>
+          </div>
+        </div>
+        <!-- Form Row ENds -->
+      </div>
+      <!-- Grid Inner Ends -->
+    <!-- Grid Box Ends -->
+  </div>
+</div>
+<!-- Container Ends -->

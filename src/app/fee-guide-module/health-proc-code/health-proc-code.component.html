@@ -1,0 +1,211 @@
+<div class="section-heading">
+    <h2>{{'feeGuide.procedureCode.heading.proc-code'|translate}} -
+        <span>{{'button.search'|translate}}</span>
+    </h2>
+</div>
+<!-- Section Heading Ends -->
+<div class="grid-box">
+    <div class="grid-heading">
+        <h3>Health Procedure Code</h3>
+        <div class="web-reg">
+            <a class="green-btn-add btn" *ngIf="healthProcCodeCheck[0].addHealthProcCode == 'T'" data-toggle="modal"
+                data-target="#addHealthProcCode" (click)="enableAddMode()">
+                <i class="fa fa-plus"></i>Add Health Procedure Code</a>
+        </div>
+    </div>
+    <!-- Grid Heading Ends -->
+    <div class="grid-inner">
+        <form [formGroup]="healthProcCode">
+            <div class="form-row">
+                <div class="row min-ht-sf">
+                    <div class="col-md-2 col-xs-12">
+                        <label>Procedure ID</label>
+                        <input id="hpca_procId" type="text" class="fm-txt form-control" placeholder="Procedure ID"
+                            formControlName="procId" (keydown)="isNumberKey($event)" (keyup.enter)="isEnterKey($event)">
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                        <label>Procedure Description</label>
+                        <ng2-completer [inputId]="'hpca_procDesc'" id="hpca_procDesc" formControlName="healthProcDesc"
+                            [datasource]="procDescRemote" [minSearchLength]="3" [clearUnselected]="false"
+                            [placeholder]="'Search Procedure Description'" [textSearching]="'Please wait...'"
+                            [inputClass]="'form-control'" [fillHighlighted]="true" [autoHighlight]="true"
+                            [selectOnFocus]="true" (selected)="onProcDescSelect($event)">
+                        </ng2-completer>
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                        <label>&nbsp;</label>
+                        <button id="btnHealthProc" *ngIf="healthProcCodeCheck[0].searchHealthProcCode == 'T'"
+                            class="btn green-btn" (click)="getHealthProc()">{{'button.search'|translate}}</button>
+                        <button id="btnClearHealthProc" class="btn grey-btn"
+                            (click)="resetHealthProc()">{{'button.clear'|translate}}</button>
+                    </div>
+                </div>
+                <!-- Form Row ENds -->
+            </div>
+            <!-- Grid Inner Ends -->
+        </form>
+    </div>
+    <div [hidden]="!showSearchTable">
+        <div class="grid-box">
+            <div class="grid-heading">
+                <h3>{{'feeGuide.procedureCode.heading.proc-code-list'|translate}}</h3>
+            </div>
+            <div class="grid-inner">
+                <form>
+                    <div class="form-row">
+                        <div class="row">
+                            <div class="col-md-12 col-xs-12 table-col">
+                                <div class="table-responsive">
+                                    <table id="healthProcedureCode"
+                                        class="display table table-bordered table-stripped alignRightText">
+                                        <thead>
+                                        </thead>
+                                        <tfoot>
+                                            <tr>
+                                                <td width="100px">
+                                                    <input [(ngModel)]="healthServiceIdL" id="hpc_dentalServiceId"
+                                                        type="text" class="fm-txt form-control inputSearch"
+                                                        name="healthServiceId"
+                                                        placeholder="{{'feeGuide.procedureCode.proc-code-listing.serviceId' | translate}}">
+                                                </td>
+                                                <td width="100px">
+                                                    <input [(ngModel)]="healthProcIdL" id="hpc_dentalProcId" type="text"
+                                                        class="fm-txt form-control inputSearch amount_right_grid"
+                                                        name="healthProcedureId"
+                                                        placeholder="{{'feeGuide.procedureCode.proc-code-listing.proc-id' | translate}}">
+                                                </td>
+                                                <td width="100px">
+                                                    <input [(ngModel)]="shortDescL" type="text"
+                                                        class="fm-txt form-control inputSearch amount_right_grid"
+                                                        name="healthProcedureDesc"
+                                                        placeholder="{{'feeGuide.procedureCode.proc-code-listing.desc-short' | translate}}">
+                                                </td>
+                                                <td width="200px">
+                                                    <input [(ngModel)]="healthProcedureLongDescL"
+                                                        id="hpc_dentalProcDescLong" type="text"
+                                                        class="fm-txt form-control inputSearch amount_right_grid"
+                                                        name="healthProcedureLongDesc"
+                                                        placeholder="{{'feeGuide.procedureCode.proc-code-listing.desc-long' | translate}}">
+                                                </td>
+                                                <td width="50px">
+                                                    <div class="form-row text-right">
+                                                        <button title="{{'common.search' | translate}}"
+                                                            id="hpc_searchbtn" class="btn green-btn searchreset"
+                                                            type="submit"
+                                                            (click)="getHealthProcCodeListByGridFilteration('healthProcedureCode')">
+                                                            <span class="glyphicon glyphicon-search"></span>
+                                                        </button>
+                                                        <button title="{{'common.reset' | translate}}" id="hpc_resetbtn"
+                                                            class="btn grey-btn searchreset" (click)="getHealthProc()">
+                                                            <span class="glyphicon glyphicon-repeat"></span>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                                <!-- Table Ends -->
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="addHealthProcCode" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button id="hpca_close" (click)="resetaddProCodeOnClose()" type="button" class="close"
+                        data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Health Procedure Code</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="grid-box">
+                        <div class="grid-inner">
+                            <div class="form-row">
+                                <form [formGroup]="addHealthProcCodeForm">
+                                    <div class="row min-ht-sf">
+                                        <div class="col-md-6 col-xs-12">
+                                            <label>Health Service
+                                                <span class="required">*</span>
+                                            </label>
+                                            <ng2-completer [inputId]="'hpca_healthService'"
+                                                formControlName="healthService" [datasource]="healthProcDataRemote"
+                                                [minSearchLength]="1" [clearUnselected]="true"
+                                                [placeholder]="'Search Health Service'"
+                                                [textSearching]="'Please wait...'" [inputClass]="'form-control'"
+                                                [fillHighlighted]="true" [autoHighlight]="true" [selectOnFocus]="true"
+                                                (selected)="onSelect($event)">
+                                            </ng2-completer>
+                                            <show-errors
+                                                [control]="addHealthProcCodeForm.controls.healthService"></show-errors>
+                                        </div>
+
+                                        <div class="col-md-6 col-xs-12">
+                                            <label>{{'feeGuide.procedureCode.proc-code-listing.proc-id'|translate}}
+                                                <span class="required">*</span>
+                                            </label>
+                                            <input id="hpca_procID" type="text" OnlyNumber="true"
+                                                formControlName="procId" class="form-control"
+                                                placeholder="{{'feeGuide.procedureCode.proc-code-listing.proc-id'|translate}}"
+                                                (keydown)="isNumberKey($event)" />
+                                            <show-errors
+                                                [control]="addHealthProcCodeForm.controls.procId"></show-errors>
+                                        </div>
+
+                                        <div class="col-md-6 col-xs-12 txtarea-height">
+                                            <label>{{'feeGuide.procedureCode.proc-code-listing.desc-short'|translate}}</label>
+                                            <textarea id="hpca_sdesc" class="form-control notInCaps"
+                                                formControlName="descShort"
+                                                placeholder="{{'feeGuide.procedureCode.proc-code-listing.desc-short'|translate}}"></textarea>
+                                            <show-errors
+                                                [control]="addHealthProcCodeForm.controls.descShort"></show-errors>
+                                        </div>
+
+                                        <div class="col-md-6 col-xs-12 txtarea-height">
+                                            <label>{{'feeGuide.procedureCode.proc-code-listing.desc-long'|translate}}</label>
+                                            <textarea id="hpca_ldesc" class="form-control notInCaps"
+                                                formControlName="descLong"
+                                                placeholder="{{'feeGuide.procedureCode.proc-code-listing.desc-long'|translate}}"></textarea>
+                                            <show-errors
+                                                [control]="addHealthProcCodeForm.controls.descLong"></show-errors>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <!-- Form Row ENds -->
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal Body End-->
+                <div class="modal-footer">
+                    <!-- <button id="hpca_save" class="green-btn btn" *ngIf="addMode" (click)="saveProcedureCode()">{{'button.save'|translate}}</button> -->
+                    <button id="hpca_Update" class="green-btn btn" *ngIf="!viewMode"
+                        (keyup.arrowLeft)="focusNextEle($event,'hpca_addHealthProcedure_close')"
+                        (keyup.arrowRight)="focusNextEle($event,'hpca_addHealthProcedure_close')"
+                        (click)="saveProcedureCode()">{{buttonText}}</button>
+                    <button class="btn grey-btn" id="hpca_addHealthProcedure_close" data-dismiss="modal"
+                        (keyup.arrowLeft)="focusNextEle($event,'hpca_Update')"
+                        (keyup.arrowRight)="focusNextEle($event,'hpca_Update')"
+                        (click)="resetaddProCodeOnClose()">{{'button.close'|translate}}</button>
+                </div>
+                <!-- Modal  Footer Ends -->
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="showLoader" class="loader-outer">
+        <div class="cube-wrapper">
+            <div class="cube-folding">
+                <span class="leaf1"></span>
+                <span class="leaf2"></span>
+                <span class="leaf3"></span>
+                <span class="leaf4"></span>
+            </div>
+            <span class="loading" data-name="Loading">{{loaderPlaceHolder}}</span>
+        </div>
+    </div>

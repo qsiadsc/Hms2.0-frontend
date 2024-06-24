@@ -1,0 +1,22 @@
+<div class="grid-box">
+    <div class="grid-heading">
+        <h3>{{'claim-type.main-heading'|translate}}</h3>
+    </div>
+    <!-- Grid Heading Ends -->
+    <div class="grid-inner">
+        <form [formGroup]="ClaimTypeFormGroup">
+          <div class="form-row">
+              <div class="row min-ht-sf">
+                  <div class="col-md-3 col-xs-12">
+                      <label>{{'claim-type.type' | translate}}</label>
+                      <select class="fm-txt form-control" placeholder="Claim Type" name="claimType" id="cct_claimType" formControlName="claimType">
+                        <option *ngFor="let type of claimType" [value]="type.disciplineKey">{{type.disciplineName}}</option>
+                      </select>
+                  </div>
+              </div>
+          </div>
+        </form>  
+        <!-- Form Row ENds -->
+    </div>
+    <!-- Grid Inner Ends -->
+</div>

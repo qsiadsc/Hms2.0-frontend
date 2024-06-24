@@ -1,0 +1,269 @@
+<!-- Section Heading Starts -->
+<div class="section-heading">
+  <h2>{{'finance.taxRates.taxRates' | translate}}
+    <span>{{'finance.taxRates.search' | translate}}</span>
+  </h2>
+</div>
+<!-- Section Heading Ends -->
+<div class="grid-box">
+  <div class="grid-heading">
+    <h3>{{'finance.taxRates.searchTaxRate' | translate}}</h3>
+    <div class="web-reg">
+      <button *ngIf="taxRateArray[0].addTaxRate == 'T'" class="green-btn-add btn" data-toggle="modal" data-target="#AddNewTaxRate"
+        (click)="enableAddMode()">
+        <i class="fa fa-plus"></i>{{'button.addTaxRate' | translate}}</button>
+    </div>
+  </div>
+  <div class="grid-inner">
+    <form [formGroup]="taxRateSearchForm">
+      <div class="form-row">
+        <div class="row min-ht-sf">
+          <div class="col-md-3 col-xs-12">
+            <label>{{'finance.taxRates.province' | translate}}</label>
+            <ng2-completer [inputName]="'provinceKey'" formControlName="searchProvince" name="provinceKey" [datasource]="provinceDataRemote"
+              [minSearchLength]="0" [openOnFocus]="true" (opened)="onOpened($event)" [fillHighlighted]="false"
+              [placeholder]="'Search Province'" [textSearching]="'Please wait...'" [inputClass]="'form-control inputSearch'"
+              data-type="predective" [inputId]="'finTaxRatesProvinceFooter'" id="finTaxRatesProvinceFooter" (selected)="onSearchProvince($event)"
+              [clearUnselected]="true">
+            </ng2-completer>
+            <show-errors [control]="taxRateSearchForm.controls.searchProvince"></show-errors>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{'finance.taxRates.taxTransactionCode' | translate}}</label>
+            <ng2-completer formControlName="searchTransactionCode" [inputName]="'taxTransactionCode'" name="taxTransactionCode"
+              [datasource]="codeDataRemote" [minSearchLength]="0" [openOnFocus]="true" (opened)="onOpened($event)"
+              [fillHighlighted]="false" [placeholder]="'Search Transaction Code'" [textSearching]="'Please wait...'"
+              [inputClass]="'form-control inputSearch'" data-type="predective" [inputId]="'finTaxTransactionCodeFooter'"
+              id="finTaxTransactionCodeFooter" (selected)="onSearchTransactionCode($event)" [clearUnselected]="true">
+            </ng2-completer>
+            <show-errors [control]="taxRateSearchForm.controls.searchTransactionCode"></show-errors>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{'finance.taxRates.taxName' | translate}}</label>
+            <ng2-completer formControlName="searchTaxName" [inputName]="'taxKey'" name="taxKey" [datasource]="taxNameDataRemote"
+              [minSearchLength]="0" [openOnFocus]="true" (opened)="onOpened($event)" [fillHighlighted]="false"
+              [placeholder]="'Search Tax Name'" [textSearching]="'Please wait...'" [inputClass]="'form-control inputSearch'"
+              data-type="predective" [inputId]="'finTaxNameFooter'" id="finTaxNameFooter" (selected)="onSearchTaxKey($event)"
+              [clearUnselected]="true">
+            </ng2-completer>
+            <show-errors [control]="taxRateSearchForm.controls.searchTaxName"></show-errors>
+          </div>
+
+          <div class="col-md-3 col-xs-12">
+            <label>{{'finance.taxRates.taxRate' | translate}}</label>
+            <input formControlName="searchTaxRate" id="finTaxRateFooter" class="fm-txt form-control tFootInput inputSearch"
+              type="text" name="taxRate" placeholder="{{'finance.taxRates.taxRate' | translate}}">
+            <show-errors [control]="taxRateSearchForm.controls.searchTaxName"></show-errors>
+          </div>
+
+          <div class="col-md-3 col-xs-12">
+            <label>{{'finance.taxRates.effectiveDate' | translate}}</label>
+            <div class="calender-field">
+              <my-date-picker formControlName="searchEffectiveOn" id="finEffectiveOnFooter" class="inputSearch" name="effectiveOn"
+                data-type="date" [options]="myDatePickerOptions" [selDate]="dateNameArray['effectiveOn']"
+                (inputFocusBlur)="changeDateFormat1($event, 'effectiveOn')" placeholder="{{'common.date-placeholder' | translate}}">
+              </my-date-picker>
+            </div>
+            <show-errors [control]="taxRateSearchForm.controls.searchEffectiveOn"></show-errors>
+          </div>
+
+          <div class="col-md-3 col-xs-12">
+            <label>{{'finance.taxRates.expiryDate' | translate}}</label>
+            <div class="calender-field">
+              <my-date-picker formControlName="searchExpiredOn" id="finExpiredOnFooter" class="inputSearch" name="expiredOn"[ngClass]="expired  ? 'expired' : 'notExpired'"
+                data-type="date" [options]="myDatePickerOptions" [selDate]="dateNameArray['expiredOn']" 
+                (inputFocusBlur)="changeDateFormat1($event, 'expiredOn')" placeholder="{{'common.date-placeholder' | translate}}">
+              </my-date-picker>
+            </div>
+            <show-errors [control]="taxRateSearchForm.controls.searchExpiredOn"></show-errors>
+          </div>
+
+          <div class="col-md-3 col-xs-12">
+            <label>&nbsp;</label>
+            <button *ngIf="taxRateArray[0].searchTaxRate == 'T'" id="btnVisionProc" class="btn green-btn" (click)="getTaxRateList()">{{'button.search'|translate}}</button>
+            <button id="btnClearVisionProc" class="btn grey-btn" (click)="resetTaxRateSearch()">{{'button.clear'|translate}}</button>
+          </div>
+        </div>
+        <!-- Form Row ENds -->
+      </div>
+      <!-- Grid Inner Ends -->
+    </form>
+  </div>
+</div>
+<div [hidden]="!showSearchTable">
+  <div class="grid-box">
+    <div class="grid-heading">
+      <h3>{{'finance.taxRates.taxRatesList' | translate}}</h3>
+    </div>
+    <div class="grid-inner">
+      <div [ngClass]="{'tableLoader': showtableLoader}">
+        <div class="form-group">
+          <div class="table-responsive lg-table">
+            <table id="taxRateList" class="table table-bordered table-stripped">
+              <thead>
+                <tr>
+                  <th>{{'finance.taxRates.province'| translate}}</th>
+                  <th class="grid_right">{{'finance.taxRates.taxTransactionCode'| translate}}</th>
+                  <th class="grid_right">Tax Name</th>
+                  <th class="grid_right">{{'finance.taxRates.taxRateTable'|translate}}</th>
+                  <th class="grid_right">{{'finance.taxRates.effectiveDate'|translate}}</th>
+                  <th class="grid_right">{{'finance.taxRates.expiryDate'|translate}}</th>
+                  <th class="grid_right">{{'common.action'|translate}}</th>
+                </tr>
+              </thead>
+              <tbody *ngFor="let taxRates of provinceArray">
+                <tr>
+                  <td><i class="fa fa-fw" [ngClass]="{'fa-caret-down': !showRightArrow , 'fa-caret-right': provinceKey!= taxRates.provinceKey }"
+                      aria-hidden="true" (click)="changeIcon(taxRates)"></i>{{taxRates.provinceName}}</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr [hidden]="provinceKey!= taxRates.provinceKey" *ngFor="let taxRates1 of taxRates.child">
+                  <td>{{taxRates1.taxMasterDescription}}</td>
+                  <td class="grid_right">{{taxRates1.mergedDescriptionTaxRateTransactionCode}}</td>
+                  <td class="grid_right">{{taxRates1.taxMasterDescription}}</td>
+                  <td class="grid_right">{{taxRates1.taxRate}}</td>
+                  <td class="grid_right">{{taxRates1.effectiveOn | dateFormate }}</td>
+                  <td class="grid_right" [ngClass]="{'expiryDate': taxRates1.expiredOn!=''}">{{taxRates1.expiredOn | dateFormate }}</td>
+                  <td class="grid_right">
+                    <!-- changes to correct view button colour. -->
+                    <a *ngIf="taxRateArray[0].viewTaxRate == 'T'" class="table-action-btn view-ico col" data-toggle="modal"
+                      data-target="#AddNewTaxRate" (click)="viewTaxRatesByKey(taxRates1)"><i class="fa fa-eye"></i></a>
+                    <a *ngIf="taxRateArray[0].deleteTaxRate == 'T'" class="table-action-btn del-ico " data-toggle="modal" (click)="deleteTaxRates(taxRates1.taxRateDetailKey)"><i
+                      class="fa fa-trash"></i></a>
+                  </td>
+                </tr>
+              </tbody>
+              <tbody *ngIf="provinceArray">
+                <tr *ngIf="provinceArray.length == 0 && !showtableLoader" class="odd">
+                  <td valign="top" colspan="8" style="text-align: center" class="dataTables_empty">{{'card.card-holder.data-tables.datamsg'
+                    | translate}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <span *ngIf="showtableLoader" class="loading" data-name="Loading">{{'common.processing' | translate}}</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="AddNewTaxRate" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="resetTaxRateForm" type="button" class="close" data-dismiss="modal" (click)="resetTaxRateForm()">&times;</button>
+        <h4 *ngIf="addMode" class="modal-title">{{'finance.taxRates.addTaxRate' | translate}}</h4>
+        <h4 *ngIf="viewMode" class="modal-title">{{'finance.taxRates.taxRateDetail' | translate}}</h4>
+        <h4 *ngIf="editMode" class="modal-title">{{'finance.taxRates.editTaxDetail' | translate}}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{'finance.taxRates.taxRateEntry' | translate}}</h3>
+          </div>
+          <!-- Grid Heading Ends -->
+          <div class="grid-inner">
+            <div [formGroup]="taxRatesForm">
+              <div class="form-row">
+                <div class="row min-ht-sf">
+
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'finance.taxRates.taxTransactionCode' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <ng2-completer #finTaxTransactionCode formControlName="taxTransactionCode" [datasource]="codeDataRemote"
+                      [minSearchLength]="0" [openOnFocus]="false" (opened)="onOpened($event)" [fillHighlighted]="false"
+                      [placeholder]="'Search Transaction Code'" [textSearching]="'Please wait...'" [inputClass]="'form-control'"
+                      (selected)="onTransactionCodeSelected($event)" [clearUnselected]="true">
+                    </ng2-completer>
+                    <show-errors [control]="taxRatesForm.controls.taxTransactionCode"></show-errors>
+                  </div>
+
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'finance.taxRates.taxName' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <ng2-completer #finTaxName formControlName="taxName" [datasource]="taxNameDataRemote"
+                      [minSearchLength]="0" [openOnFocus]="false" (opened)="onOpened($event)" [fillHighlighted]="false"
+                      [placeholder]="'Search Tax Name'" [textSearching]="'Please wait...'" [inputClass]="'form-control'"
+                      (selected)="onTaxNameSelected($event)" [clearUnselected]="true">
+                    </ng2-completer>
+                    <show-errors [control]="taxRatesForm.controls.taxName"></show-errors>
+                  </div>
+
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'finance.taxRates.province' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <ng2-completer #finProvince formControlName="province" [datasource]="provinceDataRemote"
+                      [minSearchLength]="0" [openOnFocus]="false" (opened)="onOpened($event)" [fillHighlighted]="false"
+                      [placeholder]="'Search Province'" [textSearching]="'Please wait...'" [inputClass]="'form-control'"
+                      (selected)="onProvinceSelected($event)" [clearUnselected]="true">
+                    </ng2-completer>
+                    <show-errors [control]="taxRatesForm.controls.province"></show-errors>
+                  </div>
+
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'finance.taxRates.taxRate' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <input id="finTaxRate" type="text" class="form-control" name="taxRate" formControlName="taxRate"
+                      placeholder="{{'finance.taxRates.taxRate' | translate}}" />
+                    <show-errors [control]="taxRatesForm.controls.taxRate"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'finance.taxRates.effectiveDate' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <div class="calender-field">
+                      <my-date-picker id="finEffectiveDate" [options]="myDatePickerOptions" name="effectiveOn"
+                        formControlName="effectiveOn" (inputFocusBlur)="changeDateFormat($event, 'effectiveOn','taxRatesForm', true)"
+                        placeholder="{{'common.date-placeholder' | translate}}">
+                      </my-date-picker>
+                      <show-errors [control]="taxRatesForm.controls.effectiveOn"></show-errors>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'finance.taxRates.expiryDate' | translate}}</label>
+                    <div class="calender-field">
+                      <my-date-picker id="finExpiryDate" [options]="myDatePickerOptions" name="expiredOn"
+                        formControlName="expiredOn" [ngClass]="expired  ? 'expired' : 'notExpired'" (inputFocusBlur)="changeDateFormat($event, 'expiredOn','taxRatesForm')"
+                        placeholder="{{'common.date-placeholder' | translate}}">
+                      </my-date-picker>
+                      <show-errors [control]="taxRatesForm.controls.expiredOn"></show-errors>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="saveTaxRatesBtn" class="green-btn btn" (click)="submitTaxRatesForm(taxRatesForm)">{{buttonText}}</button>
+        <button id="closeTaxRateForm" type="button" class="btn grey-btn" data-dismiss="modal" (click)="resetTaxRateForm()">{{'button.close'
+          | translate}}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div [hidden]="!showLoader" class="loader-outer">
+  <div class="cube-wrapper">
+    <div class="cube-folding">
+      <span class="leaf1"></span>
+      <span class="leaf2"></span>
+      <span class="leaf3"></span>
+      <span class="leaf4"></span>
+    </div>
+    <span class="loading" data-name="Loading">{{'company.plan.benefits.pleaseWait'|translate}}</span>
+  </div>
+</div>

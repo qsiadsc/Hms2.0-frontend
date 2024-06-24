@@ -1,0 +1,23 @@
+input[type="radio"] {
+    -webkit-margin-end: 6px !important;
+}
+.checkpading span.custom-check {
+    padding-left: 4px;
+}
+.showHideReportsPdfButton{
+    display: none
+}
+.head {
+     background: #0085af;
+}
+table th {
+    background: #00bbb5;
+}
+p {
+    color: #000000;
+}
+.table-action-btn {
+    padding: 3px 3px;
+    border-radius: 4px;
+    margin: 0 0 0 2px;
+}

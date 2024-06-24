@@ -1,0 +1,112 @@
+<button class="btn green-btn sm-width" id="btnModalRoleAssignmentHistory"  data-toggle="modal"
+ (click)="getRoleHistory();" data-target="#ModalRoleAssignmentHistory" style="display:none"></button>
+<div id="ModalRoleAssignmentHistory" class="modal fade dbPopup" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button *ngIf= "alberta" id="btnCloseCardholderHistoryPopup" type="button" title="Close" class="close" data-dismiss="modal" (click)="roleHistoryModal()">&times;</button>
+        <button *ngIf= "!alberta" id="btnCloseCardholderHistoryPopup" type="button" title="Close" class="close" data-dismiss="modal" >&times;</button>
+        <h4 class="modal-title">{{'card.card-holder.role-assigned.role-assigned-history' | translate}}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="grid-box">
+					<div class="grid-heading"> 
+						<h3>{{'card.card-holder.role-assigned.role-assigned-detail' | translate}}</h3>
+          </div>
+          <form [formGroup]="CardHolderPopUpRoleAssignedFormGroup">
+              <div class="grid-inner">
+                <div class="form-row">
+                  <div class="row">
+                    <div class="col-md-3 col-xs-12">
+                      <label>{{'card.card-holder.role-assigned.description' | translate}} <span class="required">*</span></label>	
+                      <select id="ddlRole" name="description" (change)="validateCardHolderRole($event)"  placeholder="Description" formControlName="description" 
+                        class="fm-txt form-control">
+                        <option hidden value="">{{'common.select' | translate}}</option>
+                        <option *ngFor="let role of arrRoleList" [value]="role.chRoleKey">
+                          {{role.chRoleDesc}}
+                        </option>
+                      </select>
+                      <show-errors [control]="CardHolderPopUpRoleAssignedFormGroup.controls.description"></show-errors> 
+                    </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'common.effectivedate' | translate}} <span class="required">*</span></label>
+                    <div class="calender-field">
+                      <my-date-picker disableForm 
+                      id="ddlPopupEffective"
+                      [options]="myDatePickerOptions"
+                      name="effective_date" placeholder="{{'common.date-placeholder' | translate}}"
+                      formControlName="effective_date" 
+                      (inputFocusBlur)="changeDateFormat($event, 'effective_date','CardHolderPopUpRoleAssignedFormGroup',true)">
+                    </my-date-picker>
+                    <show-errors [control]="CardHolderPopUpRoleAssignedFormGroup.controls.effective_date"></show-errors> 
+                  </div>
+                </div>
+                <div class="col-md-3 col-xs-12">
+                  <label>{{'common.expirydate' | translate}}</label>	
+                  <div class="calender-field">
+                    <my-date-picker id="ddlPopupExpiry" 
+                    [options]="myDatePickerOptions"
+                    name="expiry_date" placeholder="{{'common.date-placeholder' | translate}}"
+                    formControlName="expiry_date" 
+                    [ngClass]="expired  ? 'expired' : 'notExpired'"
+                    (inputFocusBlur)="changeDateFormat($event, 'expiry_date' ,'CardHolderPopUpRoleAssignedFormGroup')">
+                  </my-date-picker>
+                  <show-errors [control]="CardHolderPopUpRoleAssignedFormGroup.controls.expiry_date"></show-errors> 
+                 </div>
+              </div>
+              <div class="col-md-6 col-xs-12 min-ht-half">
+                <button *ngIf= "showUpdateRoleBtn && alberta" id="btnSaveRoleHistory" class="btn green-btn btn-lg" type="submit" (click)="SaveCHRoleHistory()" >
+                  Update</button>
+                  <button *ngIf= "!alberta" id="btnSaveRoleHistory" class="btn green-btn btn-lg" type="submit" (click)="SaveCHRoleHistory()" >
+                    {{roleSubmitButtonText}}</button>
+                </div>
+              </div>
+            </div><!-- Form Row ENds -->
+          </div><!-- Grid Inner Ends -->
+        </form> 
+        </div>
+        
+        <div class="grid-box">
+            <div class="grid-heading">
+              <h3>{{'card.card-holder.role-assigned.role-assigned-history' | translate}}</h3>
+            </div>
+        <div class="grid-inner">
+            <div class="form-row">
+              <div class="row">
+                <div class="col-md-12 col-xs-12 table-col">
+                  <div class="table-responsive">
+                    <table id="rolesAssignmentHistory1" class="table table-bordered table-stripped inlinePopupTable">
+                      <thead>
+                        <tr>
+                          <th width="20%">{{'card.card-holder.role-assigned.description' | translate}}</th>
+                          <th width="10%" class="amount_right_grid">{{'common.effectivedate' | translate}}</th>
+                          <th width="10%" class="amount_right_grid">{{'common.expirydate' | translate}}</th>
+                          <th width="20%" class="amount_right_grid">{{'common.action' | translate}}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="tableRow" *ngFor="let dataRow of roleHistorytableData; let i = index" id="{{'row_'+i}}">
+                            <td>{{dataRow.chRoleDesc}}</td>
+                            <td class="amount_right_grid">{{dataRow.roleEffectiveOn}}</td>
+                            <td class="amount_right_grid expiryDate">{{dataRow.roleExpiryOn}}</td>
+                            <td class="amount_right_grid"><a href='javascript:void(0)' (click)="setRoleHistoryForm(dataRow)"
+                               class='edit_row table-action-btn edit-ico' ><i class='fa fa-pencil'></i>
+                              </a></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>  
+  </div>
+  <div class="modal-footer">
+    <button *ngIf="alberta" id="closeHistoryPopup" title="Close" class="btn grey-btn" (click)="roleHistoryModal()" data-dismiss="modal">{{'button.close' | translate}}</button>
+    <button *ngIf="!alberta" id="closeHistoryPopup" title="Close" class="btn grey-btn"  data-dismiss="modal">{{'button.close' | translate}}</button>
+  </div>
+</div>
+</div>
+</div>

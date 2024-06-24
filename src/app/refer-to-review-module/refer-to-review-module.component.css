@@ -1,0 +1,30 @@
+.web-reg{
+    margin-bottom: 15px;
+}
+.reviewer-tabs .col-md-3{
+    margin: 7px 0px;
+}
+.db-box h3{
+    min-height: 40px;
+}
+.cl1::after{
+    background: #00bb4b;
+}
+.cl5::after{
+    background: #000000;
+}
+.cl6::after{
+    background: #bf2d46;
+}
+.cl7::after{
+    background: sienna;
+}
+.cl8::after{
+background: #d2810f;
+}
+.cl9::after{
+    background: #4f820c ;
+}
+.claim-dashboard .form-control{
+    margin: 20px 0px;
+}

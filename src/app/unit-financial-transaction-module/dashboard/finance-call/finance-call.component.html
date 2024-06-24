@@ -1,0 +1,575 @@
+<!-- Call Tile -->
+<div>
+  <div class="grid-box">
+    <div class="grid-heading">
+      <h3>{{'uft.dashboard.callIn.financeCall' | translate }}</h3>
+    </div>
+    <div class="grid-inner">
+      <div class="form-row">
+        <form [formGroup]="financeCallForm">
+          <div class="row min-ht-sf">
+            <div class="col-md-12 col-xs-12">
+              <div class="row">
+                <div class="col-md-3 col-xs-12">
+                  <label>{{'uft.dashboard.callIn.groupNameNo' | translate }}
+                    <span class="required">*</span>
+                  </label>
+                  <ng2-completer [inputId]="'finCallGroupNameNum'" formControlName="groupNameNum" [datasource]="companyDataRemote" [minSearchLength]="2"
+                    [placeholder]="'Search Group Name/ No.'" [textSearching]="'Please wait...'" [inputClass]="'form-control'"
+                    [clearUnselected]="true" (selected)="onCompanyNameSelected($event)" (blur)="OnBlurCompany()" [fillHighlighted]="false"
+                    [autoHighlight]="true">
+                  </ng2-completer>
+                  <show-errors [control]="financeCallForm.controls.groupNameNum"></show-errors>
+                </div>
+                <div class="col-md-9 col-xs-12">
+                  <label>&nbsp;</label>
+                  <button id="finCallSearchBtn"  type="submit" title="{{'common.search' | translate}}" class="btn green-btn"
+                    (click)="searchFinCallDashboard()"><span class="glyphicon glyphicon-search"></span>
+                  </button>
+                  <button class="btn green-btn" tabindex='0' (click)="getPlanComments()">{{'uft.dashboard.callIn.planComments' | translate }}</button>
+                  <button class="green-btn btn" tabindex='0' (click)="getPlanDetails()">{{'uft.dashboard.callIn.planDetails' | translate }}</button>
+                  <button class="green-btn btn" tabindex='0' (click)="getCompanyCardholders()">{{'uft.dashboard.callIn.cardholders' | translate }}</button>
+                  <button class="green-btn btn" data-toggle="pill" href="#financeReports" tabindex='0' (click)="getCallReports()">{{'uft.dashboard.callIn.reports' | translate }}</button>
+                  <button id="planCommentsPopup" style="display:none" data-toggle="modal" data-target="#planCommentPopup"></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Primary Contact Start -->
+  <div class="form-row">
+    <div class="row">
+      <div [hidden]="!showPrimaryContactList">
+        <div class="col-md-12 col-xs-12">
+          <div class="grid-box">
+            <div class="grid-heading collapse-heading" aria-expanded="false" data-toggle="collapse" data-target="#primaryContactSection">
+              <h3 data-toggle="collapse" aria-expanded="false" data-target="#primaryContactSection">{{'uft.dashboard.callIn.primaryContact' | translate }}</h3>
+            </div>
+            <div class="collapse" id="primaryContactSection">
+              <div class="grid-inner">
+                <div class="form-row text-right search-top">
+                  <button id="primaryContactSearchBtn" type="submit" title="{{'common.search' | translate}}" class="btn green-btn searchreset"
+                    (click)="primaryContactListSearch('primaryContactList')">
+                    <span class="glyphicon glyphicon-search"></span>
+                  </button>
+                  <button id="resetPrimaryContactBtn" title="{{'common.reset' | translate}}" class="btn grey-btn searchreset" (click)="resetPrimaryContactList('primaryContactList')">
+                    <span class="glyphicon glyphicon-repeat"></span>
+                  </button>
+                </div>
+                <div class="form-row">
+                  <div class="row">
+                    <div class="col-md-12 col-xs-12">
+                      <div class="table-responsive ">
+                        <table id="primaryContactList" class="display table table-bordered table-stripped">
+                          <thead>
+                          </thead>
+                          <tfoot>
+                            <tr>
+                              <td width="7%">
+                                <input id="companycontactfirstName" class="fm-txt form-control tFootInput inputSearch" placeholder="{{ 'company.company-tab-datatable.contact-datatables.first-name' | translate }}"
+                                  type="text" name="firstName" />
+                              </td>
+                              <td width="7%">
+                                <input id="companycontactlastName" class="fm-txt form-control tFootInput inputSearch in-number" placeholder="{{ 'company.company-tab-datatable.contact-datatables.last-name' | translate }}"
+                                  type="text" name="lastName" />
+                              </td>
+                              <td width="8%">
+                                <input id="companycontactcityName" class="fm-txt form-control tFootInput inputSearch in-number" placeholder="{{ 'company.company-tab-datatable.contact-datatables.city' | translate }}"
+                                  type="text" name="cityName" />
+                              </td>
+                              <td width="8%">
+                                <input id="companycontactprovinceName" class="fm-txt form-control tFootInput inputSearch in-number" placeholder="{{ 'company.company-tab-datatable.contact-datatables.province' | translate }}"
+                                  type="text" name="provinceName" />
+                              </td>
+                              <td width="7%">
+                                <input id="companycontactcountryName" class="fm-txt form-control tFootInput inputSearch in-number" placeholder="{{ 'company.company-tab-datatable.contact-datatables.country' | translate }}"
+                                  type="text" name="countryName" />
+                              </td>
+                              <td width="8%">
+                                <input id="companycontactphoneNo" class="fm-txt form-control tFootInput inputSearch in-number notIncaps" placeholder="{{ 'company.company-tab-datatable.contact-datatables.phone-no' | translate }}"
+                                  type="text" name="phone" [textMask]="{mask: phoneMask}" />
+                              </td>
+                              <td width="8%">
+                                <input id="companycontactemail" class="fm-txt form-control tFootInput inputSearch in-number" placeholder="{{ 'company.company-tab-datatable.contact-datatables.email-address' | translate }}"
+                                  type="text" name="email" />
+                              </td>
+                              <td width="8%" class="alignDpRight">
+                                <div class="calender-field">
+                                  <my-date-picker id="effectiveOnContact" class="inputSearch" name="effectiveOn" data-type="date" [options]="myDatePickerfilterOptions"
+                                    [selDate]="dateNameArray['effectiveOn']" (inputFocusBlur)="changeDateFormat1($event, 'effectiveOn')"
+                                    placeholder="{{ 'company.company-tab-datatable.contact-datatables.dd/mm/yyyy' | translate }}">
+                                  </my-date-picker>
+                                </div>
+                              </td>
+                              <td width="8%" class="alignDpRight">
+                                <div class="calender-field">
+                                  <my-date-picker id="expiredOnContact" class="inputSearch" name="expiredOn" data-type="date" [options]="myDatePickerfilterOptions"
+                                    [selDate]="dateNameArray['expiredOn']" [ngClass]="expired  ? 'expired' : 'notExpired'"
+                                    (inputFocusBlur)="changeDateFormat1($event, 'expiredOn')" placeholder="{{ 'company.company-tab-datatable.contact-datatables.dd/mm/yyyy' | translate }}">
+                                  </my-date-picker>
+                                </div>
+                              </td>
+                              <td width="7%">
+                                &nbsp;
+                              </td>
+                            </tr>
+                          </tfoot>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Primary Contact End -->
+
+  <!-- UFT Details Start-->
+  <div class="form-row">
+    <div class="row">
+      <div [hidden]="!showUftDetails">
+        <div class="col-md-12 col-xs-12">
+          <div class="grid-box">
+            <div class="grid-heading collapse-heading" aria-expanded="false" data-toggle="collapse" data-target="#uftDetailSection">
+              <h3 data-toggle="collapse" aria-expanded="false" data-target="#uftDetailSection">{{'uft.dashboard.callIn.uftDetails' | translate }}</h3>
+            </div>
+            <!-- Grid Heading Ends -->
+            <div class="collapse" id="uftDetailSection" >
+              <div class="grid-inner" >
+                <app-uft-continuty-call-in  id="uftc"  (uftParentComponent) ="uftContinuityReport($event)"  (uftSubTypeParentComponent) ="uftContinuitySubTypeReport($event)"  (uftOpenClosingParentComponent) ="openingClosingBalance($event)"></app-uft-continuty-call-in>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- UFT Details End-->
+
+  <!-- Administration Fees/Monthly Company Fees Start -->
+  <div class="form-row">
+    <div class="row">
+      <div [hidden]="!showAdministrationFees">
+        <div class="col-md-12 col-xs-12">
+          <div class="grid-box">
+            <div class="grid-heading collapse-heading" aria-expanded="false" data-toggle="collapse" data-target="#administrationFeesSection">
+              <h3 data-toggle="collapse" aria-expanded="false" data-target="#administrationFeesSection">{{'uft.dashboard.callIn.administrationFeesMonthlyCompanyFees' | translate }}</h3>
+            </div>
+            <div class="collapse" id="administrationFeesSection">
+              <div class="grid-inner">
+                <form [formGroup]="adminCompanyFeeForm">
+                  <div class="form-row">
+                    <div class="row min-ht-sf">
+                      <div class="col-md-3 col-xs-12">
+                        <label>{{ 'company.company-form.company-no.' | translate }}
+                        </label>
+                        <input class="fm-txt form-control" type="text" name="company" id="company_form_company" formControlName="company" disabled
+                          placeholder="{{ 'company.company-form.company-no.' | translate }}" disabled>
+                        <show-errors [control]="adminCompanyFeeForm.controls.company"></show-errors>
+                      </div>
+                      <div class="col-md-3 col-xs-12">
+                        <label>{{ 'company.company-form.company-name' | translate }}
+                        </label>
+                        <input class="fm-txt form-control" type="text" name="companyName" autofocus id="companyName" formControlName="companyName"
+                          placeholder="{{ 'company.company-form.company-name' | translate }}">
+                        <show-errors [control]="adminCompanyFeeForm.controls.companyName"></show-errors>
+                      </div>
+                      <div class="col-md-3 col-xs-12">
+                        <label>{{ 'company.company-form.website-address' | translate }}</label>
+                        <input class="fm-txt form-control" type="text" name="websiteAddress" id="company-form_website_address" formControlName="websiteAddress"
+                          placeholder="{{ 'company.company-form.website-address' | translate }}">
+                        <show-errors [control]="adminCompanyFeeForm.controls.websiteAddress"></show-errors>
+                      </div>
+                      <div class="col-md-3 col-xs-12">
+                        <label>{{ 'company.company-form.effective-on' | translate }}
+                        </label>
+                        <div class="calender-field">
+                          <my-date-picker id="company-form_effective_on" [options]="myDatePickerOptions" name="effectiveOn" formControlName="effectiveOn"
+                            (inputFocusBlur)="changeDateFormat($event, 'effectiveOn', 'adminCompanyFeeForm', true)" placeholder="{{ 'company.company-form.dd/mm/yyyy' | translate }}">
+                          </my-date-picker>
+                          <show-errors [control]="adminCompanyFeeForm.controls.effectiveOn"></show-errors>
+                        </div>
+                      </div>
+                      <div class="col-md-3 col-xs-12">
+                        <label>{{ 'company.company-form.grace-period' | translate }}
+                        </label>
+                        <input class="fm-txt form-control" type="text" name="gracePeriod" id="company-form_grace_period" formControlName="gracePeriod"
+                          placeholder="{{ 'company.company-form.grace-period' | translate }}">
+                        <show-errors [control]="adminCompanyFeeForm.controls.gracePeriod"></show-errors>
+                      </div>
+                      <div class="col-md-3 col-xs-12">
+                        <label>{{ 'company.company-form.address-line-1' | translate }}
+                        </label>
+                        <input class="fm-txt form-control" type="text" id="company-form_address_1" formControlName="address1" placeholder="{{ 'company.company-form.address-line-1' | translate }}">
+                        <show-errors [control]="adminCompanyFeeForm.controls.address1"></show-errors>
+                      </div>
+                      <div class="col-md-3 col-xs-12">
+                        <label>{{ 'company.company-form.address-line-2' | translate }}</label>
+                        <input class="fm-txt form-control" type="text" id="company-form_address_2" formControlName="address2" placeholder="{{ 'company.company-form.address-line-2' | translate }}">
+                        <show-errors [control]="adminCompanyFeeForm.controls.address2"></show-errors>
+                      </div>
+                      <div class="col-md-3 col-xs-12">
+                        <label>{{ 'company.company-form.postal-code' | translate }}
+                        </label>
+                        <input class="fm-txt form-control upperCase" type="text" id="company-form_postal_code" formControlName="postalCode" placeholder="{{ 'company.company-form.postal-code' | translate }}"
+                          autocomplete="off">
+                        <show-errors [control]="adminCompanyFeeForm.controls.postalCode"></show-errors>
+                      </div>
+                      <div class="col-md-3 col-xs-12">
+                        <label>{{ 'company.company-form.city' | translate }}
+                        </label>
+                        <input class="fm-txt form-control" type="text" id="company-form_city" formControlName="city" placeholder="{{ 'company.company-form.city' | translate }}">
+                        <show-errors [control]="adminCompanyFeeForm.controls.city"></show-errors>
+                      </div>
+                      <div class="col-md-3 col-xs-12">
+                        <label>{{ 'company.company-form.province' | translate }}
+                        </label>
+                        <input class="fm-txt form-control" type="text" name="province" id="company-form_province" formControlName="province" placeholder="{{ 'company.company-form.province' | translate }}">
+                        <show-errors [control]="adminCompanyFeeForm.controls.province"></show-errors>
+                      </div>
+                      <div class="col-md-3 col-xs-12">
+                        <label>{{ 'company.company-form.country' | translate }}
+                        </label>
+                        <input class="fm-txt form-control" type="text" name="country" id="company-form_country" formControlName="country" placeholder="{{ 'company.company-form.country' | translate }}">
+                        <show-errors [control]="adminCompanyFeeForm.controls.country"></show-errors>
+                      </div>
+                      <div class="col-md-3 col-xs-12">
+                        <div class="row min-ht-sf">
+                          <div class="col-md-5 col-xs-12">
+                            <label>{{ 'common.extension' | translate }}</label>
+                            <input class="fm-txt form-control" type="text" id="company-form_extension" formControlName="extension" placeholder="{{ 'common.extension' | translate }}">
+                            <show-errors [control]="adminCompanyFeeForm.controls.extension"></show-errors>
+                          </div>
+                          <div class="col-md-7 col-xs-12">
+                            <label>{{ 'company.company-form.phone-no' | translate }}</label>
+                            <input [textMask]="{mask: phoneMask}" class="fm-txt form-control" type="text" id="company-form_phone" formControlName="phone"
+                              placeholder="{{ 'company.company-form.phone-no' | translate }}">
+                            <show-errors [control]="adminCompanyFeeForm.controls.phone"></show-errors>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-3 col-xs-12">
+                        <label>{{ 'company.company-form.fax-no' | translate }}</label>
+                        <input [textMask]="{mask: phoneMask}" class="fm-txt form-control" type="text" name="fax" id="company-form_fax" formControlName="fax"
+                          placeholder="{{ 'company.company-form.fax-no' | translate }}">
+                        <show-errors [control]="adminCompanyFeeForm.controls.fax"></show-errors>
+                      </div>
+                      <div class="col-md-3 col-xs-12">
+                        <label>{{ 'company.company-form.business-type' | translate }}
+                        </label>
+                        <input class="fm-txt form-control" type="text" name="fax" id="comp_bussType" formControlName="businessTypeKey" placeholder="{{ 'company.company-form.business-type' | translate }}">
+                        <show-errors [control]="adminCompanyFeeForm.controls.businessTypeKey"></show-errors>
+                      </div>
+                      <div class="col-md-3 col-xs-12">
+                        <label>{{ 'company.company-form.termination-date' | translate }}</label>
+                        <div class="calender-field">
+                          <my-date-picker id="company-form_termination_date" [options]="myDatePickerOptions" name="terminationDate" formControlName="terminationDate"
+                            (inputFocusBlur)="changeDateFormat($event, 'terminationDate', 'adminCompanyFeeForm', false)" placeholder="{{ 'company.company-form.dd/mm/yyyy' | translate }}">
+                          </my-date-picker>
+                          <show-errors [control]="adminCompanyFeeForm.controls.terminationDate"></show-errors>
+                        </div>
+                      </div>
+                      <div class="col-md-3 col-xs-12">
+                        <label>{{ 'company.company-financial-data.admin-rate' | translate }}
+                        </label>
+                        <div class="search-field">
+                          <input type="text" class="fm-txt form-control" name="adminrate" id="company-financial-data_adminrate" formControlName="adminrate"
+                            placeholder="{{ 'company.company-financial-data.admin-rate' | translate }}">
+                          <show-errors [control]="adminCompanyFeeForm.controls.adminrate"></show-errors>
+                        </div>
+                        <!-- Search Field Ends -->
+                      </div>
+                      <div class="col-md-3 col-xs-12">
+                        <label>{{ 'company.company-financial-data.standard-pap-amount' | translate }}</label>
+                        <div class="calender-field d-amount">
+                          <input id="company-financial-data_standard_pap_amount" type="text" min="0" step="1" step="any" oninput="validity.valid||(value='');"
+                            class="fm-txt form-control datepicker in-number" name="standardpapamount" formControlName="standardpapamount"
+                            placeholder="{{ 'company.company-financial-data.standard-pap-amount' | translate }}">
+                          <show-errors [control]="adminCompanyFeeForm.controls.standardpapamount"></show-errors>
+                        </div>
+                      </div>
+                      <div class="col-md-3 col-xs-12">
+                        <label>{{ 'company.company-financial-data.adjusted-pap-amount' | translate }}</label>
+                        <div class="calender-field d-amount">
+                          <input type="text" min="0" step="1" step="any" oninput="validity.valid||(value='');" class="fm-txt form-control datepicker in-number"
+                            id="company-financial-data_adjusted_pap_amount" name="adjustedpapamount" formControlName="adjustedpapamount"
+                            placeholder="{{ 'company.company-financial-data.adjusted-pap-amount' | translate }}">
+                          <show-errors [control]="adminCompanyFeeForm.controls.adjustedpapamount"></show-errors>
+                        </div>
+                      </div>
+                      <div class="col-md-3 col-xs-12">
+                        <label>{{ 'company.company-financial-data.adjusted-pap-end-date' | translate }}</label>
+                        <div class="calender-field">
+                          <my-date-picker id="company-financial-data_adjusted_pap_enddate" [options]="myDatePickerOptions" name="adjustedpapenddate"
+                            formControlName="adjustedpapenddate" (inputFocusBlur)="changeDateFormat($event, 'adjustedpapenddate','adminCompanyFeeForm','currentDate')"
+                            placeholder="{{ 'company.company-financial-data.dd/mm/yyyy' | translate }}">
+                          </my-date-picker>
+                          <show-errors [control]="adminCompanyFeeForm.controls.adjustedpapenddate"></show-errors>
+                        </div>
+                        <!-- Calendar Field Ends -->
+                      </div>
+                      <div class="col-md-3 col-xs-12 min-ht-half">
+                        <label>&nbsp;</label>
+                        <div class="select-options">
+                          <span>
+                            <label class="papComment">
+                              <span class="custom-check">
+                                <input type="checkbox" data-toggle="modal" data-target="#PapComments" id="pap_Suspended" formControlName="papSuspended" (click)="papCommentHistory()">{{ 'company.company-financial-data.pap-suspended' | translate }}
+                                <span></span>
+                              </span>
+                            </label>
+                            <a>
+                              <i *ngIf="showPapComments" data-toggle="modal" data-target="#PapComments" id="pap_SuspendedComments" (click)="papCommentHistory()"
+                                class="fa fa-comment" aria-hidden="true"></i>
+                            </a>
+                          </span>
+                          <show-errors [control]="adminCompanyFeeForm.controls.papSuspended"></show-errors>
+                          <span>
+                            <label>
+                              <span class="custom-check">
+                                <input type="checkbox" id="exempt_Gst" formControlName="exemptGst">{{ 'company.company-financial-data.exempt-gst' | translate }}
+                                <span></span>
+                              </span>
+                            </label>
+                          </span>
+                          <show-errors [control]="adminCompanyFeeForm.controls.exemptGst"></show-errors>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Administration Fees/Monthly Company Fees End -->
+
+  <!-- Banking Information Start -->
+  <div class="form-row">
+    <div class="row">
+      <div [hidden]="!showBankingInformation">
+        <div class="col-md-12 col-xs-12">
+          <div class="grid-box">
+            <div class="grid-heading collapse-heading" (click)="setCompanyBankAccountFocus()" aria-expanded="false" data-toggle="collapse"
+              data-target="#bankingInformationSection">
+              <h3 data-toggle="collapse" aria-expanded="false" data-target="#bankingInformationSection">{{'uft.dashboard.callIn.bankingInformation' | translate }}</h3>
+            </div>
+            <div id="bankingInformationSection" class="collapse">
+              <div class="grid-box">
+                <div class="grid-inner">
+                  <div class="form-row">
+                    <div class="row">
+                      <div class="col-md-12 col-xs-12 table-col">
+                        <div class="table-responsive">
+                          <table id="company-bank-account-his" class="table table-bordered table-stripped inlinePopupTable">
+                          </table>
+                        </div>
+                        <!-- Table Ends -->
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Form Row ENds -->
+                </div>
+                <!-- Grid Inner Ends -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- </div> -->
+  <!-- Banking Information End -->
+
+  <!-- Pending Claims Section Start -->
+  <div class="form-row">
+    <div class="row">
+      <div [hidden]="!showPendingClaims">
+        <div class="col-md-12 col-xs-12">
+          <div class="grid-box">
+            <div class="grid-heading collapse-heading" aria-expanded="false" data-toggle="collapse" data-target="#pendingClaimsSection">
+              <h3 data-toggle="collapse" aria-expanded="false" data-target="#pendingClaimsSection">{{'uft.dashboard.callIn.pendingClaims' | translate }}</h3>
+            </div>
+            <div id="pendingClaimsSection" class="collapse">
+              <div class="grid-inner">
+                <div class="form-row">
+                  <div class="row">
+                    <div class="col-md-12 col-xs-12">
+                      <div class="table-responsive ">
+                        <table id="pendingClaimsList" class="display table table-bordered table-stripped">
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- </form> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Pending Claims Section End -->
+
+  <!-- Ticket #1287: Notification Generated Claims Section Start -->
+  <div class="form-row">
+    <div class="row">
+      <div class="col-md-12 col-xs-12">
+        <div class="grid-box">
+          <div class="grid-heading collapse-heading" aria-expanded="false" data-toggle="collapse" data-target="#notificationGeneratedClaimsSection">
+            <h3 data-toggle="collapse" aria-expanded="false" data-target="#notificationGeneratedClaimsSection">{{'uft.dashboard.callIn.notificationGeneratedClaims' | translate }}</h3>
+          </div>
+          <div id="notificationGeneratedClaimsSection" class="collapse">
+            <div class="grid-inner">
+              <div class="form-row">
+                <div class="row">
+                  <div class="col-md-12 col-xs-12">
+                    <div class="table-responsive ">
+                      <table id="notificationGeneratedClaimsList" class="display table table-bordered table-stripped">
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Notification Generated Claims Section Ends -->
+
+  <!-- Ticket #1287: About To Expire Claims Section Start -->
+  <div class="form-row">
+    <div class="row">
+      <div class="col-md-12 col-xs-12">
+        <div class="grid-box">
+          <div class="grid-heading collapse-heading" aria-expanded="false" data-toggle="collapse" data-target="#aboutToExpireClaimsSection">
+            <h3 data-toggle="collapse" aria-expanded="false" data-target="#aboutToExpireClaimsSection">{{'uft.dashboard.callIn.aboutToExpireClaim' | translate }}</h3>
+          </div>
+          <div id="aboutToExpireClaimsSection" class="collapse">
+            <div class="grid-inner">
+              <div class="form-row">
+                <div class="row">
+                  <div class="col-md-12 col-xs-12">
+                    <div class="table-responsive ">
+                      <table id="aboutToExpireClaimsList" class="display table table-bordered table-stripped">
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- About To Expire Claims Section Ends -->
+  <!-- Ticket #1287: Adjudicated Claims Section Start -->
+  <div class="form-row">
+    <div class="row">
+      <div class="col-md-12 col-xs-12">
+        <div class="grid-box">
+          <div class="grid-heading collapse-heading" aria-expanded="false" data-toggle="collapse" data-target="#adjudicatedClaimsSection">
+            <h3 data-toggle="collapse" aria-expanded="false" data-target="#adjudicatedClaimsSection">{{'uft.dashboard.callIn.adjudicatedClaims' | translate }}</h3>
+          </div>
+          <div id="adjudicatedClaimsSection" class="collapse">
+            <div class="grid-inner">
+              <div class="form-row">
+                <div class="row">
+                  <div class="col-md-12 col-xs-12">
+                    <div class="table-responsive ">
+                      <table id="adjudicatedClaimsList" class="display table table-bordered table-stripped">
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Adjudicated Claims Section Ends -->
+  <!-- Ticket #1287: Pending Paperwork Claims Section Start -->
+  <div class="form-row">
+    <div class="row">
+      <div class="col-md-12 col-xs-12">
+        <div class="grid-box">
+          <div class="grid-heading collapse-heading" aria-expanded="false" data-toggle="collapse" data-target="#pendingPaperworkClaimsSection">
+            <h3 data-toggle="collapse" aria-expanded="false" data-target="#pendingPaperworkClaimsSection">{{'uft.dashboard.callIn.pendingPaperworkClaims' | translate }}</h3>
+          </div>
+          <div id="pendingPaperworkClaimsSection" class="collapse">
+            <div class="grid-inner">
+              <div class="form-row">
+                <div class="row">
+                  <div class="col-md-12 col-xs-12">
+                    <div class="table-responsive ">
+                      <table id="pendingPaperworkClaimList" class="display table table-bordered table-stripped">
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Pending Paperwork Claims Section Ends -->
+  <div id="PapComments" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button id="CreditLimitClose" type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">{{'uft.dashboard.callIn.papComment' | translate }}</h4>
+        </div>
+        <div class="modal-body">
+          <table datatable [dtOptions]="dtOptions['PapComment']" [dtTrigger]="dtTrigger['PapComment']" id="PapComment" class="table table-bordered table-stripped inlinePopupTable">
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button id="companyReset" type="button" class="btn grey-btn" data-dismiss="modal">{{ 'button.close' | translate }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- -------- {{showReport}} -->
+  <div *ngIf="showReport">
+    <app-finance-report-call-in></app-finance-report-call-in>
+  </div>
+
+  <!-- Plan Comments Popup by -->
+  <div id="planCommentPopup" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button id="planCommentClose" type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">{{'uft.dashboard.callIn.planComments' | translate }}</h4>
+        </div>
+        <div class="modal-body">
+          <table datatable [dtOptions]="dtOptions['planComments']" [dtTrigger]="dtTrigger['planComments']" id="planComments" class="table table-bordered table-stripped inlinePopupTable">
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button id="planCommentClose" type="button" class="btn grey-btn" data-dismiss="modal">{{ 'button.close' | translate }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

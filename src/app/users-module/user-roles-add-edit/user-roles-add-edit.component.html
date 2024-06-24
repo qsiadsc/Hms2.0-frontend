@@ -1,0 +1,167 @@
+<nav class="breadcrumb">
+  <span *ngIf="userRolesAuthCheck[0].searchRole == 'T'" class="breadcrumb-item" [routerLink]="['/users/roles']">
+    {{ 'button.role' | translate }} ></span>
+  <span *ngIf="userRolesAuthCheck[0].searchRole != 'T'" class="breadcrumb-item"> {{ 'button.role' | translate }}
+    ></span>
+  <span *ngIf="addMode" class="breadcrumb-item active"> {{ 'button.add' | translate }}</span>
+  <span *ngIf="copyMode" class="breadcrumb-item active"> {{ 'button.copy' | translate }}</span>
+  <span *ngIf="editMode" class="breadcrumb-item active"> {{ 'button.edit' | translate }}</span>
+  <span *ngIf="viewMode" class="breadcrumb-item active"> {{ 'button.view' | translate }}</span>
+</nav>
+<div class="section-heading">
+  <h2 *ngIf="addMode">{{ 'user.userRoles.role' | translate }} -
+    <span>{{ 'user.userRoles.add' | translate }}</span>
+  </h2>
+  <h2 *ngIf="copyMode">{{ 'user.userRoles.role' | translate }} -
+    <span>{{ 'user.userRoles.copy' | translate }}</span>
+  </h2>
+  <h2 *ngIf="viewMode">{{ 'user.userRoles.role' | translate }} -
+    <span>{{ 'user.userRoles.view' | translate }}</span>
+  </h2>
+  <h2 *ngIf="editMode">{{ 'user.userRoles.role' | translate }} -
+    <span>{{ 'user.userRoles.edit' | translate }}</span>
+  </h2>
+</div>
+<div class="grid-box">
+  <div class="grid-heading">
+    <h3 *ngIf="addMode">{{'user.userRoles.addUserRole' | translate}}</h3>
+    <h3 *ngIf="copyMode">{{'user.userRoles.copyUserRole' | translate}}</h3>
+    <h3 *ngIf="viewMode">{{'user.userRoles.userRoleDetails' | translate}}</h3>
+    <h3 *ngIf="editMode">{{'user.userRoles.editUserRole' | translate}}</h3>
+    <div class="web-reg">
+      <button *ngIf="addMode == true" (click)="addUpdateUserRole()" id="userRoleSave" class="green-btn-add btn"
+        type="submit">{{ 'button.save' | translate }}
+      </button>
+      <button *ngIf="copyMode == true" (click)="addUpdateUserRole()" id="userRoleSave" class="green-btn-add btn"
+        type="submit">{{ 'button.copy' | translate }}
+      </button>
+      <button *ngIf="viewMode == true && userRolesAuthCheck[0].editRole == 'T'" class="green-btn-add btn" (click)="enableEditMode()">
+        {{ 'button.edit' | translate }}</button>
+      <button *ngIf="editMode == true" id="userRoleEdit" class="green-btn-add btn" type="submit"
+        (click)="addUpdateUserRole()"> {{ 'button.update' | translate }}
+      </button>
+      <button *ngIf="viewMode != true" id="userRoleFormClear" (click)="patchExistingValues()"
+        class="btn grey-btn btn-sm" data-dismiss="modal">{{'button.cancel' | translate}}</button>
+    </div>
+  </div>
+  <div class="grid-inner">
+    <form [formGroup]="FormGroup" (ngSubmit)="addUpdateUserRole()">
+      <!-- Tabs Start -->
+      <div class="container">
+        <div class="row">
+          <div class="form-row">
+            <div class="col-sm-12">
+              <label>{{'user.userRoles.userRoleName' | translate}}
+                <span class="required">*</span>
+              </label>
+              <input id="userTypeName" type="text" class="fm-txt form-control" name="userTypeName"
+                formControlName="userTypeName" placeholder="{{'user.userRoles.userRoleName' | translate}}" />
+              <show-errors [control]="FormGroup.controls.userTypeName"></show-errors>
+            </div>
+          </div>
+          <div class="form-row mainSideBarMenu sideBar">
+            <div class="tabs-left">
+              <div class="col-md-3">
+                <div class="form-row fn-tabs user-role-list">
+                  <div class="panel-group">
+                    <div class="panel panel-default" *ngFor="let appArray of appArrayList">
+                      <div class="panel-heading {{showSubMenu}}" id="mainMenu_{{appArray.appCd}}"
+                        (click)="toggleAppMenu(showSubMenu,appArray.appCd)">
+                        <h4 class="panel-title">
+                          <a data-toggle="collapse" href="#mainMenu{{appArray.appCd}}"
+                            class="p-title cashInflow toggleMainMenuName">
+                            <span>{{appArray.appName}}</span>
+                          </a>
+                        </h4>
+                      </div>
+                      <div id="mainMenu{{appArray.appCd}}" class="panel-collapse collapse mainMenuItems">
+                        <div class="panel-body">
+                          <div *ngFor="let roleSidebar of roleSidebarFilter(appArray.appCd)">
+                            <div class="panel-group">
+                              <div class="panel panel-default">
+                                <label class="switch selectAll">
+                                  <input [attr.disabled]="disabledItem ? true : null" type="checkbox" value=""
+                                    id="checkBoxParent{{roleSidebar.parentMenuId}}" class="checkBox"
+                                    (change)="addActiveClass1(roleSidebar.menuKey,$event)"><span
+                                    id="slider{{roleSidebar.parentMenuId}}" class="slider round"></span>
+                                </label>
+                                <div class="panel-heading" (click)="toggleSubMenu(roleSidebar.menuKey)">
+                                  <h4 class="panel-title">
+                                    <a class="toggleSubMenuName" data-toggle="collapse"
+                                      href="#subMenu{{roleSidebar.menuKey}}" id="subMenu_{{roleSidebar.menuKey}}"
+                                      (click)="addActiveClass(roleSidebar.menuKey)">{{roleSidebar.parentMenuName}}
+                                    </a>
+                                  </h4>
+                                </div>
+                                <div id="subMenu{{roleSidebar.menuKey}}" class="panel-collapse collapse subMenuItems">
+                                  <ul class="list-group" *ngFor="let val of sortSubMenuAlphabetically(roleSidebar.child)">
+                                    <li class="list-group-item" (click)="addActiveClassMenu(val.menuKey)"
+                                      [ngClass]="{ active: selectedItem ==  val.menuKey}">{{val.menuName}}</li>
+                                  </ul>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="tab-content sideBar" *ngIf="showSubMenu">
+                <ng-container *ngFor="let val of rolesModuledata" formGroupName="menu_{{val.menuKey}}">
+                  <div [ngClass]="{ active: selectedItem ==  val.menuKey}" class="tab-pane" id="{{val.menuKey}}">
+                    <ul>
+                      <li class="actionsParent">&nbsp;
+                        <label class="switch">
+                          <input [attr.disabled]="disabledItem ? true : null" type="checkbox" value=""
+                            id="checkBoxParent{{val.menuKey}}" class="checkBox"
+                            (change)="selectAllCheckboxes(val.menuKey,$event)"
+                            formControlName="mainaction_{{val.menuKey}}">
+                          <span class="slider round"></span>
+                        </label>
+                      </li>
+                      <li *ngFor="let val1 of val.actions" class="actions-list">{{val1.actionName}}
+                        <label class="switch">
+                          <input [attr.disabled]="disabledItem ? true : null" type="checkbox"
+                            id="view_{{val.menuKey}}_{{val1.actionKey}}" value="" class="checkBoxChild{{val.menuKey}}"
+                            formControlName="action_{{val1.actionKey}}" (change)="checkParent(val.menuKey,$event)">
+                          <span class="slider round"></span>
+                        </label>
+                      </li>
+                    </ul>
+                  </div>
+                </ng-container>
+              </div>
+              <div class="tab-content" *ngIf="showSubMenu==false">
+                <ul>
+                  <li class="no-select">
+                    {{'common.plsExpandMenuToExplore' | translate}}
+                  </li>
+                </ul>
+              </div>
+              <!-- /tab-content -->
+            </div>
+            <!-- /tabbable -->
+          </div>
+          <!-- /col -->
+        </div>
+        <!-- /row -->
+      </div>
+      <!-- /container -->
+      <!-- Tabs End -->
+    </form>
+  </div>
+</div>
+<!-- Show Loader -->
+<div *ngIf="showLoader" class="loader-outer">
+  <div class="cube-wrapper">
+    <div class="cube-folding">
+      <span class="leaf1"></span>
+      <span class="leaf2"></span>
+      <span class="leaf3"></span>
+      <span class="leaf4"></span>
+    </div>
+    <span class="loading" data-name="Loading">{{'user.addEditViewUsers.pleaseWait' | translate}}</span>
+  </div>
+</div>

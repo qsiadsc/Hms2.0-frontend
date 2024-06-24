@@ -1,0 +1,26 @@
+[
+  {
+    "id":"1",
+    "name":"Seasia",
+    "city_name":"Calgary",
+    "province_name":"Alberta",
+    "effected_on":"12/3/1997",
+    "expired_on":"12/4/2019"
+  },
+  {
+    "id":"2",
+    "name":"Test Company",
+    "city_name":"Mohali",
+    "province_name":"Alberta",
+    "effected_on":"18/5/2018",
+    "expired_on":"18/5/2019"
+  },
+  {
+    "id":"3",
+    "name":"Seasia",
+    "city_name":"Calgary",
+    "province_name":"Alberta",
+    "effected_on":"24/7/2016",
+    "expired_on":"24/7/2017"
+  }
+]

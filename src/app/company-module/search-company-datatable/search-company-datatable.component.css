@@ -1,0 +1,9 @@
+.no-data-available {
+    text-align: center;
+  }
+  .tFootInput{
+    color: #000;
+  }
+  .dataTables_empty {
+    display: none;
+  }

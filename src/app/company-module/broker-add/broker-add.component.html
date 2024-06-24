@@ -1,0 +1,124 @@
+<nav class="breadcrumb">
+	<span class="breadcrumb-item" [routerLink]="['/company']">{{ 'common.company' | translate }}</span>>
+	<span class="breadcrumb-item" [routerLink]="['/company/broker']">{{ 'company.add-broker.broker' | translate }}</span>>
+	<span class="breadcrumb-item active">{{ 'company.add-broker.add' | translate }}</span>
+</nav> 
+<div class="site-content">
+  <div class="container">
+    <div class="section-heading">
+      <h2>{{ 'company.add-broker.broker' | translate }} -
+        <span>{{ 'company.add-broker.add' | translate }}</span>
+      </h2>
+    </div>
+    <!-- Section Heading Ends -->
+    <div class="grid-box">
+      <div class="grid-heading">
+        <h3>{{ 'company.add-broker.addbroker' | translate }}</h3>
+      </div>
+      <!-- Grid Heading Ends -->
+      <div class="grid-inner">
+        <form [formGroup]="addBrokerForm" #brokerAddEditForm="ngForm" (ngSubmit)="onSubmitaddBrokerForm(addBrokerForm)">
+          <div class="form-row">
+            <div class="row min-ht-sf">
+              <div class="col-md-3 col-xs-12">
+                <label>{{ 'company.add-broker.broker-id' | translate }}</label>
+                <input class="fm-txt form-control" name="broker_id" formControlName="broker_id" id="broker-add_broker_id" type="text">
+                <show-errors [control]="addBrokerForm.controls.broker_id"></show-errors>
+              </div>
+              <div class="col-md-3 col-xs-12">
+                <label>{{ 'company.add-broker.broker-name' | translate }}</label>
+                <input class="fm-txt form-control" name="broker_name" autofocus formControlName="broker_name" id="broker-add_broker_name" type="text" />
+                <show-errors [control]="addBrokerForm.controls.broker_name"></show-errors>
+              </div>
+              <div class="col-md-3 col-xs-12">
+                <label>{{ 'company.add-broker.gst-registration-#' | translate }}</label>
+                <input class="fm-txt form-control" name="gts_registration" formControlName="gts_registration" id="broker-add_broker_gts_registration" type="text" />
+                <show-errors [control]="addBrokerForm.controls.gts_registration"></show-errors>
+              </div>
+              <div class="col-md-3 col-xs-12">
+                <label>{{ 'company.add-broker.address-line-1' | translate }}</label>
+                <input class="fm-txt form-control" name="address1" formControlName="address1" id="broker-add_broker_address1" type="text" />
+                <show-errors [control]="addBrokerForm.controls.address1"></show-errors>
+              </div>
+
+              <div class="col-md-3 col-xs-12">
+                <label>{{ 'company.add-broker.address-line-2' | translate }}</label>
+                <input class="fm-txt form-control" name="address2" formControlName="address2" id="broker-add_broker_address2" type="text" />
+                <show-errors [control]="addBrokerForm.controls.address2"></show-errors>
+              </div>
+              <div class="col-md-3 col-xs-12">
+                <label>{{ 'company.add-broker.postal-code' | translate }}</label>
+                <input class="upperCase fm-txt form-control" name="postal_code" formControlName="postal_code" id="broker-add_broker_postal_code" type="text" />
+                <show-errors [control]="addBrokerForm.controls.postal_code"></show-errors>
+              </div>
+              <div class="col-md-3 col-xs-12">
+                <label>{{ 'company.add-broker.city' | translate }}*</label>
+                <input class="fm-txt form-control" name="city" formControlName="city" id="broker-add_broker_city" type="text" />
+                <show-errors [control]="addBrokerForm.controls.city"></show-errors>
+              </div>
+              <div class="col-md-3 col-xs-12">
+                <label>{{ 'company.add-broker.province' | translate }}</label>
+                <input class="fm-txt form-control" name="province" formControlName="province" id="broker-add_broker_province" type="text" />
+                <show-errors [control]="addBrokerForm.controls.province"></show-errors>
+              </div>
+
+              <div class="col-md-3 col-xs-12">
+                <label>{{ 'company.add-broker.country' | translate }}</label>
+                <input class="fm-txt form-control" name="country" formControlName="country" id="broker-add_broker_country" type="text" />
+                <show-errors [control]="addBrokerForm.controls.country"></show-errors>
+              </div>
+              <div class="col-md-3 col-xs-12">
+                <label>{{ 'company.add-broker.email-address' | translate }}</label>
+                <input class="fm-txt form-control" name="email" formControlName="email" id="broker-add_broker_email" type="text" />
+                <show-errors [control]="addBrokerForm.controls.email"></show-errors>
+              </div>
+              <div class="col-md-3 col-xs-12">
+                <label>{{ 'company.add-broker.phone-no' | translate }}</label>
+                <input class="fm-txt form-control" [textMask]="{mask: phoneMask}" name="phone_no" formControlName="phone_no" id="broker-add_broker_phone_no" type="text" />
+                <show-errors [control]="addBrokerForm.controls.phone_no"></show-errors>
+              </div>
+              <div class="col-md-3 col-xs-12">
+                <label>{{ 'company.add-broker.fax-no' | translate }}</label>
+                <input class="fm-txt form-control" [textMask]="{mask: phoneMask}" name="fax_no" formControlName="fax_no" id="broker-add_broker_fax_no" type="text" />
+                <show-errors [control]="addBrokerForm.controls.fax_no"></show-errors>
+              </div>
+
+              <div class="col-md-3 col-xs-12">
+                <label>{{ 'company.add-broker.effective-date' | translate }}</label>
+                <div class="calender-field">
+                  <my-date-picker id="broker-add_ce_effectiveDate" [options]="myDatePickerOptions" name="effective_date" formControlName="effective_date"
+                    (inputFocusBlur)="changeDateFormat($event, 'effective_date')">
+                  </my-date-picker>
+                </div>
+                <!-- Calendar Field Ends -->
+                <show-errors [control]="addBrokerForm.controls.effective_date"></show-errors>
+              </div>
+
+              <div class="col-md-12 col-xs-12">
+                <div class="select-options">
+                  <span>
+                    <label>
+                      <input type="checkbox">{{ 'company.add-broker.Opt Out of Company Mail\Email' | translate }}
+                    </label>
+                  </span>
+                  <span>
+                    <label>
+                      <input type="checkbox">{{ 'company.add-broker.multiple-commission' | translate }}
+                    </label>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Grid Inner Ends -->
+          <div class="form-row text-center">
+            <button id="broker-add_save" type="submit" class="btn green-btn">{{ 'button.save' | translate }}</button>
+            <button href="javascript:;" data-toggle="modal" data-target="#Comments" id="broker-add_comments" class="btn green-btn">{{ 'button.comments' | translate }}</button>
+          </div>
+        </form>
+      </div>
+      <!-- Grid Inner Ends -->
+    </div>
+    <!-- Grid Box Ends -->
+  </div>
+</div>

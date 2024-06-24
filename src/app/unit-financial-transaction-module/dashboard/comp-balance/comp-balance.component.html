@@ -1,0 +1,188 @@
+<div class="form-row">
+  <div class="col-md-12">
+    <div class="grid-box ">
+      <div class="grid-heading grid-hdr-btn">
+        <h3>{{'uft.dashboard.heading.CompBal'|translate}}</h3>
+        <div *ngIf="showLastUpdated" class="web-reg">
+          <h3 class="lst-updated">{{'uft.dashboard.company-balance.lastUpdated' | translate}} {{dateTime}}</h3>
+          <button [disabled]=showtableLoader (click)="ngOnInit()" class="claim-status btn status-btn"
+            style="cursor: pointer"><i class="fa fa-refresh" aria-hidden="true"></i></button>
+        </div>
+      </div><!-- Grid Heading Ends -->
+      <div class="grid-inner">
+        <div class="form-row">
+          <div class="row min-ht-sf">
+            <div [ngClass]="{'tableLoader': showtableLoader}" style="z-index: auto !important">
+              <div *ngIf="showGraph">
+                <div style="display: block;padding: 15px 90px 15px 90px" class="col-sm-9">
+                  <canvas baseChart height="100" id="compBalanceBarChart" [datasets]="barChartData"
+                    [labels]="barChartLabels" [options]="barChartOptions" [legend]="barChartLegend"
+                    [chartType]="barChartType" [colors]="barChartColors" (chartHover)="chartHovered($event)"
+                    (chartClick)="chartClicked($event)">
+                  </canvas>
+                </div>
+                <div class="col-sm-3 map-oterrightdata" style="top:10%">
+                  <div class="map-newouter right">
+                    <button class="mapn-newourtleftbutton"  style="background-color: #09bb2f"
+                      (click)="legendBtnClick(0)"></button>
+                    <p (click)="legendBtnClick(0)"> {{'uft.dashboard.company-balance.balance3xMonthlyPAP' | translate }}
+                    </p>
+                  </div>
+                  <div class="map-newouter right">
+                    <button class="mapn-newourtleftbutton" style="background-color: #0484b4"
+                      (click)="legendBtnClick(1)"></button>
+                    <p (click)="legendBtnClick(1)"> {{'uft.dashboard.company-balance.balance0and3xMonthlyPAP' | translate }}</p>
+                  </div>
+                  <div class="map-newouter right">
+                    <button class="mapn-newourtleftbutton" 
+                    style="background-color: #d0d0d0"
+                      (click)="legendBtnClick(2)"></button>
+                    <p (click)="legendBtnClick(2)">
+                      {{'uft.dashboard.company-balance.balance0' | translate }}</p>
+                  </div>
+                  <div class="map-newouter right">
+                    <button class="mapn-newourtleftbutton" style="background-color: #D36726"
+                      (click)="legendBtnClick(3)"></button>
+                    <p (click)="legendBtnClick(3)">
+                      {{'uft.dashboard.company-balance.balance0AndCreditLimit' | translate }}</p>
+                  </div>
+                  <div class="map-newouter right">
+                    <button class="mapn-newourtleftbutton" style="background-color: #bb0919"
+                      (click)="legendBtnClick(4)"></button>
+                    <p (click)="legendBtnClick(4)">
+                     {{'uft.dashboard.company-balance.balanceCreditLimit' | translate }}</p>
+                  </div>
+                  <div class="map-newouter right">
+                    <p (click)="legendBtnClick(5)">
+                      {{'uft.dashboard.company-balance.allCompaniesData' | translate }}</p>
+                  </div>
+                </div>
+              </div>
+              <span *ngIf="showtableLoader" class="loading" data-name="Loading"
+                style="z-index: auto !important">{{'common.processing' | translate}}</span>
+            </div>
+          </div>
+        </div>
+      </div><!-- Grid Inner Ends -->
+    </div>
+  </div>
+  <div class="col-md-12">
+    <div class="grid-box">
+      <div class="grid-heading grid-hdr-btn">
+        <h3 *ngIf="case1">{{'uft.dashboard.company-balance.balance3xMonthlyPAP' | translate }}</h3>
+        <h3 *ngIf="case2">{{'uft.dashboard.company-balance.balance0and3xMonthlyPAP' | translate }}</h3>
+        <h3 *ngIf="case3">{{'uft.dashboard.company-balance.balance0' | translate }}</h3>
+        <h3 *ngIf="case4">{{'uft.dashboard.company-balance.balance0AndCreditLimit' | translate }}</h3>
+        <h3 *ngIf="case5">{{'uft.dashboard.company-balance.balanceCreditLimit' | translate }}</h3>
+        <h3 *ngIf="case6">{{'uft.dashboard.company-balance.allCompaniesData' | translate }}</h3>
+      </div><!-- Grid Heading Ends -->
+      <div class="grid-inner">
+        <form [formGroup]="compBalance">
+          <div class="row min-ht-sf">
+            <div class="col-md-3 col-xs-12  min-ht-half paddingRight">
+              <div style="margin-top:9px;" class="calender-field">
+                <my-date-picker id="uft_dashboardcb_date" placeholder="{{'common.date-placeholder'|translate}}"
+                  [options]="myDatePickerOptions" name="date"
+                  (inputFocusBlur)="changeDateFormat($event, 'date' ,'compBalance')" formControlName="date">
+                </my-date-picker>
+                <show-errors [control]="compBalance.controls.date"></show-errors>
+              </div>
+            </div>
+            <div class="col-md-3 col-xs-12 min-ht-half paddingRight">
+              <button style="margin-top:9px;" class="btn green-btn"
+                (click)="compBalancesSearch()">{{'button.search'|translate}}</button>
+            </div>
+          </div>
+        </form>
+        <div class="grid-inner">
+          <!--[Start Showing Total Counts]-->
+          <div class="total-stats disable-totals1 surrond" id="disable-totals1">
+            <h4>{{'uft.dashboard.company-balance.totalCompanyBalanceAmount' | translate }} <span class="amount">{{totalCompanyBalanceAmt}}</span></h4>
+            <h4>{{'uft.dashboard.company-balance.totalPAPAmount' | translate }} <span class="amount">{{totalPapAmt}}</span></h4>
+            <h4>{{'uft.dashboard.company-balance.totalPendingBalanceAmount' | translate }} <span class="amount">{{totalPendingBalanceAmt}}</span></h4>
+            <h4>{{'uft.dashboard.company-balance.totalRemainingAmount' | translate }}<span class="amount">{{totalRemainingAmt}}</span></h4>
+          </div>
+          <!--[End Showing Total Counts]-->
+          <div class="form-row search-top text-right">
+            <button id="btnCompBlncListByGridFilteration" type="submit" class="btn green-btn searchreset"
+              (click)="getSearchByGridFilteration('uftDashboard_bar1')" title="{{'common.search' | translate}}"><span
+                class="glyphicon glyphicon-search"></span></button>
+            <button id="btnCompBlncGridReset" class="btn grey-btn searchreset" (click)="resetTableSearch()"
+              title="{{'common.reset' | translate}}"><span class="glyphicon glyphicon-repeat"></span></button>
+          </div>
+          <div class="form-row">
+            <div class="row">
+              <div class="col-md-12 col-xs-12">
+                <div class="table-responsive">
+                  <!-- log 856  -->
+                  <table id="uftDashboard_bar1" class="display table table-bordered table-stripped">
+                    <thead>
+                    </thead>
+                    <tfoot>
+                      <tr>
+                        <td width="10%" colspan="2">
+                          <ng2-completer [(ngModel)]="CompNoName" [inputId]="'companySearchNumberName'"
+                            [datasource]="companyDataRemote" [minSearchLength]="2" [openOnFocus]="true"
+                            [clearUnselected]="true" [placeholder]="'Search Company'" [textSearching]="'Please wait...'"  [autoHighlight]="true"
+                            [inputClass]="'form-control'" [fillHighlighted]="false"
+                            (selected)="onCompanySelected($event)">
+                          </ng2-completer>
+                        </td>
+                        <td width="10%">
+                          <ng2-completer [(ngModel)]="CompbrokerNoName" [datasource]="brokerData" [minSearchLength]="2"
+                            [openOnFocus]="true" [fillHighlighted]="false" [placeholder]="'Search Broker Number-Name'"
+                            [inputId]="'CompbrokerNumberName'" [textSearching]="'Please wait...'"
+                            [inputClass]="'form-control amount_right_grid'" (selected)="onBrokerSelected($event)"
+                            [clearUnselected]="true">
+                          </ng2-completer>
+                        </td>
+                        <td width="10%">
+                          <input id="companyBalanceAmt" type="text"
+                            placeholder="{{'uft.dashboard.company-balance.companyBalanceAmt' | translate}}"
+                            class="fm-txt form-control inputSearch amount_right_grid" name="coClosingBalance" />
+                        </td>
+                        <td width="10%">
+                          <input id="pendingClaimAmt" type="text"
+                            placeholder="{{'uft.dashboard.company-balance.pendingClaimsAmt' | translate}}"
+                            class="fm-txt form-control inputSearch amount_right_grid" name="pendingClaimAmt" /></td>
+                        <td width="10%">
+                          <input id="remaininBalanceAmt" type="text"
+                            placeholder="{{'uft.dashboard.company-balance.remainingBalanceAmt' | translate}}"
+                            class="fm-txt form-control inputSearch amount_right_grid" name="coRemainingBalAmt" />
+                        </td>
+                        <td width="10%">
+                          <input id="creditLimitAmount" type="text"
+                            placeholder="{{'uft.dashboard.company-balance.creditLimitAmount' | translate}}"
+                            class="fm-txt form-control inputSearch amount_right_grid" name="creditLimitAmount" />
+                        </td>
+                        <td width="10%">
+                          <input id="monthlyPapAmt" type="text"
+                            placeholder="{{'uft.dashboard.company-balance.monthlyPapAmount' | translate}}"
+                            class="fm-txt form-control inputSearch amount_right_grid" name="monthlyPap" />
+                        </td>
+                        <td width="10%">
+                          <input id="crdtLimitMltiplr" type="text"
+                            placeholder="{{'uft.dashboard.company-balance.creditLimitMultiplier' | translate}}"
+                            class="fm-txt form-control inputSearch amount_right_grid" name="creditLimitMultiplier" />
+                        </td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                  <div *ngIf="showGraph" class="dropdown pull-right">
+                    <button class="btn green-btn dropdown-toggle" [disabled]="disableExport" data-toggle="dropdown"
+                      style="float: right;margin-bottom:15px">{{'common.export' | translate}}
+                      <span class="caret"></span></button>
+                    <ul class="dropdown-menu">
+                      <li><a href="javascript:void(0)"
+                          (click)="exportCompanyBalanceFilteredData()">{{'common.excel' | translate}}</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div><!-- Form Row Ends -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

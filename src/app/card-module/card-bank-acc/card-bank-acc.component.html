@@ -1,0 +1,234 @@
+<div class="grid-box">
+  <div class="accordion" id="accordionCardBankAddress">
+    <div class="accordion-group">
+      <div class="grid-heading collapse-heading" aria-expanded="false" data-toggle="collapse"
+        data-target="#CardBankAddressAccording">
+        <h3 aria-expanded="false" data-toggle="collapse" data-target="#CardBankAddressAccording">
+          {{'common.bank-account' | translate}}</h3>
+      </div>
+      <div class="cardViewHistoryButtons"><!-- Issue where History icon in card view page used to open accordion also, now resolved. (08-09-2023) Prabhat -->
+        <button *ngIf="(bnkAccEditMode || bnkAccViewMode) && userAuthCheck[0].bankAccHistory == 'T'"
+          title="Bank Account History" (click)="bankAccountHistoryDetails()" href="#"
+          class="history-ico card-contact-address-historyicon" alt="History" data-toggle="modal"
+          data-target="#BankAccountHistory"><i class="fa fa-history" aria-hidden="true"></i></button>
+        <span *ngIf="(bnkAccViewMode || bnkAccEditMode) && cardBankCreatedOnValue != null"
+          class="claim-status btn status-btn" style="float:right;margin-right: 15px!important;">Bank Created On:
+          {{cardBankCreatedOnValue}}</span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="collapse" id="CardBankAddressAccording">
+    <div class="grid-inner">
+      <form [formGroup]="cardbankacc">
+        <div class="form-row">
+          <div class="row min-ht-sf">
+            <div class="col-md-3 col-xs-12">
+              <label>{{'common.bank-#' | translate}}</label>
+              <input [ngClass]="{'disableInput':!bnkAddMode}" type="text" class="fm-txt form-control" id="card-bank"
+                placeholder="{{'common.bank-#' | translate}}" formControlName="bank"
+                (blur)="bankFields(cardbankacc.controls.bank,cardbankacc.controls.branch)" />
+              <show-errors [control]="cardbankacc.controls.bank"></show-errors>
+            </div>
+            <div class="col-md-3 col-xs-12">
+              <label>{{'common.branch-#' | translate}}</label>
+              <input [ngClass]="{'disableInput':!bnkAddMode}" type="text" class="fm-txt form-control" id="card-branch"
+                placeholder="{{'common.branch-#' | translate}}" formControlName="branch"
+                (blur)="bankFields(cardbankacc.controls.bank,cardbankacc.controls.branch)" />
+              <show-errors [control]="cardbankacc.controls.branch"></show-errors>
+            </div>
+            <div class="col-md-3 col-xs-12">
+              <label>{{'common.bank-name' | translate}}</label>
+              <input [ngClass]="{'disableInput':!bnkAddMode}" type="text" class="fm-txt form-control" id="card-client"
+                placeholder="{{'common.bank-name' | translate}}" formControlName="client" />
+              <show-errors [control]="cardbankacc.controls.client"></show-errors>
+            </div>
+            <div class="col-md-3 col-xs-12">
+              <label>{{'common.account-#' | translate}}</label>
+              <input [ngClass]="{'disableInput':!bnkAddMode}" type="text" class="fm-txt form-control" id="card-account"
+                placeholder="{{'common.account-#' | translate}}" (blur)="checkBankAccAlreadyExist()"
+                formControlName="account" maxlength="20"/>
+              <show-errors [control]="cardbankacc.controls.account"></show-errors>
+            </div>
+            <div class="col-md-3 col-xs-12">
+              <label>{{'common.effectivedate' | translate}}</label>
+              <div class="calender-field">
+                <my-date-picker id="card-effdate"
+                  [ngClass]="{'disableInput':!bnkAddMode, 'removeCross':bnkAccViewMode }"
+                  placeholder="{{'common.date-placeholder' | translate}}" [options]="myDatePickerOptions" name="effdate"
+                  formControlName="effdate" (inputFocusBlur)="changeDateFormat($event, 'effdate' ,'cardbankacc',false)">
+                </my-date-picker>
+              </div>
+              <show-errors [control]="cardbankacc.controls.effdate"></show-errors>
+            </div>
+            <div class="col-md-3 col-xs-12">
+              <label>{{'common.expirydate' | translate}}</label>
+              <div class="calender-field">
+                <my-date-picker [ngClass]="[expired  ? 'expired' : 'notExpired' , (bnkAccViewMode == true) ? 'removeCross':'']" id="card-expdate"
+                  [options]="myDatePickerOptions"  name="expdate"
+                  placeholder="{{'common.date-placeholder' | translate }}" formControlName="expdate"
+                  (inputFocusBlur)="changeDateFormat($event, 'expdate' ,'cardbankacc')">
+                </my-date-picker>
+              </div>
+              <show-errors [control]="cardbankacc.controls.expdate"></show-errors>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div id="BankAccountHistory" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">   <!--Bank Account History Modal-->
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="closeBankAccButton" (click)="resetCardbankAccHistory()" id="BankAccountHistory" type="button"
+          class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">{{'common.bank-account' | translate}}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{'common.bank-account-details' | translate}}</h3>
+          </div>
+          <div class="grid-inner">
+            <div class="form-row">
+              <form [formGroup]="cardBankAccountPopup">
+                <div class="row min-ht-sf">
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'common.card-id' | translate}}</label>
+                    <input [ngClass]="{'disableInput':historyEditMode}" id="bankCardId" type="text" disabled
+                      placeholder="{{'common.card-id' | translate}}" value={{savedCardNumber}}
+                      class="fm-txt form-control" />
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'common.bank-#' | translate}}<span *ngIf="!albertaBsnsType"
+                        class="required">*</span></label>
+                    <input [ngClass]="{'disableInput':historyEditMode}" type="text" class="fm-txt form-control"
+                      id="bankValue" placeholder="{{'common.bank-#' | translate}}" formControlName="bankValue"
+                      (blur)="bankFields(cardBankAccountPopup.controls.bankValue,cardBankAccountPopup.controls.branchValue)" />
+                    <show-errors [control]="cardBankAccountPopup.controls.bankValue"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'common.branch-#' | translate}}<span *ngIf="!albertaBsnsType"
+                        class="required">*</span></label>
+                    <input [ngClass]="{'disableInput':historyEditMode}" type="text" class="fm-txt form-control"
+                      id="branchValue" placeholder="{{'common.branch-#' | translate}}" formControlName="branchValue"
+                      (blur)="bankFields(cardBankAccountPopup.controls.bankValue,cardBankAccountPopup.controls.branchValue)" />
+                    <show-errors [control]="cardBankAccountPopup.controls.branchValue"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'common.bank-name' | translate}} </label>
+                    <input [ngClass]="{'disableInput':historyEditMode}" type="text" class="fm-txt form-control"
+                      id="clientValue" placeholder="{{'common.bank-name' | translate}}" formControlName="clientValue" />
+                    <show-errors [control]="cardBankAccountPopup.controls.clientValue"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'common.account-#' | translate}}<span *ngIf="!albertaBsnsType"
+                        class="required">*</span></label>
+                    <input [ngClass]="{'disableInput':historyEditMode}" type="text" class="fm-txt form-control"
+                      id="accountValue" placeholder="{{'common.account-#' | translate}}"
+                      formControlName="accountValue" />
+                    <show-errors [control]="cardBankAccountPopup.controls.accountValue"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'common.effectivedate' | translate}} <span *ngIf="!albertaBsnsType"
+                        class="required">*</span></label>
+                    <div class="calender-field">
+                      <my-date-picker id="effdateValue" placeholder="{{'common.date-placeholder' | translate}}"
+                        [options]="myDatePickerOptions" name="effdate" formControlName="effdateValue"
+                        [ngClass]="{'disableInput':historyEditMode, 'removeCross':historyEditMode }"
+                        (inputFocusBlur)="changeDateFormatBankAccount($event, 'effdateValue' ,'cardBankAccountPopup',true)">
+                      </my-date-picker>
+                    </div>
+                    <show-errors [control]="cardBankAccountPopup.controls.effdateValue"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12" >
+                    
+                    <label>{{'common.expirydate' | translate}}</label>
+                    <div class="calender-field">
+                      <my-date-picker id="expdateValue" [options]="myDatePickerOptions" name="expdate"
+                        placeholder="{{'common.date-placeholder' | translate}}" formControlName="expdateValue"
+                        [ngClass]="expired  ? 'expired' : 'notExpired'"
+                        (inputFocusBlur)="changeDateFormatBankAccount($event, 'expdateValue' ,'cardBankAccountPopup')">
+                      </my-date-picker>
+                    </div>
+                    <show-errors [control]="cardBankAccountPopup.controls.expdateValue"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>&nbsp;</label>
+                    <button id="updateBankAcc" class="btn green-btn btn-lg" title="Save Bank Account" type="submit"
+                      (click)="updateBankAccount()">{{buttonText}}</button>
+                    <button id="closeBankAccFormBtn" type="button" class="btn grey-btn"
+                      (click)="resetCardbankAccHistory()">Clear</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        
+        <div class="grid-box">    <!-- accountHistory dataTable -->
+          <div class="grid-heading">
+            <h3>{{'common.listOfBankAccounts' | translate}}</h3>
+          </div>
+          <div class="grid-inner">
+            <div class="form-row">
+              <div class="row">
+                <div class="col-md-12 col-xs-12 table-col">
+                  <div class="table-responsive">
+                    <table id='bank-history' datatable [dtOptions]="dtOptions['bank-history']"
+                      [dtTrigger]="dtTrigger['bank-history']"
+                      class="inlinePopupTable table table-bordered table-stripped">
+                      <thead>
+                        <tr>
+                          <th>{{'common.bank-#' | translate}}</th>
+                          <th class="amount_right">{{'common.branch-#' | translate}}</th>
+                          <th class="amount_right">{{'common.bank-name' | translate}}</th>
+                          <th class="amount_right">{{'common.account-#' | translate}}</th>
+                          <th class="amount_right">{{'common.effectivedate' | translate}}</th>
+                          <th class="amount_right">{{'common.expireddate' | translate}}</th>
+                          <th class="amount_right">{{'common.action' | translate}}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="tableRow" id="{{'row_'+i}}"
+                          *ngFor="let dataRow of accountHistorytableData; let i = index">
+                          <td>
+                            {{dataRow['cardBankNum']}}
+                          </td>
+                          <td class="amount_right">
+                            {{dataRow['cardBankBranchNum']}}
+                          </td>
+                          <td class="amount_right">
+                            {{dataRow['bankName']}}
+                          </td>
+                          <td class="amount_right">
+                            {{dataRow['cardBankAccountNum']}}
+                          </td>
+                          <td class="amount_right">
+                            {{dataRow['cardBaEffectiveOn']}}
+                          </td>
+                          <td class="amount_right" [ngClass]="expired ? 'expired' : 'notExpired'">
+                            {{dataRow['cardExpiredOn']}}
+                          </td>
+                          <td class="amount_right"><button (click)="setBankAccountForm(dataRow, i)"
+                              class='form_edit_row table-action-btn edit-ico'><i class='fa fa-pencil'></i></button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="closeBankAccForm" type="button" class="btn grey-btn"
+            data-dismiss="modal">{{'button.close' | translate}}</button>
+        </div>
+      </div>
+    </div>
+  </div>

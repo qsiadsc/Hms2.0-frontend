@@ -1,0 +1,172 @@
+<div class="col-sm-6 col-xs-12">
+  <div class="form-row">
+    <div class="grid-box">
+      <div class="grid-heading">
+        <h3>{{ 'card.card-eligibility.eligibility-history' | translate }}</h3>
+        <div class="web-reg">
+          <button id="SPAddNeweligHistory" *ngIf="serviceProviderChecks[0].addNewEligibilityHistory == 'T'" title="Add New Eligibility History" class="green-btn-add btn upperCase"  (click)="AddNew()"><i class="fa fa-plus"></i>{{'button.add-new'|translate}}</button>
+        </div><!-- Web Reg Ends -->
+      </div><!-- Grid HEading Ends -->
+      
+      <div class="grid-inner">
+        <div class="form-row">
+          <div class="row">
+            <div class="col-md-12 col-xs-12 table-col">
+              <div class="table-responsive">
+                <table id="SPGrdEligHistory" datatable [dtOptions]="dtOptions['SPGrdEligHistory']" [dtTrigger]="dtTrigger['SPGrdEligHistory']" class="table table-bordered table-stripped dataTable">
+                  <thead>
+                    <tr>
+                      <th width="20%">{{ 'card.card-eligibility.over-rides.card-maximums.top-up-maximums.effective-date' | translate }}</th>
+                      <th class="amount_right" width="20%">{{ 'card.card-eligibility.over-rides.card-maximums.top-up-maximums.expiry-date' | translate }}</th>
+                      <th class="amount_right" width="20%">{{ 'company.company-form.suspended'|translate}}</th>
+                      <th class="amount_right" width="20%">{{ 'card.card-eligibility.over-rides.card-maximums.top-up-maximums.action' | translate }}</th>
+                    </tr>
+                  </thead>
+                  <tbody *ngIf = "serviceProviderAddMode">
+                      <tr *ngIf="arrData.length == 0 && !addMode" class="odd">
+                        <td valign="top" colspan="6" class="dataTables_empty">{{'card.card-holder.data-tables.datamsg' | translate}}</td>
+                      </tr>
+                      <tr *ngFor="let dataRow of arrData;let i = index">
+                        <td>
+                          <span *ngIf="dataRow.idx != selectedRowId">{{dataRow.effectiveOn | dateFormate}}</span>   
+                      <my-date-picker id="txtEffectiveOn{{i}}" [options]="myDatePickerOptions" placeholder="{{'common.date-placeholder' | translate}}" name="EffectiveOn{{i}}" 
+                          (inputFocusBlur)="ChangeInputDateFormat($event,i, 'effectiveOn')" [ngClass]="{ 'error_field': newRecordValidate && dataRow.effectiveOn == '' }"  [(ngModel)]="updateEffectiveRow[i]" 
+                           *ngIf="dataRow.idx == selectedRowId " >
+                      </my-date-picker>
+                          
+                        </td>
+                        <td class="amount_right">
+                          <span style="color: rgb(235, 87, 87);font-weight: bold;" *ngIf="dataRow.idx != selectedRowId && dataRow.checkDate">{{dataRow.expiredOn | dateFormate}}</span>
+                          <span *ngIf="dataRow.idx != selectedRowId && !dataRow.checkDate">{{dataRow.expiredOn | dateFormate}}</span>
+                          <my-date-picker id="txtExpireOn{{i}}" [options]="myDatePickerOptions" placeholder="{{'common.date-placeholder' | translate}}" name="expiredOn{{i}}" 
+                          (inputFocusBlur)="ChangeInputDateFormat($event,i, 'expiredOn')"   [(ngModel)]="updateExpiredRow[i]" 
+                           *ngIf="dataRow.idx == selectedRowId " [ngClass]="expired ? 'expired' : 'notExpired'">
+                      </my-date-picker>
+                          
+                        </td>
+                        <td class="amount_right">
+                          <input  type="checkbox" name="suspendedInd{{i}}" [checked]="dataRow.suspendedInd=='F' || dataRow.suspendedInd=='false' ? false:true"  
+                          [(ngModel)]="dataRow.suspendedInd" [disabled]= "dataRow.idx != selectedRowId" 
+                          id="chksuspendedInd{{i}}">
+                        </td>
+                        <td class="amount_right">
+                            <a   (click)="EditInfo(dataRow, i)" title="Edit" 
+                            [ngClass]="{ 'edit_row': true,'table-action-btn': true,'edit-ico': true, 'disabled': serviceProviderViewMode}" *ngIf="serviceProviderAddMode && dataRow.idx != selectedRowId  && serviceProviderChecks[0].editEligibilityHistory == 'T'">
+                            <i dir="rtl" class='fa fa-pencil'></i>
+                          </a>
+                        <a  (click)="UpdateInfo(dataRow, i)" class="save_row table-action-btn edit-ico" *ngIf="dataRow.idx == selectedRowId && serviceProviderChecks[0].editEligibilityHistory == 'T'">
+                          <i class="fa fa-save"></i>
+                        </a>
+                        <a href="javascript:void(0)" title="Delete" class="delete_row table-action-btn del-ico" 
+                        (click)="CancelInfo()"
+                         *ngIf="dataRow.idx == selectedRowId">
+                        <i class="fa fa-times"></i></a>
+                      </td>
+                    </tr>
+                    <tr class="tableRow" *ngIf="addMode">
+                      <td>
+                          <my-date-picker  id="txtEffectiveOn" [options]="myDatePickerOptions" placeholder="{{'common.date-placeholder' | translate}}" name="effectiveOn" 
+                          (inputFocusBlur)="ChangeInputDateFormat($event,0, 'effectiveOn')" [ngClass]="{ 'error_field': newRecordValidate && arrNewRow.effectiveOn == '' }"  [(ngModel)]="arrNewRow.effectiveOn">
+                      </my-date-picker>
+                      </td>
+                      <td>
+                          <my-date-picker id="txtExpireOn" [options]="myDatePickerOptions" placeholder="{{'common.date-placeholder' | translate}}" name="expiredOn" 
+                          [ngClass]="expired  ? 'expired' : 'notExpired'"
+                          (inputFocusBlur)="ChangeInputDateFormat($event,0, 'expiredOn')" [(ngModel)]="arrNewRow.expiredOn">
+                      </my-date-picker>
+                      </td>
+                      <td class="amount_right">
+                        <input type="checkbox" name="suspendedInd" [(ngModel)]="arrNewRow.suspendedInd"  [checked]="arrNewRow.suspendedInd == 'F' || arrNewRow.suspendedInd == 'false'  ?false:true" >
+                      </td>
+                      <td>
+                        <a href="javascript:void(0)" title="Save" class="save_row table-action-btn edit-ico" 
+                        (click)="SaveInfo()">
+                        <i class="fa fa-save"></i>
+                      </a>
+                      <a href="javascript:void(0)" title="Delete" class="delete_row table-action-btn del-ico" 
+                      (click)="DeleteInfo()" *ngIf="serviceProviderChecks[0].deleteEligibilityHistory == 'T'">
+                      <i class="fa fa-times"></i>
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+
+            <tbody *ngIf = "serviceProviderEditMode || serviceProviderViewMode">
+                <tr *ngIf="arrData.length == 0 && !addMode" class="odd">
+                  <td valign="top" colspan="6" class="dataTables_empty">{{'card.card-holder.data-tables.datamsg' | translate}}</td>
+                </tr>
+                <tr *ngFor="let dataRow of arrData;let i = index">
+                  <td>
+                    <span *ngIf="dataRow.provEligibilKey != selectedRowId">{{dataRow.effectiveOn | dateFormate}}</span>
+                <my-date-picker id="txtEffectiveOn{{i}}" [options]="myDatePickerOptions" placeholder="{{'common.date-placeholder' | translate}}" name="EffectiveOn{{i}}" 
+                    (inputFocusBlur)="ChangeInputDateFormat($event,i, 'effectiveOn')" [ngClass]="{ 'error_field': newRecordValidate && dataRow.effectiveOn == '' }"  [(ngModel)]="updateEffectiveRow[i]" 
+                     *ngIf="dataRow.provEligibilKey == selectedRowId && i==0" >
+                </my-date-picker>
+                  </td>
+                  <td class="amount_right">
+                    <span style="color: rgb(235, 87, 87);font-weight: bold;" *ngIf="dataRow.provEligibilKey != selectedRowId && dataRow.checkDate">{{dataRow.expiredOn | dateFormate}}</span>
+                    <span *ngIf="dataRow.provEligibilKey != selectedRowId && !dataRow.checkDate">{{dataRow.expiredOn | dateFormate}}</span>
+                    <my-date-picker id="txtExpireOn{{i}}" [options]="myDatePickerOptions" placeholder="{{'common.date-placeholder' | translate}}" name="expiredOn{{i}}" 
+                    (inputFocusBlur)="ChangeInputDateFormat($event,i, 'expiredOn')"   [(ngModel)]="updateExpiredRow[i]" 
+                     *ngIf="dataRow.provEligibilKey == selectedRowId && i==0" >
+                </my-date-picker>
+                  </td>
+                  <td class="amount_right">
+                    <input type="checkbox" name="suspendedInd{{i}}" [checked]="dataRow.suspendedInd"  
+                    [(ngModel)]="dataRow.suspendedInd" [disabled]= "dataRow.provEligibilKey != selectedRowId" 
+                    id="chksuspendedInd{{i}}">
+                  </td>
+                  <td class="amount_right">
+                    <a  (click)="EditInfo(dataRow, i)" title="Edit" 
+                    [ngClass]="{ 'edit_row': true,'table-action-btn': true,'edit-ico': true, 'disabled': serviceProviderViewMode}" *ngIf="(serviceProviderEditMode || serviceProviderViewMode) && dataRow.provEligibilKey != selectedRowId && i==0  && serviceProviderChecks[0].editEligibilityHistory == 'T'">
+                    <i class='fa fa-pencil'></i>
+                  </a>
+                  <a   (click)="UpdateInfo(dataRow, i)" class="save_row table-action-btn edit-ico" *ngIf="dataRow.provEligibilKey == selectedRowId && serviceProviderChecks[0].editEligibilityHistory == 'T'">
+                    <i class="fa fa-save"></i>
+                  </a>
+                  <a href="javascript:void(0)" title="Delete" class="delete_row table-action-btn del-ico" 
+                  (click)="CancelInfo()"
+                   *ngIf="dataRow.provEligibilKey == selectedRowId">
+                  <i class="fa fa-times"></i></a>
+                </td>
+              </tr>
+              <tr class="tableRow" *ngIf="addMode">
+                <td>
+                    <my-date-picker id="txtEffectiveOn" [options]="myDatePickerOptions" placeholder="{{'common.date-placeholder' | translate}}" name="effectiveOn" 
+                    (inputFocusBlur)="ChangeInputDateFormat($event,0, 'effectiveOn')" [ngClass]="{ 'error_field': newRecordValidate && arrNewRow.effectiveOn == '' }"  [(ngModel)]="arrNewRow.effectiveOn">
+                </my-date-picker>
+                </td>
+                <td>
+                    <my-date-picker id="txtExpireOn" [options]="myDatePickerOptions" placeholder="{{'common.date-placeholder' | translate}}" name="expiredOn" 
+                    [ngClass]="expired  ? 'expired' : 'notExpired'"
+                    (inputFocusBlur)="ChangeInputDateFormat($event,0, 'expiredOn')" [(ngModel)]="arrNewRow.expiredOn">
+                </my-date-picker>
+                </td>
+                <td>
+                  <input type="checkbox" name="suspendedInd" [(ngModel)]="arrNewRow.suspendedInd">
+                </td>
+                <td>
+                  <a href="javascript:void(0)" title="Save" class="save_row table-action-btn edit-ico" 
+                  (click)="SaveInfo()">
+                  <i class="fa fa-save"></i>
+                </a>
+                <a href="javascript:void(0)" title="Delete" class="delete_row table-action-btn del-ico" 
+                (click)="DeleteInfo()" *ngIf="serviceProviderChecks[0].deleteEligibilityHistory == 'T'">
+                <i class="fa fa-times"></i>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+          </table>
+        </div>
+      </div>
+      <!-- Table Ends -->
+    </div>
+  </div>
+</div>
+<!-- Form Row ENds -->
+</div>
+<!-- Grid Inner Ends -->
+</div>
+<!-- Grid Box Ends -->
+</div><!-- Form Row Ends -->

@@ -1,0 +1,74 @@
+<div class="grid-box">
+    <div class="grid-heading">
+        <h3>{{'common.generalinfo'|translate}}</h3>
+        <div class="web-reg">
+            <!-- (back to search) button hidden when we save new service provider and view page appears. -->
+            <a *ngIf="(serviceProviderEditMode || serviceProviderViewMode) && !hideButton" style="cursor: pointer"
+                class="green-btn-add btn backSearch" [routerLink]="['/serviceProvider/search']"
+                (click)="backToSearch()"><i class="fa fa-share" aria-hidden="true"></i>Back To Search</a>
+        </div>
+    </div>
+    <!-- Grid Heading Ends -->
+    <div class="grid-inner">
+        <form [formGroup]="ServiceProviderGeneralInformationFormGroup">
+            <div class="form-row">
+                <div class="row min-ht-sf">
+                    <div class="col-md-2 col-xs-12">
+                        <label>{{'common.last-name'|translate}}<span class="required">*</span></label>
+                        <input id="spgi_lastName" type="text" class="fm-txt form-control"
+                            placeholder="{{'common.last-name'|translate}}" formControlName="lastName">
+                        <show-errors [control]="ServiceProviderGeneralInformationFormGroup.controls.lastName">
+                        </show-errors>
+                    </div>
+                    <div class="col-md-2 col-xs-12">
+                        <label>{{'common.first-name'|translate}}<span class="required">*</span></label>
+                        <input id="spgi_firstName" type="text" class="fm-txt form-control"
+                            placeholder="{{'common.first-name'|translate}}" formControlName="firstName">
+                        <show-errors [control]="ServiceProviderGeneralInformationFormGroup.controls.firstName">
+                        </show-errors>
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                        <label>{{'company.plan.discipline'|translate}}</label>
+                        <select class="fm-txt form-control" (change)="selectedDisciplineType($event)"
+                            placeholder="Discipline" name="discipline" id="spgi_discipline"
+                            formControlName="discipline">
+                            <option [ngValue]="" disabled hidden selected>
+                                {{'claims.claims-add.claims-general-information.select' | translate}}</option>
+                            <option *ngFor="let type of claimType" [value]="type.disciplineKey">{{type.disciplineName}}
+                            </option>
+                        </select>
+                        <show-errors [control]="ServiceProviderGeneralInformationFormGroup.controls.discipline">
+                        </show-errors>
+                    </div>
+                    <div class="col-md-3 col-xs-12" *ngIf="!serviceProviderViewMode">
+                        <label>{{'common.email-address'|translate}}</label>
+                        <input id="spgi_email" type="text" class="fm-txt form-control"
+                            placeholder="{{'common.email-address'|translate}}" formControlName="email">
+                        <show-errors [control]="ServiceProviderGeneralInformationFormGroup.controls.email">
+                        </show-errors>
+                    </div>
+
+                    <div class="col-md-2 col-xs-12">
+                        <label>{{'claims.claims-edit.service-provider.service-provider.billing-address.language'|translate}}</label>
+                        <select id="spgi_langauge" class="fm-txt form-control" placeholder="Language" name="langauge"
+                            formControlName="langauge">
+                            <option *ngFor="let languageValue of languages" [ngValue]="languageValue.languageKey">
+                                {{ languageValue.languageDesc }}
+                            </option>
+                        </select>
+                        <show-errors [control]="ServiceProviderGeneralInformationFormGroup.controls.langauge">
+                        </show-errors>
+                    </div>
+                    <div class="col-md-2 col-xs-12" *ngIf="!serviceProviderViewMode">
+                        <label>{{'serviceProvider.general-information.id'|translate}}</label>
+                        <input id="spgi_id" disabled type="text" class="fm-txt form-control" placeholder="ID"
+                            formControlName="id">
+                    </div>
+                </div>
+            </div>
+            <!-- Form Row ENds -->
+        </form>
+    </div>
+    <!-- Grid Inner Ends -->
+</div>
+<!-- Grid Box Ends -->

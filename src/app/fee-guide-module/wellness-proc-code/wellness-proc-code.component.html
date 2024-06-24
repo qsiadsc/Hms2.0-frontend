@@ -1,0 +1,186 @@
+<div class="section-heading">
+  <h2>{{'feeGuide.procedureCode.heading.proc-code'|translate}} -
+    <span>{{'button.search'|translate}}</span>
+  </h2>
+</div>
+<!-- Section Heading Ends -->
+<div class="grid-box">
+  <div class="grid-heading">
+    <h3>Wellness Procedure Code</h3>
+    <div class="web-reg">
+      <a class="green-btn-add btn" *ngIf="wellnessProcCodeCheck[0].addWellnessProcCode == 'T'"
+        id="clickwellnessProcCodeID" data-toggle="modal" data-target="#addWellnessProcCode" (click)="enableAddMode()">
+        <i class="fa fa-plus"></i>Add Wellness Procedure Code</a>
+    </div>
+  </div>
+  <!-- Grid Heading Ends -->
+  <div class="grid-inner">
+    <form [formGroup]="wellnessProcCode">
+      <div class="form-row">
+        <div class="row min-ht-sf">
+          <div class="col-md-3 col-xs-12">
+            <label>Procedure ID</label>
+            <input id="wpc_procId" type="text" class="fm-txt form-control" placeholder="Procedure ID"
+              formControlName="procId" (keydown)="isNumberKey($event)" (keyup.enter)="isEnterKey($event)">
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>Procedure Description</label>
+            <ng2-completer [inputId]="'wpc_procDesc'" id="wpc_procDesc" formControlName="wellnessProcDesc"
+              [datasource]="procDescRemote" [minSearchLength]="3" [clearUnselected]="false" [fillHighlighted]="true"
+              [autoHighlight]="true" [selectOnFocus]="true" [placeholder]="'Search Procedure Description'"
+              [textSearching]="'Please wait...'" [inputClass]="'form-control'" (selected)="onProcDescSelect($event)">
+            </ng2-completer>
+          </div>
+          <div class="col-md-2 col-xs-12">
+            <label>&nbsp;</label>
+            <button *ngIf="wellnessProcCodeCheck[0].searchWellnessProcCode == 'T'" id="btnWellnessProc"
+              class="btn green-btn" (click)="getWellnessProc()">{{'button.search'|translate}}</button>
+            <button id="btnClearWellnessProc" class="btn grey-btn"
+              (click)="resetWellnessProc()">{{'button.clear'|translate}}</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div [hidden]="!showSearchTable">
+    <div class="grid-box">
+      <div class="grid-heading">
+        <h3>{{'feeGuide.procedureCode.heading.proc-code-list'|translate}}</h3>
+      </div>
+      <div class="grid-inner">
+        <form>
+          <div class="form-row">
+            <div class="row">
+              <div class="col-md-12 col-xs-12 table-col">
+                <div class="table-responsive">
+                  <table id="wellnessProcedureCode" class="display table table-bordered table-stripped alignRightText">
+                    <thead>
+                    </thead>
+                    <tfoot>
+                      <tr>
+                        <td width="100px">
+                          <input [(ngModel)]="wellnessIdL" id="wpc_serviceId" type="text"
+                            class="fm-txt form-control inputSearch" name="wellnessServiceId"
+                            placeholder="{{'feeGuide.procedureCode.proc-code-listing.serviceId' | translate}}">
+                        </td>
+                        <td width="100px">
+                          <input [(ngModel)]="wellnessProcIdL" id="wpc_procId" type="text"
+                            class="fm-txt form-control inputSearch amount_right_grid" name="wellnessProcedureId"
+                            placeholder="{{'feeGuide.procedureCode.proc-code-listing.proc-id' | translate}}">
+                        </td>
+                        <td width="100px">
+                          <input [(ngModel)]="wellnessShortDescL" id="wpc_procDesc" type="text"
+                            class="fm-txt form-control inputSearch amount_right_grid" name="wellnessProcedureDesc"
+                            placeholder="{{'feeGuide.procedureCode.proc-code-listing.desc-short' | translate}}">
+                        </td>
+                        <td width="200px">
+                          <input [(ngModel)]="wellnessProcedureLongDescL" id="wpc_procDescLong" type="text"
+                            class="fm-txt form-control inputSearch amount_right_grid" name="wellnessProcedureLongDesc"
+                            placeholder="{{'feeGuide.procedureCode.proc-code-listing.desc-long' | translate}}">
+                        </td>
+                        <td width="50px">
+                          <div class="form-row text-right">
+                            <button title="{{'common.search' | translate}}" id="wpc_searchbtn"
+                              class="btn green-btn searchreset" type="submit"
+                              (click)="getProcCodeListByGridFilteration('wellnessProcedureCode')">
+                              <span class="glyphicon glyphicon-search"></span>
+                            </button>
+                            <button title="{{'common.reset' | translate}}" id="wpc_resetbtn"
+                              class="btn grey-btn searchreset" (click)="getWellnessProc()">
+                              <span class="glyphicon glyphicon-repeat"></span>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+                <!-- Table Ends -->
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div id="addWellnessProcCode" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button id="wpca_close" type="button" class="close" data-dismiss="modal"
+            (click)="resetaddProCodeOnClose">&times;</button>
+          <h4 class="modal-title">Wellness Procedure Code</h4>
+        </div>
+        <div class="modal-body">
+          <div class="grid-box">
+            <div class="grid-inner">
+              <div class="form-row">
+                <form [formGroup]="addWellnessProcCodeForm">
+                  <div class="row min-ht-sf">
+                    <div class="col-md-6 col-xs-12">
+                      <label>Wellness Service
+                        <span class="required">*</span>
+                      </label>
+                      <ng2-completer [inputId]="'wpca_wellnessService'" formControlName="wellnessService"
+                        [datasource]="wellnessProcDataRemote" [minSearchLength]="1" [clearUnselected]="true"
+                        [fillHighlighted]="true" [autoHighlight]="true" [selectOnFocus]="true"
+                        [placeholder]="'Search Wellness Service'" [textSearching]="'Please wait...'"
+                        [inputClass]="'form-control'" (selected)="onSelect($event)">
+                      </ng2-completer>
+                      <show-errors [control]="addWellnessProcCodeForm.controls.wellnessService"></show-errors>
+                    </div>
+                    <div class="col-md-6 col-xs-12">
+                      <label>{{'feeGuide.procedureCode.proc-code-listing.proc-id'|translate}}
+                        <span class="required">*</span>
+                      </label>
+                      <input id="wpca_procID" type="text" OnlyNumber="true" formControlName="procId"
+                        class="form-control"
+                        placeholder="{{'feeGuide.procedureCode.proc-code-listing.proc-id'|translate}}"
+                        (keydown)="isNumberKey($event)" />
+                      <show-errors [control]="addWellnessProcCodeForm.controls.procId"></show-errors>
+                    </div>
+                    <div class="col-md-6 col-xs-12 txtarea-height">
+                      <label>{{'feeGuide.procedureCode.proc-code-listing.desc-short'|translate}}</label>
+                      <textarea id="wpca_sdesc" class="form-control notInCaps" formControlName="descShort"
+                        placeholder="{{'feeGuide.procedureCode.proc-code-listing.desc-short'|translate}}"></textarea>
+                      <show-errors [control]="addWellnessProcCodeForm.controls.descShort"></show-errors>
+                    </div>
+                    <div class="col-md-6 col-xs-12 txtarea-height">
+                      <label>{{'feeGuide.procedureCode.proc-code-listing.desc-long'|translate}}</label>
+                      <textarea id="wpca_ldesc" class="form-control notInCaps" formControlName="descLong"
+                        placeholder="{{'feeGuide.procedureCode.proc-code-listing.desc-long'|translate}}"></textarea>
+                      <show-errors [control]="addWellnessProcCodeForm.controls.descLong"></show-errors>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <!-- Form Row ENds -->
+            </div>
+          </div>
+        </div>
+        <!-- Modal Body End-->
+        <div class="modal-footer">
+          <button id="wpca_Update" class="green-btn btn" *ngIf="!viewMode"
+            (keyup.arrowLeft)="focusNextEle($event,'wpca_Close')" (keyup.arrowRight)="focusNextEle($event,'wpca_Close')"
+            (click)="saveProcedureCode()">{{buttonText}}</button>
+          <button id="wpca_Close" class="btn grey-btn" data-dismiss="modal"
+            (keyup.arrowLeft)="focusNextEle($event,'wpca_Update')"
+            (keyup.arrowRight)="focusNextEle($event,'wpca_Update')"
+            (click)="resetaddProCodeOnClose()">{{'button.close'|translate}}</button>
+        </div>
+        <!-- Modal  Footer Ends -->
+      </div>
+    </div>
+  </div>
+  <div *ngIf="showLoader" class="loader-outer">
+    <div class="cube-wrapper">
+      <div class="cube-folding">
+        <span class="leaf1"></span>
+        <span class="leaf2"></span>
+        <span class="leaf3"></span>
+        <span class="leaf4"></span>
+      </div>
+      <span class="loading" data-name="Loading">{{loaderPlaceHolder}}</span>
+    </div>
+  </div>

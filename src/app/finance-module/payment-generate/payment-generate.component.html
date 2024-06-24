@@ -1,0 +1,116 @@
+<div class="container">
+    <div class="section-heading">
+      <h2>{{'finance.paymentGenerate.payment' | translate}}
+        <span>{{'finance.paymentGenerate.run' | translate}}</span>
+      </h2>
+    </div>
+    <!-- Section Heading Ends -->
+  
+    <div class="grid-box">
+      <div class="grid-heading">
+        <h3>{{'finance.paymentGenerate.generatePayment' | translate}}</h3>
+      </div>
+      <!-- Grid Heading Ends -->
+  
+      <div class="grid-inner">
+        <form [formGroup]="paymentGenerateForm">
+        <div class="form-row">
+          <div class="row min-ht-sf">
+            <div class="col-md-12 col-xs-12">
+              <label>&nbsp;</label>
+              <div class="select-options">
+                <span><label><input id="payGenerateDental" type="checkbox" name="dental" formControlName="dental" > {{'finance.paymentGenerate.dental' | translate}}</label></span>
+                <span><label><input id="payGenerateVision" class="txt-top" type="checkbox" name="vision" formControlName="vision" >{{'finance.paymentGenerate.vision' | translate}}  </label></span>
+                <span><label><input id="payGenerateHealth" class="txt-top" type="checkbox" name="health" formControlName="health" > {{'finance.paymentGenerate.health' | translate}} </label></span>
+                <span><label><input id="payGenerateDrug" class="txt-top" type="checkbox" name="drug" formControlName="drug" >{{'finance.paymentGenerate.drug' | translate}}  </label></span>
+                <span><label><input id="payGenerateSupplement" class="txt-top" type="checkbox" name="supplement" formControlName="supplement" > {{'finance.paymentGenerate.supplement' | translate}} </label></span>
+                <span><label><input id="payGenerateWellness" class="txt-top" type="checkbox" name="wellness" formControlName="wellness"> {{'finance.paymentGenerate.wellness' | translate}} </label></span>
+              </div>
+            </div>
+  
+            <div class="col-md-3 col-xs-12">
+              <label>{{'finance.paymentGenerate.planType' | translate}}</label>
+              <select id="payGeneratePlanType" class="form-control" name="planType" formControlName="planType">
+                <option hidden value="">{{'common.select' | translate}}</option>
+                <option value="Q">{{'finance.paymentGenerate.quikcard' | translate}}</option>
+                <option value="A">{{'finance.paymentGenerate.abGov' | translate}}</option>
+                <option value="F">{{'finance.paymentGenerate.fscdCp' | translate}}</option>
+                <option value="O">{{'finance.paymentGenerate.other' | translate}}</option>
+              </select>
+              <show-errors [control]="paymentGenerateForm.controls.planType"></show-errors>
+            </div>
+  
+            <div class="col-md-3 col-xs-12">
+              <label>{{'finance.paymentGenerate.eftDueDate' | translate}}</label>
+              <div class="calender-field">
+                <my-date-picker id="payGenerateEffectiveDate" [options]="myDatePickerOptions" name="effectiveOn" formControlName="effectiveOn" (inputFocusBlur)="changeDateFormat($event, 'effectiveOn','paymentGenerateForm', true)"
+                  placeholder="{{'common.date-placeholder' | translate}}">
+                </my-date-picker>
+                <show-errors [control]="paymentGenerateForm.controls.effectiveOn"></show-errors>
+              </div>
+            </div>
+  
+            <div class="col-md-3 col-xs-12">
+              <label>{{'finance.paymentGenerate.confirmationNo' | translate}}</label>
+              <input id="payGenerateConfirmation" type="text" name="confirmationNo" formControlName="confirmationNo" class="form-control" placeholder="{{'finance.paymentGenerate.confirmationNo' | translate}}" />
+              <show-errors [control]="paymentGenerateForm.controls.confirmationNo"></show-errors>
+            </div>  
+          </div>
+        </div>
+      </form>
+        <!-- Form Row ENds -->
+      </div>
+      <!-- Grid Inner Ends -->
+    </div>
+    <!-- Grid Box Ends -->
+  
+    <div class="grid-box">
+      <div class="grid-heading">
+        <h3>{{'finance.paymentGenerate.processingSteps' | translate}}</h3>
+      </div>
+      <!-- Grid Heading Ends -->
+      <div class="grid-inner">  
+        <div class="form-row">
+          <div class="row">
+            <div class="col-md-12 col-xs-12 table-col">
+              <div class="table-responsive search-table">
+                <table id="processingStepList" class="table table-bordered table-stripped">
+                  <thead>
+                    <tr>
+                        <th>{{'finance.paymentGenerate.done' | translate}}</th>
+                        <th>{{'finance.paymentGenerate.steps' | translate}}</th>
+                        <th>{{'finance.paymentGenerate.processing' | translate}}</th>
+                        <th>{{'finance.paymentGenerate.result' | translate}}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                      <tr *ngFor="let field of fieldArray; let i = index">
+                        <td><input type="checkbox" disabled [checked]="(field.done == 0)?false:true" value="field.done"></td>
+                        <td>{{field.step}}</td>
+                        <td>{{field.processing}}</td>
+                        <td>{{field.result}}</td>
+                      </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!-- Table Ends -->
+            </div>
+          </div>
+        </div>
+        <!-- Form Row ENds -->
+  
+        <div class="form-row text-center">
+          <div class="row">
+            <div class="col-md-12 col-xs-12">
+              <button id="payGeneratebtn" class="btn green-btn" [disabled]="generatePaymentButton" (click)="submitPaymentGenerateForm(paymentGenerateForm)">{{'button.generatePayment' | translate}}</button>
+              <button id="payGenerateClose" class="btn grey-btn">{{'button.close' | translate}}</button>
+            </div>
+          </div>
+        </div>
+        <!-- Form Row ENds -->
+      </div>
+      <!-- Grid Inner Ends -->
+    </div>
+    <!-- Grid Box Ends -->
+  </div>
+  <!-- Container Ends -->

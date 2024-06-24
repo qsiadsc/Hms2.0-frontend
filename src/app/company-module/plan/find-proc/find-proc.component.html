@@ -1,0 +1,101 @@
+<nav class="breadcrumb">
+  <span class="breadcrumb-item" [routerLink]="['/company']">{{'company.plan.company' | translate}}</span> >
+  <span class="breadcrumb-item" (click)="goBack()">{{'company.plan.plan' | translate}}</span> >
+  <a class="active serviceProviderActive">Search Proc Code</a>
+</nav>
+
+<form [formGroup]="PlanFrequenciesFormGroup">
+  <div class="section-heading">
+  <!-- Page Heading format is different from other sections of application in Plan View Pages (point no- 118) -->  
+    <h2>Search Proc Code -
+      <span>  View </span>
+    </h2>
+  </div>
+  <!--[Start Dental Plan Coverage Section]-->
+  <div class="grid-box">
+    <div class="grid-heading collapse-heading" aria-expanded="true" data-toggle="collapse"
+      data-target="#dentalPlanCoverageSection">
+      <h3 aria-expanded="true" data-toggle="collapse" data-target="#dentalPlanCoverageSection">
+        Dental Plan Coverage </h3>
+    </div>
+    <div class="collapse in" id="dentalPlanCoverageSection">
+      <div class="grid-inner">
+        <div class="form-row ">
+          <div class="row min-ht-sf">
+            <div class="col-md-2 col-xs-12">
+              <label>Proc Code</label>
+              <input id="proc_code" class="fm-txt form-control" placeholder="Proc Code" type="text"
+                formControlName="proc_code">
+              <span class='error' *ngIf="procCodeError">This field is required</span>
+            </div>
+            <div class="col-md-3 col-xs-12">
+              <label>Plan #</label>
+              <input id="plan_num" class="fm-txt form-control" type="text" formControlName="plan_num" readonly>
+            </div>
+            <div class="col-md-3 col-xs-12">
+              <label>Division #</label>
+              <input id="division_num" class="fm-txt form-control" type="text" formControlName="division_num" readonly>
+            </div>
+            <div class="col-md-3 col-xs-12">
+              <label>Division Name</label>
+              <input id="division_description" class="fm-txt form-control" type="text"
+                formControlName="division_description" readonly>
+            </div>
+            <div class="col-md-1 col-xs-12 procBtn">
+              <button class="btn green-btn-add" (click)="searchProcCode()">Find</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--[End Dental Plan Coverage Section]-->
+
+  <!--[Start Services Covered Section]-->
+  <div class="grid-box" id="coverage_procedures_div">
+    <div class="grid-content">
+      <div class="grid-heading collapse-heading collapse" aria-expanded="true" data-toggle="collapse"
+        data-target="#servicesCoveredSectio">
+        <h3 aria-expanded="true" data-toggle="collapse" data-target="#servicesCoveredSectio">
+          Plan Coverage Category </h3>
+      </div>
+      <div class="collapse in" id="servicesCoveredSectio">
+        <div class="grid-box">
+          <div class="grid-inner">
+            <div class="form-row">
+              <div class="row">
+                <div class="col-md-12 col-xs-12 table-col">
+                  <div class="table-responsive">
+                    <table id='plan-category' class="inlinePopupTable table table-bordered table-stripped">
+                     
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--[End Services Covered Section]-->
+
+  <!--[Start Coverage Procedures Section]-->
+  <!-- add rule list component -->
+  <app-rule-list></app-rule-list>
+  <!--[End Coverage Procedures Section]-->
+  
+</form>
+
+<div [hidden]="!showLoader" class="loader-outer">
+  <div class="cube-wrapper">
+    <div class="cube-folding">
+      <span class="leaf1"></span>
+      <span class="leaf2"></span>
+      <span class="leaf3"></span>
+      <span class="leaf4"></span>
+    </div>
+    <span class="loading" data-name="Loading">{{'company.plan.benefits.pleaseWait'|translate}}</span>
+  </div>
+</div>

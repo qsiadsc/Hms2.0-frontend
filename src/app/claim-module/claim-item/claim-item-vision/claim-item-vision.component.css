@@ -1,0 +1,8 @@
+#claim-item-vision tfoot {
+    position: unset;
+}
+
+.checkVisCss input[type=checkbox]{
+    width: 20px;
+    height: 15px;
+}

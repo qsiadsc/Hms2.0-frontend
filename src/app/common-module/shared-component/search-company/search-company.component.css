@@ -1,0 +1,14 @@
+.search-company {min-width: 278px;top: 38px;position: absolute;text-align: left;left: 0;display: block;z-index: 998;max-height: 300px;background: #fff;width: 100%;overflow: auto;}
+.search-company table{border: 1px solid #d2d2d2;width: 100%;box-shadow: 2px 3px 6px 0px #d2d2d2;}
+.search-company a{cursor: pointer;}
+.company_details{display: table;width: 100%; table-layout: fixed;}
+.company_details a{display: table-row;width: 100%; text-decoration: none;} 
+.company_details div{display: table-cell;width: 50%;text-align: center;     text-overflow: ellipsis;
+    overflow: hidden;}
+.company_heading > div {background: #bababa;padding: 10px 0;color: #fff;border: 1px solid #fff;}
+.company_details.company_heading{border: none;}
+.company_details{color: #515050;font-size: 13px;border: 1px solid #ddd;}
+.company_details a{color: #515050;}
+.company_details a > div{color: #515050;border-right: 1px solid #ddd;padding: 10px;}
+.company_details a > div:last-child {border: none;}
+.active {background: #c6c9d0; color: white;}

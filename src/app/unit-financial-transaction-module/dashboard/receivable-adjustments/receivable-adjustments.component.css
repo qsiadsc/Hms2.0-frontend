@@ -1,0 +1,51 @@
+:host ::ng-deep #negativeTransactionList .dataTables_empty {
+    height: 160px;
+}
+.scroll-negativeTransactionList{
+    overflow-y: scroll;
+    max-height: 500px;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+:host ::ng-deep .dataTables_wrapper{
+    width:100% !important;
+  }
+:host ::ng-deep #negativeTransactionList_wrapper {
+    min-height: 301px;
+}
+:host ::ng-deep div#negativeTransactionList_length {
+    position: absolute;
+}
+:host ::ng-deep #receiptsList .dataTables_empty {
+    height: 160px;
+}
+.scroll-receiptsList{
+    overflow-y: scroll;
+    max-height: 500px;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+:host ::ng-deep #receiptsList_wrapper {
+    min-height: 301px;
+}
+:host ::ng-deep div#receiptsList_length {
+    position: absolute;
+}
+.content-align{
+    text-align: end;
+}
+:host ::ng-deep  .form-row.content-align{
+    padding-top: 17px;
+    padding-right: 9px;
+}
+:host ::ng-deep .fixedHeader > thead > tr > td, :host ::ng-deep .fixedHeader > thead > tr > th {
+    position: sticky !important;
+    top: 0;
+    z-index: 9;
+}
+.search-top .cashAdj
+{
+    margin: -22px 10px -30px 0px !important;
+}

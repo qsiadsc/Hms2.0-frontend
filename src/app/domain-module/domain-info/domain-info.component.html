@@ -1,0 +1,865 @@
+<div *ngIf="!messageScreen && !transactionCode && !dentalProviderSpecialty && !wellnessProviderSpecialty && !mouthTooth && !mouthSite && !visionProviderSpecialty && !healthProviderSpecialty" class="container">
+  <div class="section-heading">
+    <h2>{{'domain.domain' | translate}} -
+      <span> {{'domain.domainInformationList' | translate}}</span>
+    </h2>
+  </div>
+  <div class="grid-box">
+    <div class="grid-heading">
+      <h3>{{domainHeading}} List</h3>
+      <div class="web-reg">
+        <button id="addDomainInfoBtn" class="green-btn-add btn" data-toggle="modal" data-target="#AddNewDomainInfo" (click)="enableAddMode()">
+          <i class="fa fa-plus"></i> {{'domain.add' | translate}} </button>
+      </div>
+    </div>
+    <!-- Grid Heading Ends -->
+    <div class="grid-inner">
+      <div class="form-row">
+        <div class="row">
+          <div class="col-md-12 col-xs-12 table-col">
+            <div class="table-responsive">
+              <form>
+                <table id="domainInfoList" class="table table-bordered table-stripped">
+                  <tfoot>
+                    <tr>
+                      <td>
+                        <input id="domainInfoTypeCd" class="fm-txt form-control tFootInput inputSearch" type="text" placeholder="{{'domain.typeCode' | translate}}"
+                          name="typeCd" />
+                      </td>
+                      <td>
+                        <input id="domainInfoTypeDesc" class="fm-txt form-control tFootInput inputSearch grid_right" type="text" placeholder="{{'domain.typeDescription' | translate}}"
+                          name="typeDescription" />
+                      </td>
+                      <td *ngIf="toothCode">
+                        <input id="domainInfoAllowSurface" class="fm-txt form-control tFootInput inputSearch grid_right" type="text" placeholder="{{'domain.allowSurface' | translate}}"
+                          name="allowSurface" />
+                      </td>
+                      <td *ngIf="dentalPracticeType || visionPracticeType || healthPracticeType || drugPracticeType || wellnessPracticeType">
+                        <input id="domainInfoComment" class="fm-txt form-control tFootInput inputSearch grid_right" type="text" placeholder="Comment"
+                          name="comment" />
+                      </td>
+                      <td *ngIf="discipline">
+                        <select id="domainInfoSuspended" dir="rtl"  name="suspended" class="fm-txt form-control tFootInput inputSearch grid_right" placeholder="Suspended"
+                          (keydown)="filterSearchOnEnter($event,'suspended')">
+                          <option value="" disabled hidden>{{'common.select' | translate}}</option>
+                          <option value="T">Yes</option>
+                          <option value="F">No</option>
+                        </select>
+                      </td>
+                      <td class="alignDpRight" *ngIf="!cardMailoutType">
+                        <div class="calender-field">
+                          <my-date-picker id="domainInfoExpiredOn" class="inputSearch" name="expiredOn" data-type="date" [options]="myDatePickerOptions"
+                            [selDate]="dateNameArray['expiredOn']" [ngClass]="expired  ? 'expired' : 'notExpired'" (inputFocusBlur)="changeDateFormat1($event, 'expiredOn')"
+                            placeholder="{{'common.date-placeholder' | translate}}">
+                          </my-date-picker>
+                        </div>
+                      </td>
+
+                      <td class="grid_right">
+                        <div class="form-row">
+                          <button id="domainInfoSearchBtn" type="submit" title="{{'common.search' | translate}}" class="btn green-btn searchreset"
+                            (click)="searchDomainInfo('domainInfoList')">
+                            <span class="glyphicon glyphicon-search"></span>
+                          </button>
+                          <button id="resetDomainInfoSearchBtn" title="{{'common.reset' | translate}}" class="btn grey-btn searchreset" (click)="resetDomainInfoSearch('domainInfoList')">
+                            <span class="glyphicon glyphicon-repeat"></span>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </form>
+            </div>
+            <!-- Table Ends -->
+          </div>
+        </div>
+      </div>
+      <!-- Form Row ENds -->
+    </div>
+    <!-- Grid Inner Ends -->
+  </div>
+</div>
+
+<div *ngIf="messageScreen" class="container">
+  <div class="section-heading">
+    <h2>{{'domain.domain' | translate}} -
+      <span> {{'domain.domainInformationList' | translate}}</span>
+    </h2>
+  </div>
+  <div class="grid-box">
+    <div class="grid-heading">
+      <h3>{{domainHeading}} List</h3>
+      <div class="web-reg">
+        <button id="addNewMessageBtn" class="green-btn-add btn" data-toggle="modal" data-target="#AddNewMessage" (click)="enableAddMode()">
+          <i class="fa fa-plus"></i> {{'domain.addMessage' | translate}}</button>
+      </div>
+    </div>
+    <!-- Grid Heading Ends -->
+    <div class="grid-inner">
+      <div class="form-row">
+        <div class="row">
+          <div class="col-md-12 col-xs-12 table-col">
+            <div class="table-responsive">
+              <form (submit)="searchDomainInfo('messageList')">
+                <table id="messageList" class="table table-bordered table-stripped">
+                  <tfoot>
+                    <tr>
+                      <td>
+                        <input id="messageEng" class="fm-txt form-control tFootInput inputSearch" type="text" placeholder="{{'domain.messageDescriptionEng'| translate}}"
+                          name="messageEng" />
+                      </td>
+                      <td>
+                        <input id="messageFre" class="fm-txt form-control tFootInput inputSearch grid_right" type="text" placeholder="{{'domain.messageDescriptionFre' | translate}}"
+                          name="messageFre" />
+                      </td>
+                      <td class="alignDpRight">
+                        <div class="calender-field">
+                          <my-date-picker id="domainInfoExpiredOn" class="inputSearch" name="expiredOn" data-type="date" [options]="myDatePickerOptions"
+                            [selDate]="dateNameArray['expiredOn']" [ngClass]="expired  ? 'expired' : 'notExpired'" (inputFocusBlur)="changeDateFormat1($event, 'expiredOn')"
+                            placeholder="{{'common.date-placeholder' | translate}}">
+                          </my-date-picker>
+                        </div>
+                      </td>
+
+                      <td class="grid_right">
+                        <div class="form-row">
+                          <button id="domainInfoSearchBtn" type="submit" title="{{'common.search' | translate}}" class="btn green-btn searchreset"
+                            (click)="searchDomainInfo('messageList')">
+                            <span class="glyphicon glyphicon-search"></span>
+                          </button>
+                          <button id="resetDomainInfoSearchBtn" title="{{'common.reset' | translate}}" class="btn grey-btn searchreset" (click)="resetDomainInfoSearch('messageList')">
+                            <span class="glyphicon glyphicon-repeat"></span>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </form>
+            </div>
+            <!-- Table Ends -->
+          </div>
+        </div>
+      </div>
+      <!-- Form Row ENds -->
+    </div>
+    <!-- Grid Inner Ends -->
+  </div>
+</div>
+
+<!-- Transaction Code Grid  -->
+<div *ngIf="transactionCode" class="container">
+  <div class="section-heading">
+    <h2>{{'domain.domain' | translate}} -
+      <span> {{'domain.domainInformationList' | translate}}</span>
+    </h2>
+  </div>
+  <div class="grid-box">
+    <div class="grid-heading">
+      <h3>{{domainHeading}} List </h3>
+      <div class="web-reg">
+        <button id="addDomainInfoBtn" class="green-btn-add btn" data-toggle="modal" data-target="#AddNewDomainInfo" (click)="enableAddMode()">
+          <i class="fa fa-plus"></i> {{'domain.add' | translate}} </button>
+      </div>
+    </div>
+    <!-- Grid Heading Ends -->
+    <div class="grid-inner">
+      <div class="form-row">
+        <div class="row">
+          <div class="col-md-12 col-xs-12 table-col">
+            <div class="table-responsive">
+              <form (submit)="searchDomainInfo('transactionCodeList')">
+                <table id="transactionCodeList" class="table table-bordered table-stripped">
+                  <tfoot>
+                    <tr>
+                      <td>
+                        <input id="tranCd" class="fm-txt form-control tFootInput inputSearch" type="text" placeholder="Transaction Code" name="tranCd"
+                        />
+                      </td>
+                      <td>
+                        <input id="tranDescription" class="fm-txt form-control tFootInput inputSearch grid_right" type="text" placeholder="Transaction Description"
+                          name="tranDescription" />
+                      </td>
+                      <td class="alignDpRight">
+                        <div class="calender-field">
+                          <my-date-picker id="tranCodeEffectiveOn" class="inputSearch" name="effectiveOn" data-type="date" [options]="myDatePickerOptions"
+                            [selDate]="dateNameArray['effectiveOn']" [ngClass]="expired  ? 'expired' : 'notExpired'" (inputFocusBlur)="changeDateFormat1($event, 'effectiveOn')"
+                            placeholder="{{'common.date-placeholder' | translate}}">
+                          </my-date-picker>
+                        </div>
+                      </td>
+                      <td class="alignDpRight">
+                        <div class="calender-field">
+                          <my-date-picker id="tranCodeExpiredOn" class="inputSearch" name="expiredOn" data-type="date" [options]="myDatePickerOptions"
+                            [selDate]="dateNameArray['expiredOn']" [ngClass]="expired  ? 'expired' : 'notExpired'" (inputFocusBlur)="changeDateFormat1($event, 'expiredOn')"
+                            placeholder="{{'common.date-placeholder' | translate}}">
+                          </my-date-picker>
+                        </div>
+                      </td>
+
+                      <td class="grid_right">
+                        <div class="form-row">
+                          <button id="domainInfoSearchBtn" type="submit" title="{{'common.search' | translate}}" class="btn green-btn searchreset"
+                            (click)="searchDomainInfo('transactionCodeList')">
+                            <span class="glyphicon glyphicon-search"></span>
+                          </button>
+                          <button id="resetDomainInfoSearchBtn" title="{{'common.reset' | translate}}" class="btn grey-btn searchreset" (click)="resetDomainInfoSearch('transactionCodeList')">
+                            <span class="glyphicon glyphicon-repeat"></span>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </form>
+            </div>
+            <!-- Table Ends -->
+          </div>
+        </div>
+      </div>
+      <!-- Form Row ENds -->
+    </div>
+    <!-- Grid Inner Ends -->
+  </div>
+</div>
+<!-- Transaction Code Grid -->
+
+<!-- Dental Provider Specialty Grid -->
+<div *ngIf="dentalProviderSpecialty || wellnessProviderSpecialty || visionProviderSpecialty || healthProviderSpecialty" class="container">
+  <div class="section-heading">
+    <h2>{{'domain.domain' | translate}} -
+      <span> {{'domain.domainInformationList' | translate}}</span>
+    </h2>
+  </div>
+  <div class="grid-box">
+    <div class="grid-heading">
+      <h3>{{domainHeading}} List</h3>
+      <div class="web-reg">
+        <button id="addDentProvSpecBtn" class="green-btn-add btn" data-toggle="modal" data-target="#AddNewProvSpecialty" (click)="enableAddMode()">
+          <i class="fa fa-plus"></i> {{'domain.add' | translate}} </button>
+      </div>
+    </div>
+    <!-- Grid Heading Ends -->
+    <div class="grid-inner">
+      <div class="form-row">
+        <div class="row">
+          <div class="col-md-12 col-xs-12 table-col">
+            <div class="table-responsive">
+              <form (submit)="searchDomainInfo('dentalProviderSpecialtyList')">
+                <table id="dentalProviderSpecialtyList" class="table table-bordered table-stripped">
+                  <tfoot>
+                    <tr>
+                      <td>
+                        <input id="provSpecialId" class="fm-txt form-control tFootInput inputSearch" type="text" placeholder="Specialty Id" name="provSpecialId"
+                        />
+                      </td>
+                      <td>
+                        <input id="provSpecialDesc" class="fm-txt form-control tFootInput inputSearch grid_right" type="text" placeholder="Specialty Description"
+                          name="provSpecialDesc" />
+                      </td>
+                      <td>
+                        <input id="specialtyTypeKey" class="fm-txt form-control tFootInput inputSearch grid_right" type="text" placeholder="Specialty Type"
+                          name="specialtyTypeDesc" />
+                      </td>
+                      <!-- Specialty Group commented for wellnessProviderSpecialty as per discussed with Arun sir -->
+                      <td *ngIf="!visionProviderSpecialty && !healthProviderSpecialty && !wellnessProviderSpecialty">
+                        <input id="provSpecialGroupKey" class="fm-txt form-control tFootInput inputSearch grid_right" type="text" placeholder="Specialty Group"
+                          name="provSpecialGroupDesc" />
+                      </td>
+                      <td class="grid_right">
+                        <div class="form-row">
+                          <button id="domainInfoSearchBtn" type="submit" title="{{'common.search' | translate}}" class="btn green-btn searchreset"
+                            (click)="searchDomainInfo('dentalProviderSpecialtyList')">
+                            <span class="glyphicon glyphicon-search"></span>
+                          </button>
+                          <button id="resetDomainInfoSearchBtn" title="{{'common.reset' | translate}}" class="btn grey-btn searchreset" (click)="resetDomainInfoSearch('dentalProviderSpecialtyList')">
+                            <span class="glyphicon glyphicon-repeat"></span>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </form>
+            </div>
+            <!-- Table Ends -->
+          </div>
+        </div>
+      </div>
+      <!-- Form Row ENds -->
+    </div>
+    <!-- Grid Inner Ends -->
+  </div>
+</div>
+<!-- Dental Provider Specialty Grid  -->
+<!-- Mouth Tooth Grid -->
+<div *ngIf="mouthTooth" class="container">
+  <div class="section-heading">
+    <h2>{{'domain.domain' | translate}} -
+      <span> {{'domain.domainInformationList' | translate}}</span>
+    </h2>
+  </div>
+  <div class="grid-box">
+    <div class="grid-heading">
+      <h3>{{domainHeading}} List</h3>
+      <div class="web-reg">
+        <button id="addNewMouthToothBtn" class="green-btn-add btn" data-toggle="modal" data-target="#AddNewMouthTooth" (click)="enableAddMode()">
+          <i class="fa fa-plus"></i> Add</button>
+      </div>
+    </div>
+    <!-- Grid Heading Ends -->
+    <div class="grid-inner">
+      <div class="form-row">
+        <div class="row">
+          <div class="col-md-12 col-xs-12 table-col">
+            <div class="table-responsive">
+              <form (submit)="searchDomainInfo('mouthToothList')">
+                <table id="mouthToothList" class="table table-bordered table-stripped">
+                  <tfoot>
+                    <tr>
+                      <td>
+                        <!-- Task 437 Below 2 inputs placeholders chenged -->
+                        <input id="mouthToothDesc" class="fm-txt form-control tFootInput inputSearch" type="text" placeholder="Mouth Id"
+                          name="toothDesc" />
+                          <!-- Existing code is Mouth Id as placeholder-->
+                      </td>
+                      <td>
+                        <input id="mouthSiteDesc" class="fm-txt form-control tFootInput inputSearch grid_right" type="text" placeholder="Mouth Site Id"
+                          name="mouthDesc" />
+                          <!-- Existing code is Mouth Site Id as placeholder-->
+                      </td>
+                      <td class="alignDpRight">
+                        <div class="calender-field">
+                          <my-date-picker id="domainInfoExpiredOn" class="inputSearch" name="expiredOn" data-type="date" [options]="myDatePickerOptions"
+                            [selDate]="dateNameArray['expiredOn']" [ngClass]="expired  ? 'expired' : 'notExpired'" (inputFocusBlur)="changeDateFormat1($event, 'expiredOn')"
+                            placeholder="{{'common.date-placeholder' | translate}}">
+                          </my-date-picker>
+                        </div>
+                      </td>
+
+                      <td class="grid_right">
+                        <div class="form-row">
+                          <button id="domainInfoSearchBtn" type="submit" title="{{'common.search' | translate}}" class="btn green-btn searchreset"
+                            (click)="searchDomainInfo('mouthToothList')">
+                            <span class="glyphicon glyphicon-search"></span>
+                          </button>
+                          <button id="resetDomainInfoSearchBtn" title="{{'common.reset' | translate}}" class="btn grey-btn searchreset" (click)="resetDomainInfoSearch('mouthToothList')">
+                            <span class="glyphicon glyphicon-repeat"></span>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </form>
+            </div>
+            <!-- Table Ends -->
+          </div>
+        </div>
+      </div>
+      <!-- Form Row ENds -->
+    </div>
+    <!-- Grid Inner Ends -->
+  </div>
+</div>
+<!-- Mouth Tooth Grid -->
+
+<!-- Mouth Site Grid -->
+<div *ngIf="mouthSite" class="container">
+  <div class="section-heading">
+    <h2>{{'domain.domain' | translate}} -
+      <span> {{'domain.domainInformationList' | translate}}</span>
+    </h2>
+  </div>
+  <div class="grid-box">
+    <div class="grid-heading">
+      <h3>{{domainHeading}} List</h3>
+      <div class="web-reg">
+        <button id="addNewMouthSiteBtn" class="green-btn-add btn" data-toggle="modal" data-target="#AddNewMouthSite" (click)="enableAddMode()">
+          <i class="fa fa-plus"></i> Add</button>
+      </div>
+    </div>
+    <!-- Grid Heading Ends -->
+    <div class="grid-inner">
+      <div class="form-row">
+        <div class="row">
+          <div class="col-md-12 col-xs-12 table-col">
+            <div class="table-responsive">
+              <form (submit)="searchDomainInfo('mouthSiteList')">
+                <table id="mouthSiteList" class="table table-bordered table-stripped">
+                  <tfoot>
+                    <tr>
+                      <td>
+                        <!--Task 438 Below 2 input fields placeholders corrected -->
+                        <input id="mouthId" class="fm-txt form-control tFootInput inputSearch" type="text" placeholder="Mouth Id"
+                          name="mouthId" />
+                        <!-- Existing code is Tooth Code as placeholder-->
+                      </td>
+                      <td>
+                        <input id="mouthSiteId" class="fm-txt form-control tFootInput inputSearch grid_right" type="text" placeholder="Mouth Site Id"
+                          name="mouthSiteId" />
+                          <!-- Existing code is Mouth Site as placeholder-->
+                      </td>
+
+                      <td class="alignDpRight">
+                        <div class="calender-field">
+                          <my-date-picker id="domainInfoEffectiveOn" class="inputSearch" name="effectiveOn" data-type="date" [options]="myDatePickerOptions"
+                            [selDate]="dateNameArray['effectiveOn']" [ngClass]="expired  ? 'expired' : 'notExpired'" (inputFocusBlur)="changeDateFormat1($event, 'effectiveOn')"
+                            placeholder="{{'common.date-placeholder' | translate}}">
+                          </my-date-picker>
+                        </div>
+                      </td>
+                      <td class="alignDpRight">
+                        <div class="calender-field">
+                          <my-date-picker id="domainInfoExpiredOn" class="inputSearch" name="expiredOn" data-type="date" [options]="myDatePickerOptions"
+                            [selDate]="dateNameArray['expiredOn']" [ngClass]="expired  ? 'expired' : 'notExpired'" (inputFocusBlur)="changeDateFormat1($event, 'expiredOn')"
+                            placeholder="{{'common.date-placeholder' | translate}}">
+                          </my-date-picker>
+                        </div>
+                      </td>
+
+                      <td class="grid_right">
+                        <div class="form-row">
+                          <button id="domainInfoSearchBtn" type="submit" title="{{'common.search' | translate}}" class="btn green-btn searchreset"
+                            (click)="searchDomainInfo('mouthSiteList')">
+                            <span class="glyphicon glyphicon-search"></span>
+                          </button>
+                          <button id="resetDomainInfoSearchBtn" title="{{'common.reset' | translate}}" class="btn grey-btn searchreset" (click)="resetDomainInfoSearch('mouthSiteList')">
+                            <span class="glyphicon glyphicon-repeat"></span>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </form>
+            </div>
+            <!-- Table Ends -->
+          </div>
+        </div>
+      </div>
+      <!-- Form Row ENds -->
+    </div>
+    <!-- Grid Inner Ends -->
+  </div>
+</div>
+<!-- Mouth Site Grid -->
+
+<div id="AddNewDomainInfo" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="resetDomainInfoForm" type="button" class="close" data-dismiss="modal" (click)="resetDomainInfoForm()">&times;</button>
+        <h4 *ngIf="addMode" class="modal-title">Add {{domainHeading}}</h4>
+        <h4 *ngIf="editMode" class="modal-title">Edit {{domainHeading}}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{domainHeading}}</h3>
+          </div>
+          <!-- Grid Heading Ends -->
+          <div class="grid-inner">
+            <form [formGroup]="addDomainInfo">
+              <div class="form-row">
+                <div class="row min-ht-sf">
+                  <div class="col-md-4 col-xs-12">
+                    <label>{{'domain.typeCode' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <input id="domainInfoTypeCode" type="text" name="typeCd" formControlName="typeCd" class="form-control" placeholder="{{'domain.typeCode' | translate}}">
+                    <show-errors [control]="addDomainInfo.controls.typeCd"></show-errors>
+                  </div>
+                  <div class="col-md-5 col-xs-12">
+                    <label>{{'domain.typeDescription' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <input id="domainInfoTypeDescription" type="text" name="typeDescription" formControlName="typeDescription" class="form-control"
+                      placeholder="{{'domain.typeDescription' | translate}}">
+                    <show-errors [control]="addDomainInfo.controls.typeDescription"></show-errors>
+                  </div>
+
+                  <div *ngIf="toothCode" class="col-md-5 col-xs-12">
+                    <label>{{'domain.allowSurface' | translate}}
+                    </label>
+                    <input id="domainInfoAllowSurface" type="text" name="allowSurface" formControlName="allowSurface" class="form-control" placeholder="{{'domain.allowSurface' | translate}}">
+                    <show-errors [control]="addDomainInfo.controls.allowSurface"></show-errors>
+                  </div>
+
+                  <div *ngIf="dentalPracticeType || visionPracticeType || healthPracticeType || drugPracticeType || wellnessPracticeType" class="col-md-5 col-xs-12">
+                    <label>Comment
+                      <span class="required">*</span>
+                    </label>
+                    <input id="domainInfoComment" type="text" name="comment" formControlName="comment" class="form-control" placeholder="Comment">
+                    <show-errors [control]="addDomainInfo.controls.comment"></show-errors>
+                  </div>
+
+                  <div *ngIf="!cardMailoutType && transactionCode" class="col-md-2 col-xs-12">
+                    <label>{{'domain.effectiveDate' | translate}}</label>
+                    <div class="calender-field">
+                      <my-date-picker id="domainInfoEffectiveOn" [options]="myDatePickerOptions" name="effectiveOn" formControlName="effectiveOn"
+                        (inputFocusBlur)="changeDateFormat($event, 'effectiveOn','addDomainInfo', false)" placeholder="{{'common.date-placeholder' | translate}}">
+                      </my-date-picker>
+                      <show-errors [control]="addDomainInfo.controls.effectiveOn"></show-errors>
+                    </div>
+                    <!-- Calendar Field Ends -->
+                  </div>
+
+                  <div *ngIf="discipline" class="col-md-3 col-xs-12">
+                      <label>&nbsp;</label>
+                      <div class="select-options">
+                          <span>
+                              <label>
+                                  <span class="custom-check">
+                                      <input id="domainInfoSuspended" name="suspended" formControlName="suspended"
+                                          type="checkbox">Suspended
+                                      <span></span>
+                                  </span>
+                              </label>
+                          </span>
+                      </div>
+                  </div>
+
+
+                  <div *ngIf="!cardMailoutType && !claimType && !claimStatus" class="col-md-2 col-xs-12">
+                    <label>{{'domain.expiryDate' | translate}}</label>
+                    <div class="calender-field">
+                      <my-date-picker id="domainInfoExpiredOn" [options]="myDatePickerOptions" name="expiredOn" formControlName="expiredOn" (inputFocusBlur)="changeDateFormat($event, 'expiredOn','addDomainInfo', false)"
+                        [ngClass]="expired  ? 'expired' : 'notExpired'" placeholder="{{'common.date-placeholder' | translate}}">
+                      </my-date-picker>
+                      <show-errors [control]="addDomainInfo.controls.expiredOn"></show-errors>
+                    </div>
+                    <!-- Calendar Field Ends -->
+                  </div>
+                </div>
+              </div>
+              <!-- Form Row ENds -->
+            </form>
+          </div>
+          <!-- Grid Inner Ends -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="saveDomainInfoForm" type="button" class="btn green-btn" (keyup.arrowLeft)="focusNextEle($event,'closeDomainInfoForm')"
+          (keyup.arrowRight)="focusNextEle($event,'closeDomainInfoForm')" (click)="submitDomainInfo()">{{buttonText}}</button>
+        <button id="closeDomainInfoForm" type="button" class="btn grey-btn" data-dismiss="modal" (keyup.arrowLeft)="focusNextEle($event,'saveDomainInfoForm')"
+          (keyup.arrowRight)="focusNextEle($event,'saveDomainInfoForm')" (click)="resetDomainInfoForm()">{{'button.close' | translate}}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="AddNewMessage" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="resetMessageForm" type="button" class="close" data-dismiss="modal" (click)="resetMessageForm()">&times;</button>
+        <h4 *ngIf="addModeMsg" class="modal-title">{{'domain.addMessage' |translate}}</h4>
+        <h4 *ngIf="editModeMsg" class="modal-title">{{'domain.editMessageDetail' |translate}}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{'domain.message' | translate}}</h3>
+          </div>
+          <!-- Grid Heading Ends -->
+          <div class="grid-inner">
+            <form [formGroup]="addMesssageForm">
+              <div class="form-row">
+                <div class="row min-ht-sf">
+                  <div class="col-md-4 col-xs-12">
+                    <label>{{'domain.msgDescriptionEng' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <input id="addMessageDescEng" type="text" name="messageEng" formControlName="messageEng" class="form-control" placeholder="{{'domain.msgDescriptionEng' | translate}}">
+                    <show-errors [control]="addMesssageForm.controls.messageEng"></show-errors>
+                  </div>
+                  <div class="col-md-4 col-xs-12">
+                    <label>{{'domain.msgDescriptionFre' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <input id="addMessageDescFre" type="text" name="messageFre" formControlName="messageFre" class="form-control" placeholder="{{'domain.msgDescriptionFre' | translate}}">
+                    <show-errors [control]="addMesssageForm.controls.messageFre"></show-errors>
+                  </div>
+                  <div class="col-md-4 col-xs-12">
+                    <label>{{'domain.expiryDate'| translate}}</label>
+                    <div class="calender-field">
+                      <my-date-picker id="addMessageExpiredOn" [options]="myDatePickerOptions" name="expiredOn" formControlName="expiredOn" (inputFocusBlur)="changeDateFormat($event, 'expiredOn','addMesssageForm', false)"
+                        [ngClass]="expired  ? 'expired' : 'notExpired'" placeholder="{{'common.date-placeholder' | translate}}">
+                      </my-date-picker>
+                      <show-errors [control]="addMesssageForm.controls.expiredOn"></show-errors>
+                    </div>
+                    <!-- Calendar Field Ends -->
+                  </div>
+                </div>
+              </div>
+              <!-- Form Row ENds -->
+            </form>
+          </div>
+          <!-- Grid Inner Ends -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="saveMessageForm" type="button" class="btn green-btn" (keyup.arrowLeft)="focusNextEle($event,'closeMessageForm')"
+          (keyup.arrowRight)="focusNextEle($event,'closeMessageForm')" (click)="submitMessageForm()">{{buttonText}}</button>
+        <button id="closeMessageForm" type="button" class="btn grey-btn" data-dismiss="modal" (keyup.arrowLeft)="focusNextEle($event,'saveMessageForm')"
+          (keyup.arrowRight)="focusNextEle($event,'saveMessageForm')" (click)="resetMessageForm()">{{'button.close' | translate}}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Dental Provider Specialty -->
+<div id="AddNewProvSpecialty" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="resetDomainProviderSpecialtyForm" type="button" class="close" data-dismiss="modal" (click)="resetDomainProviderSpecialtyForm()">&times;</button>
+        <h4 *ngIf="addMode" class="modal-title">Add {{domainHeading}}</h4>
+        <h4 *ngIf="editMode" class="modal-title">Edit {{domainHeading}}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{domainHeading}}</h3>
+          </div>
+          <!-- Grid Heading Ends -->
+          <div class="grid-inner">
+            <form [formGroup]="addProviderSpecialityForm">
+              <div class="form-row">
+                <div class="row min-ht-sf">
+                  <div class="col-md-4 col-xs-12">
+                    <label>Speciality Type
+                      <span class="required">*</span>
+                    </label>
+                      <ng2-completer *ngIf="dentalProviderSpecialty" [inputId]="'domainInfoSpecialtyType'" formControlName="specialtyType" [datasource]="dentalSpecialtyTypeRemote" [minSearchLength]="1"
+                        [clearUnselected]="false" [placeholder]="'Search Specialty Type'" [textSearching]="'Please wait...'"
+                        [inputClass]="'form-control'" [fillHighlighted]="false" [autoHighlight]="true" [selectOnFocus]="true"
+                        (selected)="onSelectSpecialtyType($event,'specialtyType')">
+                      </ng2-completer>
+                      <ng2-completer *ngIf="wellnessProviderSpecialty" [inputId]="'domainInfoSpecialtyType'" formControlName="specialtyType" [datasource]="wellnessSpecialtyTypeRemote" [minSearchLength]="1"
+                        [clearUnselected]="false" [placeholder]="'Search Specialty Type'" [textSearching]="'Please wait...'"
+                        [inputClass]="'form-control'" [fillHighlighted]="false" [autoHighlight]="true" [selectOnFocus]="true"
+                        (selected)="onSelectSpecialtyType($event,'specialtyType')">
+                      </ng2-completer>
+                      <ng2-completer *ngIf="visionProviderSpecialty" [inputId]="'domainInfoSpecialtyType'" formControlName="specialtyType" [datasource]="visionSpecialtyTypeRemote" [minSearchLength]="1"
+                        [clearUnselected]="false" [placeholder]="'Search Specialty Type'" [textSearching]="'Please wait...'"
+                        [inputClass]="'form-control'" [fillHighlighted]="false" [autoHighlight]="true" [selectOnFocus]="true"
+                        (selected)="onSelectSpecialtyType($event,'specialtyType')">
+                      </ng2-completer>
+                      <ng2-completer *ngIf="healthProviderSpecialty" [inputId]="'domainInfoSpecialtyType'" formControlName="specialtyType" [datasource]="healthSpecialtyTypeRemote" [minSearchLength]="1"
+                        [clearUnselected]="false" [placeholder]="'Search Specialty Type'" [textSearching]="'Please wait...'"
+                        [inputClass]="'form-control'" [fillHighlighted]="false" [autoHighlight]="true" [selectOnFocus]="true"
+                        (selected)="onSelectSpecialtyType($event,'specialtyType')">
+                      </ng2-completer>
+                    <show-errors [control]="addProviderSpecialityForm.controls.specialtyType"></show-errors>
+                  </div>
+                  <div class="col-md-4 col-xs-12" *ngIf="!visionProviderSpecialty && !healthProviderSpecialty && !wellnessProviderSpecialty">
+                    <label>Specialty Group
+                      <span class="required">*</span>
+                    </label>
+                    <ng2-completer *ngIf="dentalProviderSpecialty" [inputId]="'domainInfoSpecialtyGroup'" formControlName="specialtyGroup" [datasource]="dentalSpecialtyGroupRemote" [minSearchLength]="1"
+                      [clearUnselected]="false" [placeholder]="'Search Specialty Group'" [textSearching]="'Please wait...'"
+                      [inputClass]="'form-control'" [fillHighlighted]="false" [autoHighlight]="true" [selectOnFocus]="true"
+                      (selected)="onSelectSpecialtyGroup($event,'specialtyGroup')">
+                    </ng2-completer>
+                   
+                    <show-errors [control]="addProviderSpecialityForm.controls.specialtyGroup"></show-errors>
+                  </div>
+
+                  <div class="col-md-4 col-xs-12">
+                    <label>Specialty Id
+                      <span class="required">*</span>
+                    </label>
+                    <input id="domainInfoSpecialtyId" type="text" name="specialtyId" formControlName="specialtyId" class="form-control" placeholder="Specialty Id">
+                    <show-errors [control]="addProviderSpecialityForm.controls.specialtyId"></show-errors>
+                  </div>
+
+                  <div class="col-md-4 col-xs-12">
+                    <label>Specialty Description
+                      <span class="required">*</span>
+                    </label>
+                    <input id="domainInfoSpecialtyDescription" type="text" name="specialtyDescription" formControlName="specialtyDescription"
+                      class="form-control" placeholder="Specialty Description">
+                    <show-errors [control]="addProviderSpecialityForm.controls.specialtyDescription"></show-errors>
+                  </div>
+
+                </div>
+              </div>
+              <!-- Form Row ENds -->
+            </form>
+          </div>
+          <!-- Grid Inner Ends -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="saveProviderSpecialtyForm" type="button" class="btn green-btn" (keyup.arrowLeft)="focusNextEle($event,'closeProviderSpecialtyForm')"
+          (keyup.arrowRight)="focusNextEle($event,'closeProviderSpecialtyForm')" (click)="submitProviderSpecialtyForm()">{{buttonText}}</button>
+        <button id="closeProviderSpecialtyForm" type="button" class="btn grey-btn" data-dismiss="modal" (keyup.arrowLeft)="focusNextEle($event,'saveProviderSpecialtyForm')"
+          (keyup.arrowRight)="focusNextEle($event,'saveProviderSpecialtyForm')" (click)="resetDomainProviderSpecialtyForm()">{{'button.close' | translate}}</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Dental Provider Specialty -->
+
+<!-- Mouth Tooth Form -->
+<div id="AddNewMouthTooth" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="resetDomainMouthToothForm" type="button" class="close" data-dismiss="modal" (click)="resetDomainMouthToothForm()">&times;</button>
+        <h4 *ngIf="addMode" class="modal-title">Add {{domainHeading}}</h4>
+        <h4 *ngIf="editMode" class="modal-title">Edit {{domainHeading}}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{domainHeading}}</h3>
+          </div>
+          <!-- Grid Heading Ends -->
+          <div class="grid-inner">
+            <form [formGroup]="addMouthToothForm">
+              <div class="form-row">
+                <div class="row min-ht-sf">
+                  <div class="col-md-4 col-xs-12">
+                    <label>Tooth Code
+                      <span class="required">*</span>
+                    </label>
+                      <ng2-completer [inputId]="'domainInfoToothCode'" formControlName="toothCode" [datasource]="toothCodeRemote" [minSearchLength]="1"
+                        [clearUnselected]="false" [placeholder]="'Search Tooth Code'" [textSearching]="'Please wait...'"
+                        [inputClass]="'form-control'" [fillHighlighted]="false" [autoHighlight]="true" [selectOnFocus]="true"
+                        (selected)="onSelectToothCode($event,'toothCode')">
+                      </ng2-completer>
+                    <show-errors [control]="addMouthToothForm.controls.toothCode"></show-errors>
+                  </div>
+                  <div class="col-md-4 col-xs-12">
+                    <label>Mouth Site
+                      <span class="required">*</span>
+                    </label>
+                    <ng2-completer [inputId]="'domainInfoMouthSite'" formControlName="mouthSite" [datasource]="mouthSiteRemote" [minSearchLength]="1"
+                      [clearUnselected]="false" [placeholder]="'Search Mouth Site'" [textSearching]="'Please wait...'"
+                      [inputClass]="'form-control'" [fillHighlighted]="false" [autoHighlight]="true" [selectOnFocus]="true"
+                      (selected)="onSelectMouthSite($event,'mouthSite')">
+                    </ng2-completer>
+                    <show-errors [control]="addMouthToothForm.controls.mouthSite"></show-errors>
+                  </div>
+
+                  <div class="col-md-2 col-xs-12">
+                    <label>{{'domain.expiryDate' | translate}}</label>
+                    <div class="calender-field">
+                      <my-date-picker id="domainInfoMouthToothExpiredOn" [options]="myDatePickerOptions" name="expiredOn" formControlName="expiredOn" (inputFocusBlur)="changeDateFormat($event, 'expiredOn','addMouthToothForm', false)"
+                        [ngClass]="expired  ? 'expired' : 'notExpired'" placeholder="{{'common.date-placeholder' | translate}}">
+                      </my-date-picker>
+                      <show-errors [control]="addMouthToothForm.controls.expiredOn"></show-errors>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Form Row ENds -->
+            </form>
+          </div>
+          <!-- Grid Inner Ends -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="saveMouthToothForm" type="button" class="btn green-btn" (keyup.arrowLeft)="focusNextEle($event,'closeMouthToothForm')"
+          (keyup.arrowRight)="focusNextEle($event,'closeMouthToothForm')" (click)="submitMouthToothForm()">{{buttonText}}</button>
+        <button id="closeMouthToothForm" type="button" class="btn grey-btn" data-dismiss="modal" (keyup.arrowLeft)="focusNextEle($event,'saveMouthToothForm')"
+          (keyup.arrowRight)="focusNextEle($event,'saveMouthToothForm')" (click)="resetDomainMouthToothForm()">{{'button.close' | translate}}</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Mouth Tooth Form -->
+
+<!-- Mouth Site Form -->
+<div id="AddNewMouthSite" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="resetDomainMouthSiteForm" type="button" class="close" data-dismiss="modal" (click)="resetDomainMouthSiteForm()">&times;</button>
+        <h4 *ngIf="addMode" class="modal-title">Add {{domainHeading}}</h4>
+        <h4 *ngIf="editMode" class="modal-title">Edit {{domainHeading}}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{domainHeading}}</h3>
+          </div>
+          <!-- Grid Heading Ends -->
+          <div class="grid-inner">
+            <form [formGroup]="addMouthSiteForm">
+              <div class="form-row">
+                <div class="row min-ht-sf">
+                  <div class="col-md-4 col-xs-12">
+                    <label>Mouth ID
+                      <span class="required">*</span>
+                    </label>
+                    <input id="domainInfoMouthId" type="text" name="mouthId" formControlName="mouthId" class="form-control" placeholder="Mouth ID">
+                    <show-errors [control]="addMouthSiteForm.controls.mouthId"></show-errors>
+                  </div>
+                  <div class="col-md-4 col-xs-12">
+                    <label>Mouth Site ID
+                      <span class="required">*</span>
+                    </label>
+                    <input id="domainInfoMouthSiteId" type="text" name="mouthSiteId" formControlName="mouthSiteId" class="form-control" placeholder="Mouth Site ID">
+                    <show-errors [control]="addMouthSiteForm.controls.mouthSiteId"></show-errors>
+                  </div>
+
+                  <div class="col-md-2 col-xs-12">
+                    <label>{{'domain.effectiveDate' | translate}}</label>
+                    <div class="calender-field">
+                      <my-date-picker id="domainInfoEffectiveOn" [options]="myDatePickerOptions" name="effectiveOn" formControlName="effectiveOn"
+                        (inputFocusBlur)="changeDateFormat($event, 'effectiveOn','addMouthSiteForm', false)" placeholder="{{'common.date-placeholder' | translate}}">
+                      </my-date-picker>
+                      <show-errors [control]="addMouthSiteForm.controls.effectiveOn"></show-errors>
+                    </div>
+                    <!-- Calendar Field Ends -->
+                  </div>
+
+                  <div class="col-md-2 col-xs-12">
+                    <label>{{'domain.expiryDate' | translate}}</label>
+                    <div class="calender-field">
+                      <my-date-picker id="domainInfoExpiredOn" [options]="myDatePickerOptions" name="expiredOn" formControlName="expiredOn" (inputFocusBlur)="changeDateFormat($event, 'expiredOn','addMouthSiteForm', false)"
+                        [ngClass]="expired  ? 'expired' : 'notExpired'" placeholder="{{'common.date-placeholder' | translate}}">
+                      </my-date-picker>
+                      <show-errors [control]="addMouthSiteForm.controls.expiredOn"></show-errors>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Form Row ENds -->
+            </form>
+          </div>
+          <!-- Grid Inner Ends -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="saveMouthSiteForm" type="button" class="btn green-btn" (keyup.arrowLeft)="focusNextEle($event,'closeMouthSiteForm')"
+          (keyup.arrowRight)="focusNextEle($event,'closeMouthSiteForm')" (click)="submitMouthSiteForm()">{{buttonText}}</button>
+        <button id="closeMouthSiteForm" type="button" class="btn grey-btn" data-dismiss="modal" (keyup.arrowLeft)="focusNextEle($event,'saveMouthSiteForm')"
+          (keyup.arrowRight)="focusNextEle($event,'saveMouthSiteForm')" (click)="resetDomainMouthSiteForm()">{{'button.close' | translate}}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div [hidden]="!showLoader" class="loader-outer">
+  <div class="cube-wrapper">
+    <div class="cube-folding">
+      <span class="leaf1"></span>
+      <span class="leaf2"></span>
+      <span class="leaf3"></span>
+      <span class="leaf4"></span>
+    </div>
+    <span class="loading" data-name="Loading">{{'common.pleaseWait'|translate}}</span>
+  </div>
+</div>

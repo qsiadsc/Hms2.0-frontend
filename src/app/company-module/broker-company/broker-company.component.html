@@ -1,0 +1,623 @@
+<div class="grid-box">
+  <div class="grid-inner">
+    <div class="form-row">
+      <ul class="nav company-tabs nav-pills">
+        <li class="active"><a data-toggle="pill" (click)="CompanyAssc()"
+            href="#home">{{ 'tabs.company-associated' | translate }}</a></li>
+        <li><a data-toggle="pill" (click)="Contact()" href="#menu1">{{ 'tabs.contact' | translate }}</a></li>
+      </ul>
+      <div class="tab-content">
+        <!-- Company Associated Tab -->
+        <div id="home" class="tab-pane fade in active">
+          <button *ngIf="brokerCompanyAuthCheck[0].addCompanyAssociated == 'T'"
+            id="broker-company_add-company-associated" class="tab-grid-btn green-btn-add btn"
+            (click)="enableCoAssAddMode()"><i class="fa fa-plus"></i> {{
+            'button.add-company-associated' | translate }}</button>
+          <button *ngIf="brokerCompanyAuthCheck[0].updateBroker == 'T'" id="broker-company_update_broker"
+            class="tab-grid-btn green-btn-add btn" data-toggle="modal" (click)="getSelectedCompanyList()"> <i
+              class="fa fa-plus"></i> {{
+            'button.update-broker' | translate }}</button>
+          <button *ngIf="brokerCompanyAuthCheck[0].updateBroker == 'T'" id="UpdateBrokerBtn"
+            class="tab-grid-btn green-btn-add btn hidden" data-toggle="modal" data-target="#UpdateBroker"> <i
+              class="fa fa-plus"></i> {{ 'button.update-broker' |
+            translate }}</button>
+
+          <div class="table-responsive">
+            <!-- to stop identical multiple[8(4 without optional)] APIs hitting on server -->
+            <form>
+              <table id="brokerCompanyAssociated" class="table table-bordered table-stripped text-left col-lt-search">
+                <tfoot>
+                  <tr>
+                    <td width="40px">
+                      &nbsp;
+                    </td>
+                    <td width="153px">
+                      <input placeholder="{{ 'company.add-company-associated.company-#' | translate }}"
+                        class="fm-txt form-control tFootInput inputSearch" type="text" id="broker_company_company_id"
+                        name="companyId" onkeyup="this.value = this.value.toUpperCase()"/>
+                    </td>
+                    <td width="152px">
+                      <input placeholder="{{ 'company.add-company-associated.company-name' | translate }}"
+                        class="fm-txt form-control tFootInput inputSearch amount_right_grid" type="text"
+                        id="broker_company_company_name" name="companyName" onkeyup="this.value = this.value.toUpperCase()"/>
+                    </td>
+                    <td width="152px">
+                      <input placeholder="{{ 'company.add-company-associated.commission' | translate }}"
+                        class="fm-txt form-control tFootInput inputSearch amount_right_grid" type="text"
+                        id="broker_company_broker_CoComission_rate" name="brokerCoComissionRate" onkeyup="this.value = this.value.toUpperCase()"/>
+                    </td>
+                    <td width="152px" class="alignDpRight">
+                      <div class="calender-field">
+                        <my-date-picker [placeholder]="dateFormatPlaceholder" id="ca_effectiveOn" class="inputSearch"
+                          name="effectiveOn" data-type="date" [options]="myDatePickerOptions"
+                          [selDate]="dateNameArray['effectiveOn']"
+                          (inputFocusBlur)="changeFilterDateFormat($event, 'effectiveOn')">
+                        </my-date-picker>
+                      </div>
+                    </td>
+                    <td width="152px" class="alignDpRight">
+                    
+                      <div class="calender-field">
+                        <my-date-picker [placeholder]="dateFormatPlaceholder" id="ca_expiredOn" class="inputSearch"
+                          name="expiredOn" data-type="date" [options]="myDatePickerOptions"
+                          [selDate]="dateNameArray['expiredOn']"
+                          [ngClass]="expired  ? 'expired' : 'notExpired'"                                               
+                          (inputFocusBlur)="changeFilterDateFormat($event, 'expiredOn')">
+                        </my-date-picker>
+                      </div>
+                    </td>
+                    <td width="152px" class="alignDpRight">
+                      <div class="calender-field">
+                        <my-date-picker [placeholder]="dateFormatPlaceholder" id="co_effectiveOn" class="inputSearch"
+                          name="coEffectiveOn" data-type="date" [options]="myDatePickerOptions"
+                          [selDate]="dateNameArray['coEffectiveOn']"
+                          (inputFocusBlur)="changeFilterDateFormat($event, 'coEffectiveOn')">
+                        </my-date-picker>
+                      </div>
+                    </td>
+                    <td width="152px" class="alignDpRight">
+                      <div class="calender-field">
+                        <my-date-picker [placeholder]="dateFormatPlaceholder" id="co_terminatedOn" class="inputSearch"
+                          name="coTerminateOn" data-type="date" [options]="myDatePickerOptions"
+                          [selDate]="dateNameArray['coTerminateOn']"
+                          (inputFocusBlur)="changeFilterDateFormat($event, 'coTerminateOn')">
+                        </my-date-picker>
+                      </div>
+                    </td>
+                    <td width="80px" class="amount_right_grid">
+                      <div class="form-row">
+                        <button type="submit" id="broker-company_search" class="btn green-btn searchreset"
+                          (click)="filterCompanyAssociatedSearch()" title="{{ 'button.search' | translate }}"><span
+                            class="glyphicon glyphicon-search"></span></button>
+                        <button id="broker-company_clear" class="btn grey-btn searchreset resetbtntooltip"
+                          (click)="resetTableSearch('brokerCompanyAssociated')"
+                          title="{{ 'button.clear' | translate }}"><span
+                            class="glyphicon glyphicon-repeat"></span></button>
+                      </div>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </form>
+          </div>
+          <!-- Company Associated Data Table End -->
+        </div>
+        <!-- Company Associated Tab End -->
+        <!-- Contact Tab -->
+        <div id="menu1" class="tab-pane fade">
+          <button *ngIf="brokerCompanyAuthCheck[0].addContact == 'T'" id="broker-company_add_contact"
+            class="tab-grid-btn green-btn-add btn" data-toggle="modal" (click)="enableCompanyAddMode()"><i
+              class="fa fa-plus"></i> {{ 'button.add-contact' |
+            translate }}</button>
+          <button *ngIf="brokerCompanyAuthCheck[0].addContact == 'T'" id="BrokerAddContactBtn"
+            class="tab-grid-btn green-btn-add btn hidden" data-toggle="modal" data-target="#BrokerAddContact"><i
+              class="fa fa-plus"></i> {{ 'button.add-contact' |
+            translate }}</button>
+          <!-- Contact Modal -->
+          <div id="BrokerAddContact" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+            <div class="modal-dialog">
+              <!-- Modal content-->
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button id="broker-company-close" type="button" (click)="resetForm('addContactForm')" class="close"
+                    data-dismiss="modal">&times;</button>
+                  <h4 *ngIf="addMode" class="modal-title">{{ 'button.add-contact' | translate }}</h4>
+                  <h4 *ngIf="viewMode" class="modal-title">{{ 'button.view-contact' | translate }}</h4>
+                  <h4 *ngIf="editMode" class="modal-title">{{ 'button.edit-contact' | translate }}</h4>
+                </div>
+                <div class="modal-body">
+                  <div class="grid-box">
+                    <div class="grid-inner">
+                      <form [formGroup]="addContactForm" #contactForm="ngForm">
+                        <div class="form-row">
+                          <div class="row min-ht-sf">
+                            <div class="col-md-3 col-xs-12">
+                              <!-- Span removed to make it non mendatory field. -->
+                              <label for="title">{{ 'company.add-contact.title' | translate }}</label>
+                              <select id="autofocusContactForm" name="name_pre_fix" formControlName="name_pre_fix"
+                                class="fm-txt form-control">
+                                <option [ngValue]="null" disabled hidden>{{'common.select' | translate}}</option>
+                                <option *ngFor="let val of personNamePrefix" [value]="val.personNamePrefixKey">
+                                  {{val.personNamePrefixDesc}}</option>
+                              </select>
+                              <show-errors [control]="addContactForm.controls.name_pre_fix"></show-errors>
+                            </div>
+                            <div class="col-md-3 col-xs-12">
+                              <label for="first_name">{{ 'company.add-contact.first-name' | translate }}<span
+                                  class="required">*</span></label>
+                              <input placeholder="{{ 'company.add-contact.first-name' | translate }}" type="text"
+                                name="first_name" id="broker_company_company_first_name" formControlName="first_name"
+                                class="fm-txt form-control" />
+                              <show-errors [control]="addContactForm.controls.first_name"></show-errors>
+                            </div>
+                            <div class="col-md-3 col-xs-12">
+                              <label for="last_name">{{ 'company.add-contact.last-name' | translate }}</label>
+                              <input placeholder="{{ 'company.add-contact.last-name' | translate }}" type="text"
+                                name="last_name" id="broker_company_company_last_name" formControlName="last_name"
+                                class="fm-txt form-control" />
+                              <show-errors [control]="addContactForm.controls.last_name"></show-errors>
+                            </div>
+                            <div class="col-md-3 col-xs-12">
+                              <label for="fax_no">{{ 'company.add-contact.fax-no' | translate }}</label>
+                              <input placeholder="{{ 'company.add-contact.fax-no' | translate }}" type="text"
+                                [textMask]="{mask: phoneMask}" id="broker_company_company_fax_no" name="fax_no"
+                                formControlName="fax_no" class="fm-txt form-control" />
+                              <show-errors [control]="addContactForm.controls.fax_no"></show-errors>
+                            </div>
+                            <!--[Start]-->
+                            <div class="col-md-3 col-xs-12">
+                              <div class="row min-ht-sf">
+                                <div class="col-md-5 col-xs-12">
+                                  <label for="extension">{{ 'common.extension' | translate }}</label>
+                                  <input placeholder="{{ 'common.extension' | translate }}" type="text" name="extension"
+                                    id="broker_company_company_extension" formControlName="extension"
+                                    class="fm-txt form-control" />
+                                  <show-errors [control]="addContactForm.controls.extension"></show-errors>
+                                </div>
+                                <div class="col-md-7 col-xs-12">
+                                  <label for="phone_no">{{ 'company.add-contact.phone-no' | translate }}</label>
+                                  <input placeholder="{{ 'company.add-contact.phone-no' | translate }}" type="text"
+                                    [textMask]="{mask: phoneMask}" name="phone_no" id="broker_company_company_phone_no"
+                                    formControlName="phone_no" class="fm-txt form-control" />
+                                  <show-errors [control]="addContactForm.controls.phone_no"></show-errors>
+                                </div>
+                              </div>
+                            </div>
+                            <!--[End]-->
+                            <div class="col-md-3 col-xs-12">
+                              <label for="email">{{ 'company.add-contact.email-address' | translate }}</label>
+                              <input placeholder="{{ 'company.add-contact.email-address' | translate }}" type="text"
+                                name="email" id="broker_company_company_email" formControlName="email"
+                                class="fm-txt form-control" />
+                              <show-errors [control]="addContactForm.controls.email"></show-errors>
+                            </div>
+                            <div class="col-md-3 col-xs-12">
+                              <label for="effective_date">{{ 'company.add-contact.effective-date' | translate }}<span
+                                  class="required">*</span></label>
+                              <div class="calender-field">
+                                <my-date-picker [ngClass]="(viewMode == true) ? 'removeCross':''"
+                                  [placeholder]="dateFormatPlaceholder" id="effective_date"
+                                  [options]="myDatePickerOptions" name="effective_date" formControlName="effective_date"
+                                  (inputFocusBlur)="changeDateFormat($event, 'effective_date', 'addContactForm', true)">
+                                </my-date-picker>
+                              </div>
+                              <show-errors [control]="addContactForm.controls.effective_date"></show-errors>
+                              <ul *ngIf="error2.isError==true" class="validation-errors">
+                                <li style="color: red">{{error2.errorMessage}}</li>
+                              </ul>
+                              <!-- Calendar Field Ends -->
+                            </div>
+                            <div class="col-md-3 col-xs-12">
+   
+                              <label for="expiry_date">{{ 'company.add-contact.expiry-date' | translate }}</label>
+                              <div class="calender-field">
+                                <my-date-picker [ngClass]="[expired  ? 'expired' : 'notExpired' , (viewMode == true) ? 'removeCross':'']"
+                                  [placeholder]="dateFormatPlaceholder" id="expiry_date" [options]="myDatePickerOptions"
+                                  name="expiry_date" formControlName="expiry_date"
+                                  (inputFocusBlur)="changeDateFormat($event, 'expiry_date', 'addContactForm')">
+                                </my-date-picker>
+                              </div>
+                              <!-- to stop showing "Effective Date Should Be Greater than Broker Effective Date" validation -->
+                              <ul *ngIf="error.isError==true" class="validation-errors">
+                                <li style="color: red">{{error.errorMessage}}</li>
+                              </ul>
+                              <!-- Calendar Field Ends -->
+                            </div>
+                            <div class="col-md-6 col-xs-12">
+                              <div class="web-reg">
+                                <div class="select-options">
+                                  <span>
+                                    <label for="main_contact">
+                                      <input type="checkbox" name="main_contact" formControlName="main_contact">
+                                      {{ 'company.add-contact.main-contact' | translate }}
+                                    </label>
+                                    <show-errors [control]="addContactForm.controls.main_contact"></show-errors>
+                                  </span>
+                                  <span>
+                                    <label for="optoutCompanyEmailInd">
+                                      <input type="checkbox" name="optoutCompanyEmailInd"
+                                        formControlName="optoutCompanyEmailInd">
+                                      {{
+                                          'company.edit-broker.opt_out_of_company_mail_email' | translate }}
+                                    </label>
+                                    <show-errors
+                                      [control]="addContactForm.controls.optoutCompanyEmailInd">
+                                    </show-errors>
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="form-row text-center" *ngIf="addMode">
+                          <!-- Task 576, button disabled to avoid saving contact multiple times -->
+                          <button [disabled]="saveButtonClicked" *ngIf="brokerCompanyAuthCheck[0].saveContact == 'T'" id="broker-company_add_contact_save" class="green-btn btn" (keyup.arrowLeft) = "focusNextEle($event,'broker-company_add_contact_close')" (keyup.arrowRight) = "focusNextEle($event,'broker-company_add_contact_close')" (click)="AddContactForm(addContactForm)">{{ 'button.save' | translate
+                            }}</button>
+                          <button id="broker-company_add_contact_close" type="button" class="btn grey-btn" data-dismiss="modal" (keyup.arrowLeft) = "focusNextEle($event,'broker-company_add_contact_save')" (keyup.arrowRight) = "focusNextEle($event,'broker-company_add_contact_save')" (click)="resetForm('addContactForm')">{{ 'button.close' | translate }}</button>
+                        </div>
+                        <div class="form-row text-center" *ngIf="viewMode">
+                          <button id="broker-company_edit" class="green-btn btn" (keyup.arrowLeft) = "focusNextEle($event,'broker-company_close')" (keyup.arrowRight) = "focusNextEle($event,'broker-company_close')" (click)="enableCompanyEditMode($event)">{{'button.edit' | translate }}</button>
+                          <button id="broker-company_close" type="button" class="btn grey-btn" data-dismiss="modal" (keyup.arrowLeft) = "focusNextEle($event,'broker-company_edit')" (keyup.arrowRight) = "focusNextEle($event,'broker-company_edit')" (click)="resetForm('addContactForm')">{{ 'button.close' | translate }}</button>
+                        </div>
+                        <div class="form-row text-center" *ngIf="editMode">
+                          <button id="broker-company_update_contact_form" class="green-btn btn " (keyup.arrowLeft) = "focusNextEle($event,'broker-company_add_contact_form_close')" (keyup.arrowRight) = "focusNextEle($event,'broker-company_add_contact_form_close')" (click)="UpdateContactForm(addContactForm)">{{
+                            'button.update' | translate }}</button>
+                          <button id="broker-company_add_contact_form_close" type="button" class="btn grey-btn"
+                            data-dismiss="modal" (keyup.arrowLeft) = "focusNextEle($event,'broker-company_update_contact_form')" (keyup.arrowRight) = "focusNextEle($event,'broker-company_update_contact_form')" (click)="resetForm('addContactForm')">{{ 'button.close' | translate }}</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                  <!-- Grid box Ends -->
+                  <!-- Grid Box Ends -->
+                </div>
+                <!-- Modal Body Ends -->
+              </div>
+            </div>
+            <!-- modal Content Ends -->
+          </div>
+          <!-- Contact Modal End -->
+          <!-- Contact Data Table -->
+          <div class="table-responsive ">
+            <button id="companyAssociatedPopup" [hidden]="true" data-toggle="modal"
+              data-target="#BrokerAddCompanyAssociates">{{
+              'button.openmodal' | translate }}</button>
+            <button id="contactPopup" [hidden]="true" data-toggle="modal" data-target="#BrokerAddContact">{{
+              'button.openmodal' | translate }}</button>
+            <!-- to stop identical multiple[8(4 without optional)] APIs hitting on server -->
+            <form>
+              <table id="brokerContact" class="table table-bordered table-stripped text-left col-lt-search">
+                <tfoot>
+                  <tr>
+                    <td>
+                      <input placeholder="{{ 'company.add-contact.last-name' | translate }}"
+                        class="fm-txt form-control tFootInput inputSearch" type="text" id="broker_contact_last_name"
+                        name="lastName" onkeyup="this.value = this.value.toUpperCase()"/>
+                    </td>
+                    <td>
+                      <input placeholder="{{ 'company.add-contact.first-name' | translate }}"
+                        class="fm-txt form-control tFootInput inputSearch amount_right_grid" type="text"
+                        id="broker_contact_first_name" name="firstName" onkeyup="this.value = this.value.toUpperCase()"/>
+                    </td>
+                    <td>
+                      <input placeholder="{{ 'company.add-contact.phone-no' | translate }}"
+                        class="fm-txt form-control tFootInput inputSearch amount_right_grid notInCaps" type="text" name="phone"
+                        id="broker_contact_phone" [textMask]="{mask: phoneMask}"  />
+                    </td>
+                    <td>
+                      <input placeholder="{{ 'company.add-contact.email-address' | translate }}"
+                        class="fm-txt form-control tFootInput inputSearch amount_right_grid" type="text"
+                        id="broker_contact_email" name="email" onkeyup="this.value = this.value.toUpperCase()"/>
+                    </td>
+                    <td class="alignDpRight">
+                      <div class="calender-field">
+                        <my-date-picker [placeholder]="dateFormatPlaceholder" id="contactEffectiveOn"
+                          class="inputSearch" name="effectiveOn" data-type="date" [options]="myDatePickerOptions"
+                          [selDate]="dateNameArray['effectiveOn']"
+                          (inputFocusBlur)="changeFilterDateFormat($event, 'effectiveOn')">
+                        </my-date-picker>
+                      </div>
+                    </td>
+                    <td class="alignDpRight">
+                    
+                      <div class="calender-field">
+                        <my-date-picker [placeholder]="dateFormatPlaceholder" id="contactExpiredOn" class="inputSearch"
+                          name="expiredOn" data-type="date" [options]="myDatePickerOptions"
+                          [selDate]="dateNameArray['expiredOn']"
+                          [ngClass]="expired  ? 'expired' : 'notExpired'"
+                          (inputFocusBlur)="changeFilterDateFormat($event, 'expiredOn')">
+                        </my-date-picker>
+                      </div>
+                    </td>
+                    <td width="7%" class="amount_right_grid"></td>
+                    <td width="7%" class="amount_right_grid"></td>
+                    <td width="7%" class="amount_right_grid">
+                      <div class="form-row">
+                        <button type="submit" id="broker-company_filter_contact_serach"
+                          class="btn green-btn searchreset" (click)="filterContactSearch()"
+                          title="{{ 'button.search' | translate }}"><span
+                            class="glyphicon glyphicon-search"></span></button>
+                        <button id="broker-company_reset_table_search_clear"
+                          class="btn grey-btn searchreset resetbtntooltip" (click)="resetTableSearch('brokerContact')"
+                          title="{{ 'button.clear' | translate }}"><span
+                            class="glyphicon glyphicon-repeat"></span></button>
+                      </div>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </form>
+          </div>
+          <!-- Contact Data Table End -->
+        </div>
+        <!-- Contact Tab End -->
+        <!-- Update Broker Model -->
+        <div id="UpdateBroker" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+          <!--Terminate Broker Modal-->
+          <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+              <div class="modal-header">
+                <button id="broker-company_update_broker_form" type="button" (click)="resetForm('updateBrokerForm')"
+                  class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">{{ 'button.update' | translate }}
+                  <span></span>
+                </h4>
+              </div>
+              <div class="modal-body">
+                <div class="grid-box">
+                  <div class="grid-inner">
+                    <form [formGroup]="updateBrokerForm" #brokerUpdateForm="ngForm"
+                      (ngSubmit)="onSubmitUpdateBrokerForm(updateBrokerForm)">
+                      <div class="form-row">
+                        <div class="row">
+                          <div class="col-md-3 col-xs-12">
+                            <label>{{ 'company.update-broker.broker-name' | translate }}<span
+                                class="required">*</span></label>
+                            <select #focusUpdateCompanyBrokerEl name="" formControlName="broker_name"
+                              class="fm-txt form-control">
+                              <option [ngValue]="null" disabled hidden>{{'common.select' | translate}}</option>
+                              <option *ngFor="let brokerData of brokerList" value="{{brokerData.brokerKey}}">
+                                {{brokerData.brokerName}}</option>
+                            </select>
+                            <show-errors [control]="updateBrokerForm.controls.broker_name"></show-errors>
+                          </div>
+                          <div class="col-md-3 col-xs-12">
+                            <label>{{ 'company.update-broker.effective-date' | translate }}<span
+                                class="required">*</span></label>
+                            <div class="calender-field">
+                              <my-date-picker id="broker-company_ce_effectedDate" [placeholder]="dateFormatPlaceholder"
+                                [options]="myDatePickerOptions" name="effective_date" formControlName="effective_date"
+                                (inputFocusBlur)="changeDateFormat($event, 'effective_date', 'updateBrokerForm', true)">
+                              </my-date-picker>
+                            </div>
+                            <!-- Calendar Field Ends -->
+                            <show-errors [control]="updateBrokerForm.controls.effective_date"></show-errors>
+                          </div>
+                          <div class="col-md-3 col-xs-12">
+                           
+                            <label>{{ 'company.update-broker.expired-date' | translate }}</label>
+                            <div class="calender-field">
+                              <my-date-picker id="broker-company_ce_expired_date" [options]="myDatePickerOptions"
+                                [placeholder]="dateFormatPlaceholder" name="expired_date" formControlName="expired_date"
+                                [ngClass]="expired  ? 'expired' : 'notExpired'"
+                                (inputFocusBlur)="changeDateFormat($event, 'expired_date', 'updateBrokerForm')">
+                              </my-date-picker>
+                            </div>
+                            <!-- Calendar Field Ends -->
+                            <show-errors [control]="updateBrokerForm.controls.expired_date"></show-errors>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+                <div class="grid-box">
+                  <div class="grid-inner">
+                    <div class="form-row">
+                      <div class="row">
+                        <div class="col-md-12 col-xs-12 table-col">
+                          <div class="table-responsive">
+                            <table class="table table-bordered table-stripped">
+                              <thead>
+                                <tr>
+                                  <th width="60%">{{ 'company.update-broker.data-tables.company-name' | translate }}
+                                  </th>
+                                  <th width="40%">{{ 'company.update-broker.data-tables.commission' | translate }}</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr *ngFor="let company of associatedCompanyObj">
+                                  <td>{{company.company_name}}</td>
+                                  <td>
+                                    <input type="text" [(ngModel)]="company.commission"
+                                      (keypress)="validateOnlyNumbers($event)">
+                                    <ul *ngIf="errorCommission[company.id]==true" class="validation-errors">
+                                      <li style="color: red">{{errorCommissionMessage}}</li>
+                                    </ul>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                          <!-- Table Ends -->
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Form Row ENds -->
+
+                  </div>
+                  <!-- Grid Inner Ends -->
+                </div>
+                <!-- Grid Box Ends -->
+              </div>
+              <!-- Modal Body End-->
+              <div class="form-row text-center">
+                <button *ngIf="brokerCompanyAuthCheck[0].saveUpdateBroker == 'T'" id="broker-company_save_broker_form"
+                  type="submit" class="green-btn btn" (click)="onSubmitUpdateCompanyBrokerForm(updateBrokerForm)">{{
+                  'button.save' | translate }}</button>
+                <button id="broker-company_close_broker_form" type="button" class="btn grey-btn"
+                  (click)="resetForm('updateBrokerForm')" data-dismiss="modal">{{ 'button.close' | translate }}</button>
+              </div>
+              <!-- Modal  Footer Ends -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-row text-center">
+      <div class="row">
+        <div class="col-md-12 col-xs-12">
+          <div class="dropdown pull-right">
+            <button id="brokerTabExport" class="btn green-btn dropdown-toggle hideGPRunButton" type="button"
+              data-toggle="dropdown">Export
+              <span class="caret"></span></button>
+            <ul class="dropdown-menu">
+              <li><a href="javascript:void(0)" *ngIf="compAssc" (click)="exportBrokerCompanyAssociationlist()">Excel</a>
+              </li>
+              <li><a href="javascript:void(0)" *ngIf="contactTab" (click)="exportBrokerContactListing()">Excel</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Form Row ENds -->
+  </div>
+  <!-- Grid Inner Ends -->
+</div>
+<!-- Grid Box Ends -->
+<!-- Company Associated Modal -->
+<div id="BrokerAddCompanyAssociates" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="broker-company_add_company_associated" type="button" (click)="resetForm('addCompanyAssociatedForm')"
+          class="close" data-dismiss="modal">&times;</button>
+        <h4 *ngIf="addCoAssocMode" class="modal-title">{{ 'company.add-company-associated.addcompanyassociated' |
+          translate }}</h4>
+        <h4 *ngIf="viewCoAssocMode" class="modal-title">{{ 'company.add-company-associated.viewcompanyassociated' |
+          translate }}</h4>
+        <h4 *ngIf="editCoAssocMode" class="modal-title">{{ 'company.add-company-associated.editcompanyassociated' |
+          translate }}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="grid-box">
+          <!-- Grid Heading Ends -->
+          <div class="grid-inner">
+            <form [formGroup]="addCompanyAssociatedForm" #companyAssociatedForm="ngForm">
+              <div class="form-row">
+                <div class="row min-ht-sf">
+                  <div class="col-md-3 col-xs-12"  >
+                    <label>{{ 'company.add-company-associated.company-name' | translate }}<span
+                        class="required">*</span></label>
+                    <input placeholder="{{ 'company.add-company-associated.company-#' | translate }}"
+                      *ngIf="!addCoAssocMode" name="company" formControlName="company" type="text"
+                      class="fm-txt form-control" />
+
+                    <ng2-completer *ngIf="addCoAssocMode" formControlName="company" name="company" (blur)="abc()"
+                      [datasource]="companyData" [minSearchLength]="0" [clearUnselected]="true"
+                      [fillHighlighted]="false" [placeholder]="'Search Company'" [textSearching]="'Please wait...'"
+                      [inputClass]="'fm-txt form-control'" [inputId]="'autofocusCoAssocForm'"
+                      (selected)="onCompanySelected($event)" [clearUnselected]="true" >
+                    </ng2-completer>
+
+                    <show-errors [control]="addCompanyAssociatedForm.controls.company"></show-errors>
+                  </div>
+
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{ 'company.add-company-associated.effective-date' | translate }}<span
+                        class="required">*</span></label>
+                    <div class="calender-field">
+                      <my-date-picker [ngClass]="(viewCoAssocMode == true) ? 'removeCross':''"
+                        [placeholder]="dateFormatPlaceholder" id="addCompany_effective_date"
+                        [options]="myDatePickerOptions" name="effective_date" formControlName="effective_date"
+                        (inputFocusBlur)="changeDateFormat($event, 'effective_date', 'addCompanyAssociatedForm', true)">
+                      </my-date-picker>
+                    </div>
+                    <show-errors [control]="addCompanyAssociatedForm.controls.effective_date"></show-errors>
+                    <ul *ngIf="error1.isError==true" class="validation-errors">
+                      <li style="color: red">{{error1.errorMessage}}</li>
+                    </ul>
+                    <ul *ngIf="error2.isError==true" class="validation-errors">
+                      <li style="color: red">{{error2.errorMessage}}</li>
+                    </ul>
+                    <!-- Calendar Field Ends -->
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    
+                    <label>{{ 'company.add-company-associated.expiry-date' | translate }}</label>
+                    <div class="calender-field">
+                      <my-date-picker [ngClass]="[expired ? 'expired' : 'notExpired', (viewCoAssocMode == true) ? 'removeCross':'']"
+                        [placeholder]="dateFormatPlaceholder" id="expired_date" [options]="myDatePickerOptions"
+                        name="expired_date" formControlName="expired_date"
+                        (inputFocusBlur)="changeDateFormat($event, 'expired_date', 'addCompanyAssociatedForm')">
+                      </my-date-picker>
+                    </div>
+                    <show-errors [control]="addCompanyAssociatedForm.controls.expired_date"></show-errors>
+                    <ul *ngIf="error.isError==true" class="validation-errors">
+                      <li style="color: red">{{error.errorMessage}}</li>
+                    </ul>
+                    <!-- Calendar Field Ends -->
+                  </div>
+                </div>
+              </div>
+              <!-- Form Row ENds -->
+              <div class="form-row">
+                <div class="row">
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{ 'company.add-company-associated.commission' | translate }}<span
+                        class="required">*</span></label>
+                    <input placeholder="{{ 'company.add-company-associated.commission' | translate }}" type="text"
+                      name="commision" id="broker_add_company_associates_commision" formControlName="commision"
+                      class="fm-txt form-control" />
+                    <show-errors [control]="addCompanyAssociatedForm.controls.commision"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{ 'company.add-company-associated.company-effected-on' | translate }}<span
+                        class="required">*</span></label>
+                    <input placeholder="{{ 'company.add-company-associated.company-effected-on' | translate }}"
+                      id="company_effected" name="company_effected" formControlName="company_effected" type="text"
+                      class="fm-txt form-control" />
+                    <show-errors [control]="addCompanyAssociatedForm.controls.company_effected"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{ 'company.add-company-associated.company-terminated-on' | translate }}</label>
+                    <input placeholder="{{ 'company.add-company-associated.company-terminated-on' | translate }}"
+                      id="company_terminated" name="company_terminated" formControlName="company_terminated" type="text"
+                      class="fm-txt form-control" />
+                    <show-errors [control]="addCompanyAssociatedForm.controls.company_terminated"></show-errors>
+                  </div>
+                </div>
+              </div>
+              <div class="form-row text-center" *ngIf="addCoAssocMode">
+                <button id="addCompanyAssociatedBtn" class="green-btn btn" (keyup.arrowLeft) = "focusNextEle($event,'broker-company_add_company_associated_close')" (keyup.arrowRight) = "focusNextEle($event,'broker-company_add_company_associated_close')" (click)="addCompanyAssociated(addCompanyAssociatedForm)">{{
+                  'button.save' | translate }}</button>
+                <button id="broker-company_add_company_associated_close" type="button" class="btn grey-btn"
+                  data-dismiss="modal" (keyup.arrowLeft) = "focusNextEle($event,'addCompanyAssociatedBtn')" (keyup.arrowRight) = "focusNextEle($event,'addCompanyAssociatedBtn')" (click)="resetForm('addCompanyAssociatedForm')">{{ 'button.close' | translate }}</button>
+              </div>
+              <div class="form-row text-center" *ngIf="viewCoAssocMode">
+                <button id="broker-company_add_associated_edit" (keyup.arrowLeft) = "focusNextEle($event,'close_add_company')" (keyup.arrowRight) = "focusNextEle($event,'close_add_company')" class="green-btn btn"
+                  (click)="enableCoAssEditMode($event)">{{
+                  'button.edit' | translate }}</button>
+                <button id="close_add_company" type="button" (keyup.arrowLeft) = "focusNextEle($event,'broker-company_add_associated_edit')" (keyup.arrowRight) = "focusNextEle($event,'broker-company_add_associated_edit')" class="btn grey-btn" data-dismiss="modal"
+                  (click)="resetForm('addCompanyAssociatedForm')">{{
+                  'button.close' | translate }}</button>
+              </div>
+              <div class="form-row text-center" *ngIf="editCoAssocMode">
+                <button id="update_add_company_associate" class="green-btn btn" (keyup.arrowLeft) = "focusNextEle($event,'company_associate_close')" (keyup.arrowRight) = "focusNextEle($event,'company_associate_close')" (click)="updateCompanyAssociated(addCompanyAssociatedForm)">{{
+                  'button.update' | translate }}</button>
+                <button id="company_associate_close" type="button" class="btn grey-btn" data-dismiss="modal"
+                (keyup.arrowLeft) = "focusNextEle($event,'update_add_company_associate')" (keyup.arrowRight) = "focusNextEle($event,'update_add_company_associate')"  (click)="resetForm('addCompanyAssociatedForm')">{{
+                  'button.close' | translate }}</button>
+              </div>
+            </form>
+          </div>
+        </div>
+        <!-- Grid Box Ends -->
+      </div>
+      <!-- Modal Body End-->
+    </div>
+  </div>
+</div>
+<!-- Company Associated Modal End -->

@@ -1,0 +1,2536 @@
+<nav class="breadcrumb">
+  <span class="breadcrumb-item" [routerLink]="['/company']">{{'company.plan.company' | translate}}</span> >
+  <span class="breadcrumb-item" (click)="goBack()">{{'company.plan.plan' | translate}}</span> >
+  <a class="active serviceProviderActive">{{'company.plan.plan-view.view' | translate}}</a>
+</nav>
+
+<form [formGroup]="PlanViewFormGroup">
+  <div class="section-heading">
+    <!-- Page Heading format is different from other sections of application in Plan View Pages fixed (point no- 118) -->
+    <h2>{{'company.plan.plan-view.plan-details' | translate}} -     
+      <span> {{'company.plan.plan-view.view' | translate}} </span>
+    </h2>
+  </div>
+  <!--[Section Heading Start]-->
+  <div class="grid-box">
+    <div class="grid-heading {{planStatus}}">
+      <h3> {{'company.plan.plan-view.plan-company' | translate}} ({{planStatus}}) {{unlimitedPlan}}</h3>
+      <div class="web-reg">
+
+        <!-- for issue number 730 -->
+        <a *ngIf="cardholderId != null" class="green-btn-add btn" routerLink="/card/view/{{cardholderId}}"
+          [ngClass]="(planStatus == 'Terminated') ? 'disabled':''">Back to Cardholder</a>
+
+
+        <!-- for issue number 730 -->
+        <!-- for issue #1276 change Back to Company to Company -->
+        <a class="green-btn-add btn" routerLink="/company/view/{{coKeyUrlId}}"
+          [ngClass]="(planStatus == 'Terminated') ? 'disabled':''">Company</a>
+        <a *ngIf="mainPlanArray[0].copyDivision == 'T'" class=" green-btn-add btn"
+          [routerLink]="['/company/plan/copy-division']"
+          [queryParams]="{'companyId':coKeyUrlId,'planId':planKeyUrlId,'divisionId':divisionKeyUrlId,'planType':'copyDivision'}"
+          [ngClass]="(planStatus == 'Terminated') ? 'disabled':''">
+          {{ 'button.copy-division' | translate }} </a>
+        <a *ngIf="mainPlanArray[0].planComments == 'T'" href="#plan-comments" class="green-btn-add btn"
+          data-toggle="modal" data-target="#plan-comments"
+          [ngClass]="(planStatus == 'Terminated') ? 'disabled':''">{{ 'company.company-comments.comments' | translate }}</a>
+         
+          <a *ngIf="mainPlanArray[0].editPlan == 'T'" class=" green-btn-add btn" [routerLink]="['/company/plan/edit']"
+          [queryParams]="{'companyId':coKeyUrlId,'planId':planKeyUrlId,'divisionId':divisionKeyUrlId,'planType':'editPlan'}"
+          [ngClass]="(planStatus == 'Terminated') ? 'disabled':''">
+          <i class="fa fa-pencil"></i>{{'company.plan.plan-view.edit-plan' | translate}} </a>
+      </div>
+    </div>
+  </div>
+  <!--[Section Heading End]-->
+
+   <!--[Start Collapisble Tab Section]-->
+  <div class="grid-box">
+    <div class="grid-heading collapse-heading" aria-expanded="true" data-toggle="collapse"
+      data-target="#disciplinesSection">
+      <h3 aria-expanded="true" data-toggle="collapse" data-target="#disciplinesSection">
+        Disciplines</h3>
+    </div>
+    <div class="collapse in" id="disciplinesSection">
+      <div class="">
+       
+          <!--[START TAB]-->
+          <ul class="nav company-tabs  nav-pills custom-nav-pills">
+            <li class="wrap-li" *ngFor="let key of benefitsJsonKeys; let i = index" [class.active]="i==0">
+              <a *ngIf="key" data-toggle="pill" href="#subtab-{{key}}">{{key}}</a>
+            </li>
+            <!-- Task 503 Buttons used to touch with top accordion resolved -->
+            <div class="web-reg" style="margin-top: 1%;">
+              <button *ngIf="TabKeysDataEmpty==true && isDentalSlug" id="planDentalDiscCoverage"
+              type="button" class="btn green-btn-add wrap-li" data-toggle="modal" data-target="#disciplineCoverage" (click)="getDiscipline('dental')">Add Dental Coverage</button>
+              <button *ngIf="TabKeysDataEmpty==true && isVisionSLug" id="planVisionDiscCoverage"
+              type="button" class="btn green-btn-add" data-toggle="modal" data-target="#disciplineCoverage" (click)="getDiscipline('vision')">Add Vision Coverage</button>
+              <button *ngIf="TabKeysDataEmpty==true && isHealthSlug" id="planHealthDiscCoverage"
+              type="button" class="btn green-btn-add" data-toggle="modal" data-target="#disciplineCoverage" (click)="getDiscipline('health')">Add Health Coverage</button>
+              <button *ngIf="TabKeysDataEmpty==true && isDrugSlug" id="planDrugDiscCoverage"
+              type="button" class="btn green-btn-add" data-toggle="modal" data-target="#disciplineCoverage" (click)="getDiscipline('drug')">Add Drug Coverage</button>
+              <button *ngIf="TabKeysDataEmpty==true && isSupplementalSlug" id="planSupplementalDiscCoverage"
+              type="button" class="btn green-btn-add" data-toggle="modal" data-target="#disciplineCoverage" (click)="getDiscipline('supplemental')">Add Supplemental Coverage</button>
+              <button *ngIf="TabKeysDataEmpty==true && isWellnessSlug" id="planWellnessDiscCoverage"
+              type="button" class="btn green-btn-add" data-toggle="modal" data-target="#disciplineCoverage" (click)="getDiscipline('wellness')">Add Wellness Coverage</button>
+              <button *ngIf="TabKeysDataEmpty==true && mainPlanArray[0].terminateCoverage =='T'" id="planViewTerminate"
+                type="button" class="btn green-btn-add" data-toggle="modal" data-target="#TerminateDate"
+                (click)="resetForm()">Terminate Coverage</button>
+            </div>
+          </ul>
+          <!--[END TAB]-->
+        <!--[START TAB CONTENT]-->
+        <div class="tab-content">
+
+          <!-- DENTAL SUBSUB TAB STARTS -->
+          <div id="subtab-dental" class="tab-pane fade in  custom-nav-pills" [class.active]="firstTab == 'dental'">
+            <div class="tab-hdr-inner">
+              <h3>{{'company.plan.plan-view.dental-coverage' | translate}}</h3>
+            </div>
+            <div class="form-row">
+              <div class="row min-ht-sf">
+                <div class="col-md-3 col-xs-12">
+                  <label>{{'company.plan.plan-view.benefits' | translate}}</label>
+                  <input id="PlanViewBenefits" class="fm-txt form-control" type="text" placeholder="Dental"
+                    formControlName="benefits">
+                </div>
+                <div class="col-md-3 col-xs-12">
+                  <label>{{'company.plan.plan-view.effective-date' | translate}}</label>
+                  <input id="PlanViewEffectiveDate3" class="fm-txt form-control" type="text"
+                    formControlName="effective_date3">
+                </div>
+                <div class="col-md-3 col-xs-12">
+                  <label>{{'company.plan.plan-view.dependant-age1' | translate}}</label>
+                  <input id="PlanViewDependantAge1" class="fm-txt form-control" type="text"
+                    formControlName="dependant_age1">
+                </div>
+                <div class="col-md-3 col-xs-12">
+                  <label>{{'company.plan.plan-view.dependant-age2' | translate}}</label>
+                  <input id="PlanViewDependantAge2" class="fm-txt form-control" type="text"
+                    formControlName="dependant_age2">
+                </div>
+              </div>
+            </div>
+            <!-- for issue number 731 Carry Forward  STARTS -->
+            <div id="subtab-dental" class="tab-pane fade in" [class.active]="firstTab == 'dental'"
+              *ngIf="dentalCarryForwardFlag">
+              <div class="tab-hdr-inner">
+                <h3>{{'company.plan.plan-view.dental-coverage-CarryForward' | translate}}</h3>
+              </div>
+              <div class="form-row">
+                <div class="row min-ht-sf">
+                  <div class="col-md-4 col-xs-12">
+                    <label>{{'company.plan.plan-view.dental-coverage-carryforward-year' | translate}}</label>
+                    <input class="fm-txt form-control" type="text" placeholder="Carry Forward Year"
+                      formControlName="carryForwardYear">
+                  </div>
+                  <div class="col-md-4 col-xs-12">
+                    <label>{{'company.plan.plan-view.dental-coverage-carryforward-effective-on' | translate}}</label>
+                    <input class="fm-txt form-control" type="text" formControlName="carryForwardEffectiveOn">
+                  </div>
+                  <div class="col-md-4 col-xs-12">
+                    <label>{{'company.plan.plan-view.dental-coverage-carryforward-expire-on' | translate}}</label>
+                    <input class="fm-txt form-control" type="text" formControlName="carryForwardExpireOn" placeholder="Expired On">
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+            <!-- for issue number 731 Carry Forward  ENDS -->
+            <div class="table-responsive clear ">
+              <table id="planViewTable" class="table table-bordered table-stripped">
+                <thead>
+                  <tr>
+                    <th>{{'company.plan.plan-view.coverage-category' | translate }}</th>
+                    <th class="in-number">{{'company.plan.plan-view.adult%' | translate }}</th>
+                    <th class="in-number">{{'company.plan.plan-view.adult-lab%' | translate }}</th>
+                    <th class="in-number">{{'company.plan.plan-view.dep%' | translate }}</th>
+                    <th class="in-number">{{'company.plan.plan-view.dep-lab%' | translate }}</th>
+                    <th class="in-number">{{'company.plan.plan-view.pay-lab' | translate }}</th>
+                    <th class="in-number">{{'company.plan.plan-view.pay-claim' | translate }}</th>
+                    <th class="in-number">{{'company.plan.plan-view.effective-date' | translate }}</th>
+                    <th class="in-number">{{'company.plan.plan-view.expiry-date'| translate }}</th>
+                    <th class="in-number">{{'company.plan.plan-view.action'| translate }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let unit of CoverageListDental; let i = index"
+                    [ngClass]="isExpired(unit.expiredOn) ? 'hterminated-row':''">
+                    <td>
+                      <span>{{unit.covCatDesc}} - <a (click)="getPlanFrequencies(unit.covKey)" class="FBtn"
+                          style="cursor: pointer;font-weight: 600;">F</a></span>
+                    </td>
+                    <td class="in-number">
+                      <span>{{unit.adult}}</span>
+                    </td>
+                    <td class="in-number">
+                      <span>{{unit.adultLab}}</span>
+                    </td>
+                    <td class="in-number">
+                      <span>{{unit.dept}}</span>
+                    </td>
+                    <td class="in-number">
+                      <span>{{unit.deptLab}}</span>
+                    </td>
+                    <td class="in-number">
+                      <span>{{unit.payLab == "T" ? "Yes" : "No"}}</span>
+                    </td>
+                    <td class="in-number">
+                      <span>{{unit.payClaim == "T" ? "Yes" : "No"}}</span>
+                    </td>
+                    <td class="in-number">
+                      <span>{{unit.effectiveOn|dateFormate}}</span>
+                    </td>
+                    <td class="in-number">
+
+                      <span>{{unit.expiredOn|dateFormate}}</span>
+                    </td>
+                    <td class="in-number">
+
+                      <span><button class="btn green-btn-add" (click)="openFindProc(unit.covKey)">Find Proc
+                          Code</button></span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <!-- DENTAL SUBSUB TAB ENDS -->
+          <!-- VISION SUBSUB TAB STARTS -->
+          <div id="subtab-vision" class="tab-pane fade in  custom-nav-pills" [class.active]="firstTab == 'vision'">
+            <div class="tab-hdr-inner">
+              <h3>{{'company.plan.plan-view.vision-coverage' | translate }}</h3>
+            </div>
+            <div class="form-row">
+              <div class="row min-ht-sf">
+                <div class="col-md-3 col-xs-12">
+                  <label>{{'company.plan.plan-view.benefits' | translate }}</label>
+                  <input id="PlanViewBenefits1" class="fm-txt form-control" placeholder="Vision" type="text"
+                    formControlName="benefits">
+                </div>
+                <div class="col-md-3 col-xs-12">
+                  <label>{{'company.plan.plan-view.effective-date' | translate }}</label>
+                  <input id="PlanViewEffectiveDate4" class="fm-txt form-control" type="text"
+                    formControlName="effective_date3">
+                </div>
+                <div class="col-md-3 col-xs-12">
+                  <label>{{'company.plan.plan-view.dependant-age1' | translate }}</label>
+                  <input id="PlanViewDependantAge1_1" class="fm-txt form-control" type="text"
+                    formControlName="dependant_age1">
+                </div>
+                <div class="col-md-3 col-xs-12">
+                  <label>{{'company.plan.plan-view.dependant-age2' | translate }}</label>
+                  <input id="PlanViewDependantAge2_1" class="fm-txt form-control" type="text"
+                    formControlName="dependant_age2">
+                </div>
+              </div>
+            </div>
+            <!--issue number 731 VISION carry STARTS -->
+            <div *ngIf="visionCarryForwardFlag">
+              <div class="tab-hdr-inner">
+                <h3>{{'company.plan.plan-view.vision-coverage-forward-carry-forward' | translate }}</h3>
+              </div>
+              <div class="form-row">
+                <div class="row min-ht-sf">
+                  <div class="col-md-4 col-xs-12">
+                    <label>{{'company.plan.plan-view.vision-coverage-carryforward-year' | translate }}</label>
+                    <input id="PlanViewBenefits1" class="fm-txt form-control" placeholder="Carry Forward Year"
+                      type="text" formControlName="visionCarryForwardYear">
+                  </div>
+                  <div class="col-md-4 col-xs-12">
+                    <label>{{'company.plan.plan-view.vision-coverage-effective-on' | translate }}</label>
+                    <input id="PlanViewEffectiveDate4" class="fm-txt form-control" type="text"
+                      formControlName="visionCarryForwardEffectiveOn" placeholder="Effective On">
+                  </div>
+                  <div class="col-md-4 col-xs-12">
+                    <label>{{'company.plan.plan-view.vision-coverage-expire-on' | translate }}</label>
+                    <input id="PlanViewDependantAge1_1" class="fm-txt form-control" type="text"
+                      formControlName="visionCarryForwardExpireOn" placeholder="Expired On">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--issue number 731 VISION carry ends -->
+          <div class="collapse in">
+            <div class="grid-inner">
+            <div class="table-responsive clear ">
+              <table id="planViewTable1" class="table table-bordered table-stripped">
+                <thead>
+                  <tr>
+                    <th width="10%">{{'company.plan.plan-view.coverage-category' | translate }}</th>
+                    <th width="10%" class="in-number">{{'company.plan.plan-view.adult%' | translate }}</th>
+                    <th width="10%" class="in-number">{{'company.plan.plan-view.adult-time-frame' | translate }}</th>
+                    <th width="10%" class="in-number">{{'company.plan.plan-view.dep%' | translate }}</th>
+                    <th width="10%" class="in-number">{{'company.plan.plan-view.deptime-frame' | translate }}</th>
+                    <th width="10%" class="in-number">{{'company.plan.plan-view.pay-claim' | translate }}</th>
+                    <th width="10%" class="in-number">{{'company.plan.plan-view.effective-date' | translate }}</th>
+                    <th width="10%" class="in-number">{{'company.plan.plan-view.expiry-date'| translate }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let unit of CoverageListVision; let i = index"
+                    [ngClass]="isExpired(unit.expiredOn) ? 'hterminated-row':''">
+                    <td>
+                      <span>{{unit.covCatDesc}} - <a (click)="getVisionPlanCoverage(unit.covKey)" class="FBtn"
+                          style="cursor: pointer;font-weight: 600;">F</a></span>
+                    </td>
+                    <td class="in-number">
+                      <span>{{unit.adult}}</span>
+                    </td>
+                    <td [ngSwitch]="unit.covCoverageTimeFrameKey" class="in-number">
+                      <span *ngSwitchCase="21">Every Year</span>
+                      <span *ngSwitchCase="22">Every Two Year</span>
+                      <span *ngSwitchCase="23">Every 12 Months</span>
+                      <span *ngSwitchCase="24">Every 24 Months</span>
+                    </td>
+                    <td class="in-number">
+                      <span>{{unit.dept}}</span>
+                    </td>
+                    <td [ngSwitch]="unit.coverageTimeFrameKey" class="in-number">
+                      <span *ngSwitchCase="21">Every Year</span>
+                      <span *ngSwitchCase="22">Every Two Year</span>
+                      <span *ngSwitchCase="23">Every 12 Months</span>
+                      <span *ngSwitchCase="24">Every 24 Months</span>
+                    </td>
+                    <td class="in-number">
+                      <span>{{unit.payClaim == "T" ? "Yes" : "No"}}</span>
+                    </td>
+                    <td class="in-number">
+                      <span>{{unit.effectiveOn|dateFormate}}</span>
+                    </td>
+                    <td class="in-number">
+
+                      <span>{{unit.expiredOn|dateFormate}}</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          </div>
+          </div>
+          <!-- VISION SUBSUB TAB ENDS -->
+          <!-- HEALTH SUBSUB TAB STARTS -->
+          <div id="subtab-health" class="tab-pane fade in custom-nav-pills" [class.active]="firstTab == 'health'">
+            <div class="tab-hdr-inner">
+              <h3>{{'company.plan.plan-view.health-coverage' | translate }}</h3>
+            </div>
+            <div class="form-row">
+              <div class="row min-ht-sf">
+                <div class="col-md-3 col-xs-12">
+                  <label>{{'company.plan.plan-view.benefits' | translate }}</label>
+                  <input id="PlanViewBenefits2" class="fm-txt form-control" placeholder="Health" type="text"
+                    formControlName="benefits">
+                </div>
+                <div class="col-md-3 col-xs-12">
+                  <label>{{'company.plan.plan-view.effective-date' | translate }}</label>
+                  <input id="PlanViewEffectiveDate5" class="fm-txt form-control" type="text"
+                    formControlName="effective_date3">
+                </div>
+                <div class="col-md-3 col-xs-12">
+                  <label>{{'company.plan.plan-view.dependant-age1' | translate }}</label>
+                  <input id="PlanViewDependantAge1_2" class="fm-txt form-control" type="text"
+                    formControlName="dependant_age1">
+                </div>
+                <div class="col-md-3 col-xs-12">
+                  <label>{{'company.plan.plan-view.dependant-age2' | translate }}</label>
+                  <input id="PlanViewDependantAge2_2" class="fm-txt form-control" type="text"
+                    formControlName="dependant_age2">
+                </div>
+              </div>
+            </div>
+            <!-- issue number 731 health tab start -->
+            <div *ngIf="healthCarryForwardFlag">
+              <div class="tab-hdr-inner">
+                <h3>{{'company.plan.plan-view.health-coverage-carryforward' | translate }}</h3>
+              </div>
+              <div class="form-row">
+                <div class="row min-ht-sf">
+                  <div class="col-md-4 col-xs-12">
+                    <label>{{'company.plan.plan-view.health-coverage-forward-carry-forward' | translate }}</label>
+                    <input id="PlanViewBenefits2" class="fm-txt form-control" placeholder="Carry Forward Year"
+                      type="text" formControlName="healthCarryForwardYear">
+                  </div>
+                  <div class="col-md-4 col-xs-12">
+                    <label>{{'company.plan.plan-view.vision-coverage-effective-on' | translate }}</label>
+                    <input id="PlanViewEffectiveDate5" class="fm-txt form-control" type="text"
+                      formControlName="healthCarryForwardEffectiveOn" placeholder="Effective On">
+                  </div>
+                  <div class="col-md-4 col-xs-12">
+                    <label>{{'company.plan.plan-view.vision-coverage-expire-on' | translate }}</label>
+                    <input id="PlanViewDependantAge1_2" class="fm-txt form-control" type="text"
+                      formControlName="healthCarryForwardExpireOn" placeholder="Expired On">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- issue number 731 health tab end -->
+          <div class="collapse in">
+            <div class="grid-inner">
+            <div class="table-responsive clear ">
+              <table id="planViewTable2" class="table table-bordered table-stripped">
+                <thead>
+                  <tr>
+                    <th width="16%">{{'company.plan.plan-view.coverage-category' | translate }}</th>
+                    <th width="16%" class="in-number">{{'company.plan.plan-view.adult%' | translate }}</th>
+                    <th width="16%" class="in-number">{{'company.plan.plan-view.dep%' | translate }}</th>
+                    <th width="16%" class="in-number">{{'company.plan.plan-view.pay-claim' | translate }}</th>
+                    <th width="16%" class="in-number">{{'company.plan.plan-view.effective-date' | translate }}</th>
+                    <th width="16%" class="in-number">{{'company.plan.plan-view.expiry-date'| translate }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let unit of CoverageListHealth; let i = index"
+                    [ngClass]="isExpired(unit.expiredOn) ? 'hterminated-row':''">
+                    <td>
+                      <span>{{unit.covCatDesc}}
+                        - <a (click)="getHealthPlanCoverage(unit.covKey)" class="FBtn"
+                          style="cursor: pointer;font-weight: 600;">F</a>
+                      </span>
+                    </td>
+                    <td class="in-number">
+                      <span>{{unit.adult}}</span>
+                    </td>
+                    <td class="in-number">
+                      <span>{{unit.dept}}</span>
+                    </td>
+                    <td class="in-number">
+                      <span>{{unit.payClaim == "T" ? "Yes" : "No"}}</span>
+                    </td>
+                    <td class="in-number">
+                      <span>{{unit.effectiveOn|dateFormate}}</span>
+                    </td>
+                    <td class="in-number">
+                      <span>{{unit.expiredOn|dateFormate}}</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+          </div>
+          <!-- HEALTH SUBSUB TAB ENDS -->
+          <!-- DRUG SUBSUB TAB STARTS -->
+          <div id="subtab-drug" class="tab-pane fade in" [class.active]="firstTab == 'drug'">
+            <div class="tab-hdr-inner">
+              <h3>{{'company.plan.plan-view.drug-coverage' | translate }}</h3>
+            </div>
+            <div class="form-row">
+              <div class="row min-ht-sf">
+                <div class="col-md-3 col-xs-12">
+                  <label>{{'company.plan.plan-view.benefits' | translate }}</label>
+                  <input id="PlanViewBenefits3" class="fm-txt form-control" placeholder="Drug" type="text"
+                    formControlName="benefits">
+                </div>
+                <div class="col-md-3 col-xs-12">
+                  <label>{{'company.plan.plan-view.effective-date' | translate }}</label>
+                  <input id="PlanViewEffectiveDate6" class="fm-txt form-control" type="text"
+                    formControlName="effective_date3">
+                </div>
+                <div class="col-md-3 col-xs-12">
+                  <label>{{'company.plan.plan-view.dependant-age1' | translate }}</label>
+                  <input id="PlanViewDependantAge1_3" class="fm-txt form-control" type="text"
+                    formControlName="dependant_age1">
+                </div>
+                <div class="col-md-3 col-xs-12">
+                  <label>{{'company.plan.plan-view.dependant-age2' | translate }}</label>
+                  <input id="PlanViewDependantAge2_3" class="fm-txt form-control" type="text"
+                    formControlName="dependant_age2">
+                </div>
+              </div>
+            </div>
+            <div class="table-responsive clear">
+              <table id="planViewTable3" class="table table-bordered table-stripped">
+                <thead>
+                  <tr>
+                    <th width="16%">{{'company.plan.plan-view.coverage-category' | translate }}</th>
+                    <th width="16%">{{'company.plan.plan-view.adult%' | translate }}</th>
+                    <th width="16%">{{'company.plan.plan-view.dep%' | translate }}</th>
+                    <th width="16%">{{'company.plan.plan-view.effective-date' | translate }}</th>
+                    <th width="16%">{{'company.plan.plan-view.expiry-date'| translate }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let unit of CoverageListDrug; let i = index"
+                    [ngClass]="isExpired(unit.expiredOn) ? 'hterminated-row':''">
+                    <td>
+                      <span>{{unit.covCatDesc}}</span>
+                    </td>
+                    <td>
+                      <span>{{unit.adult}}</span>
+                    </td>
+                    <td>
+                      <span>{{unit.dept}}</span>
+                    </td>
+                    <td>
+                      <span>{{unit.effectiveOn|dateFormate}}</span>
+                    </td>
+                    <td>
+                      <span>{{unit.expiredOn|dateFormate}}</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <!-- DRUG SUBSUB TAB ENDS -->
+          <!-- SUPPLEMENT SUBSUB TAB STARTS -->
+          <!-- firstTab {{firstTab}} -->
+          <div id="subtab-supplemental" class="tab-pane fade in custom-nav-pills" [class.active]="firstTab == 'supplemental'">
+            <div class="tab-hdr-inner">
+              <h3>{{'company.plan.plan-view.supplement-coverage' | translate }}</h3>
+            </div>
+            <div class="form-row">
+              <div class="row min-ht-sf">
+                <div class="col-md-3 col-xs-12">
+                  <label>{{'company.plan.plan-view.benefits' | translate }}</label>
+                  <input id="PlanViewBenefits4" class="fm-txt form-control" placeholder="Supplemental" type="text"
+                    formControlName="benefits">
+                </div>
+                <div class="col-md-3 col-xs-12">
+                  <label>{{'company.plan.plan-view.effective-date' | translate }}</label>
+                  <input id="PlanViewEffectiveDate7" class="fm-txt form-control" type="text"
+                    formControlName="effective_date3">
+                </div>
+                <div class="col-md-3 col-xs-12">
+                  <label>{{'company.plan.plan-view.dependant-age1' | translate }}</label>
+                  <input id="PlanViewDependantAge1_4" class="fm-txt form-control" type="text"
+                    formControlName="dependant_age1">
+                </div>
+                <div class="col-md-3 col-xs-12">
+                  <label>{{'company.plan.plan-view.dependant-age2' | translate }}</label>
+                  <input id="PlanViewDependantAge2_4" class="fm-txt form-control" type="text"
+                    formControlName="dependant_age2">
+                </div>
+              </div>
+            </div>
+            <!-- issue numbe 731 suppliment start -->
+            <div *ngIf="suppliementCarryForwardFlag">
+              <div class="tab-hdr-inner">
+                <h3>{{'company.plan.plan-view.supplement-coverage-carry-forward' | translate }}</h3>
+              </div>
+              <div class="form-row">
+                <div class="row min-ht-sf">
+                  <div class="col-md-4 col-xs-12">
+                    <label>{{'company.plan.plan-view.suppliement-coverage-forward-carry-forward' | translate }}</label>
+                    <input id="PlanViewBenefits2" class="fm-txt form-control" placeholder="Carry Forward Year"
+                      type="text" formControlName="supplimentCarryForwardYear">
+                  </div>
+                  <div class="col-md-4 col-xs-12">
+                    <label>{{'company.plan.plan-view.vision-coverage-effective-on' | translate }}</label>
+                    <input id="PlanViewEffectiveDate5" class="fm-txt form-control" type="text"
+                      formControlName="supplimentCarryForwardEffectiveOn" placeholder="Effective On">
+                  </div>
+                  <div class="col-md-4 col-xs-12">
+                    <label>{{'company.plan.plan-view.vision-coverage-expire-on' | translate }}</label>
+                    <input id="PlanViewDependantAge1_2" class="fm-txt form-control" type="text"
+                      formControlName="supplimentCarryForwardExpireOn" placeholder="Expired On">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- issue number 731 suppliment tab ends -->
+          <div class="collapse in">
+            <div class="grid-inner">
+            <div class="table-responsive clear">
+              <table id="planViewTable4" class="table table-bordered table-stripped">
+                <thead>
+                  <tr>
+                    <th width="16%">{{'company.plan.plan-view.coverage-desc' | translate }}</th>
+                    <th width="16%" class="in-number">{{'company.plan.plan-view.effective-date' | translate }}</th>
+                    <th width="16%" class="in-number">{{'company.plan.plan-view.expiry-date'| translate }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let unit of CoverageListSupplement; let i = index"
+                    [ngClass]="isExpired(unit.expiredOn) ? 'hterminated-row':''">
+                    <td>
+                      <span>{{unit.covCatDesc}}</span>
+                    </td>
+                    <td class="in-number">
+                      <span>{{unit.effectiveOn|dateFormate}}</span>
+                    </td>
+                    <td class="in-number">
+                      <span>{{unit.expiredOn|dateFormate}}</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+          </div>
+          <!-- WELLNESS SUBSUB TAB STARTS -->
+          <div id="subtab-wellness" class="tab-pane fade in custom-nav-pills" [class.active]="firstTab == 'wellness'">
+            <div class="tab-hdr-inner">
+              <h3>{{'company.plan.plan-view.wellness-coverage' | translate}}</h3>
+            </div>
+            <div class="form-row">
+              <div class="row min-ht-sf">
+                <div class="col-md-3 col-xs-12">
+                  <label>{{'company.plan.plan-view.benefits' | translate}}</label>
+                  <input id="PlanViewBenefits" class="fm-txt form-control" type="text" placeholder="Wellness"
+                    formControlName="benefits">
+                </div>
+                <div class="col-md-3 col-xs-12">
+                  <label>{{'company.plan.plan-view.effective-date' | translate}}</label>
+                  <input id="PlanViewEffectiveDate3" class="fm-txt form-control" type="text"
+                    formControlName="effective_date3">
+                </div>
+                <div class="col-md-3 col-xs-12">
+                  <label>{{'company.plan.plan-view.dependant-age1' | translate}}</label>
+                  <input id="PlanViewDependantAge1" class="fm-txt form-control" type="text"
+                    formControlName="dependant_age1">
+                </div>
+                <div class="col-md-3 col-xs-12">
+                  <label>{{'company.plan.plan-view.dependant-age2' | translate}}</label>
+                  <input id="PlanViewDependantAge2" class="fm-txt form-control" type="text"
+                    formControlName="dependant_age2">
+                </div>
+              </div>
+            </div>
+
+
+  <!-- issue numbe 833 wellness start -->
+  <div *ngIf="wellnessCarryForwardFlag">
+    <div class="tab-hdr-inner">
+      <h3>{{'company.plan.plan-view.wellness-coverage-carry-forward' | translate }}</h3>
+    </div>
+    <div class="form-row">
+      <div class="row min-ht-sf">
+        <div class="col-md-4 col-xs-12">
+          <label>{{'company.plan.plan-view.suppliement-coverage-forward-carry-forward' | translate }}</label>
+          <input id="PlanViewBenefits2" class="fm-txt form-control" placeholder="Carry Forward Year"
+            type="text" formControlName="supplimentCarryForwardYear">
+        </div>
+        <div class="col-md-4 col-xs-12">
+          <label>{{'company.plan.plan-view.vision-coverage-effective-on' | translate }}</label>
+          <input id="PlanViewEffectiveDate5" class="fm-txt form-control" type="text"
+            formControlName="supplimentCarryForwardEffectiveOn" placeholder="Effective On">
+        </div>
+        <div class="col-md-4 col-xs-12">
+          <label>{{'company.plan.plan-view.vision-coverage-expire-on' | translate }}</label>
+          <input id="PlanViewDependantAge1_2" class="fm-txt form-control" type="text"
+            formControlName="supplimentCarryForwardExpireOn" placeholder="Expired On">
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- issue number 833 wellness tab ends -->
+
+
+
+         <div class="collapse in">
+          <div class="grid-inner">
+            <div class="table-responsive clear ">
+              <table id="planViewTable" class="table table-bordered table-stripped">
+                <thead>
+                  <tr>
+                    <th>{{'company.plan.plan-view.coverage-category' | translate }}</th>
+                    <th class="in-number">{{'company.plan.plan-view.adult%' | translate }}</th>
+                    <th class="in-number">{{'company.plan.plan-view.pay-claim' | translate }}</th>
+                    <th class="in-number">{{'company.plan.plan-view.effective-date' | translate }}</th>
+                    <th class="in-number">{{'company.plan.plan-view.expiry-date'| translate }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Task 585 Class added to show rows in red if plan has been terminated in company -> plan -> wellness -->
+                  <tr *ngFor="let unit of CoverageListWellness; let i = index" [ngClass]="isExpired(unit.expiredOn) ? 'hterminated-row':''">
+                    <td>
+                      <span>{{unit.covCatDesc}}</span>
+                    </td>
+                    <td class="in-number">
+                      <span>{{unit.adult}}</span>
+                    </td>
+                    <td class="in-number">
+                      <span>{{unit.payClaim == "T" ? "Yes" : "No"}}</span>
+                    </td>
+                    <td class="in-number">
+                      <span>{{unit.effectiveOn|dateFormate}}</span>
+                    </td>
+                    <td class="in-number">
+                      <span>{{unit.expiredOn|dateFormate}}</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        </div>
+        </div>
+        <!--[END TAB CONTENT]-->
+      </div>
+    </div>
+  </div>
+  <!--[End Collapisble Tab Section]-->
+      <!--[Start Plan Division Maximum Section]-->
+  <div class="grid-box" *ngIf="showdivisionMaximumSection == true">
+    <div class="grid-heading collapse-heading" aria-expanded="true" data-toggle="collapse"
+      data-target="#planDivMaxSection">
+      <h3 aria-expanded="true" data-toggle="collapse" data-target="#planDivMaxSection">
+        Division Maximum</h3>
+      <span *ngIf="editMode == true && isDivMaxHistoryExist == true">
+        <app-history-icons [attr.data-toggle]="dataToggle" [attr.data-target]="divisionMaxHistoryDataTarget"
+          [id]="divisionMaxHistoryId" [class]="divisionMaxHistoryClass" [title]="divisionMaxHistoryTitle"
+          (click)="getDivisionMaximumHistory()">
+        </app-history-icons>
+      </span>
+      <span *ngIf="addMode && isDivMaxHistoryExist == false"></span>
+    </div>
+    <div class="collapse in" id="planDivMaxSection">
+      <div class="grid-inner">
+        <div class="table-responsive">
+          <table id="PlanViewDivMaxTable" class="table table-bordered table-stripped">
+            <thead>
+              <tr>
+                <th width="20%">{{'company.plan.preview.maximum' | translate}}</th>
+                <th width="20%" class="amount_right_grid">{{'company.plan.preview.maximum-type' | translate}}</th>
+                <th width="20%" class="amount_right_grid">{{'company.plan.preview.maximum-period-type' | translate}}
+                </th>
+                <th width="20%" class="amount_right_grid">{{'company.plan.preview.maximum-amount' | translate}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let unit of planMax; let i = index">
+                <td>
+                  {{unit.maximum}}
+                </td>
+                <td class="amount_right_grid">
+                  {{unit.maxTypeDesc}}
+                </td>
+                <td class="amount_right_grid">
+                  {{unit.maxPeriodTypeDesc}}
+                </td>
+                <td class="amount_right_grid">
+                  <span>$</span>{{unit.divMaxAmt  | number: '1.2'}}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--[End Plan Division Maximum Section]-->
+    <!--[Start Prorating Section]-->
+    <div class="grid-box">
+      <div class="grid-heading collapse-heading" [attr.aria-expanded]="proratingSection" data-toggle="collapse"
+        data-target="#proratingSection">
+        <h3 [attr.aria-expanded]="proratingSection" data-toggle="collapse" data-target="#proratingSection">
+          {{'company.plan.plan-view.prorating' | translate}}</h3>
+      </div>
+      <div [ngClass]="(proratingSection == true) ? 'collapse in' : 'collapse' " id="proratingSection">
+        <div class="grid-inner">
+          <div class="form-row">
+            <div class="row min-ht-sf">
+              <div class="col-md-3 col-xs-12">
+                <label>{{'company.plan.plan-view.prorating-type' | translate}}</label>
+                <input id="PlanViewProratingType" class="fm-txt form-control" type="text"
+                  formControlName="prorating_type" placeholder="Prorating Type">
+                <span *ngIf="isPrpHistoryExist == false && editMode == true"></span>
+              </div>
+              <div class="col-md-3 col-xs-12">
+                <label>{{'company.plan.plan-view.start-date' | translate}}</label>
+                <input id="PlanViewStartDate" class="fm-txt form-control" type="text" formControlName="start_date" placeholder="Start Date">
+              </div>
+              <div class="col-md-3 col-xs-12">
+                <label>{{'company.plan.plan-view.end-date' | translate}}</label>
+                <input id="PlanViewEndDate" class="fm-txt form-control" type="text" formControlName="end_date" placeholder="End date">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--[End Prorating Section]-->
+    <!--[Start carryforward Section]-->
+    <div class="grid-box">
+      <div class="grid-heading collapse-heading" [attr.aria-expanded]="carryForwardSection" data-toggle="collapse"
+        data-target="#carryForwardSection">
+        <h3 [attr.aria-expanded]="carryForwardSection" data-toggle="collapse" data-target="#carryForwardSection">
+          Carry Forward</h3>
+      </div>
+      <div [ngClass]="(carryForwardSection == true) ? 'collapse in' : 'collapse' " id="carryForwardSection">
+        <div class="grid-inner">
+          <div class="form-row">
+            <div class="row min-ht-sf">
+              <div class="col-md-3 col-xs-12">
+                <label>Carry Forward Years</label>
+                <input id="CarryForwardYears1" class="fm-txt form-control" type="text" formControlName="carry_forward" placeholder="Carry Forward Years">
+                <span *ngIf="isCarryForwardHistoryExist == true && editMode == true">
+                  <app-history-icons [attr.data-toggle]="dataToggle" [attr.data-target]="divisionMaxHistoryDataTarget"
+                    [id]="divisionMaxHistoryId" [class]="divisionMaxHistoryClass" [title]="divisionMaxHistoryTitle"
+                    (click)="getCarryForwardHistory()">
+                  </app-history-icons>
+                </span>
+                <span *ngIf="isCarryForwardHistoryExist == false && editMode == true"></span>
+              </div>
+              <div class="col-md-3 col-xs-12">
+                <label>{{'company.plan.plan-view.start-date' | translate}}</label>
+                <input id="PlanViewStartDate" class="fm-txt form-control" type="text" formControlName="start_dateCarry" placeholder="Start Date">
+              </div>
+              <div class="col-md-3 col-xs-12">
+                <label>{{'company.plan.plan-view.end-date' | translate}}</label>
+                <input id="PlanViewEndDate" class="fm-txt form-control" type="text" formControlName="end_dateCarry" placeholder="End date">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--[End carryforward Section]
+  <!-[Start Division Details Section]-->
+  <div class="grid-box">
+    <div class="grid-heading collapse-heading" [attr.aria-expanded]="divisionDetailSection" data-toggle="collapse"
+      data-target="#divisionDetailsSection">
+      <h3 [attr.aria-expanded]="divisionDetailSection" data-toggle="collapse" data-target="#divisionDetailsSection">
+        {{'company.plan.plan-view.division-details' | translate}}</h3>
+    </div>
+    <div [ngClass]="(divisionDetailSection == true) ? 'collapse in' : 'collapse' " id="divisionDetailsSection">
+      <div class="grid-inner">
+        <div class="form-row">
+          <div class="row min-ht-sf">
+            <div class="col-md-3 col-xs-12">
+              <label>{{'company.plan.plan-view.family-deductible-type' | translate}}</label>
+              <input id="PlanViewFamilyDeductibleType" class="fm-txt form-control" type="text"
+                formControlName="family_deductible_type">
+              <span *ngIf="isDedHistoryExist == true && editMode == true">
+                <app-history-icons [attr.data-toggle]="dataToggle" [attr.data-target]="familyDeductibleTypeTarget"
+                  [id]="familyDeductibleTypeId" [class]="familyDeductibleTypeClass" [title]="familyDeductibleTypeTitle"
+                  (click)="getDeductableTypeHistory()">
+                </app-history-icons>
+              </span>
+              <span *ngIf="isDedHistoryExist == false && editMode == true"></span>
+            </div>
+            <div class="col-md-2 col-xs-12">
+              <label>{{'company.plan.plan-view.family-deductible' | translate}}</label>
+              <div class="calender-field d-amount">
+              <input id="PlanViewFamilyDeductible" class="fm-txt form-control datepicker in-number" type="text"
+                formControlName="family_deductible" (blur)="addDecimal($event,'family_deductible')">
+              </div>
+            </div>
+            <div class="col-md-2 col-xs-12">
+              <label>{{'company.plan.plan-view.single-deductible' | translate}}</label>
+              <div class="calender-field d-amount">
+              <input id="PlanViewSingleDeductible" class="fm-txt form-control datepicker in-number" type="text"
+                formControlName="single_deductible" (blur)="addDecimal($event,'single_deductible')">
+              </div>
+            </div>
+            <!-- [Start New Fields] -->
+            <div class="col-md-2 col-xs-12">
+              <label>{{'company.plan.effective-date' | translate}}</label>
+              <input id="PlanViewEffectiveDate2" class="fm-txt form-control" type="text"
+                formControlName="division_detail_effective_date">
+            </div>
+            <div class="col-md-2 col-xs-12">
+
+              <label>{{'company.plan.plan-view.expiry-date' | translate}}</label>
+              <input id="PlanViewExpiryDate2" class="fm-txt form-control" type="text"
+                formControlName="division_detail_expiry_date" placeholder="Expiry Date">
+            </div>
+            <!-- [End New Fields] -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--[End Division Details Section]-->
+  <!--[Start Plan Section]-->
+  <div class="grid-box">
+    <div class="grid-heading collapse-heading" [attr.aria-expanded]="planSection" data-toggle="collapse"
+      data-target="#planSection">
+      <h3 [attr.aria-expanded]="planSection" data-toggle="collapse" data-target="#planSection">
+        {{'company.plan.plan-view.plan-no' | translate}} : {{planNumber}}</h3>
+    </div>
+    <div class="collapse in" id="planSection">
+      <div class="grid-inner">
+        <div class="form-row">
+          <div class="row min-ht-sf">
+            <div class="col-md-2 col-xs-12">
+              <label>{{'company.plan.plan-view.effective-date' | translate}}</label>
+              <input id="PlanViewEffectiveDate1" class="fm-txt form-control" type="text"
+                formControlName="effective_date1">
+            </div>
+            <div class="col-md-2 col-xs-12">
+              <label>{{'company.plan.plan-view.typeof-year' | translate}}</label>
+              <input id="PlanViewYearType" class="fm-txt form-control" type="text" formControlName="typeof_year">
+            </div>
+            <div class="col-md-2 col-xs-12">
+              <label></label>
+              <div class="select-options">
+                <span>
+                  <label>
+                    <input id="PlanViewExtraBenefits" type="checkbox" formControlName="extra_benefits"> Extra Benefits
+                  </label>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--[End Plan Section]-->
+  <!--[Start Division No. Section]-->
+
+    <!-- change for #1276-->
+    
+  <div class="grid-box">
+    <div class="grid-heading collapse-heading" [attr.aria-expanded]="divisionNumSection" data-toggle="collapse"
+      data-target="#divisionNumSection">
+      <h3 [attr.aria-expanded]="divisionNumSection" data-toggle="collapse" data-target="#divisionNumSection">
+        {{'company.plan.plan-view.division-no' | translate}} : {{divisionNumber}}</h3>
+    </div>
+        <div [ngClass]="(divisionNumSection == true) ? 'collapse in' : 'collapse' " id="divisionNumSection">
+    <div class="collapse in" id="divisionNumSection">
+      <div class="grid-inner">
+        <div class="form-row">
+          <div class="row min-ht-sf">
+            <div class="col-md-3 col-xs-12">
+              <label>{{'company.plan.plan-view.effective-date' | translate}}</label>
+              <input id="PlanViewEffectiveDate2" class="fm-txt form-control" type="text"
+                formControlName="effective_date2">
+            </div>
+            <div class="col-md-3 col-xs-12">
+              <label>{{'company.plan.termination-date' | translate}}</label>
+              <input id="PlanViewEffectiveDate2" class="fm-txt form-control terminatedOn" type="text"
+                formControlName="terminatedOn" placeholder="Termination Date">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  <!--[End Division No. Section]-->
+  <!--[Start Company Section]-->
+  
+
+ <!-- change #1276 by mukul-->
+  <div class="grid-box">
+    <div class="grid-heading collapse-heading" [attr.aria-expanded]="companySection" data-toggle="collapse"
+      data-target="#companySection">
+      <h3 [attr.aria-expanded]="companySection" data-toggle="collapse" data-target="#companySection">
+        {{'company.plan.plan-view.company' | translate}}</h3>
+    </div>
+        <div [ngClass]="(companySection == true) ? 'collapse in' : 'collapse' " id="companySection">
+  <div class="collapse in" id="companySection">
+    <div class="grid-inner">
+      <div class="form-row ">
+        <div class="row min-ht-sf">
+          <div class="col-md-3 col-xs-12">
+            <label>{{'company.plan.plan-view.company-id' | translate}}</label>
+            <input id="PlanViewCompanyId" class="fm-txt form-control" type="text" formControlName="company_id">
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{'company.plan.plan-view.company-name' | translate}}</label>
+            <input id="PlanViewCompanyName" class="fm-txt form-control" type="text" formControlName="company_name">
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{'company.plan.plan-view.effective-date' | translate}}</label>
+            <input id="PlanViewEffectiveDate|dateFormate" class="fm-txt form-control" type="text"
+              formControlName="effective_date">
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{'company.plan.plan-view.business-type' | translate}}</label>
+            <input id="PlanViewBusinessType" class="fm-txt form-control" placeholder="Quikcard" type="text"
+              formControlName="business_type">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  </div>
+  <!--[End Company Section]-->
+ <!-- [Start Totals]-->
+  <div class="form-row" *ngIf="showTotalsSection == true">
+    <div class="tab-hdr-inner">
+      <h3>Totals</h3>
+    </div>
+    <div class="grid-box">
+      <div class="grid-inner">
+        <!-- [Start Grids] -->
+        <div [hidden]="getCovMaxxValue">
+          <div class="grid-box">
+            <div class="grid-heading">
+              <h3>Coverage Maximums</h3>
+            </div>
+            <div class="grid-inner">
+              <div class="form-row">
+                <div class="row">
+                  <div class="  col-md-12 col-xs-12 table-col">
+                    <div class="table-responsive">
+                      <table id='ClaimTotalCOVMax' datatable [dtOptions]="dtOptions['ClaimTotalCOVMax']"
+                        [dtTrigger]="dtTrigger['ClaimTotalCOVMax']"
+                        class="inlinePopupTable table table-bordered table-stripped">
+                        <thead>
+                          <tr>
+                            <th>{{'common.category' | translate}}</th>
+                            <th>{{'common.max-type' | translate}}</th>
+                            <th>{{'common.max_amount' | translate}}</th>
+                            <th>{{'common.prorated_max' | translate}}</th>
+                            <th>{{'common.paid_to_date' | translate}}</th>
+                            <th>{{'common.amt_avail' | translate}}</th>
+                            <th>{{'common.cfwd_amt' | translate}}</th>
+                            <th>{{'common.period_type' | translate}}</th>
+                            <th>{{'common.year_type' | translate}}</th>
+                            <th>{{'common.period_start' | translate}}</th>
+                            <th>{{'common.period_end' | translate}}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr class="tableRow" id="{{'row_'+i}}" *ngFor="let dataRow of getCovMax; let i = index">
+                            <td>{{dataRow.covCat}}</td>
+                            <td>{{dataRow.maxType}}</td>
+                            <td class="text-right">{{dataRow.maxAmount | currency}}</td>
+                            <td class="text-right">{{dataRow.proratedAmount | currency}}</td>
+                            <td>{{dataRow.expiryDate}}</td>
+                            <td class="text-right">{{dataRow.availableAmount | currency}}</td>
+                            <td class="text-right">{{dataRow.cfwdamount | currency}}</td>
+                            <td>{{dataRow.periodType}}</td>
+                            <td>{{dataRow.typeOfYear}}</td>
+                            <td>{{dataRow.periodStart}}</td>
+                            <td>{{dataRow.periodEnd}}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <br>
+                      <br>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Form Row ENds -->
+            </div>
+          </div>
+          <!--Coverage Combined-->
+          <div [hidden]="getCcMaxValue">
+            <div class="grid-box">
+              <div class="grid-heading">
+                <h3>Coverage Combined Maximums</h3>
+              </div>
+              <div class="grid-inner">
+                <div class="form-row">
+                  <div class="row">
+                    <div class="col-md-12 col-xs-12 table-col">
+                      <div class="table-responsive">
+                        <table id='TotalCoverageMaximums' class="table table-bordered table-stripped">
+                          <thead>
+                            <tr>
+                              <th>{{'common.category' | translate}}</th>
+                              <th>{{'common.max-type' | translate}}</th>
+                              <th>{{'common.max_amount' | translate}}</th>
+                              <th>{{'common.prorated_max' | translate}}</th>
+                              <th>{{'common.paid_to_date' | translate}}</th>
+                              <th>{{'common.amt_avail' | translate}}</th>
+                              <th>{{'common.cfwd_amt' | translate}}</th>
+                              <th>{{'common.period_type' | translate}}</th>
+                              <th>{{'common.year_type' | translate}}</th>
+                              <th>{{'common.period_start' | translate}}</th>
+                              <th>{{'common.period_end' | translate}}</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr class="tableRow" id="{{'row_'+i}}" *ngFor="let dataRow of getCcMax; let i = index">
+                              <td>{{dataRow.covCat}}</td>
+                              <td>{{dataRow.maxType}}</td>
+                              <td class="text-right">{{dataRow.maxAmount | currency}}</td>
+                              <td class="text-right">{{dataRow.proratedAmount | currency}}</td>
+                              <td>{{dataRow.expiryDate}}</td>
+                              <td class="text-right">{{dataRow.availableAmount | currency}}</td>
+                              <td class="text-right">{{dataRow.cfwdamount | currency}}</td>
+                              <td>{{dataRow.periodType}}</td>
+                              <td>{{dataRow.typeOfYear}}</td>
+                              <td>{{dataRow.periodStart}}</td>
+                              <td>{{dataRow.periodEnd}}</td>
+                            </tr>
+                            <tr [hidden]='getCcMaxValue'>
+                              <td colspan="11" style="text-align:center">No Data Available</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                        <br>
+                        <br>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Form Row ENds -->
+              </div>
+            </div>
+          </div>
+          <!--HSA Combined-->
+
+          <div [hidden]="getHsaMaxValue">
+            <div class="grid-box">
+              <div class="grid-heading">
+                <h3>HSA Maximums</h3>
+              </div>
+              <div class="grid-inner">
+                <div class="form-row">
+                  <div class="row">
+                    <div class="col-md-12 col-xs-12 table-col">
+                      <div class="table-responsive">
+                        <table id='TotalCoverageMaximums' class="inlinePopupTable table table-bordered table-stripped">
+                          <thead>
+                            <tr>
+                              <th>{{'common.max-type' | translate}}</th>
+                              <th>{{'common.period_type' | translate}}</th>
+                              <th>{{'common.cfwd_amt' | translate}}</th>
+                              <th>{{'common.max_amount' | translate}}</th>
+                              <th>{{'common.prorated_max' | translate}}</th>
+                              <th>{{'common.paid_to_date' | translate}}</th>
+                              <th>{{'common.avail_amt' | translate}}</th>
+                              <th>{{'common.year_type' | translate}}</th>
+                              <th>{{'common.period_start' | translate}}</th>
+                              <th>{{'common.period_end' | translate}}</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr class="tableRow" id="{{'row_'+i}}" *ngFor="let dataRow of getHsaMax; let i = index">
+                              <td>{{dataRow.maxType}}</td>
+                              <td>{{dataRow.periodType}}</td>
+                              <td class="text-right">{{dataRow.cfwdamount | currency}}</td>
+                              <td class="text-right">{{dataRow.maxAmount | currency}}</td>
+                              <td class="text-right">{{dataRow.proratedAmount | currency}}</td>
+                              <td class="text-right">{{dataRow.totalExpense | currency}}</td>
+                              <td class="text-right">{{dataRow.cfwdamount | currency}}</td>
+                              <td>{{dataRow.typeOfYear}}</td>
+                              <td>{{dataRow.periodStart}}</td>
+                              <td>{{dataRow.periodEnd}}</td>
+                            </tr>
+                            <tr [hidden]='getHsaMaxValue'>
+                              <td colspan="10" style="text-align:center">No Data Available</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                        <br>
+                        <br>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Form Row ENds -->
+              </div>
+            </div>
+          </div>
+          <div [hidden]="getDivMaxValue">
+            <div class="grid-box">
+              <div class="grid-heading">
+                <h3>Plan Combined Maximums</h3>
+              </div>
+              <div class="grid-inner">
+                <div class="form-row">
+                  <div class="row">
+                    <div class="col-md-12 col-xs-12 table-col">
+                      <div class="table-responsive">
+                        <table id='TotalHistory' class="table table-bordered table-stripped">
+                          <thead>
+                            <tr>
+                              <th>{{'common.max-type' | translate}}</th>
+                              <th>{{'common.period_type' | translate}}</th>
+                              <th>{{'common.cfwd_amt' | translate}}</th>
+                              <th>{{'common.max_amount' | translate}}</th>
+                              <th>{{'common.prorated_max' | translate}}</th>
+                              <th>{{'common.cfed_expense' | translate}}</th>
+                              <th>{{'common.preauth_amt' | translate}}</th>
+                              <th>{{'common.expense_adj' | translate}}</th>
+                              <th>{{'common.paid_to_date' | translate}}</th>
+                              <th>{{'common.avail_amt' | translate}}</th>
+                              <th>{{'common.year_type' | translate}}</th>
+                              <th>{{'common.period_start' | translate}}</th>
+                              <th>{{'common.period_end' | translate}}</th>
+                              <th>{{'common.dental' | translate}}</th>
+                              <th>{{'common.vision' | translate}}</th>
+                              <th>{{'common.health' | translate}}</th>
+                              <th>{{'common.drug' | translate}}</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr class="tableRow" id="{{'row_'+i}}" *ngFor="let dataRow of getDivMax; let i = index">
+                              <td>{{dataRow.maxType}}</td>
+                              <td>{{dataRow.periodType}}</td>
+                              <td class="text-right">{{dataRow.cfwdamount | currency}}</td>
+                              <td class="text-right">{{dataRow.maxAmount | currency}}</td>
+                              <td class="text-right">{{dataRow.proratedAmount | currency}}</td>
+                              <td class="text-right">{{dataRow.cfwdexpense | currency}}</td>
+                              <td class="text-right">{{dataRow.preauthAmount | currency}}</td>
+                              <td class="text-right">{{dataRow.expenseAdjustment | currency}}</td>
+                              <td>{{dataRow.expiryDate }}</td>
+                              <td class="text-right">{{dataRow.availableAmount | currency}}</td>
+                              <td>{{dataRow.typeOfYear}}</td>
+                              <td>{{dataRow.periodStart}}</td>
+                              <td>{{dataRow.periodEnd}}</td>
+                              <td>{{(dataRow.dentalInd == 'T') ? 'Yes' : 'No'}}</td>
+                              <td>{{(dataRow.visionInd == 'T') ? 'Yes' : 'No'}}</td>
+                              <td>{{(dataRow.healthInd == 'T') ? 'Yes' : 'No'}}</td>
+                              <td>{{(dataRow.drugInd == 'T') ? 'Yes' : 'No'}}</td>
+                            </tr>
+                            <tr [hidden]='getDivMaxValue'>
+                              <td colspan="17" style="text-align:center">No Data Available</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                        <br>
+                        <br>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Form Row ENds -->
+              </div>
+            </div>
+          </div>
+          <!-- Grid Box Ends -->
+        </div>
+        <!-- [End Grids] -->
+      </div>
+    </div>
+  </div>
+  <!--[End Totals]-->
+
+<!-- Show rules in Plan View with expand option process start... -->
+
+  <div class="grid-box" id="plan-Rule">
+    <div class="grid-heading collapse-heading" [attr.aria-expanded]="RulesSection" data-toggle="collapse"
+    data-target="#RulesSection">
+    <h3 [attr.aria-expanded]="RulesSection" data-toggle="collapse" data-target="#RulesSection">
+      Rules</h3>
+  </div>
+
+  <div [ngClass]="(RulesSection == true) ? 'collapse in' : 'collapse' " id="RulesSection">
+    <div class="form-row">
+    <div class="grid-inner">
+          <form [formGroup]="FormGroup">
+            <div class="col-md-3 col-xs-12">
+                <label>{{'company.plan.rules.coverage' | translate}}</label>
+                <select disabled class="fm-txt form-control" formControlName="coverageCat">
+               <option *ngFor="let type of rulesArray" >{{type.covDesc}}</option>
+               </select>  
+            </div>
+            <div class="col-md-3 col-xs-12">
+                <label>{{'company.plan.plan-view.effective-date' | translate}}</label>
+                 <div class="calender-field">
+                    <input id="planRulesEffectiveOn" class="fm-txt form-control" type="text"
+                    formControlName="effectiveDate" disabled="true">
+                </div>                
+          </div>   
+          <div class="col-md-8 col-xs-12">
+              <label>{{'company.plan.rules.rules' | translate}}</label>
+              <select disabled class="fm-txt form-control" formControlName="rules">
+              <option *ngFor="let type of rulesArray" >{{type.ruleDesc}}</option>
+            </select>
+          </div>
+            <div class="col-md-2 col-xs-12 text-right alignSearchRuleButton "> 
+              <label>&nbsp;</label>
+              <button class="btn green-btn m-0" (click) ="openRulesPage()">{{'company.plan.search-rule' | translate}}</button>
+          </div>
+            <div class="row">          
+              <div class="col-md-12 col-xs-12 table-col">         
+                <div class="table-responsive">         
+                  <table id="rulesTableNew" datatable [dtOptions]="dtOptions['rulesTableNew']" [dtTrigger]="dtTrigger['rulesTableNew']"         
+                    class="table table-bordered table-stripped">          
+                    <thead>         
+                      <tr>          
+                        <th style="text-align-last: left;" width="155.79px">Dental Coverage</th>         
+                        <th class="amount_right" width="667.76px">Rule Description</th>         
+                        <th class="amount_right" width="104.46px">Effective Date</th>         
+                        <th class="amount_right" width="104.46px">Expiry Date</th>         
+                      </tr>         
+                    </thead>          
+                    <tbody>          
+                      <tr *ngFor="let value of rulesArray">          
+                        <td>{{value.covDesc}}</td>          
+                        <td class="amount_right">{{value.ruleDesc}}</td>          
+                        <td class="amount_right">{{value.effectiveOn}}</td>          
+                        <td class="amount_right">{{value.expireOn}}</td>          
+                      </tr>          
+                    </tbody>          
+                  </table>          
+                </div>          
+              </div>          
+            </div>         
+      </form>
+    </div>
+    </div>
+  </div>
+  </div>
+
+<!-- Show rules in Plan View with expand option process End... -->
+  <!--[Start Fee Guide Details Section]-->
+  
+  <!-- resolved issue no. #614 -->
+  <div class="grid-box" id="plan-guide">
+    <div class="grid-heading collapse-heading" [attr.aria-expanded]="feedGuideDetailSection" data-toggle="collapse"
+      data-target="#feedGuideDetailsSection">
+      <h3 [attr.aria-expanded]="feedGuideDetailSection" data-toggle="collapse" data-target="#feedGuideDetailsSection">
+        {{'company.plan.fee-guide.feeGuideDetails' | translate}}</h3>
+    </div>
+    <div [ngClass]="(feedGuideDetailSection == true) ? 'collapse in' : 'collapse' " id="feedGuideDetailsSection">
+      <div class="grid-inner">
+        <!--[Start Old Code]-->
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{'company.plan.fee-guide.generalDetails' | translate}}</h3>
+          </div>
+          <div class="grid-inner">
+            <div class="row">
+              <div class="col-md-3 col-xs-12">
+                <label>{{'company.plan.fee-guide.schedule' | translate}}
+                </label>
+                <input class="fm-txt form-control" type="text" formControlName="schedule" placeholder="Schedule">
+              </div>
+              <div class="col-md-3 col-xs-12">
+                <label>{{'company.plan.fee-guide.province' | translate}}
+                </label>
+                <input class="fm-txt form-control" type="text" formControlName="province" placeholder="Province">
+              </div>
+              <div class="col-md-3 col-xs-12">
+                <label>{{'company.plan.fee-guide.feeGuideDate' | translate}}</label>
+                <input class="fm-txt form-control" type="text" formControlName="fee_guide_date" placeholder="Fee Guide Date">
+              </div>
+              <div class="col-md-3 col-xs-12">
+                <label>&nbsp;</label>
+                <div class="select-options">
+                  <span>
+                    <label>
+                      <input type="checkbox" value="T"
+                        formControlName="payOnProvidersAdd">{{'company.plan.fee-guide.payOnProvideAddress' | translate}}</label>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-hdr-inner">
+          <h3>{{'company.plan.fee-guide.schedule' | translate}}</h3>
+          <span>
+            <app-history-icons [attr.data-toggle]="dataToggle" [attr.data-target]="scheduleDataTarget" [id]="scheduleId"
+              [class]="scheduleClass" [title]="scheduleTitle" (click)="getScheduleHistory()">
+            </app-history-icons>
+          </span>
+        </div>
+        <!-- resolved issue no. #614 -->
+        <div class="form-row">
+          <div class="row">
+            <div class="col-md-12 col-xs-12 table-col">
+              <div class="table-responsive">
+                <table class="table table-bordered table-stripped">
+                  <thead>
+                    <tr>
+                      <th width="25%">{{'company.plan.fee-guide.dentalFeeSchedule' | translate}}</th>
+                      <th width="25%">{{'company.plan.fee-guide.effected_date' | translate}}</th>
+                      <th width="25%">{{'company.plan.fee-guide.expiry_date' | translate}}</th>
+                    </tr>
+                  </thead>
+                  <tbody *ngIf="feeguideSceheduleData == true">
+                    <tr *ngFor="let unit of FeeguideSechedule; let i = index">
+                      <td>
+                        <span>{{unit.dentFeeGuideSchedDesc}}</span>
+                      </td>
+                      <td>
+                        <span>{{unit.effectiveOn|dateFormate}}</span>
+                      </td>
+                      <td>
+                        <span>{{unit.expiredOn|dateFormate}}</span>
+                      </td>
+                    </tr>
+                  </tbody>
+                  <tbody *ngIf="feeguideSceheduleData == false">
+                    <tr>
+                      <td style="text-align:center" colspan="3">
+                        No data available in table
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-hdr-inner">
+          <h3>{{'company.plan.fee-guide.province' | translate}}</h3>
+          <span>
+            <app-history-icons [attr.data-toggle]="dataToggle" [attr.data-target]="provinceDataTarget"
+              [class]="provinceClass" [id]="provinceId" [title]="provinceTitle" (click)="getProvinceHistory()">
+            </app-history-icons>
+          </span>
+        </div>
+        <!-- resolved issue no. #614 -->
+        <div class="form-row">
+          <div class="row">
+            <div class="col-md-12 col-xs-12 table-col">
+              <div class="table-responsive">
+                <table class="table table-bordered table-stripped">
+                  <thead>
+                    <tr>
+                      <th width="25%">{{'company.plan.fee-guide.province' | translate}}</th>
+                      <th width="25%">{{'company.plan.fee-guide.effected_date' | translate}}</th>
+                      <th width="25%">{{'company.plan.fee-guide.expiry_date' | translate}}</th>
+                    </tr>
+                  </thead>
+                  <tbody *ngIf="feeguideProvinceData == true">
+                    <tr *ngFor="let unit of FeeguideProvince; let i = index">
+                      <td>
+                        <span>{{unit.provinceName}}</span>
+                      </td>
+                      <td>
+                        <span>{{unit.effectiveOn|dateFormate}}</span>
+                      </td>
+                      <td>
+                        <span>{{unit.expiredOn|dateFormate}}</span>
+                      </td>
+                    </tr>
+                  </tbody>
+                  <tbody *ngIf="feeguideProvinceData == false">
+                    <tr>
+                      <td style="text-align:center" colspan="3">
+                        No data available in table
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--[End Old Code]-->
+      </div>
+    </div>
+  </div>
+  <!--[End Fee Guide Details Section]-->
+  
+  <!--Procedure Modal-->
+  <div id="Procedure" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button id="planViewClose" type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">{{'company.plan.plan-view.enter-procedure-no' | translate}}</h4>
+        </div>
+        <div class="modal-body">
+          <div class="grid-box">
+            <div class="grid-heading">
+              <h3>{{'company.plan.plan-view.enter-procedure-companyname' | translate}}</h3>
+            </div>
+            <!-- Grid Heading Ends -->
+            <div class="grid-inner">
+              <div class="form-row">
+                <div class="row min-ht-sf">
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'company.plan.plan-view.procedure-code' | translate}}</label>
+                    <input id="PlanViewProcedureCode" type="text" class="fm-txt form-control"
+                      formControlName="procedure_code" />
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'company.plan.plan-view.plan-no' | translate}}</label>
+                    <input id="PlanViewPlanNo" type="text" class="fm-txt form-control" formControlName="plan_no" />
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'company.plan.plan-view.division-no' | translate}}</label>
+                    <input id="PlanViewDivisionNo" type="text" class="fm-txt form-control"
+                      formControlName="division_no" />
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'company.plan.plan-view.division-name' | translate}}</label>
+                    <input id="PlanViewDivisionName" type="text" class="fm-txt form-control"
+                      formControlName="division_name" />
+                  </div>
+                </div>
+              </div>
+              <!-- Form Row ENds -->
+              <div class="form-row text-center">
+                <button id="PlanViewFind" class="btn green-btn" data-toggle="modal"
+                  data-target="#Terminate">{{'button.find' | translate}}</button>
+              </div>
+            </div>
+          </div>
+          <div class="grid-box">
+            <div class="grid-heading">
+              <h3>{{'company.plan.plan-view.plan-coverage-categories' | translate}}</h3>
+            </div>
+            <!-- Grid Heading Ends -->
+            <div class="grid-inner">
+              <div class="form-row">
+                <div class="row">
+                  <div class="col-md-12 col-xs-12 table-col">
+                    <div class="table-responsive">
+                      <table id="PlanViewCoverageCategories" class="table table-bordered table-stripped">
+                        <thead>
+                          <tr>
+                            <th>{{'company.plan.plan-view.coverage-category' | translate}}</th>
+                            <th>{{'company.plan.plan-view.effective-date' | translate }}</th>
+                            <th>{{'company.plan.plan-view.expiry-date' | translate}}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let unit of planCoverageCategoriesList; let i = index">
+                            <td>
+                              <span *ngIf="unit.id">{{unit.coverageCategory}}</span>
+                              <input id="PlanViewCoverageCategory" type="text" [formControl]="old_unit_id"
+                                *ngIf="UnitEditMode && unit.id " [(ngModel)]="selectedUnit.maximum">
+                            </td>
+                            <td>
+                              <span *ngIf="unit.id ">{{unit.effectiveDate|dateFormate}}</span>
+                              <input id="PlanViewEffectiveDate8" type="text" [formControl]="old_effective_date"
+                                *ngIf="UnitEditMode && unit.id " [(ngModel)]="selectedUnit.effectiveOn">
+                            </td>
+                            <td>
+                              <span *ngIf="unit.id ">{{unit.expiryDate|dateFormate}}</span>
+                              <input id="PlanViewExpiryDate3" type="text" [formControl]="old_effective_date"
+                                *ngIf="UnitEditMode && unit.id " [(ngModel)]="selectedUnit.effectiveOn">
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <!-- Table Ends -->
+                  </div>
+                </div>
+              </div>
+              <!-- Form Row ENds -->
+            </div>
+            <!-- Grid Inner Ends -->
+          </div>
+          <!-- Grid Box Ends -->
+          <div class="grid-box">
+            <div class="grid-heading">
+              <h3>{{'company.plan.plan-view.plan-coverage-rules' | translate}}</h3>
+            </div>
+            <!-- Grid Heading Ends -->
+            <div class="grid-inner">
+              <div class="form-row">
+                <div class="row">
+                  <div class="col-md-12 col-xs-12 table-col">
+                    <div class="table-responsive">
+                      <table id="PlanViewCoverageRules" class="table table-bordered table-stripped">
+                        <thead>
+                          <tr>
+                            <th>{{'company.plan.plan-view.rule-cd' | translate}}</th>
+                            <th>{{'company.plan.plan-view.rule-description' | translate}}</th>
+                            <th>{{'company.plan.plan-view.effective-date' | translate }}</th>
+                            <th>{{'company.plan.plan-view.expiry-date' | translate}}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let unit of planCoverageRulesList; let i = index">
+                            <td>
+                              <span *ngIf="unit.id">{{unit.ruleCd}}</span>
+                              <input id="PlanViewCoverageUnitId" type="text" [formControl]="old_unit_id"
+                                *ngIf="UnitEditMode && unit.id " [(ngModel)]="selectedUnit.maximum">
+                            </td>
+                            <td>
+                              <span *ngIf="unit.id">{{unit.ruleDescription}}</span>
+                              <input id="PlanViewCoverageRuleDesc" type="text" [formControl]="old_unit_id"
+                                *ngIf="UnitEditMode && unit.id " [(ngModel)]="selectedUnit.maximum">
+                            </td>
+                            <td>
+                              <span *ngIf="unit.id ">{{unit.effectiveDate|dateFormate}}</span>
+                              <input id="PlanViewCoverageEffectiveDate" type="text" [formControl]="old_effective_date"
+                                *ngIf="UnitEditMode && unit.id " [(ngModel)]="selectedUnit.effectiveOn">
+                            </td>
+                            <td>
+
+                              <span *ngIf="unit.id ">{{unit.expiryDate|dateFormate}}</span>
+                              <input id="PlanViewCoverageExpiryDate" type="text" [formControl]="old_effective_date"
+                                *ngIf="UnitEditMode && unit.id " [(ngModel)]="selectedUnit.effectiveOn">
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <!-- Table Ends -->
+                  </div>
+                </div>
+              </div>
+              <!-- Form Row ENds -->
+            </div>
+            <!-- Grid Inner Ends -->
+          </div>
+        </div>
+        <!-- Modal Body End-->
+      </div>
+    </div>
+  </div>
+  <!--Procedure Modal-->
+
+  <!--Terminate Date Modal-->
+  <div id="TerminateDate" class="modal fade" role="dialog" data-keyboard="No" data-backdrop="static">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button id="planViewClose2" type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">{{'company.plan.plan-view.terminateCoverage' | translate}}</h4>
+        </div>
+        <div class="modal-body">
+          <div class="grid-box">
+            <div class="grid-inner">
+              <form [formGroup]="TerminateCategoryFormGroup">
+                <div class="form-row">
+                  <div class="row min-ht-sf">
+                    <div class="col-md-3 col-xs-12">
+                      <label>{{'company.plan.plan-view.termination-date' | translate}}<span class="required">*</span></label>
+                      <div class="calender-field">
+                        <my-date-picker id="PlanViewTerminationDate" [options]="myDatePickerOptions"
+                          name="termination_date" formControlName="termination_date"
+                          placeholder="{{'company.plan.plan-view.termination-date' | translate}}"
+                          (inputFocusBlur)="changeDateFormat($event, 'termination_date', 'TerminateCategoryFormGroup','No')">
+                        </my-date-picker>
+                        <show-errors [control]="TerminateCategoryFormGroup.controls.termination_date"></show-errors>
+                      </div>
+                      <!-- Calendar Field Ends -->
+                    </div>
+                    <div class="col-md-9 col-xs-12">
+                      <label>&nbsp;</label>
+                      <div class="select-options tabCheckBox">
+                        <span *ngFor="let key of benefitsJsonKeys; let i = index">
+                          <label>
+                            <input id="PlanViewBenefitskeys" type="checkbox" (click)="checkboxGet(key)"
+                              formControlName="{{key}}">{{key}}</label>
+                        </span>
+                        <span style="color:red"
+                          *ngIf="isSelectedOneCategory">{{'company.plan.plan-view.selectAtleastOneCategory' | translate}}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+              <!-- Form Row ENds -->
+              <div class="form-row text-center">
+                <button *ngIf="mainPlanArray[0].addTerminateCoverage =='T'" id="triggerSaveButton" class="green-btn btn"
+                  id="checkBtn" type="button" (click)="terminateCategory()">{{'button.save' | translate}}</button>
+                <button id="triggerCloseButton" class="grey-btn btn"
+                  data-dismiss="modal">{{'button.close' | translate}}</button>
+              </div>
+              <!-- Form Row ENds -->
+            </div>
+          </div>
+          <!-- Grid Box Ends -->
+        </div>
+        <!-- Modal Body End-->
+      </div>
+    </div>
+  </div>
+  <!--Terminate Date Modal-->
+
+  <!-- Terminate History Modal Start-->
+  <div id="TerminateCategoryHistory" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">{{'company.plan.plan-coverage-history' | translate}}
+            <span>{{'company.plan.company-name' | translate}}</span>
+          </h4>
+        </div>
+        <!--modal-header Ends-->
+        <div class="modal-body">
+          <div class="grid-box">
+            <div class="grid-inner">
+              <div class="form-row">
+                <div class="add-comments">
+                  <div class="row min-ht-sf">
+                    <div class="col-md-3 col-xs-12">
+                      <label>{{'company.plan.plan-name' | translate}}</label>
+                      <div class="calender-field">
+                        <input id="PlanViewPlanName" type="text" class="fm-txt form-control" />
+                      </div>
+                      <!-- Calendar Field Ends -->
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                      <label>{{'company.plan.division-no' | translate}}</label>
+                      <input id="PlanViewDivisionNo1" class="fm-txt form-control" type="text">
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                      <label>{{'company.plan.division-name' | translate}}</label>
+                      <input id="PlanViewDivisionName1" class="fm-txt form-control" type="text">
+                    </div>
+                  </div>
+                  <!-- row Ends-->
+                </div>
+                <!-- Add Comments Ends -->
+              </div>
+              <!-- Form Row Ends -->
+              <div class="form-row">
+                <div class="row">
+                  <div class="col-md-12 col-xs-12 table-col">
+                    <div class="table-responsive">
+                      <table id="planViewTable5" class="table table-bordered table-stripped">
+                        <thead>
+                          <tr>
+                            <th>{{'company.plan.date' | translate}}</th>
+                            <th>{{'company.plan.user-id' | translate}}</th>
+                            <th>{{'company.plan.division' | translate}}</th>
+                            <th>{{'company.plan.plan-view.coverage-category' | translate}}</th>
+                            <th>{{'company.plan.plan-view.adult-fee' | translate}}</th>
+                            <th>{{'company.plan.plan-view.dependant-fee%' | translate}}</th>
+                            <th>{{'company.plan.plan-view.pay-claim' | translate}}</th>
+                            <th>{{'company.plan.plan-view.effective-date' | translate }}</th>
+                            <th>{{'company.plan.plan-view.expiry-date' | translate}}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>02/03/2018</td>
+                            <td>Lorem Ipsum</td>
+                            <td>Lorem Ipsum</td>
+                            <td>Lorem Ipsum</td>
+                            <td>Lorem Ipsum</td>
+                            <td>Lorem Ipsum</td>
+                            <td>Lorem Ipsum</td>
+                            <td>02/03/2018</td>
+                            <td>02/03/2020</td>
+                          </tr>
+                          <tr>
+                            <td>02/03/2018</td>
+                            <td>Lorem Ipsum</td>
+                            <td>Lorem Ipsum</td>
+                            <td>Lorem Ipsum</td>
+                            <td>Lorem Ipsum</td>
+                            <td>Lorem Ipsum</td>
+                            <td>Lorem Ipsum</td>
+                            <td>02/03/2018</td>
+                            <td>02/03/2020</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <!-- Table Ends -->
+                  </div>
+                  <!--col Ends-->
+                </div>
+                <!-- row Ends-->
+              </div>
+              <!-- Form Row ENds -->
+            </div>
+            <!--grid-iner Ends-->
+          </div>
+          <!--grid-box Ends-->
+        </div>
+        <!--modal-body Ends-->
+        <div class="modal-footer">
+          <button id="planViewClose3" type="button" class="btn grey-btn"
+            data-dismiss="modal">{{'button.close' | translate}}</button>
+        </div>
+        <!--modal-footer Ends-->
+      </div>
+      <!-- Modal Content Ends -->
+    </div>
+    <!--modal-dialog Ends-->
+  </div>
+  <!--Terminate History Modal End -->
+</form>
+
+<div id="plan-comments" class="modal fade" role="dialog" data-keyboard="No" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="planViewClose4" type="button" class="close" data-dismiss="modal"
+          (click)="resetPlanCommentForm()">&times;</button>
+        <h4 class="modal-title">{{'company.plan.plan-view.add-comments' | translate}}</h4>
+      </div>
+      <!--modal-header Ends-->
+      <div class="modal-body">
+        <!-- Company General Information Start -->
+        <!-- Company General Information End -->
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{'company.plan.plan-view.comments' | translate}}</h3>
+          </div>
+          <!-- Grid Heading Ends -->
+          <app-comment-edit-model [enableAddButton]="mainPlanArray[0].addPlanComment" [commentsParams]="{  
+              getCommentsListUrl: 'plan-service/planCommentList', 
+              addCommentUrl: 'plan-service/planComment',
+              coKey: planKeyUrlId,
+              requestMode: 'post' 
+              }" [commentColumns]="[
+              {'title':'Date', 'data':'createdOn'},
+              {'title':'User Name', 'data':'username'},
+              {'title':'Department', 'data':'department'},
+              {'title':'Comments', 'data':'commentTxt'},
+              {'title':'Expiry Date', 'data':'expiredOn'},
+              {'title':'Importance', 'data':'commentImportance'}
+              ]" [getCommentJson]="{'key':'plansKey', 'value':planKeyUrlId}"
+            [newCommentJson]="[ 'Key','commentTxt','commentImportance']">
+          </app-comment-edit-model>
+          <div class="modal-footer">
+            <button id="planViewClose5" type="button" id class="btn grey-btn" data-dismiss="modal"
+              (click)="resetPlanCommentForm()">{{ 'button.close' | translate }}</button>
+          </div>
+          <!--modal-footer Ends-->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div id="uscls" class="modal fade" role="dialog" data-keyboard="No" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="planViewClose4" type="button" class="close" data-dismiss="modal"
+          (click)="resetPlanCommentForm()">&times;</button>
+        <h4 class="modal-title">Add New Service And Procedure Codes</h4>
+      </div>
+      <!--modal-header Ends-->
+      <div class="modal-body">
+        <div class="grid-box">
+          <div class="grid-inner">
+            <div class="form-row">
+              <div class="tab-content">
+                <div id="stepOne" class="tab-pane fade in active">
+                  <form [formGroup]="usclsFormGroup">
+                    <div class="form-row">
+                      <div class="row min-ht-sf">
+
+                        <div class="col-md-12 col-xs-12" style="margin: 10px 0px;">
+                          <div class="col-md-4 col-xs-12">
+                            <label>{{'claims.claims-search.claims-plan.business-type' | translate}}</label>
+                            <select  id="csc_businessType"
+                              class="fm-txt form-control" formControlName="businessType">
+                              <option *ngFor="let businessType of businessTypeList"
+                                value="{{businessType.businessTypeDesc}}">
+                                {{businessType.businessTypeDesc}}</option>
+                            </select>
+                          </div>
+
+                          <div class="col-md-4 col-xs-12">
+                            <label>{{ 'common.company-name' | translate }}</label>
+
+                            <ng2-completer [inputId]="'searchCompanyy'" id="searchCompanyy"
+                              formControlName="searchCompanyy" [datasource]="companyDataRemote" [minSearchLength]="0"
+                              [placeholder]="'Search Company'" [textSearching]="'Please wait...'"
+                              [inputClass]="'form-control searchCompanyy wwww'" [fillHighlighted]="false"
+                              (selected)="onCompanyNameSelected($event)" (blur)="onCompanyNameBlur(usclsFormGroup)"
+                              [autoHighlight]="true" [selectOnFocus]="true">
+                            </ng2-completer>
+                            <show-errors [control]="usclsFormGroup.controls.searchCompanyy"></show-errors>
+                          </div>
+
+                          <div class="col-md-4 col-xs-12">
+                            <label>{{ 'card.card-eligibility.plan-div-unit' | translate }}</label>
+                            <angular2-multiselect [data]="planList" [(ngModel)]="plan"
+                              [ngModelOptions]="{standalone: true}"
+                              (onSelect)="onSelectplanMultiDropDown($event,'plan')"
+                              (onDeSelect)="onDeSelectplanMultiDropDown($event,'plan')"
+                              (onSelectAll)="onSelectAllplanMultiDropDown($event,'plan')"
+                              (onDeSelectAll)="onDeSelectplanAllMultiDropDown($event,'plan')"
+                              [settings]="dropdownSettings">
+                            </angular2-multiselect>
+
+                            <show-errors [control]="usclsFormGroup.controls.plan"></show-errors>
+                          </div>
+                          <div class="col-md-4 col-xs-12">
+                            <label>Coverage Category</label>
+
+                            <angular2-multiselect [data]="covcatList" [(ngModel)]="covCat"
+                              [ngModelOptions]="{standalone: true}" (onSelect)="onSelectMultiDropDown($event,'covCat')"
+                              (onDeSelect)="onDeSelectMultiDropDown($event,'covCat')"
+                              (onSelectAll)="onSelectAllMultiDropDown($event,'covCat')"
+                              (onDeSelectAll)="onDeSelectAllMultiDropDown($event,'covCat')"
+                              [settings]="dropdownSettings">
+                            </angular2-multiselect>
+                          </div>
+                          <div class="col-md-8 col-xs-12 uslcs">
+                            <label> </label>
+                            Process
+                            <span>
+                              <button class="btn green-btn" (click)="Add('Add Coverage Category')" id="ste">Add Coverage
+                                Category</button>
+                              <button class="btn green-btn" (click)="Add('Add Codes')" id="ste2">Add Codes</button>
+                              <button class="btn green-btn" (click)="Add('Terminate Codes')" id="ste22">Terminate
+                                Codes</button>
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div>
+                        <div class="grid-box" *ngIf='title'>
+                          <div class="grid-heading">
+                            <h3>{{title}}</h3>
+                            
+                            <div class="web-reg">
+                              <button class="green-btn-add btn" (click)="enableAddMode()"><i class="fa fa-plus"></i> Add 
+                                New</button>
+                            </div>
+                          </div>
+
+                          <div class="grid-inner">
+                            <div class="form-row">
+                              <div class="row">
+                                <div class="col-md-12 col-xs-12 table-col">
+                                  <div class="table-responsive">
+                                   
+                                    <table class="table table-bordered table-stripped" id="planBenefitTabCombineMaximum">
+                                      <thead>
+                                        <tr>
+                                          <th width="15%">Service Code</th>
+                                          <th class="amount_right" width="15%">Procedure Code</th>
+                                          <th class="amount_right" width="15%">Effective Date</th>
+                                          <th class="amount_right" width="15%">{{ 'card.card-eligibility.over-rides.card-maximums.top-up-maximums.expiry-date' | translate }}</th>
+                                   
+                                          <th class="amount_right" width="10%">Action</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        <!-- Adding New Row Data Here-->
+                                        <tr *ngIf="DentalCombineMaxAddMode">
+                                          <td>
+                                              <ng2-completer [(ngModel)]="parentServiceId" [inputId]="'dentalPatientServiceId'"
+                                              id="dentalPatientServiceId"  [formControl]="serviceCode"
+                                              [datasource]="dentalParentServiceDataRemote" [minSearchLength]="1" [fillHighlighted]="false"
+                                              [autoHighlight]="true" [clearUnselected]="true" [selectOnFocus]="true"
+                                              [placeholder]="'Service ID'" [textSearching]="'Please wait...'" [inputClass]="'form-control'"
+                                              (selected)="onSelect($event, 'parentServiceId')">
+                                            </ng2-completer>
+                                            <show-errors [control]="usclsFormGroup.controls.parentServiceId"></show-errors>
+                                          </td>
+                                          <td class="amount_right">
+                                            <input  class="fm-txt form-control" type="text"
+                                            [formControl]="procCode">
+                                          
+                                          </td>
+                                        
+                                          <td  class="amount_right">
+                    
+                                            <div class="calender-field">
+                                              <my-date-picker id="EffectiveDate"
+                                                [formControl]="effective_date" [options]="myDatePickerOptions"
+                                                [placeholder]="myDatePickerPlaceholder"
+                                                [selDate]="dateNameArray['EffectiveDate']"
+                                                (inputFocusBlur)="changeFilterDateFormat($event, 'effective_date', 'EffectiveDate', true)">
+                                              </my-date-picker>
+                                            </div>
+                                          </td>
+                                          <td  class="amount_right">
+                    
+                                            <div class="calender-field">
+                                              <my-date-picker id="ExpiryDate"
+                                                [formControl]="expiry_date" [options]="myDatePickerOptions"
+                                                [placeholder]="myDatePickerPlaceholder" [ngClass]="expired  ? 'expired' : 'notExpired'"
+                                                [selDate]="dateNameArray['ExpiryDate']"
+                                                (inputFocusBlur)="changeFilterDateFormat($event, 'expiry_date', 'ExpiryDate')">
+                                              </my-date-picker>
+                                            </div>
+                                          </td>
+                                          <td class="amount_right">
+                                            <button type="button" (click)="addNewDentalCombineMax()" class="table-action-btn save-ico"
+                                              title="Save"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+                                            <button type="button" (click)="resetNewCombineMaxRow()" class="table-action-btn cancel-ico"
+                                              title="Cancel"><i class="fa fa-times" aria-hidden="true"></i></button>
+                                          </td>
+                                        </tr>
+                                       
+                                        
+                                        <div
+                                        *ngIf="CovCatList.length!=0 || nullAddMode; then recordFound else recordNotFound ">
+                                      </div>
+                                        <ng-template #recordNotFound>
+                                          <tr>
+                                            <td colspan="7" class="text-center">No data available in table.</td>
+                                          </tr>
+                                        </ng-template>
+                                        <ng-template #recordFound>
+                                          <tr *ngFor="let row of CovCatList; let rowIndex = index">
+                                            <td class="amount_right_grid">
+                                              <div *ngIf="rowIndex != selectedCombineMax.rowIndex">
+                                                {{row.serviceCode }}
+                                              </div>
+                    
+                                              <input type="hidden" [formControl]="serviceCode"
+                                                *ngIf="DentalCombineMaxEditMode && rowIndex == selectedCombineMax.rowIndex"
+                                                [(ngModel)]="selectedCombineMax.serviceCode">
+                    
+                                                <ng2-completer  #focusEditCombineMaxEl *ngIf="DentalCombineMaxEditMode && rowIndex == selectedCombineMax.rowIndex" [(ngModel)]="selectedCombineMax.serviceCode" [inputId]="'dentalPatientServiceId'"
+                                                id="dentalPatientServiceId"  [formControl]="serviceCode"
+                                                [datasource]="dentalParentServiceDataRemote" [minSearchLength]="1" [fillHighlighted]="false"
+                                                [autoHighlight]="true" [clearUnselected]="true" [selectOnFocus]="true"
+                                                [placeholder]="'Service ID'" [textSearching]="'Please wait...'" [inputClass]="'form-control'"
+                                                (selected)="onSelect($event, 'serviceCode')">
+                                              </ng2-completer>
+                                              <show-errors [control]="usclsFormGroup.controls.serviceCode"></show-errors>
+                                            </td>
+                                            
+                                            <td class="amount_right">
+                                              <div *ngIf="rowIndex != selectedCombineMax.rowIndex">
+                                                {{row.procCode }}
+                                              </div>
+                                              <input type="hidden" [formControl]="procCode"
+                                              *ngIf="DentalCombineMaxEditMode && rowIndex == selectedCombineMax.procCode"
+                                              [(ngModel)]="selectedCombineMax.procCode">
+                  
+                                            <input #focusEditCombineMaxEl class="fm-txt form-control" type="text"
+                                              [formControl]="procCode"
+                                              *ngIf="DentalCombineMaxEditMode && rowIndex == selectedCombineMax.rowIndex"
+                                              [(ngModel)]="selectedCombineMax.procCode">
+                                            </td>
+                                            <td class="amount_right">
+                                              <div *ngIf="rowIndex != selectedCombineMax.rowIndex">
+                                                {{row.effective_date }}
+                                              </div>
+                                              
+                                              <div *ngIf="DentalCombineMaxEditMode && rowIndex == selectedCombineMax.rowIndex" class="calender-field">
+                                                <my-date-picker id="EffectiveDate"
+                                                [formControl]="effective_date" [options]="myDatePickerOptions"
+                                                [placeholder]="myDatePickerPlaceholder"
+                                                [selDate]="dateNameArray['EffectiveDate']"
+                                                (inputFocusBlur)="changeFilterDateFormat($event, 'effective_date', 'EffectiveDate', true)">
+                                              </my-date-picker>
+                                              </div>
+                                            </td>
+                                            <td class="amount_right">
+                                              <div *ngIf="rowIndex != selectedCombineMax.rowIndex">
+                                                {{row.expiry_date }}
+                                              </div>
+                                              <div *ngIf="DentalCombineMaxEditMode && rowIndex == selectedCombineMax.rowIndex" class="calender-field">
+                                                <my-date-picker id="ExpiryDate"
+                                                  [formControl]="expiry_date" [options]="myDatePickerOptions"
+                                                  [placeholder]="myDatePickerPlaceholder" [ngClass]="expired  ? 'expired' : 'notExpired'"
+                                                  [selDate]="dateNameArray['ExpiryDate']"
+                                                  (inputFocusBlur)="changeFilterDateFormat($event, 'expiry_date', 'ExpiryDate')">
+                                                </my-date-picker>
+                                              </div>
+                                            </td>
+                                            
+                                            <td class="amount_right">
+                                              <!-- Display button in View Mode -->
+                                              <button *ngIf="rowIndex != selectedCombineMax.rowIndex" type="button"
+                                                class="table-action-btn edit-ico" (click)="enableEditDentalCombineMax(row, rowIndex)"
+                                                title="Edit"><i class="fa fa-pencil"></i></button>
+                                              <button *ngIf="rowIndex != selectedCombineMax.rowIndex" type="button"
+                                                class="table-action-btn del-ico" (click)="deleteDentalCombineMax(rowIndex)"
+                                                title="Delete"><i class="fa fa-trash"></i></button>
+                                              <!-- Display button in Edit Mode -->
+                                              <button *ngIf="DentalCombineMaxEditMode && rowIndex == selectedCombineMax.rowIndex"
+                                                type="button" class="table-action-btn save-ico" (click)="updateDentalCombineMax(rowIndex)"
+                                                title="Save"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+                                              <button *ngIf="DentalCombineMaxEditMode && rowIndex == selectedCombineMax.rowIndex"
+                                                type="button" class="table-action-btn cancel-ico" (click)="resetFeilds()"
+                                                title="Cancel"><i class="fa fa-times" aria-hidden="true"></i></button>
+                                            </td>
+                                          </tr>
+                                        </ng-template>
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                </div>
+
+                                                         </div>
+                            </div>
+                          </div>
+                        </div>
+
+
+
+                      </div>
+                    </div>
+                  </form>
+
+                  <div class="modal-footer"  *ngIf='title' >
+                    <button class="btn green-btn" id="step2btn" (click)='next()'>
+                      Save
+                    </button>
+                  </div>
+                </div>
+                <div id="stepTwo" class="tab-pane fade in">
+                  <form [formGroup]="usclsFormGroupStep2">
+                    <div class="form-row">
+                      <div class="row min-ht-sf">
+
+                        <div class="col-md-12 col-xs-12" style="margin: 10px 0px;">
+
+                          <div class="col-md-4 col-xs-12">
+                            <label>Proc Code<span class="required">*</span></label>
+                            <input id="proc_code" class="fm-txt form-control" placeholder="Proc Code" type="text"
+                              formControlName="proc_code">
+                            <show-errors [control]="usclsFormGroupStep2.controls.proc_code"></show-errors>
+
+                          </div>
+                          <div class="col-md-4 col-xs-12">
+                            <label>Look Up Proc Code<span class="required">*</span></label>
+                            <ng2-completer [(ngModel)]="parentKey" [inputId]="'ProcedureprocedureKey'"
+                              id="ProcedureprocedureKey" formControlName="lookUpProc_code"
+                              [datasource]="ProcedureParentServiceDataRemote" [minSearchLength]="1"
+                              [fillHighlighted]="false" [autoHighlight]="true" [clearUnselected]="true"
+                              [selectOnFocus]="true" [placeholder]="'Procedure ID'" [textSearching]="'Please wait...'"
+                              [inputClass]="'form-control'" (selected)="onSelectPro($event, 'parentKey')">
+                            </ng2-completer>
+                            <show-errors [control]="usclsFormGroupStep2.controls.lookUpProc_code"></show-errors>
+                          </div>
+                          <div class="col-md-4 col-xs-12">
+                            <label>Effective Date<span class="required">*</span></label>
+                            <div class="calender-field">
+
+                              <my-date-picker id="usclsEffectiveDate" [options]="myDatePickerOptions"
+                                name="usclsEffectiveDate" formControlName="usclsEffectiveDate"
+                                placeholder="Effective Date"
+                                (inputFocusBlur)="changeDateFormat($event, 'usclsEffectiveDate', 'usclsFormGroupStep2','No')">
+                              </my-date-picker>
+                            </div>
+                            <show-errors [control]="usclsFormGroupStep2.controls.usclsEffectiveDate"></show-errors>
+
+                          </div>
+                          <div>
+
+                            <div class="select-options" style="padding: 0px 17px;">
+                              <span>
+                                <label class="papComment">
+                                  <span class="custom-check">
+                                    <input formControlName="approvalInd" type="checkbox" class=""
+                                      name="approvalInd">Approval
+                                    <span></span>
+                                  </span>
+                                </label>
+                              </span>
+                              <span>
+                                <label class="papComment">
+                                  <span class="custom-check">
+                                    <input formControlName="reviewInd" type="checkbox" class=""
+                                      name="reviewInd">Reviewer
+                                    <span></span>
+                                  </span>
+                                </label>
+                              </span>
+                              <span>
+                                <label class="papComment">
+                                  <span class="custom-check">
+                                    <input formControlName="qcInd" type="checkbox" class="" name="qcInd">Quickcard
+                                    <span></span>
+                                  </span>
+                                </label>
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                  <div class="modal-footer">
+                    <button class="btn green-btn" style="display: none;" id="step11" data-toggle="pill"
+                      href="#stepOne">Back</button>
+                    <button type="button" id="submitUslcs" class="btn green-btn" (click)="submitUslcs()">Submit</button>
+
+                    <button id="planViewClose5" type="button" id='closeUslc' class="btn grey-btn" data-dismiss="modal"
+                      (click)="resetPlanCommentForm()">{{ 'button.close' | translate }}</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <!--modal-footer Ends-->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Deductable Type History  Modal -->
+<div id="DeductableTypeHistory" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="DeductableTypeHistoryClose" type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">{{'company.plan.plan-view.deductableTypeHistory' | translate}}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="grid-box">
+          <div class="grid-inner">
+            <div class="form-row">
+              <div class="row">
+                <div class="col-md-12 col-xs-12 table-col">
+                  <div class="table-responsive">
+                    <table id="deductable_type" class="table table-bordered table-stripped">
+                    </table>
+                  </div>
+                  <!-- Table Ends -->
+                </div>
+              </div>
+            </div>
+            <!-- Form Row ENds -->
+          </div>
+          <!-- Table Ends -->
+        </div>
+      </div>
+      <!-- Grid Box Ends -->
+    </div>
+    <!-- Modal Body End-->
+    <div class="modal-footer">
+      <button id="DeductableTypeHistoryClose1" type="button" class="btn grey-btn"
+        data-dismiss="modal">{{'button.close' | translate}}</button>
+    </div>
+    <!-- Grid Inner Ends -->
+  </div>
+  <!-- Grid Box Ends -->
+</div>
+<!-- Deductable Type History Modal End -->
+
+<!-- Prorating Type History  Modal -->
+<div id="ProratingTypeHistory" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="ProratingTypeHistoryClose" type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">{{'company.plan.plan-view.proratingTypeHistory' | translate}}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="grid-box">
+          <div class="grid-inner">
+            <div class="form-row">
+              <div class="row">
+                <div class="col-md-12 col-xs-12 table-col">
+                  <div class="table-responsive">
+                    <table id="prorating_type" class="table table-bordered table-stripped">
+                    </table>
+                  </div>
+                  <!-- Table Ends -->
+                </div>
+              </div>
+            </div>
+            <!-- Form Row ENds -->
+          </div>
+          <!-- Table Ends -->
+        </div>
+      </div>
+      <!-- Grid Box Ends -->
+    </div>
+    <!-- Modal Body End-->
+    <div class="modal-footer">
+      <button id="ProratingTypeHistoryClose1" type="button" class="btn grey-btn"
+        data-dismiss="modal">{{'button.close' | translate}}</button>
+    </div>
+    <!-- Grid Inner Ends -->
+  </div>
+  <!-- Grid Box Ends -->
+</div>
+<!-- Prorating Type History Modal End -->
+
+<!-- Division Maximum History  Modal -->
+<div id="divisionMaximumHistoryDivMax" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="divisionMaximumHistoryClose" type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">{{ 'company.plan.division-max.divMaxHistoryTableTitle' | translate }}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="grid-box">
+          <div class="grid-inner">
+            <div class="form-row">
+              <div class="row">
+                <div class="col-md-12 col-xs-12 table-col">
+                  <div class="table-responsive">
+                    <table id="division_maximum_history" class="table table-bordered table-stripped">
+                    </table>
+                  </div>
+                  <!-- Table Ends -->
+                </div>
+              </div>
+            </div>
+            <!-- Form Row ENds -->
+          </div>
+          <!-- Grid Inner Ends -->
+        </div>
+        <!-- Grid Box Ends -->
+      </div>
+      <!-- Modal Body End-->
+      <div class="modal-footer">
+        <button id="divisionMaximumHistoryClose1" type="button" class="btn grey-btn"
+          data-dismiss="modal">{{ 'button.close' | translate }}</button>
+      </div>
+      <!-- Modal Footer Ends-->
+    </div>
+  </div>
+</div>
+<!-- Division Maximum History Modal End -->
+
+<!-- Schedule History  Modal -->
+<div id="scheduleHistory" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="scheduleHistoryClose" type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">{{ 'company.plan.fee-guide.scheduleHistory' | translate }}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="grid-box">
+          <div class="grid-inner">
+            <div class="form-row">
+              <div class="row">
+                <div class="col-md-12 col-xs-12 table-col">
+                  <div class="table-responsive">
+                    <table id="schedule" class="table table-bordered table-stripped">
+                    </table>
+                  </div>
+                  <!-- Table Ends -->
+                </div>
+              </div>
+            </div>
+            <!-- Form Row ENds -->
+          </div>
+          <!-- Grid Inner Ends -->
+        </div>
+        <!-- Grid Box Ends -->
+      </div>
+      <!-- Modal Body End-->
+      <div class="modal-footer">
+        <button id="scheduleHistoryClose1" type="button" class="btn grey-btn"
+          data-dismiss="modal">{{ 'button.close' | translate }}</button>
+      </div>
+      <!-- Modal Footer Ends-->
+    </div>
+  </div>
+</div>
+<!-- Schedule History Modal End -->
+
+<!-- Province History  Modal -->
+<div id="provinceHistory" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="provinceHistoryClose" type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">{{ 'company.plan.fee-guide.provinceHistory' | translate }}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="grid-box">
+          <div class="grid-inner">
+            <div class="form-row">
+              <div class="row">
+                <div class="col-md-12 col-xs-12 table-col">
+                  <div class="table-responsive">
+                    <table id="province" class="table table-bordered table-stripped">
+                    </table>
+                  </div>
+                  <!-- Table Ends -->
+                </div>
+              </div>
+            </div>
+            <!-- Form Row ENds -->
+          </div>
+          <!-- Grid Inner Ends -->
+        </div>
+        <!-- Grid Box Ends -->
+      </div>
+      <!-- Modal Body End-->
+      <div class="modal-footer">
+        <button id="provinceHistoryClose1" type="button" class="btn grey-btn"
+          data-dismiss="modal">{{ 'button.close' | translate }}</button>
+      </div>
+      <!-- Modal Footer Ends-->
+    </div>
+  </div>
+</div>
+<!-- Province History Modal End -->
+
+<div [hidden]="!showLoader" class="loader-outer">
+  <div class="cube-wrapper">
+    <div class="cube-folding">
+      <span class="leaf1"></span>
+      <span class="leaf2"></span>
+      <span class="leaf3"></span>
+      <span class="leaf4"></span>
+    </div>
+    <span class="loading" data-name="Loading">{{'company.plan.benefits.pleaseWait'|translate}}</span>
+  </div>
+</div>
+
+<!-- Plan Discipline Coverage Modal Added -->
+<div id="disciplineCoverage" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="btnCloseClaimTotal" type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">{{discTitle}} Coverage</h4>
+      </div>
+
+      <div class="modal-body">
+        <div class="grid-box">
+            <form [formGroup]="disciplineCoverageForm">
+              <div class="grid-heading">
+                <h3>{{discTitle}} Coverage</h3>
+              </div>
+              <div class="grid-inner">
+                <div class="form-row ">
+                  <div class="row min-ht-sf">
+                    <div class="col-md-3 col-xs-12">
+                      <label>Plan #</label>
+                      <input id="amendmentPlanNum" class="fm-txt form-control" type="text" formControlName="planNum" placeholder="Plan #" disabled>
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                      <label>Division #</label>
+                      <input id="amendmentDivisionNum" class="fm-txt form-control" type="text" formControlName="divisionNum" placeholder="Division #" disabled>
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                      <label>Division Description</label>
+                      <input id="amendmentDivisionDescription" class="fm-txt form-control" type="text"
+                        formControlName="divisionDescription" placeholder="Division Description" disabled>
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                      <label>Effective Date <span class="required">*</span></label>
+                      <input id="amendmentEffDate" class="fm-txt form-control" placeholder="dd/mmm/yyyy" type="text"
+                        formControlName="effDate">
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                      <label>Dependant Age 1</label>
+                      <input id="amendmentDependantAge1" class="fm-txt form-control" placeholder="Dependant Age 1" type="text"
+                        formControlName="dependantAge1" disabled>
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                      <label>Dependant Age 2</label>
+                      <input id="amendmentDependantAge2" class="fm-txt form-control" placeholder="Dependant Age 2" type="text"
+                        formControlName="dependantAge2" disabled>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+        </div>
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{discTitle}} Coverage Categories</h3>
+          </div>
+          <div class="grid-inner">
+            <div class="form-row coverageCategory">
+              <div class="row">
+                <div class="  col-md-12 col-xs-12 table-col">
+                  <div class="table-responsive">
+                    <generic-table [gtClasses]="'table table-bordered table-stripped fixed-tb'" #myTable [gtSettings]="configObject.settings" [gtFields]="configObject.fields" [gtTexts]="customTexts" [(gtData)]="configObject.data" (gtEvent)="eventListener($event)"></generic-table>
+                    <div class="text-center">
+                      <small>
+                        <gt-table-info class="form-text text-muted mb-2" [genericTable]="myTable"></gt-table-info>
+                      </small>
+                      <gt-pagination [gtClasses]="'pagination-sm justify-content-center'" [genericTable]="myTable">
+                      </gt-pagination>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{discTitle}} Services</h3>
+          </div>
+          <div class="grid-inner">
+            <div class="form-row services">
+              <div class="loader-service" *ngIf="discId == 1">
+                <p-treeTable *ngIf="discId == 1" [value]="arrDataDental" [class]="'tree-table'"
+                  [(selection)]="selectedNode">
+                  <p-column field="serviceId" header="Service">
+                    <ng-template let-col let-node="rowData" pTemplate="body">
+                      <input [(ngModel)]="node.data.isSelected || node.data.isPartial" value="node.data.serviceId"
+                        type="checkBox" (change)="setNodeSelectedFirst(node,$event.target.checked,'dental')"
+                        [disabled]="!serviceLayerDentalBoolean" name="{{node.data.serviceId}}"
+                        class="checkboxDissabled" />
+                      <span>{{node.data.serviceId}}</span>
+                    </ng-template>
+                  </p-column>
+                  <p-column field="procedureId" header="Proc ID"></p-column>
+                  <p-column field="serviceDesc" header="Description"></p-column>
+                </p-treeTable>
+              </div>
+              <div class="loader-service" *ngIf="discId == 2">
+                <p-treeTable *ngIf="discId == 2" [value]="arrDataVision" [class]="'tree-table'"
+                  [(selection)]="selectedNode">
+                  <p-column field="serviceId" header="Service">
+                    <ng-template let-col let-node="rowData" pTemplate="body">
+                      <input [(ngModel)]="node.data.isSelected || node.data.isPartial" value="{{node.data.isSelected}}"
+                        type="checkBox" (change)="setNodeSelectedFirst(node,$event.target.checked,'vision')"
+                        [disabled]="!serviceLayerVisionBoolean" class="checkboxDissabled" />
+                      <span>{{node.data.serviceId}}</span>
+                    </ng-template>
+                  </p-column>
+                  <p-column field="procedureId" header="Proc ID"></p-column>
+                  <p-column field="serviceDesc" header="Description"></p-column>
+                </p-treeTable>
+              </div>
+              <div class="loader-service" *ngIf="discId == 3">
+                <p-treeTable *ngIf="discId == 3" [value]="arrDataHealth" [class]="'tree-table'"
+                  [(selection)]="selectedNode">
+                  <p-column field="serviceKey" header="Service">
+                    <ng-template let-col let-node="rowData" pTemplate="body">
+                      <input [(ngModel)]="node.data.isSelected || node.data.isPartial" value="{{node.data.isSelected}}"
+                        type="checkBox" (change)="setNodeSelectedFirst(node,$event.target.checked,'health')"
+                        [disabled]="!serviceLayerHealthBoolean" class="checkboxDissabled" />
+                      <span>{{node.data.serviceId}}</span>
+                    </ng-template>
+                  </p-column>
+                  <p-column field="procedureId" header="Proc ID"></p-column>
+                  <p-column field="serviceDesc" header="Description"></p-column>
+                </p-treeTable>
+              </div>
+              <div class="loader-service" *ngIf="discId == 4">
+                <p-treeTable *ngIf="discId == 4" [value]="arrDataDrug" [class]="'tree-table'"
+                  [(selection)]="selectedNode">
+                  <p-column field="serviceId" header="Service">
+                    <ng-template let-col let-node="rowData" pTemplate="body">
+                      <input [(ngModel)]="node.data.isSelected || node.data.isPartial" value="{{node.data.isSelected}}"
+                        type="checkBox" (change)="setNodeSelectedFirst(node,$event.target.checked,'drug')"
+                        [disabled]="!serviceLayerDrugBoolean" class="checkboxDissabled" />
+                      <span>{{node.data.serviceId}}</span>
+                    </ng-template>
+                  </p-column>
+                  <p-column field="procedureId" header="Proc ID"></p-column>
+                  <p-column field="serviceDesc" header="Description"></p-column>
+                </p-treeTable>
+              </div>
+              <div class="loader-service" *ngIf="discId == 5">
+                <p-treeTable *ngIf="discId == 5" [value]="arrDataSupplement" [class]="'tree-table'"
+                  [(selection)]="selectedNode">
+                  <p-column field="serviceId" header="Service">
+                    <ng-template let-col let-node="rowData" pTemplate="body">
+                      <input [(ngModel)]="node.data.isSelected || node.data.isPartial" value="{{node.data.isSelected}}"
+                        type="checkBox" (change)="setNodeSelectedFirst(node,$event.target.checked,'supplement')"
+                        [disabled]="!serviceLayerSupplementBoolean" class="checkboxDissabled" />
+                      <span>{{node.data.serviceId}}</span>
+                    </ng-template>
+                  </p-column>
+                  <p-column field="procedureId" header="Proc ID"></p-column>
+                  <p-column field="serviceDesc" header="Description"></p-column>
+                </p-treeTable>
+              </div>
+              <div class="loader-service" *ngIf="discId == 6">
+                  <p-treeTable *ngIf="discId == 6" [value]="arrDataWellness" [class]="'tree-table'"
+                    [(selection)]="selectedNode">
+                    <p-column field="serviceId" header="Service">
+                      <ng-template let-col let-node="rowData" pTemplate="body">
+                        <input [(ngModel)]="node.data.isSelected || node.data.isPartial"
+                          value="{{node.data.isSelected}}" type="checkBox"
+                          (change)="setNodeSelectedFirst(node,$event.target.checked,'wellness')"
+                          [disabled]="!serviceLayerWellnessBoolean" class="checkboxDissabled" />
+                        <span>{{node.data.serviceId}}</span>
+                      </ng-template>
+                    </p-column>
+                    <p-column field="procedureId" header="Proc ID"></p-column>
+                    <p-column field="serviceDesc" header="Description"></p-column>
+                  </p-treeTable>
+              </div>
+            </div>
+            <div class="modal-footer">
+                <button id="saveDisciplineCoverageModal" (click)="saveDiscCoverageCategories()" class="green-btn-add btn">{{'button.save'|translate}}</button>
+              <button id="closeDisciplineCoverageModal" class="btn grey-btn" data-dismiss="modal">{{'button.close'|translate}}</button>
+            </div>
+          </div>
+        </div>
+</div>
+

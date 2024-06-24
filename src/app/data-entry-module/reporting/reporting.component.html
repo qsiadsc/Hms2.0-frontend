@@ -1,0 +1,53 @@
+<div class="container">
+    <div class="section-heading">
+        <h2>DataEntry -
+            <span>Import </span> 
+        </h2>
+    </div>
+    <!-- Section Heading Ends -->
+    
+    <div class="grid-box">
+        <div class="grid-heading">
+            <h3>Payment Details Filename</h3>
+        </div>
+        <!-- Grid Heading Ends -->
+        <div class="grid-inner">
+            <div class="form-row">
+                <div class="row">
+                    <div class="col-md-3 col-xs-12 min-ht-half">
+                        <label>&nbsp;</label>
+                        <input style="display: none" type="file" (change)="onFileChanged($event)" onclick="this.value=null" #crFileInput>
+                        <input [(ngModel)]="selectedFileName" class="fm-txt form-control datepicker" type="text">
+                        <ul *ngIf="error.isError==true" class="validation-errors">
+                            <li style="color: red">{{error.errorMessage}}</li>
+                        </ul>
+                        <ul *ngIf="error3.isError==true" class="validation-errors">
+                            <li style="color: red">{{error3.errorMessage}}</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4 col-xs-12 min-ht-half">
+                        <label>&nbsp;</label>
+                        <button class="btn green-btn" (click)="crFileInput.click()">Select File</button>
+                        <button *ngIf = "selectedFileName" (click)="onUpload()" class="btn green-btn">Upload</button>
+                        <button *ngIf = "selectedFileName" (click)="removeExtension()" class="btn red-btn ">Remove</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Grid Inner Ends -->
+    </div>
+    <!-- Grid Box Ends -->
+    
+</div>
+
+<div *ngIf="showLoader" class="loader-outer">
+    <div class="cube-wrapper">
+        <div class="cube-folding">
+            <span class="leaf1"></span>
+            <span class="leaf2"></span>
+            <span class="leaf3"></span>
+            <span class="leaf4"></span>
+        </div>
+        <span class="loading" data-name="Loading">{{loaderPlaceHolder}}</span>
+    </div>
+</div>

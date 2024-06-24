@@ -1,0 +1,649 @@
+<nav class="breadcrumb">
+  <span class="breadcrumb-item" [routerLink]="['/company']">{{'company.plan.company' | translate}}</span> >
+  <span class="breadcrumb-item" (click)="goBack()">{{'company.plan.plan' | translate}}</span> >
+  <a class="active serviceProviderActive">Frequencies</a>
+</nav>
+
+<form [formGroup]="PlanFrequenciesFormGroup">
+  <div class="section-heading">
+    <!-- Page Heading format resolved in Plan View Pages(point no- 118) -->
+    <h2>Plan Frequencies
+      - <span> View</span>
+    </h2>
+  </div>
+  <!-- #1277 Re-arranged sequence of 4 Frequencies For frequencies in view plan -> Disciplines -->
+  <!--[Start Coverage Rules Section]-->
+  <div class="grid-box" id="coverage_rules_div">
+    <div class="grid-content">
+      <div class="grid-heading collapse-heading"[attr.aria-expanded]="true"  data-toggle="collapse"
+        data-target="#coverageRulesSection">
+        <h3 aria-expanded="true" data-toggle="collapse" data-target="#coverageRulesSection">
+          Coverage Rules </h3>
+      </div>
+      <!-- collapse in added for log 975 -->
+      <div class = "collapse in" id="coverageRulesSection">
+        <div class="grid-box">
+          <div class="grid-inner">
+            <div class="form-row">
+              <div class="row">
+                <div class="col-md-12 col-xs-12 table-col">
+                  <div class="table-responsive">
+                    <table id='services_covered' class="inlinePopupTable table table-bordered table-stripped">
+                      <thead>
+                        <tr>
+                          <th width="55%">Dental Rule</th>
+                          <th class="amount_right" width="10%">Effective On</th>
+                          <th class="amount_right" width="20%">Expired On</th>
+                          <th class="amount_right" width="15%">Action</th> 
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <!-- Task 587 hidden added to hide data table when when there is no data available -->
+                        <tr [hidden]='dentalRule.length == 0' *ngFor="let crData of dentalRule; let i = index;">
+                          <td>{{crData.ruleDesc}}</td>
+                          <td class="amount_right">{{crData.effectiveOn}}</td>
+                          <td class="amount_right">{{crData.expiredOn}}</td>
+                           <td class="amount_right">
+                            <button data-toggle="modal" data-target="#AddNewRules" class="table-action-btn edit-ico" id="planInfoEdit" type="button" title="Edit" (click)="enableEditModeRule(crData)">
+                              <i class="fa fa-pencil"></i>
+                            </button>
+                            <button (click)="deleteindividualRule(crData.covRuleAssgnKey)" class="table-action-btn del-ico"
+                              id="planInfoDelete1" type="button" title="Delete">
+                              <i class="fa fa-trash"></i>
+                            </button>
+                            </td> 
+                        </tr>
+                        <!-- Task 587 row added to show "no data available" in table when there is no data available -->
+                        <tr [hidden]='dentalRule.length > 0'>
+                          <td colspan="4" style="text-align:center">No data available in table</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--[End Coverage Rules Section]-->
+
+  <!--[Start Coverage Procedures Section]-->
+  <div class="grid-box" id="coverage_procedures_div">
+    <div class="grid-content">
+      <!-- #1277 Below 2 divs created to keep collapsed because client wanted to keep closed in dental only -->
+      <div class="grid-heading collapse-heading" [attr.aria-expanded]="coverageProceduresSection" data-toggle="collapse"
+        data-target="#coverageProceduresSection">
+        <h3 [attr.aria-expanded]="coverageProceduresSection" data-toggle="collapse" data-target="#coverageProceduresSection">
+          Coverage Procedures </h3>
+      </div>
+      <div [ngClass]="(coverageProceduresSection == true) ? 'collapse in' : 'collapse' " id="coverageProceduresSection">
+        <div class="collapse in" id="coverageProceduresSection">
+          <div class="grid-box">
+            <div class="grid-inner">
+              <div class="form-row">
+                <div class="row">
+                  <div class="col-md-12 col-xs-12 table-col">
+                    <div class="table-responsive">
+                      <table id='services_covered' class="inlinePopupTable table table-bordered table-stripped">
+                        <thead>
+                          <tr>
+                            <th width="10%">Proc #</th>
+                            <th class="amount_right" width="8%">Approval</th>
+                            <th class="amount_right" width="8%">Reviewer</th>
+                            <th class="amount_right" width="8%">Facility</th>
+                            <th class="amount_right" width="8%">Assist Permit</th>
+                            <th class="amount_right" width="8%">Referal</th>
+                            <th class="amount_right" width="8%">Exclude On</th>
+                            <th class="amount_right" width="8%">Effective On</th>
+                            <th class="amount_right" width="8%">Expired On</th>
+                            <th class="amount_right" width="8%">Action</th> 
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let cpData of coverageProcedureJson; let i = index;">
+                            <td>{{cpData.procId}}</td>
+
+                            <td *ngIf="cpData.approvalInd =='T'" class="amount_right"><input type="checkbox"
+                                name="approvalInd" value="{{cpData.approvalInd}}" checked disabled="disabled" /></td>
+                            <td *ngIf="cpData.approvalInd =='F'" class="amount_right"><input type="checkbox"
+                                name="approvalInd" value="{{cpData.approvalInd}}" disabled="disabled" /></td>
+
+                            <td *ngIf="cpData.reviewInd =='T'" class="amount_right"><input type="checkbox"
+                                name="reviewInd" value="{{cpData.reviewInd}}" checked disabled="disabled" /></td>
+                            <td *ngIf="cpData.reviewInd =='F'" class="amount_right"><input type="checkbox"
+                                name="reviewInd" value="{{cpData.reviewInd}}" disabled="disabled" /></td>
+
+                            <td *ngIf="cpData.facilityInd =='T'" class="amount_right"><input type="checkbox"
+                                name="facilityInd" value="{{cpData.facilityInd}}" checked disabled="disabled" /></td>
+                            <td *ngIf="cpData.facilityInd =='F'" class="amount_right"><input type="checkbox"
+                                name="facilityInd" value="{{cpData.facilityInd}}" disabled="disabled" /></td>
+
+                            <td *ngIf="cpData.assistPermitInd =='T'" class="amount_right"><input type="checkbox"
+                                name="assistPermitInd" value="{{cpData.assistPermitInd}}" checked disabled="disabled" />
+                            </td>
+                            <td *ngIf="cpData.assistPermitInd =='F'" class="amount_right"><input type="checkbox"
+                                name="assistPermitInd" value="{{cpData.assistPermitInd}}" disabled="disabled" /></td>
+
+                            <td *ngIf="cpData.referalInd =='T'" class="amount_right"><input type="checkbox"
+                                name="referalInd" value="{{cpData.referalInd}}" checked disabled="disabled" /></td>
+                            <td *ngIf="cpData.referalInd =='F'" class="amount_right"><input type="checkbox"
+                                name="referalInd" value="{{cpData.referalInd}}" disabled="disabled" /></td>
+
+                            <td *ngIf="cpData.excludeInd =='T'" class="amount_right"><input type="checkbox"
+                                name="excludeInd" value="{{cpData.excludeInd}}" checked disabled="disabled" /></td>
+                            <td *ngIf="cpData.excludeInd =='F'" class="amount_right"><input type="checkbox"
+                                name="excludeInd" value="{{cpData.excludeInd}}" disabled="disabled" /></td>
+
+                            <td class="amount_right">{{cpData.effectiveOn}}</td>
+                            <td class="amount_right">{{cpData.expiredOn}}</td>
+                            <td class="amount_right">
+                              <button data-toggle="modal" data-target="#AddNewProcedureService" class="table-action-btn edit-ico" id="planInfoEdit" type="button" title="Edit" (click)="enableEditModeProcedure(cpData)">
+                                <i class="fa fa-pencil"></i>
+                              </button>
+
+                              <button (click)="deleteindividualProcedure(cpData.procCovKey)" class="table-action-btn del-ico"
+                                id="planInfoDelete1" type="button" title="Delete">
+                                <i class="fa fa-trash"></i>
+                              </button>
+                            </td> 
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--[End Coverage Procedures Section]-->
+
+  <!--[Start Services Covered Section]-->
+  <div class="grid-box" id="services_covered_div">
+    <div class="grid-content">
+      <!-- #1277 Below 3 divs created to keep collapsed because client wanted to do this in all -->
+      <div class="grid-heading collapse-heading" [attr.aria-expanded]="servicesCoveredSection" data-toggle="collapse"
+        data-target="#servicesCoveredSection">
+        <h3 [attr.aria-expanded]="servicesCoveredSection" data-toggle="collapse" data-target="#servicesCoveredSection">
+          Services Covered </h3>
+          <div class="web-reg" >
+        <button  class="green-btn-add btn" data-toggle="modal" data-target="#AddNewDentalService"
+          (click)="enableAddMode()"><i class="fa fa-plus"></i>Add New Service</button>
+        </div> 
+      </div>
+      <div [ngClass]="(servicesCoveredSection == true) ? 'collapse in' : 'collapse' " id="servicesCoveredSection">
+        <div class="collapse in">
+          <div class="grid-box">
+            <div class="grid-inner">
+              <div class="form-row">
+                <div class="row">
+                  <div class="col-md-12 col-xs-12 table-col">
+                    <div class="table-responsive">
+                      <table id='services_covered' class="inlinePopupTable table table-bordered table-stripped">
+                        <thead>
+                          <tr>
+                            <th width="35%">Dental Service</th>
+                            <th class="amount_right" width="10%">Excluded</th>
+                            <th class="amount_right" width="10%">Effective On</th>
+                            <th class="amount_right" width="20%">Expired On</th>
+                            <th class="amount_right" width="20%">Action</th> 
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let scData of serviceCoveredJson; let i = index">
+                            <td>{{scData.serviceDesc}}</td>
+                            <td *ngIf="scData.excludeInd == 'T'" class="amount_right"><input type="checkbox"
+                                name="excludedInd" value="{{scData.excludeInd}}" checked disabled="disabled"></td>
+                            <td *ngIf="scData.excludeInd == 'F'" class="amount_right"><input type="checkbox"
+                                name="excludedInd" value="{{scData.excludeInd}}" disabled="disabled"></td>
+                            <td class="amount_right">{{scData.effectiveOn}}</td>
+                            <td class="amount_right">{{scData.expiredOn}}</td>
+                            <td class="amount_right">
+                              <button data-toggle="modal" data-target="#AddNewDentalService" class="table-action-btn edit-ico" id="planInfoEdit" type="button" title="Edit" (click)="enableEditMode(scData)">
+                                <i class="fa fa-pencil"></i>
+                              </button>
+                              <button  class="green-btn-add btn" data-toggle="modal" data-target="#AddNewProcedureService"
+                              (click)="enableAddModeProcedure(scData.covServAssgnKey)" title="Add Procedure">AP</button>
+                              <button  class="green-btn-add btn" data-toggle="modal" data-target="#AddNewRules"
+                              (click)="enableAddModeRule(scData.covServAssgnKey)" title="Add Rules">AR</button>
+                              <button (click)="deleteindividual(scData.covServAssgnKey)" class="table-action-btn del-ico"
+                                id="planInfoDelete1" type="button" title="Delete">
+                                <i class="fa fa-trash"></i>
+                              </button>
+                            </td> 
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--[End Services Covered Section]-->
+
+  <!--[Start Dental Plan Coverage Section]-->
+  <div class="grid-box">
+    <!-- #1277 Below 2 divs created to keep collapsed because client wanted to do this in all -->
+    <div class="grid-heading collapse-heading" [attr.aria-expanded]="dentalPlanCoverageSection" data-toggle="collapse"
+      data-target="#dentalPlanCoverageSection">
+      <h3 [attr.aria-expanded]="dentalPlanCoverageSection" data-toggle="collapse" data-target="#dentalPlanCoverageSection">
+        Dental Plan Coverage </h3>
+    </div>
+    <div [ngClass]="(dentalPlanCoverageSection == true) ? 'collapse in' : 'collapse' " id="dentalPlanCoverageSection">
+      <div class="collapse in" id="dentalPlanCoverageSection">
+        <div class="grid-inner">
+          <div class="form-row ">
+            <div class="row min-ht-sf">
+              <div class="col-md-3 col-xs-12">
+                <label>Plan #</label>
+                <input id="plan_num" class="fm-txt form-control" type="text" formControlName="plan_num">
+              </div>
+              <div class="col-md-3 col-xs-12">
+                <label>Division #</label>
+                <input id="division_num" class="fm-txt form-control" type="text" formControlName="division_num">
+              </div>
+              <div class="col-md-3 col-xs-12">
+                <label>Division Description</label>
+                <input id="division_description" class="fm-txt form-control" type="text"
+                  formControlName="division_description">
+              </div>
+              <div class="col-md-3 col-xs-12">
+                <label>Category</label>
+                <input id="category" class="fm-txt form-control" placeholder="Quikcard" type="text"
+                  formControlName="category">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--[End Dental Plan Coverage Section]-->
+</form>
+<!-- Add New Dental Service Modal-->
+<div id="AddNewDentalService" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="resetDentalServiceForm" #dismissModel type="button" class="close" data-dismiss="modal"
+          >&times;</button>
+        <h4 *ngIf="addMode" class="modal-title">{{'feeGuide.dentalService.addService' | translate}}</h4>
+       
+        <h4 *ngIf="editMode" class="modal-title">{{'feeGuide.dentalService.editService' | translate}}</h4>
+      </div>
+
+      <div class="modal-body">
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{'feeGuide.dentalService.service' | translate}}</h3>
+          </div><!-- Grid Heading Ends -->
+          <div class="grid-inner">
+            <form [formGroup]="addDentalServiceForm">
+              <div class="form-row">
+                <div class="row min-ht-sf">
+                  <div class="col-md-4 col-xs-12">
+                    <label>{{'feeGuide.dentalService.coverageCategory' | translate}}<span
+                        class="required">*</span></label>
+                    <ng2-completer [(ngModel)]="coverageCategory" [inputId]="'dentalCoverageCategory'"
+                      formControlName="coverageCategory" [datasource]="coverageCategoryDataRemote" [minSearchLength]="1"
+                      [fillHighlighted]="false" [clearUnselected]="true" [autoHighlight]="true" [selectOnFocus]="true"
+                      [placeholder]="'Search Coverage Category'" [textSearching]="'Please wait...'"
+                      [inputClass]="'form-control'" (selected)="onSelect($event, 'coverageCategory')">
+                    </ng2-completer>
+                    <show-errors [control]="addDentalServiceForm.controls.coverageCategory"></show-errors>
+                  </div>
+
+                  <div class="col-md-4 col-xs-12">
+                    <label>{{'feeGuide.dentalService.serviceId' | translate}}<span class="required">*</span></label>
+
+                    <ng2-completer [(ngModel)]="parentServiceId" [inputId]="'dentalPatientServiceId'"
+                      id="dentalPatientServiceId" formControlName="parentServiceId"
+                      [datasource]="dentalParentServiceDataRemote" [minSearchLength]="1" [fillHighlighted]="false"
+                      [autoHighlight]="true" [clearUnselected]="true" [selectOnFocus]="true"
+                      [placeholder]="'Service ID'" [textSearching]="'Please wait...'" [inputClass]="'form-control'"
+                      (selected)="onSelect($event, 'parentServiceId')">
+                    </ng2-completer>
+                    <show-errors [control]="addDentalServiceForm.controls.parentServiceId"></show-errors>
+                  </div>
+                  <div class="col-md-4 col-xs-12 custom-check-excluded">
+                    <label></label>
+                      <span>
+                          <label class="papComment">
+                            <span class="custom-check" >
+                              <input formControlName="excludedInd"  type="checkbox" class="" name="excludedInd"
+                                >Excluded
+                              <span></span>
+                            </span>
+                          </label>
+                        </span>
+                  </div>
+                  
+                  <div class="col-md-4 col-xs-12 txtarea-height">
+                    <label>{{'feeGuide.dentalService.effectiveDate' | translate}}<span class="required">*</span></label>
+                    <div class="calender-field">
+                      <my-date-picker id="dentalEffectiveDate" [options]="myDatePickerOptions" name="effectiveOn"
+                        formControlName="effectiveOn"
+                        (inputFocusBlur)="changeDateFormat($event, 'effectiveOn','addDentalServiceForm', true)"
+                        placeholder="{{'common.date-placeholder' | translate}}">
+                      </my-date-picker>
+                      <show-errors [control]="addDentalServiceForm.controls.effectiveOn"></show-errors>
+                    </div>
+                  </div>
+                  <div class="col-md-4 col-xs-12 txtarea-height">
+                    <label>{{'feeGuide.dentalService.expiryDate' | translate}}</label>
+                    <div class="calender-field">
+                      <my-date-picker id="dentalExpiryDate" [options]="myDatePickerOptions" name="expiredOn"
+                        formControlName="expiredOn"
+                        [ngClass]="expired  ? 'expired' : 'notExpired'"
+                        (inputFocusBlur)="changeDateFormat($event, 'expiredOn','addDentalServiceForm')"
+                        placeholder="{{'common.date-placeholder' | translate}}">
+                      </my-date-picker>
+                      <show-errors [control]="addDentalServiceForm.controls.expiredOn"></show-errors>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+            </form>
+            <!-- Form Row ENds -->
+          </div>
+        </div><!-- Grid Box Ends -->
+      </div>
+      <!-- Modal Body End-->
+
+      <div class="modal-footer">
+        <label>&nbsp;</label>
+        <button id="dentalSaveBtn" *ngIf="addMode"  class="green-btn btn" type="submit"
+          (keyup.arrowLeft)="focusNextEle($event,'closeDentalServiceForm')"
+          (keyup.arrowRight)="focusNextEle($event,'closeDentalServiceForm')"
+          (click)="submitDentalServiceForm(addDentalServiceForm ,'add')">
+          {{'button.save' | translate}}</button>
+        <button id="closeDentalServiceForm" *ngIf="addMode" type="button" class="btn grey-btn" data-dismiss="modal"
+          (keyup.arrowLeft)="focusNextEle($event,'dentalSaveBtn')"
+          (keyup.arrowRight)="focusNextEle($event,'dentalSaveBtn')"
+          >{{'button.close' | translate}}</button>
+          <button id="dentalSaveBtn" *ngIf="editMode"  class="green-btn btn" type="submit"
+          (keyup.arrowLeft)="focusNextEle($event,'closeDentalServiceForm')"
+          (keyup.arrowRight)="focusNextEle($event,'closeDentalServiceForm')"
+          (click)="submitDentalServiceForm(addDentalServiceForm ,'update')">
+          {{'button.update' | translate}}</button>
+        <button id="closeDentalServiceForm" *ngIf="editMode" type="button" class="btn grey-btn" data-dismiss="modal"
+          (keyup.arrowLeft)="focusNextEle($event,'dentalUpdateBtn')"
+          (keyup.arrowRight)="focusNextEle($event,'dentalUpdateBtn')"
+          >{{'button.close' | translate}}</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Add New Coverage Procedure Service Modal-->
+<div id="AddNewProcedureService" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="resetProcedureServiceForm" #dismissModelProcedure type="button" class="close" data-dismiss="modal"
+          >&times;</button>
+        <h4 *ngIf="addModePro" class="modal-title">Add Procedure Service</h4>
+        <h4 *ngIf="editModePro" class="modal-title">Edit Procedure Service</h4>
+      </div>
+      <div class="modal-body">
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{'feeGuide.dentalService.service' | translate}}</h3>
+          </div><!-- Grid Heading Ends -->
+          <div class="grid-inner">
+            <form [formGroup]="addProcedureServiceForm">
+              <div class="form-row">
+                <div class="row min-ht-sf">
+                  <div class="col-md-4 col-xs-12">
+                    <label>Procedure ID<span class="required">*</span></label>
+                    <ng2-completer  [(ngModel)]="parentKey" [inputId]="'ProcedureprocedureKey'"
+                      id="ProcedureprocedureKey" formControlName="parentKey"
+                      [datasource]="ProcedureParentServiceDataRemote" [minSearchLength]="1"  [fillHighlighted]="false"
+                      [autoHighlight]="true" [clearUnselected]="true" [selectOnFocus]="true"
+                      [placeholder]="'Procedure ID'" [textSearching]="'Please wait...'" [inputClass]="'form-control'"
+                      (selected)="onSelectPro($event, 'parentKey')">
+                    </ng2-completer>
+                    <show-errors [control]="addProcedureServiceForm.controls.parentKey"></show-errors>
+                  </div>
+                  <div class="col-md-4 col-xs-12 txtarea-height">
+                    <label>{{'feeGuide.dentalService.effectiveDate' | translate}}<span class="required">*</span></label>
+                    <div class="calender-field">
+                      <my-date-picker id="dentalEffectiveDate" [options]="myDatePickerOptions" name="effectiveOn"
+                        formControlName="effectiveOn"
+                        (inputFocusBlur)="changeDateFormat($event, 'effectiveOn','addProcedureServiceForm', true)"
+                        placeholder="{{'common.date-placeholder' | translate}}">
+                      </my-date-picker>
+                      <show-errors [control]="addProcedureServiceForm.controls.effectiveOn"></show-errors>
+                    </div>
+                  </div>
+                  <div class="col-md-4 col-xs-12 txtarea-height">
+                    <label>{{'feeGuide.dentalService.expiryDate' | translate}}</label>
+                    <div class="calender-field">
+                      <my-date-picker id="dentalExpiryDate" [options]="myDatePickerOptions" name="expiredOn"
+                        formControlName="expiredOn"
+                        [ngClass]="expired  ? 'expired' : 'notExpired'"
+                        (inputFocusBlur)="changeDateFormat($event, 'expiredOn','addProcedureServiceForm')"
+                        placeholder="{{'common.date-placeholder' | translate}}">
+                      </my-date-picker>
+                      <show-errors [control]="addProcedureServiceForm.controls.expiredOn"></show-errors>
+                    </div>
+                  </div>
+                  <div class="grid-inner">
+                    <div class="form-row">
+                      <div class="row min-ht-sf">
+                        <div class="col-md-10 col-xs-12 min-ht-half">
+                          <div class="select-options">
+                  <span>
+                    <label class="papComment">
+                      <span class="custom-check" >
+                        <input formControlName="approvalInd"  type="checkbox" class="" name="approvalInd"
+                          >Approval
+                        <span></span>
+                      </span>
+                    </label>
+                  </span>
+                  <span>
+                    <label class="papComment">
+                      <span class="custom-check">
+                        <input formControlName="reviewInd"  type="checkbox" class="" name="reviewInd"
+                          >Reviewer
+                        <span></span>
+                      </span>
+                    </label>
+                  </span>
+                  <span>
+                    <label class="papComment">
+                      <span class="custom-check"> 
+                        <input formControlName="facilityInd"  type="checkbox" class="" name="facilityInd"
+                          >Facility
+                        <span></span>
+                      </span>
+                    </label>
+                  </span>
+                  <span>
+                    <label class="papComment" >
+                      <span class="custom-check" >
+                        <input formControlName="assistPermitInd"  type="checkbox" class="" name="assistPermitInd"
+                          >Assist Permit
+                        <span></span>
+                      </span>
+                    </label>
+                  </span>
+                  <span>
+                    <label class="papComment">
+                      <span class="custom-check" >
+                        <input formControlName="referalInd"  type="checkbox" class="" name="referalInd"
+                          >Referal
+                        <span></span>
+                      </span>
+                    </label>
+                  </span>
+                  <span>
+                    <label class="papComment">
+                      <span class="custom-check" >
+                        <input formControlName="excludeInd"  type="checkbox" class="" name="excludeInd"
+                          >Exclude On
+                        <span></span>
+                      </span>
+                    </label>
+                  </span>
+           </div>
+          </div>
+        </div>
+      </div>
+    </div>
+                </div>
+              </div> 
+
+            </form>
+            <!-- Form Row ENds -->
+          </div>
+        </div><!-- Grid Box Ends -->
+
+        
+      </div>
+      <!-- Modal Body End-->
+
+      <div class="modal-footer">
+        <label>&nbsp;</label>
+        <button id="ProdSaveBtn" *ngIf="addModePro"  class="green-btn btn" type="submit"
+          (keyup.arrowLeft)="focusNextElePro($event,'closeProcedureServiceForm')"
+          (keyup.arrowRight)="focusNextElePro($event,'closeProcedureServiceForm')"
+          (click)="submitProcedureServiceForm(addProcedureServiceForm ,'add')">
+          {{'button.save' | translate}}</button>
+        <button id="closeProcedureServiceForm" *ngIf="addModePro" type="button" class="btn grey-btn" data-dismiss="modal"
+          (keyup.arrowLeft)="focusNextElePro($event,'ProdSaveBtn')"
+          (keyup.arrowRight)="focusNextElePro($event,'ProdSaveBtn')"
+          >{{'button.close' | translate}}</button>
+          <button id="ProdSaveBtn" *ngIf="editModePro"  class="green-btn btn" type="submit"
+          (keyup.arrowLeft)="focusNextElePro($event,'closeProcedureServiceForm')"
+          (keyup.arrowRight)="focusNextElePro($event,'closeProcedureServiceForm')"
+          (click)="submitProcedureServiceForm(addProcedureServiceForm ,'update')">
+          {{'button.update' | translate}}</button>
+        <button id="closeProcedureServiceForm" *ngIf="editModePro" type="button" class="btn grey-btn" data-dismiss="modal"
+          (keyup.arrowLeft)="focusNextElePro($event,'ProUpdateBtn')"
+          (keyup.arrowRight)="focusNextElePro($event,'ProUpdateBtn')"
+          >{{'button.close' | translate}}</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Add New Coverage Rules  Modal-->
+<div id="AddNewRules" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="resetRuleServiceForm" #dismissModelRule type="button" class="close" data-dismiss="modal"
+          >&times;</button>
+        <h4 *ngIf="addModeRule" class="modal-title">Add Rules </h4>
+        <h4 *ngIf="editModeRule" class="modal-title">Edit Rules </h4>
+      </div>
+      <div class="modal-body">
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{'feeGuide.dentalService.service' | translate}}</h3>
+          </div><!-- Grid Heading Ends -->
+         
+          <div class="grid-inner"  *ngIf="rulesList == true"  >
+            <form [formGroup]="addRuleServiceForm">
+              <div class="form-row">
+                <div class="row min-ht-sf">
+          
+                    <div class="col-md-4 col-xs-12">
+                      <label>Rules <span class="required">*</span></label>
+                      <ng2-completer [(ngModel)]="rulesService" [inputId]="'RuleserviceKey'"
+                        id="RuleserviceKey" formControlName="rulesService"
+                        [datasource]="RulesParentServiceDataRemote" [minSearchLength]="1" [fillHighlighted]="false"
+                        [autoHighlight]="true" [clearUnselected]="true" [selectOnFocus]="true"
+                        [placeholder]="'Rules '" [textSearching]="'Please wait...'" [inputClass]="'form-control'"
+                        (selected)="onSelectRule($event, 'rulesService')">
+                      </ng2-completer>
+                      <show-errors [control]="addRuleServiceForm.controls.rulesService"></show-errors>
+                    </div>
+                  <div class="col-md-4 col-xs-12 txtarea-height">
+                    <label>{{'feeGuide.dentalService.effectiveDate' | translate}}<span class="required">*</span></label>
+                    <div class="calender-field">
+                      <my-date-picker id="dentalEffectiveDate" [options]="myDatePickerOptions" name="effectiveOn"
+                        formControlName="effectiveOn"
+                        (inputFocusBlur)="changeDateFormat($event, 'effectiveOn','addRuleServiceForm', true)"
+                        placeholder="{{'common.date-placeholder' | translate}}">
+                      </my-date-picker>
+                      <show-errors [control]="addRuleServiceForm.controls.effectiveOn"></show-errors>
+                    </div>
+                  </div>
+                  <div class="col-md-4 col-xs-12 txtarea-height">
+                    <label>{{'feeGuide.dentalService.expiryDate' | translate}}</label>
+                    <div class="calender-field">
+                      <my-date-picker id="dentalExpiryDate" [options]="myDatePickerOptions" name="expiredOn"
+                        formControlName="expiredOn"
+                        [ngClass]="expired  ? 'expired' : 'notExpired'"
+                        (inputFocusBlur)="changeDateFormat($event, 'expiredOn','addRuleServiceForm')"
+                        placeholder="{{'common.date-placeholder' | translate}}">
+                      </my-date-picker>
+                      <show-errors [control]="addRuleServiceForm.controls.expiredOn"></show-errors>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+            </form>
+            <!-- Form Row ENds -->
+          </div>
+        </div><!-- Grid Box Ends -->
+
+        
+      </div>
+      <!-- Modal Body End-->
+
+      <div class="modal-footer">
+        <label>&nbsp;</label>
+        <button id="RuleSaveBtn" *ngIf="addModeRule"  class="green-btn btn" type="submit"
+          (keyup.arrowLeft)="focusNextEleRule($event,'closeRuleServiceForm')"
+          (keyup.arrowRight)="focusNextEleRule($event,'closeRuleServiceForm')"
+          (click)="submitRuleServiceForm(addRuleServiceForm ,'add')">
+          {{'button.save' | translate}}</button> 
+        <button id="closeRuleServiceForm" *ngIf="addModeRule" type="button" class="btn grey-btn" data-dismiss="modal"
+          (keyup.arrowLeft)="focusNextEleRule($event,'RuleSaveBtn')"
+          (keyup.arrowRight)="focusNextEleRule($event,'RuleSaveBtn')"
+          >{{'button.close' | translate}}</button>
+          <button id="RuleSaveBtn" *ngIf="editModeRule"  class="green-btn btn" type="submit"
+          (keyup.arrowLeft)="focusNextEleRule($event,'closeRuleServiceForm')"
+          (keyup.arrowRight)="focusNextEleRule($event,'closeRuleServiceForm')"
+          (click)="submitRuleServiceForm(addRuleServiceForm ,'update')">
+          {{'button.update' | translate}}</button>
+        <button id="closeRuleServiceForm" *ngIf="editModeRule" type="button" class="btn grey-btn" data-dismiss="modal"
+          (keyup.arrowLeft)="focusNextElePro($event,'RuleUpdateBtn')"
+          (keyup.arrowRight)="focusNextElePro($event,'RuleUpdateBtn')"
+          >{{'button.close' | translate}}</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Add New Fee Guide Modal-->
+<div [hidden]="!showLoader" class="loader-outer">
+  <div class="cube-wrapper">
+    <div class="cube-folding">
+      <span class="leaf1"></span>
+      <span class="leaf2"></span>
+      <span class="leaf3"></span>
+      <span class="leaf4"></span>
+    </div>
+    <span class="loading" data-name="Loading">{{'company.plan.benefits.pleaseWait'|translate}}</span>
+  </div>
+</div>

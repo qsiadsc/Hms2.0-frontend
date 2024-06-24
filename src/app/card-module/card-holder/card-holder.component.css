@@ -1,0 +1,50 @@
+table#SearchedCards tr.active {
+  background-color: #ccc;
+}
+
+.dataTables_empty {
+  text-align: center
+}
+
+.selectedBoxMargin {
+  margin-top: -5px;
+  width: 15%;
+}
+
+.selectHeight {
+  height: 30px !important;
+}
+
+.modal-content {
+  width: 1250px;
+  margin: 0px auto;
+}
+
+.modal-open .modal {
+  margin-left: -50px !important;
+}
+
+.hideAccodion.collapse-heading h3[aria-expanded="false"]:after {
+  display: none !important;
+}
+
+.hideAccodion.collapse-heading h3[aria-expanded="true"]:after {
+  display: none !important;
+}
+
+.grid-heading .web-reg {
+  margin-right: -8px !important;
+}
+
+.hideAccodionbtn {
+  margin-right: 0px !important;
+}
+
+#cardHolderAddNew .modal-footer {
+  display: flex;
+  justify-content: center;
+}
+
+#SearchedCards .green-btn-add {
+  padding: 4px 3px;
+}

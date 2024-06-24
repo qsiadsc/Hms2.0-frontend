@@ -1,0 +1,348 @@
+<div class="grid-box">
+  <div class="grid-heading">
+    <h3>{{'claims.claims-view.claims-messages.message' | translate}}</h3>
+  </div>
+  <!-- Grid Heading Ends -->
+  <ul class="nav company-tabs nav-pills">
+      <li id="sys-comments-tab" class="active">
+          <a  id = "system_comment" data-toggle="pill"  href="#claim-system"> {{'claims.claims-view.claims-messages.messages.system' | translate}}</a>
+        </li>
+    <li>
+      <a *ngIf = "!claimMsgAddMode" style="color: red;"  data-toggle="pill" href="#claim-custom" (click)="removeInternalValidations()">{{'claims.claims-view.claims-messages.messages.custom' | translate}}<i *ngIf="UreadMessage != 0" class="badge badge-notify" title="Uread Message" (click)="markComentUnread()" >{{UreadMessage}}</i></a>
+    </li>
+    <li id="claim-comments-tab">
+      <a data-toggle="pill" href="#claim-comments" (click)="removeEobValidations()">{{'claims.claims-view.claims-messages.messages.claim-comments' | translate}}</a>
+    </li>
+  </ul>
+
+    <div class="form-row">
+      <div class="tab-content">
+        
+        <!--- claim-system TAB STARTS -->
+        <div id="claim-system" class="tab-pane fade in active">
+
+          <div class="grid-inner">
+
+            <div class="form-row">
+              <div class="row">
+
+                <div class="col-md-12 col-xs-12 table-col ">
+                  <div class="table-responsive">
+                    <table id="claim-system-message" datatable [dtOptions]="dtOptions['claim-system-message']" [dtTrigger]="dtTrigger['claim-system-message']" class="table table-bordered table-stripped">
+                      <thead>
+                        <tr>
+                          <th width="10%">{{'claims.claims-view.claims-messages.messages.systems.data-table.date' | translate}}</th>
+                          <th class="amount_right" width="10%">{{'claims.claims-view.claims-messages.messages.systems.data-table.proc' | translate}}</th>
+                          <th class="amount_right" width="30%">{{'claims.claims-view.claims-messages.messages.systems.data-table.messages' | translate}}</th>
+                          <th class="amount_right" width="30%">{{'common.action'|translate}}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let message of systemMessage">
+                          <td width="10%">{{message.serviceDate | dateFormate}}</td>
+                          <!-- // title issue no 661 -->
+                          <td class="amount_right" width="10%" title="{{message.itemProcLongDesc}}">{{message.procdeureCode}}</td>
+                          <td class="amount_right" width="30%">{{message.messageCom}}</td>
+                          <td class="amount_right" width="30%">{{message.actionCom}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <!-- Table Ends -->
+                </div>
+              </div>
+
+            </div>
+            <!-- Form Row ENds -->
+
+            
+          </div>
+          <!-- Grid Inner Ends -->
+
+        </div>
+        <!--claim-system TAB ENDS -> 
+
+        <!- Claim Custom TAB STARTS -->
+        <div id="claim-custom" class="tab-pane fade">
+              <div class="grid-inner">
+
+                <div *ngIf = "!reviewer && this.claimStatus != 'Paid' && this.claimRefered != true && this.claimStatus != 'Reversed'" class="form-row">
+                  <form [formGroup]="customCommentForm">
+                    <label>{{'common.addcomment'|translate}}
+                      <span class="required">* <b> This Comment will show on all EOB's to clients and providers.</b></span>
+                    </label>
+                    <div class="add-comments">
+                      <div class="row">
+                        <div class="col-sm-5 claim-dropdown-height">
+                          <angular2-multiselect id="ccm_customCommentTxt" [data]="customCommentsDropDown"  [(ngModel)]="selectedCommentTxt" 
+                          [ngModelOptions]="{standalone: true}" (onSelect)="onSelectDropDown($event)"
+                          [settings]="dropdownSettingsCustom"  (onDeSelect)="onDeSelectDropDown($event)"></angular2-multiselect>
+                          <ul *ngIf="error.isError==true" class="validation-errors">
+                            <li style="color: red">{{error.errorMessage}}</li>
+                          </ul>
+                        </div>
+                        
+                        <div class="col-sm-5">
+                          <angular2-multiselect [data]="dropdownList"  [(ngModel)]="selectedItems" 
+                            [ngModelOptions]="{standalone: true}" (onSelect)="onSelectItemList($event)"
+                            [settings]="dropdownSettings" ></angular2-multiselect>
+                            <ul *ngIf="error1.isError==true" class="validation-errors">
+                              <li style="color: red">{{error1.errorMessage}}</li>
+                            </ul>
+                        </div> 
+                        
+                        <div class="col-sm-2 text-right">
+                          <button id="btnAddCustomCommentAddMode" *ngIf = "claimMsgAddMode" class="green-btn-add btn" (click)="addCustomComment(customCommentForm,'custom-comments','addMode')">
+                            <i class="fa fa-plus"></i>{{'button.add'|translate}}</button>
+                          <button id="btnAddCustomCommentEditMode" style="margin: 0px 150px 0px 0px !important" *ngIf = "!claimMsgAddMode && !editClaimItemMsg" class="green-btn-add btn" (click)="addCustomComment(customCommentForm,'custom-comments','editMode')">
+                              <i class="fa fa-plus"></i>{{'button.add'|translate}}</button>
+                              <!-- #1124: New Feedback -->
+                          <button id="btnCustomCommentEditMode" style="margin: 0px 150px 0px 0px !important" *ngIf = "!claimMsgAddMode && editClaimItemMsg" class="green-btn-add btn" (click)="addCustomComment(customCommentForm,'custom-comments','editMode')">
+                              {{'button.update'|translate}}</button>
+                        </div>
+                        <!-- Log #1124: Custom Message -->
+                        <div class="col-sm-5" *ngIf = "showCustomOption">
+                            <label>{{'common.customComment' | translate }}<span class="required">*</span></label>
+                            <textarea id="ccm_txt" class="notInCaps fm-txt form-control comment-textarea" name = "customText" formControlName="customText" placeholder="{{'common.customComment' | translate }}" (blur)="customTextValidaton()"
+                            ></textarea>
+                            <show-errors [control]="customCommentForm.controls.customText"></show-errors>
+                        </div>
+                      </div>
+                    </div>
+                  <!-- Add Comments Ends -->
+                  </form>
+                  <!-- Add Comments Form Ends -->
+                </div>
+                <!-- Form Row Ends -->
+
+                <div class="form-row">
+                  <div class="row">
+
+                    <div class="col-md-12 col-xs-12 table-col">
+                      <div class="table-responsive">
+                          <table id="custom-comments" datatable [dtOptions]="dtOptions['custom-comments']" [dtTrigger]="dtTrigger['custom-comments']" class="table table-bordered table-stripped">
+                              <thead>
+                                <tr>
+                                  <th width="10%">{{'claims.claims-view.claims-messages.messages.customs.data-table.date' | translate}}</th>
+                                  <th class="amount_right" width="25%">{{'claims.claims-view.claims-messages.messages.customs.data-table.line-item' | translate}}</th>
+                                  <th class="amount_right" width="25%">{{'claims.claims-view.claims-messages.messages.customs.data-table.notes' | translate}}</th>
+                                  <th width="10%" class="amount_right" *ngIf = "!reviewer && this.claimStatus != 'Paid' && this.claimRefered != true && this.claimStatus != 'Reversed'">{{'common.action' | translate }}</th>  <!-- #1124: New Feedback -->
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr *ngFor="let customComment of customComments">
+                                  <td>{{ customComment.createdOn | dateFormate  }}</td>
+                                  <td class="amount_right">{{ customComment.itemName}}</td>
+                                  <td class="amount_right">{{ customComment.claimItemCoTxt }}</td>
+                                  <td class="amount_right" *ngIf = "!reviewer && this.claimStatus != 'Paid' && this.claimRefered != true && this.claimStatus != 'Reversed'">
+                                    <a href="javascript:;" title="{{'common.edit' | translate }}" class="table-action-btn edit-ico" (click)="getCustomClaimItemData(customComment)"><i class="fa fa-pencil"></i></a>
+                                    <a href="javascript:;" title="{{'common.delete' | translate }}" class="table-action-btn del-ico" (click)="deleteClaimItemCustomComment(customComment.claimItemComKey)"><i class="fa fa-trash"></i></a>
+                                  </td>
+                                </tr>
+                              </tbody>
+                          </table>
+                      </div>
+                      <!-- Table Ends -->
+                    </div>
+                  </div>
+
+                </div> 
+                <!-- Form Row ENds -->
+              
+              </div>
+              <!-- Grid Inner Ends -->
+        </div>
+        <!--Claim Custom TAB ENDS -> 
+
+        <!- Claim Comments TAB STARTS -->
+        <div id="claim-comments" class="tab-pane fad">
+              <div class="grid-inner">
+
+                <div *ngIf = "!reviewer && this.claimStatus != 'Paid' && this.claimRefered != true && this.claimStatus != 'Reversed'" class="form-row">
+                  <form [formGroup]="claimCommentForm">
+                    <label>{{'common.addcomment'|translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <div class="add-comments">
+                      <div class="row">
+                        <div class="col-sm-5">
+                            <textarea id="ccm_claimCoTxt" class="notInCaps fm-txt form-control comment-textarea" name = "claimCoTxt" formControlName="claimCoTxt" (blur) = "claimCoTxtValidations()"></textarea>
+                            <show-errors [control]="claimCommentForm.controls.claimCoTxt"></show-errors>
+                        </div>
+                        <div class="col-sm-2">
+                          <label class="check-lb">
+                            <input id="ccm_claimImportance" type="checkbox" formControlName="claimImportance" />
+                            <span class="check-flag">
+                                <i class="fa fa-flag" aria- hidden="true"></i>
+                            </span>{{'common.importance'|translate}}
+                          </label>
+                        </div>
+                        <div *ngIf = "showCommentBussnsType && !addMode" class="col-sm-2">
+                            <label>Department<span class="required"> *</span></label>
+                            <ng2-completer 
+                              formControlName="claimCommentGroupKey" 
+                              [ngClass]="{'disableInput':disableBsnsType}"
+                              [datasource]="userGroupData" 
+                              [minSearchLength]="0" 
+                              [openOnFocus]="true"
+                              [fillHighlighted]="false" 
+                              [placeholder]="'Search Department'" 
+                              [textSearching]="'Please wait...'"
+                              [inputClass]="'form-control'" 
+                              [clearUnselected]="false"
+                              (selected)="onSelect($event)"
+                              (blur) = "claimCommentGroupValidations()"> 
+                            </ng2-completer>
+                            <show-errors [control]="claimCommentForm.controls.claimCommentGroupKey"></show-errors>
+                          </div>
+
+                              <div  class="col-sm-2">
+
+                    <label>{{'card.card-eligibility.expirydate' | translate}}</label>
+                    <div class="calender-field">
+                        <my-date-picker id="c_expiryDate" placeholder="{{'common.date-placeholder' | translate}}"
+                            [options]="myDatePickerOptions" name="expiryDateIC"
+                            [ngClass]="expired  ? 'expired' : 'notExpired'" formControlName="expiryDateIC"
+                            (inputFocusBlur)="changeDateFormat($event, 'expiryDateIC' ,'claimCommentForm')">
+                        </my-date-picker>
+                        <show-errors [control]="claimCommentForm.controls.expiryDateIC"></show-errors>
+                    </div>
+
+                  </div>
+                        <div class="col-sm-1 text-right" *ngIf="!showAddUpdateBtn">
+                          <button id="btnAddClaimCommentAddMode" *ngIf = "claimMsgAddMode" class="green-btn-add btn" (click)="addClaimComment(claimCommentForm,'claim-comments','addMode')">
+                            <i class="fa fa-plus"></i>{{'button.add'|translate}}</button>
+                          <button id="btnAddClaimCommentEditMode" *ngIf = "!claimMsgAddMode" class="green-btn-add btn" (click)="addClaimComment(claimCommentForm,'claim-comments','editMode')">
+                              <i class="fa fa-plus"></i>{{'button.add'|translate}}</button>
+                        </div>
+                        <div class="col-sm-1 text-right" *ngIf="showAddUpdateBtn">
+                            <button id="btnUpdateClaimCommentAddMode" *ngIf = "claimMsgAddMode" class="green-btn-add btn" (click)="UpdateClaimComment(claimCommentForm,'claim-comments','addMode')">
+                              <i class="fa fa-plus"></i>{{'button.update'|translate}}</button>
+                            <button id="btnUpdateClaimCommentEditMode" *ngIf = "!claimMsgAddMode" class="green-btn-add btn" (click)="UpdateClaimComment(claimCommentForm,'claim-comments','editMode')">
+                                <i class="fa fa-plus"></i>{{'button.update'|translate}}</button>
+                        </div>
+                      </div>
+                      <!-- Below div created to show File Upload field.-->
+                      <div class="col-md-3 col-xs-12 fileFieldAlign">
+                        <label>{{'common.documentName' | translate}}</label>
+                        <input style="display: none" type="file" (click)="claimCommentsDocumentName.value = null" (change)="claimCommentsFileUpload($event)" #claimCommentsDocumentName>
+                        <input formControlName="claimsCommentsDocumentName" class="fm-txt form-control datepicker" type="text" disabled>
+                        <ul *ngIf="error4.isError==true" class="validation-errors">
+                            <li style="color: red">{{error4.errorMessage}}</li>
+                        </ul>
+                        <ul *ngIf="error3.isError==true" class="validation-errors">
+                            <li style="color: red">{{error3.errorMessage}}</li>
+                        </ul>                                                    
+                      </div>
+                      <!-- Below div is for add and remove functionality.-->
+                      <div class="col-md-3 col-xs-12">
+                        <button class="btn green-btn" (click)="claimCommentsDocumentName.click()">{{'common.selectFile' | translate}}</button>
+                        <button *ngIf="showRemoveBtn" (click)="removeClaimCommentsFile()" class="btn red-btn ">{{'common.remove' | translate}}</button>
+                      </div>
+                    </div>
+                  <!-- Add Comments Ends -->
+                  </form>
+                  <!-- Add Comments Form Ends -->
+                </div>
+                <!-- Form Row Ends -->
+
+                <div class="form-row">
+                  <div class="row">
+
+                    <div class="col-md-12 col-xs-12 table-col">
+                      <div class="table-responsive">
+                        <table id="claim-comments" datatable [dtOptions]="dtOptions['claim-comments']" [dtTrigger]="dtTrigger['claim-comments']" class="table table-bordered table-stripped">
+                          <thead>
+                            <tr>
+                              <th width="10%">{{'claims.claims-view.claims-messages.messages.claim-comment.data-table.date' | translate}}</th>
+                              <th class="amount_right" width="20%">{{'claims.claims-view.claims-messages.messages.claim-comment.data-table.user-id' | translate}}</th>
+                              <th class="amount_right" width="20%">{{'claims.claims-view.claims-messages.messages.claim-comment.data-table.department' | translate}}</th>
+                              <th class="amount_right" width="20%">{{'claims.claims-view.claims-messages.messages.claim-comment.data-table.notes' | translate}}</th>
+                              <th class="amount_right" width="15%">{{'claims.claims-view.claims-messages.messages.claim-comment.data-table.expiryDate' | translate}}</th>
+
+                              <th class="amount_right" width="20%">{{'common.importance'|translate}}</th>
+                              <th class="amount_right">{{'common.action'|translate}}</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let claimComment of claimComment ;let i= index">
+                              <td>{{ claimComment.createdOn | dateFormate  }}</td>
+                               <td *ngIf ="!claimComment.claimComKey" class="amount_right">{{ claimComment.username}}</td>
+                              <td *ngIf ="!claimComment.claimComKey" class="amount_right">{{ claimComment.department}}</td>
+                              <td *ngIf ="!claimComment.claimComKey" class="amount_right">{{ claimComment.claimCoTxt }}</td> 
+                              <td *ngIf ="!claimComment.claimComKey" class="amount_right">{{ claimComment.expiredOn | dateFormate }}</td> 
+
+                              
+                              <!-- changed for log 990 -->
+                              <td  *ngIf ="claimComment.claimComKey" class="amount_right">{{ claimComment.userName}}</td>
+                              <td  *ngIf ="claimComment.claimComKey" class="amount_right">{{ claimComment.userGroupName}}</td>
+                              <td  *ngIf ="claimComment.claimComKey" class="amount_right">{{ claimComment.commentText }}</td>
+                              <td  *ngIf ="claimComment.claimComKey" class="amount_right">{{ claimComment.expiredOn | dateFormate}}</td>
+
+                              <td class="amount_right" *ngIf="claimComment.claimImportance == 'Y'"><span class="flag"><i class="fa fa-flag" aria-hidden="true"></i></span></td>
+                              <td class="amount_right" *ngIf="claimComment.claimImportance == 'N'"></td>
+                              <td class="amount_right" *ngIf="claimComment.claimImportance == ''"></td>
+                              <td class="amount_right">
+                                <button title="Edit"  [attr.disabled]="showAddUpdateBtn == true ? '' : null"  *ngIf="claimComment.claimImportance != ''" 
+                                (click)="claimComment.claimComKey > 0?EditClaimComments(claimComment.claimComKey,claimComment.claimImportance,claimComment.userGroupName,claimComment.commentText,claimComment.expiredOn,i):EditClaimComments(claimComment.claimComKey,claimComment.claimImportance,claimComment.department,claimComment.claimCoTxt,claimComment.expiredOn, i)" class="edit_row table-action-btn edit-ico">
+                                    <i class="fa fa-pencil"></i>
+                                </button>
+                                <button title="Delete" *ngIf="claimComment.claimImportance != ''" (click)="DeleteClaimComments(claimComment.claimComKey, i,claimComment.claimImportance,claimComment.claimCoTxt)" class="delete_row table-action-btn del-ico">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                              </td>
+                            </tr>
+                          </tbody>
+                      </table>
+                      </div>
+                      <!-- Table Ends -->
+                    </div>
+                  </div>
+
+                </div>
+                <!-- Form Row ENds -->
+              
+              </div>
+              <!-- Grid Inner Ends -->
+        </div>
+        <!--Claim Comments TAB ENDS -->
+      
+        <!--- all-claim-comments TAB STARTS -->
+        <div id="getAllCommentsTab" class="tab-pane fade">
+          <div class="grid-inner">
+            <div class="form-row">
+              <div class="row">
+                <div class="col-md-12 col-xs-12 table-col ">
+                  <div class="table-responsive">
+                     
+                    
+                  </div>
+                  <!-- Table Ends -->
+                </div>
+              </div>
+            </div>
+            <!-- Form Row ENds -->
+          </div>
+          <!-- Grid Inner Ends -->
+        </div>
+        <!-- all-claim-comments TAB ENDS --> 
+      </div>
+
+    </div>
+    <!-- Form Row ENds -->
+
+</div>
+<!-- Grid Box Ends -->
+
+<!-- Form Row ENds -->
+<div *ngIf="showLoader" class="loader-outer">
+  <div class="cube-wrapper">
+    <div class="cube-folding">
+      <span class="leaf1"></span>
+      <span class="leaf2"></span>
+      <span class="leaf3"></span>
+      <span class="leaf4"></span>
+    </div>
+    <span class="loading" data-name="Loading">{{'common.pleaseWait' | translate }}</span>
+  </div>
+</div>

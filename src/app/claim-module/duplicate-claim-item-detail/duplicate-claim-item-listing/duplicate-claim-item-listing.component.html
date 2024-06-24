@@ -1,0 +1,139 @@
+<div class="grid-box">
+  <div class="grid-heading">
+    <h3>{{'claims.claims-view.claims-messages.message' | translate}}</h3>
+  </div>
+  <ul class="nav company-tabs nav-pills">
+      <li  class="active">
+          <a  id = "system_comment" data-toggle="pill"  href="#claim-system-view"> {{'claims.claims-view.claims-messages.messages.system' | translate}}</a>
+        </li>
+    <li>
+      <a *ngIf = "!claimMsgAddMode"  data-toggle="pill" href="#claim-custom-view">{{'claims.claims-view.claims-messages.messages.custom' | translate}}<i *ngIf="UreadMessage != 0" class="badge badge-notify" title="Uread Message" (click)="markComentUnread()" >{{UreadMessage}}</i></a>
+    </li>
+    <li click="getSystemMessages()">
+      <a data-toggle="pill" href="#claim-comments-v">{{'claims.claims-view.claims-messages.messages.claim-comments' | translate}}</a>
+    </li>
+  </ul>
+    <div class="form-row">
+      <div class="tab-content">
+        <div id="claim-system-view" class="tab-pane fade in active">
+          <div class="grid-inner">
+            <div class="form-row">
+              <div class="row">
+                <div class="col-md-12 col-xs-12 table-col ">
+                  <div class="table-responsive">
+                    <table id="claim-system-message-view" datatable [dtOptions]="dtOptions['claim-system-message-view']" [dtTrigger]="dtTrigger['claim-system-message-view']" class="table table-bordered table-stripped">
+                      <thead>
+                        <tr>
+                          <th width="10%">{{'claims.claims-view.claims-messages.messages.systems.data-table.date' | translate}}</th>
+                          <th class="amount_right" width="10%">{{'claims.claims-view.claims-messages.messages.systems.data-table.proc' | translate}}</th>
+                          <th class="amount_right" width="30%">{{'claims.claims-view.claims-messages.messages.systems.data-table.messages' | translate}}</th>
+                          <th class="amount_right" width="30%">{{'common.action'|translate}}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let message of systemMessage">
+                          <td width="10%">{{message.serviceDate | dateFormate}}</td>
+                          <td class="amount_right" width="10%" title="{{message.itemProcLongDesc}}">{{message.procdeureCode}}</td>
+                          <td class="amount_right" width="30%">{{message.messageCom}}</td>
+                          <td class="amount_right" width="30%">{{message.actionCom}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div id="claim-custom-view" class="tab-pane fade">
+              <div class="grid-inner">
+               
+                <div class="form-row">
+                  <div class="row">
+                    <div class="col-md-12 col-xs-12 table-col">
+                      <div class="table-responsive">
+                          <table id="custom-comments-view" datatable [dtOptions]="dtOptions['custom-comments-view']" [dtTrigger]="dtTrigger['custom-comments-view']" class="table table-bordered table-stripped">
+                              <thead>
+                                <tr>
+                                  <th width="10%">{{'claims.claims-view.claims-messages.messages.customs.data-table.date' | translate}}</th>
+                                  <th class="amount_right" width="25%">{{'claims.claims-view.claims-messages.messages.customs.data-table.line-item' | translate}}</th>
+                                  <th class="amount_right" width="25%">{{'claims.claims-view.claims-messages.messages.customs.data-table.notes' | translate}}</th>
+                                 
+                                  <!-- #1124: New Feedback -->
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr *ngFor="let customComment of customComments">
+                                  <td>{{ customComment.createdOn | dateFormate  }}</td>
+                                  <td class="amount_right">{{ customComment.itemName}}</td>
+                                  <td class="amount_right">{{ customComment.claimItemCoTxt }}</td>
+                                 
+                                </tr>
+                              </tbody>
+                          </table>
+                      </div>
+                    </div>
+                  </div>
+                </div> 
+              </div>
+        </div>
+        <div id="claim-comments-v" class="tab-pane fad">
+              <div class="grid-inner">
+              
+                <div class="form-row">
+                  <div class="row">
+                    <div class="col-md-12 col-xs-12 table-col">
+                      <div class="table-responsive">
+                        <table id="claim-comments-view" datatable [dtOptions]="dtOptions['claim-comments-view']" [dtTrigger]="dtTrigger['claim-comments-view']" class="table table-bordered table-stripped">
+                          <thead>
+                            <tr>
+                              <th width="10%">{{'claims.claims-view.claims-messages.messages.claim-comment.data-table.date' | translate}}</th>
+                              <th class="amount_right" width="20%">{{'claims.claims-view.claims-messages.messages.claim-comment.data-table.user-id' | translate}}</th>
+                              <th class="amount_right" width="20%">{{'claims.claims-view.claims-messages.messages.claim-comment.data-table.department' | translate}}</th>
+                              <th class="amount_right" width="20%">{{'claims.claims-view.claims-messages.messages.claim-comment.data-table.notes' | translate}}</th>
+                              <th class="amount_right" width="15%">{{'claims.claims-view.claims-messages.messages.claim-comment.data-table.expiryDate' | translate}}</th>
+                              <th class="amount_right" width="20%">{{'common.importance'|translate}}</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let claimComment of claimComment ;let i= index">
+                              <td>{{ claimComment.createdOn | dateFormate  }}</td>
+                               <td *ngIf ="!claimComment.claimComKey" class="amount_right">{{ claimComment.username}}</td>
+                              <td *ngIf ="!claimComment.claimComKey" class="amount_right">{{ claimComment.department}}</td>
+                              <td *ngIf ="!claimComment.claimComKey" class="amount_right">{{ claimComment.claimCoTxt }}</td> 
+                              <td *ngIf ="!claimComment.claimComKey" class="amount_right">{{ claimComment.expiredOn | dateFormate }}</td> 
+                              <td  *ngIf ="claimComment.claimComKey" class="amount_right">{{ claimComment.userName}}</td>
+                              <td  *ngIf ="claimComment.claimComKey" class="amount_right">{{ claimComment.userGroupName}}</td>
+                              <td  *ngIf ="claimComment.claimComKey" class="amount_right">{{ claimComment.commentText }}</td>
+                              <td  *ngIf ="claimComment.claimComKey" class="amount_right">{{ claimComment.expiredOn | dateFormate}}</td>
+                              <td class="amount_right" *ngIf="claimComment.claimImportance == 'Y'"><span class="flag"><i class="fa fa-flag" aria-hidden="true"></i></span></td>
+                              <td class="amount_right" *ngIf="claimComment.claimImportance == 'N'"></td>
+                              <td class="amount_right" *ngIf="claimComment.claimImportance == ''"></td>
+                              
+                            </tr>
+                          </tbody>
+                      </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+        </div>
+        <div id="getAllCommentsTab" class="tab-pane fade">
+          <div class="grid-inner">
+            <div class="form-row">
+              <div class="row">
+                <div class="col-md-12 col-xs-12 table-col ">
+                  <div class="table-responsive">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<button id="getallComments" style="display: none;" (click)="getSystemMessages()">hide get comments</button>

@@ -1,0 +1,213 @@
+<div class="section-heading">
+    <h2> {{ 'amendment.plan' | translate }} {{ 'amendment.amendment' | translate }} -<span>
+            {{ 'amendment.wizard' | translate }} </span></h2>
+</div>
+<!-- Section Heading Ends -->
+<div class="grid-box" id="main-plan-ot">
+    <div class="grid-heading">
+        <h3>{{ 'amendment.do' | translate }} {{ 'amendment.amendment' | translate }}</h3>
+    </div>
+    <!-- Grid Heading Ends -->
+    <ul class="nav company-tabs nav-pills tabCur">
+        <li id="li-step1" class="tab-li active"><a (click)="clickNextTab('step2','step1')">
+                {{ 'amendment.step' | translate }} 1</a></li>
+        <li id="li-step2" class="tab-li"><a (click)="clickNextTab('step1','step2')">{{ 'amendment.step' | translate }}
+                2</a></li>
+
+        <li id="planInfo" class="tab-li active hidden"><a data-toggle="pill" href="#step1">
+                {{ 'amendment.step' | translate }} 1</a></li>
+        <li id="planBenefit" class="tab-li hidden"><a data-toggle="pill"
+                href="#step2">{{ 'amendment.step' | translate }}
+                2</a></li>
+    </ul>
+    <div class="grid-inner">
+        <div class="form-row">
+            <div class="tab-content">
+                <!--- PLAN DASHBOARD TAB STARTS -->
+                <div id="step1" class="tab-pane fade in active tab">
+                    <div class="grid-heading">
+                        <h3> <b>{{ 'amendment.selectTask' | translate }}</b>
+                        </h3>
+                    </div>
+                    <form [formGroup]="initialStep">
+                        <div class="grid-inner">
+                            <div class="grid-inner checkpading">
+                                <div class="select-options">
+                                    <span>
+                                        <input type="radio"
+                                            value="Change Effective Date for Company. Plans, Divisions, Cards, and Benefits.."
+                                            formControlName="status">
+                                        <label class="option_label">
+                                            <span class="custom-check">
+                                                {{ 'amendment.optionOne' | translate }}
+                                                <br>
+                                                {{ 'amendment.optionTwo' | translate }}
+                                            </span>
+                                        </label>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="error" *ngIf='isRequired'>
+                            {{ 'amendment.reqiredError' | translate }}
+                        </div>
+                    </form>
+                    <div class="form-row text-center">
+                        <button class="btn green-btn"
+                            (click)="clickNextTab('step1','step2')">{{'button.next' | translate}}</button>
+                    </div>
+                </div>
+
+                <!--PLAN DASHBOARD TAB ENDS -->
+                <!--- PLAN DASHBOARD TAB STARTS -->
+                <div id="step2" class="tab-pane fade in ">
+                    <form [formGroup]="filterReport">
+                        <div class="grid-heading">
+                            <h3>
+                                <b>
+                                    {{ 'amendment.selectOneError' | translate }}
+                                </b> ({{selectedValue}})
+                            </h3>
+                        </div>
+                        <div>
+                            <div class="col-md-12 top">
+                                <div class="col-md-1 col-xs-2 step2Label">
+                                    <input type="radio" value="C" formControlName="rbutton" name='rbutton'
+                                        (click)="selectedOption('C')" title="Company" />
+                                    {{ 'amendment.company' | translate }}
+                                </div>
+                                <div class="col-md-10 col-xs-10">
+                                    <app-search-company (getCompanyName)="getCompanySearchName($event)"
+                                        (checkCompanyField)="setValueProgram($event)" (coIdEvent)="receiveCoId($event)">
+                                    </app-search-company>
+                                    <show-errors [control]="filterReport.controls.searchCompany"></show-errors>
+                                    {{ 'amendment.optionThree' | translate }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="col-md-1 col-xs-2 step2Label">
+                                <input type="radio" formControlName="rbutton" value="P" name='rbutton'
+                                    (click)="selectedOption('P')" title="Plan" />
+                                {{ 'amendment.plan' | translate }}
+                            </div>
+                            <div class="col-md-10 col-xs-10">
+                                <input type="text" formControlName="plan" placeholder="Plan" class="form-control">
+                                <show-errors [control]="filterReport.controls.plan"></show-errors>
+                                {{ 'amendment.optionFour' | translate }}
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="col-md-1 col-xs-2 step2Label">
+                                <input type="radio" formControlName="rbutton" value="D" name='rbutton'
+                                    (click)="selectedOption('D')" title="Division" />
+                                {{ 'amendment.division' | translate }}
+                            </div>
+                            <div class="col-md-10 col-xs-10">
+                                <input type="text" formControlName="division" id='division' placeholder="Division"
+                                    class="form-control">
+                                <show-errors [control]="filterReport.controls.division"></show-errors>
+                                {{ 'amendment.optionFive' | translate }}
+                            </div>
+                        </div>
+                        <div>
+                            <div class="col-md-12 lastRow">
+                                <div class="col-md-1 step2Label col-xs-2">
+                                    <label></label>
+                                    <input type="radio" formControlName="rbutton" value="B" name='rbutton'
+                                        (click)="selectedOption('B')" title="Benefit" />
+                                    {{ 'amendment.benefit' | translate }}
+                                </div>
+                                <div class="col-md-11 step2Label">
+                                    <label></label>
+                                    <div class="select-options">
+                                        <span>
+                                            <label>
+                                                <input type="checkbox" title="Dental" value="dental"
+                                                    formControlName="dental" name="dental" id="dental" />
+                                                {{ 'amendment.dental' | translate }}
+                                            </label>
+                                        </span>
+                                        <span>
+                                            <label>
+                                                <input type="checkbox" value="drug" title="Drug" formControlName="drug"
+                                                    name="drug" id="drug" />
+                                                {{ 'amendment.drug' | translate }}
+                                            </label>
+                                        </span>
+                                        <span>
+                                            <label>
+                                                <input type="checkbox" value="health" formControlName="health"
+                                                    title="Health" name="health" id="health" />
+                                                {{ 'amendment.health' | translate }}
+                                            </label>
+                                        </span>
+                                        <span>
+                                            <label>
+                                                <input type="checkbox" value="topup" formControlName="topup"
+                                                    title="Topup" name="topup" id="topup" />
+                                                {{ 'amendment.topup' | translate }}
+                                            </label>
+                                        </span>
+                                        <span>
+                                            <label>
+                                                <input type="checkbox" value="vision" formControlName="vision"
+                                                    title="Vision" name="vision" id="vision" />
+                                                {{ 'amendment.vision' | translate }}
+                                            </label>
+                                        </span>
+                                    </div>
+                                    <div>
+                                        {{ 'amendment.optionSix' | translate }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="col-md-1"></div>
+                                <div class="col-md-11">
+                                    <div class="col-md-2 effDate">
+                                        {{ 'amendment.effectiveDate' | translate }} : </div>
+                                    <div class="col-md-2">
+                                        <div class="calender-field">
+                                            <my-date-picker id="effectiveOnAmendment" class="inputSearch" name="effectiveOn"
+                                                data-type="date" [options]="myDatePickerOptions"
+                                                [selDate]="dateNameArray['effectiveOn']" formControlName="effectiveOn"
+                                                (inputFocusBlur)="changeDateFormat1($event, 'effectiveOn')"
+                                                placeholder="{{'common.date-placeholder' | translate}}">
+                                            </my-date-picker>
+                                            <show-errors [control]="filterReport.controls.effectiveOn"></show-errors>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row text-center">
+                            <button class="btn grey-btn"
+                                (click)="clickbackTab('step2','step1')">{{ 'amendment.back' | translate }}</button>
+                            <button class="btn green-btn"
+                                (click)="submit()">{{ 'amendment.finish' | translate }}</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!--PLAN DASHBOARD TAB ENDS -->
+            </div>
+            <!-- Form Row ENds -->
+        </div>
+        <!-- Grid Inner Ends -->
+    </div>
+    <!-- Grid Box Ends -->
+</div>
+<!-- Container Ends -->
+<div [hidden]="!showLoader" class="loader-outer">
+    <div class="cube-wrapper">
+        <div class="cube-folding">
+            <span class="leaf1"></span>
+            <span class="leaf2"></span>
+            <span class="leaf3"></span>
+            <span class="leaf4"></span>
+        </div>
+        <span class="loading" data-name="Loading">{{'company.plan.benefits.pleaseWait'|translate}}</span>
+    </div>
+</div>

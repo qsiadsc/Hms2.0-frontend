@@ -1,0 +1,1000 @@
+<div class="web-reg" *ngIf="!addMode">
+</div>
+<form [formGroup]="FormGroup">
+    <!-- [Start Group Sections] -->
+    <div class="grid-box">
+        <div class="grid-heading">
+            <h3>Plan Section</h3>
+        </div>
+        <div class="grid-inner">
+            <div class="form-row">
+                <div class="row min-ht-sf">
+                    <div class="col-md-2 col-xs-12">
+                        <label>{{ 'common.company-no.' | translate }}
+                        </label>
+                        <input id="planInfoCompanyNo" disabled class="fm-txt form-control" type="text"
+                            formControlName="company_number" autofocus>
+                        <show-errors [control]="FormGroup.controls.company_number"></show-errors>
+                    </div>
+                    <div class="col-md-2 col-xs-12">
+                        <label>{{ 'company.plan.plan-info.company-name' | translate }}
+                        </label>
+                        <input id="planInfoCompanyName" class="fm-txt form-control" type="text"
+                            formControlName="company_name">
+                        <show-errors [control]="FormGroup.controls.company_name"></show-errors>
+                    </div>
+                    <div class="col-md-2 col-xs-12">
+                        <label>{{'company.plan.plan-info.typeOfYear' | translate }}
+                            <span *ngIf="showHideTypeOfYear" class="required">*</span>
+                        </label>
+
+                        <ng2-completer formControlName="type_of_year" [datasource]="planYearTypeData"
+                            [minSearchLength]="0" [openOnFocus]="true" (opened)="onOpened($event)"
+                            [fillHighlighted]="false" [placeholder]="'Search Year Type'"
+                            [textSearching]="'Please wait...'" [inputClass]="'form-control'"
+                            (selected)="onYearTypeSelected($event)" [clearUnselected]="true">
+                        </ng2-completer>
+                        <show-errors [control]="FormGroup.controls.type_of_year"></show-errors>
+                    </div>
+                    <div class="col-md-1 col-xs-12">
+                        <label>{{ 'company.plan.plan-info.planNo' | translate }}
+                        </label>
+                        <!-- change for (#1189) -->
+                        <input class="fm-txt form-control" type="text" [ngClass]="{'disableInput':planInfoDisable}" formControlName="plan_num"
+                            (blur)="isPlanValid($event)">
+                        <show-errors [control]="FormGroup.controls.plan_num"></show-errors>
+                    </div>
+                    <div class="col-md-2 col-xs-12">
+                        <label>{{ 'company.plan.plan-info.effective-date' | translate }}
+                            <span class="required">*</span>
+                        </label>
+                        <div class="calender-field">
+                            <my-date-picker id="planInfoEffectiveDate" [options]="myDatePickerOptions"
+                                name="effective_date" formControlName="effective_date"
+                                placeholder="{{'common.date-placeholder' | translate}}"
+                                (inputFocusBlur)="changeDateFormat($event, 'effective_date', 'FormGroup', true)">
+                            </my-date-picker>
+                            <show-errors [control]="FormGroup.controls.effective_date"></show-errors>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 col-xs-12">
+                        <label>&nbsp;</label>
+                        <div class="select-options">
+                            <span *ngIf = '!isCopyMode'>
+                                <label><span class="custom-check">
+                                        <input type="checkbox" value="T" formControlName="no_claim">
+                                        {{ 'company.plan.plan-info.noClaimSecure' | translate }}
+                                        <span></span></span></label>
+                            </span>
+                            <span *ngIf="!addMode">
+                                <!-- Task 570 changes made to align Suspend Division with it’s checkbox in plan section of plan info -->
+                                <label name="check" data-toggle="modal" style="width: 9rem;margin-left: -1px" data-target="#PlanSuspHistory"
+                                    (click)="resetDivisionSuspendedForm()">
+                                    <img *ngIf="isDivisionSuspended == false" class="check-image" [src]="unChecked"
+                                        alt="" ng-if="isDivisionSuspended" />
+                                    <!-- Task 570 changes made to align Suspend Division with it’s checkbox in plan section of plan info -->
+                                    <img *ngIf="isDivisionSuspended == true" [src]="checked" alt=""
+                                        ng-if="isDivisionSuspended"/><h3 style="margin-left: 17%; margin-top: -13%;">Suspend Division</h3>
+                                </label>
+                            </span>
+                            <span *ngIf="isSuspendedHistoryExist == true && editMode == true">
+                                <app-history-icons [attr.data-toggle]="dataToggle"
+                                    [attr.data-target]="suspendDivisionDataTarget" [id]="suspendDivisionId"
+                                    [class]="suspendDivisionClass" [title]="suspendDivisionTitle"
+                                    (click)="getDivisionSuspendHistory()">
+                                </app-history-icons>
+                            </span>
+                            <span *ngIf="isSuspendedHistoryExist == false && editMode == true"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid-box">
+        <div class="grid-heading">
+            <h3>Division Section</h3>
+        </div>
+        <div class="grid-inner">
+            <div class="form-row">
+                <div class="row min-ht-sf">
+                    <div class="col-md-3 col-xs-12">
+                        <label>{{ 'company.plan.plan-info.divNo' | translate }}
+                            <span class="required">*</span>
+                        </label>
+                        <input id="planInfoDivisionNo" class="fm-txt form-control" type="text"
+                            formControlName="division_num">
+                        <show-errors [control]="FormGroup.controls.division_num"></show-errors>
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                        <label>{{ 'company.plan.plan-info.divName' | translate }}
+                            <span class="required">*</span>
+                        </label>
+                        <input id="planInfoDivisionName" class="fm-txt form-control" type="text"
+                            formControlName="division_name">
+                        <show-errors [control]="FormGroup.controls.division_name"></show-errors>
+                    </div>
+
+                    <div class="col-md-3 col-xs-12" *ngIf="!addMode">
+                        <label>Terminated Date</label>
+                        <div class="calender-field">
+                            <my-date-picker id="planInfoEffectiveDate" [options]="myDatePickerOptions"
+                                name="terminate_date_division" formControlName="terminate_date_division"
+                                placeholder="{{'common.date-placeholder' | translate}}"
+                                (inputFocusBlur)="changeDateFormat($event, 'terminate_date_division', 'FormGroup', true)">
+                            </my-date-picker>
+                            <show-errors [control]="FormGroup.controls.terminate_date_division"></show-errors>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid-box">
+        <div class="grid-heading">
+            <h3>Division Details Section</h3>
+        </div>
+        <div class="grid-inner">
+            <div class="form-row">
+                <div class="row min-ht-sf">
+                    <div class="col-md-2 col-xs-12">
+                        <label>{{'company.plan.plan-info.dependentAge1' | translate }}
+                            <!-- change conditions for (#1189) -->
+                            <span *ngIf="businessType==1" class="required">*</span> 
+                        </label>
+                        <input id="planInfoDependantAge1" class="fm-txt form-control" type="text"
+                            formControlName="dependent_age_1"
+                            (blur)="isdependentAgeValid(FormGroup.controls.dependent_age_1,FormGroup.controls.dependent_age_2)">
+                        <show-errors [control]="FormGroup.controls.dependent_age_1"></show-errors>
+                    </div>
+                    <div class="col-md-2 col-xs-12">
+                        <label>{{'company.plan.plan-info.dependentAge2' | translate }}
+                            <!-- change conditions for (#1189) -->
+                            <span *ngIf="businessType==1" class="required">*</span>
+                        </label>
+                        <input id="planInfoDependantAge2" class="fm-txt form-control" type="text"
+                            formControlName="dependent_age_2"
+                            (blur)="isAgeValid(FormGroup.controls.dependent_age_2,FormGroup.controls.dependent_age_1)">
+                        <show-errors [control]="FormGroup.controls.dependent_age_2"></show-errors>
+                    </div>
+                    <div class="col-md-2 col-xs-12" *ngIf="!addMode">
+                        <label>{{ 'company.plan.plan-info.effective-date' | translate }}
+                            <span *ngIf="businessType==1 || ageValue == true" class="required">*</span>
+                        </label>
+                        <div class="calender-field">
+                            <my-date-picker id="planInfoEffectiveDate" [options]="myDatePickerOptions"
+                                name="effective_date_divisionDetails" formControlName="effective_date_divisionDetails"
+                                placeholder="{{'common.date-placeholder' | translate}}"
+                                (inputFocusBlur)="changeDateFormat($event, 'effective_date_divisionDetails', 'FormGroup', true)">
+                            </my-date-picker>
+                            <show-errors [control]="FormGroup.controls.effective_date_divisionDetails"></show-errors>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-xs-12">
+                        <label>{{ 'company.plan.plan-info.divisionComments' | translate }}</label>
+                        <textarea id="planInfoDivisionComments" class="notInCaps fm-txt form-control"
+                            formControlName="division_comment"></textarea>
+                        <show-errors [control]="FormGroup.controls.division_comment"></show-errors>
+                        <span *ngIf="isDivCommHistoryExist == true && editMode == true">
+                            <app-history-icons [attr.data-toggle]="dataToggle"
+                                [attr.data-target]="divisionCommentsDataTarget" [id]="divisionCommentsId"
+                                [class]="divisionCommentsClass" [title]="divisionCommentsTitle"
+                                (click)="getDivisionCommentsHistory()">
+                            </app-history-icons>
+                        </span>
+                        <span *ngIf="isDivCommHistoryExist == false && editMode == true"></span>
+                    </div>
+                    <div class="col-md-2 col-xs-12">
+                        <label>&nbsp;</label>
+                        <div class="select-options">
+                            <span>
+                                <label><span class="custom-check">
+                                        <input type="checkbox" value="T" formControlName="extra_benefits">
+                                        {{ 'company.plan.plan-info.extraBenefits' | translate }}<span></span></span>
+                                </label>
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid-box">
+        <div class="grid-heading">
+            <h3>Prorating Section</h3>
+            <!--[Start]-->
+            <span *ngIf="isPrpHistoryExist == true && editMode == true">
+                <app-history-icons [attr.data-toggle]="dataToggle" [attr.data-target]="proratingTypeDataTarget"
+                    [id]="proratingTypeId" [class]="proratingTypeClass" [title]="proratingTypeTitle"
+                    (click)="getProratingTypeHistory()">
+                </app-history-icons>
+            </span>
+            <span *ngIf="isPrpHistoryExist == false && editMode == true"></span>
+            <!--[End]-->
+        </div>
+        <div class="grid-inner">
+            <!-- [Start Prorating Row] -->
+            <div class="form-row">
+                <div class="row min-ht-sf">
+                    <div class="col-md-3 col-xs-12">
+                        <label>{{ 'company.plan.plan-info.selectProrating' | translate }}</label>
+                        <ng2-completer formControlName="prorating_type" [datasource]="proratingTypeData"
+                            [minSearchLength]="0" [openOnFocus]="true" (opened)="onOpened($event)"
+                            [fillHighlighted]="false" [placeholder]="'Search Prorating Type'"
+                            [textSearching]="'Please wait...'" [inputClass]="'form-control'"
+                            (selected)="onProratingTypeSelected($event)" (blur)="onBlurProratingType($event)" [clearUnselected]="false">
+                        </ng2-completer>
+                    </div>
+                    <div class="col-md-3 col-xs-12" *ngIf="!addMode">
+                        <label>{{ 'company.plan.plan-info.effective-date' | translate }}<span *ngIf = "isRequiredEnable" class="required">*</span>
+                        </label>
+                        <div class="calender-field">
+                            <my-date-picker id="proratingTypeEffectiveDate" [options]="myDatePickerOptions"
+                                name="effective_date_proratingType" formControlName="effective_date_proratingType"
+                                placeholder="{{'common.date-placeholder' | translate}}"
+                                (inputFocusBlur)="changeDateFormat($event, 'effective_date_proratingType', 'FormGroup', false)">
+                            </my-date-picker>
+                            <show-errors [control]="FormGroup.controls.effective_date_proratingType"></show-errors>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-xs-12" *ngIf="showProratingExpiry && !addMode">
+                      
+                        <label>Expiry Date</label>
+                        <div class="calender-field">
+                            <my-date-picker id="proratingTypeExpiryDate" [options]="myDatePickerOptions"
+                                name="expiry_date_proratingType" formControlName="expiry_date_proratingType"
+                                placeholder="{{'common.date-placeholder' | translate}}" [ngClass]="expired  ? 'expired' : 'notExpired'"
+                                (inputFocusBlur)="changeDateFormat($event, 'expiry_date_proratingType', 'FormGroup', true)">
+                            </my-date-picker>
+                            <show-errors [control]="FormGroup.controls.expiry_date_proratingType"></show-errors>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- [End Prorating Row] -->
+        </div>
+    </div>
+
+    <div class="grid-box">
+        <div class="grid-heading">
+            <h3>Deductible Section</h3>
+            <!--[Start]-->
+            <span *ngIf="editMode == true && isDedHistoryExist == true">
+                <app-history-icons [attr.data-toggle]="dataToggle" [attr.data-target]="deductibleDataTarget"
+                    [class]="deductibleClass" [id]="deductibleId" [title]="deductibleTitle"
+                    (click)="getDeductableTypeHistory()">
+                </app-history-icons>
+            </span>
+            <span *ngIf="isDedHistoryExist == true && editMode == true"></span>
+            <!--[End]-->
+        </div>
+        <div class="grid-inner">
+            <!-- [Start Deductible Row] -->
+            <div class="form-row">
+                <div class="row min-ht-sf">
+                    <div class="col-md-3 col-xs-12">
+                        <label>{{ 'company.plan.plan-info.deductibleType' | translate }}</label>
+                        <ng2-completer formControlName="deductible_type" [datasource]="deductibleTypeData"
+                            [minSearchLength]="0" [openOnFocus]="true" (opened)="onOpened($event)"
+                            [fillHighlighted]="false" [placeholder]="'Search Deductible Type'"
+                            [textSearching]="'Please wait...'" [inputClass]="'form-control'"
+                            (selected)="onDeductibleTypeSelected($event)" [clearUnselected]="false">
+                        </ng2-completer>
+                    </div>
+                    <div class="col-md-2 col-xs-12" *ngIf="!addMode">
+                        <label>{{ 'company.plan.plan-info.effective-date' | translate }}<span *ngIf = "forDeductRequired" class="required">*</span></label>
+                        <div class="calender-field">
+                            <my-date-picker id="deductibleTypeEffectiveDate" [options]="myDatePickerOptions"
+                                name="effective_date" formControlName="effective_date_deductibleType"
+                                placeholder="{{'common.date-placeholder' | translate}}"
+                                (inputFocusBlur)="changeDateFormat($event, 'effective_date_deductibleType', 'FormGroup', false)">
+                            </my-date-picker>
+                            <show-errors [control]="FormGroup.controls.effective_date_deductibleType"></show-errors>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-xs-12" *ngIf="showDeductibleExpiry && !addMode">
+                        <label>Expiry Date</label>
+                        <div class="calender-field">
+                            <my-date-picker id="deductibleTypeExpiryDate" [options]="myDatePickerOptions"
+                                name="effective_date" formControlName="expiry_date_deductibleType" 
+                                placeholder="{{'common.date-placeholder' | translate}}" [ngClass]="expired  ? 'expired' : 'notExpired'"
+                                (inputFocusBlur)="changeDateFormat($event, 'expiry_date_deductibleType', 'FormGroup', true)">
+                            </my-date-picker>
+                            <show-errors [control]="FormGroup.controls.expiry_date_deductibleType"></show-errors>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-xs-12">
+                        <label>{{ 'company.plan.plan-info.singleDeductibleAmount' | translate }}</label>
+                        <div class="calender-field d-amount">
+                        <input id="planInfoSingleDeductibleType" class="fm-txt form-control" min="0"
+                            step="1" step="any" oninput="validity.valid||(value='');"
+                            formControlName="single_debit_amount" (blur)="addDecimal($event,'single_debit_amount')">
+                        <show-errors [control]="FormGroup.controls.single_debit_amount"></show-errors>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-xs-12">
+                        <label>{{ 'company.plan.plan-info.familyDeductibleAmount' | translate }}</label>
+                        <div class="calender-field d-amount">
+                        <input id="planInfoFamilyDeductibleType" class="fm-txt form-control" min="0" 
+                            step="1" step="any" oninput="validity.valid||(value='');"
+                            formControlName="family_debit_amount" (blur)="addDecimal($event,'family_debit_amount')">
+                        <show-errors [control]="FormGroup.controls.family_debit_amount"></show-errors>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- [End Deductible Row] -->
+    </div>
+    <!-- [End Group Sections] -->
+
+    <div class="form-row">
+        <div class="pull-right">
+            <button id="planInfoAddNew" class="green-btn-add btn" (click)="enableAddUnit()">
+                <i class="fa fa-plus"></i> Add New Unit</button>
+        </div>
+        <!-- Grid Filters Ends -->
+        <div class="row">
+            <div class="col-md-12 col-xs-12 table-col">
+                <div class="table-responsive">
+                    <!-- Validation Errors Messages for new row -->
+
+                    <div style="color: red" class="alert alert-danger" *ngIf="(new_unit_id.invalid && (new_unit_id.dirty || new_unit_id.touched)) 
+                        || (new_description.invalid && (new_description.dirty || new_description.touched)) 
+                        || (new_effective_date.invalid && (new_effective_date.dirty || new_effective_date.touched))">
+
+                        <!-- Validatoin for new record unit id -->
+                        <div *ngIf="new_unit_id.invalid && (new_unit_id.dirty || new_unit_id.touched)">
+                            <div *ngIf="new_unit_id.errors.required">
+                                {{ 'company.plan.plan-info.unitIdReq' | translate }}
+                            </div>
+                            <div *ngIf="!new_unit_id.errors.required && new_unit_id.errors.onlyNumbers">
+                                {{ 'company.plan.plan-info.numbersOnly' | translate }}
+                            </div>
+                            <div
+                                *ngIf="!new_unit_id.errors.required && !new_unit_id.errors.onlyNumbers && new_unit_id.errors.maxlength">
+                                {{ 'company.plan.plan-info.max9Numbers' | translate }}
+                            </div>
+
+                            <div *ngIf="new_unit_id.errors.alreadyExist">
+                                {{ 'company.plan.plan-info.unitExist' | translate }}
+                            </div>
+                        </div>
+
+                        <!-- Validatoin for new record description -->
+                        <div *ngIf="new_description.invalid && (new_description.dirty || new_description.touched)">
+                            <div *ngIf="new_description.errors.required">
+                                {{ 'company.plan.plan-info.descriptionReq' | translate }}
+                            </div>
+
+                            <div *ngIf="new_description.errors.maxlength">
+                                {{ 'company.plan.plan-info.descNotGreater50' | translate }}
+                            </div>
+                        </div>
+                        <!-- Validatoin for new record effective date -->
+                        <div
+                            *ngIf="new_effective_date.invalid && (new_effective_date.dirty || new_effective_date.touched)">
+                            <div *ngIf="new_effective_date.errors.required">
+                                {{ 'company.plan.plan-info.effeDateisReq' | translate }}
+                            </div>
+
+                            <div *ngIf="new_effective_date.errors.dateNotValid">
+                                {{ 'company.plan.plan-info.validDate' | translate }}
+                            </div>
+                            <div *ngIf="new_effective_date.errors.EffectiveDateNotValid">
+                                {{ 'company.plan.plan-info.dateCantBeLess' | translate }} </div>
+                        </div>
+
+                    </div>
+
+                    
+                    <div style="color: red" class="alert alert-danger" *ngIf="(old_unit_id.invalid && (old_unit_id.dirty || old_unit_id.touched))
+                        || (old_description.invalid && (old_description.dirty || old_description.touched)) 
+                        || (updates_comment.invalid && (updates_comment.dirty || updates_comment.touched)) 
+                        || (old_effective_date.invalid && (old_effective_date.dirty || old_effective_date.touched))">
+
+                        <div *ngIf="old_unit_id.invalid && (old_unit_id.dirty || old_unit_id.touched)">
+                            <div *ngIf="old_unit_id.errors.required">
+                                {{ 'company.plan.plan-info.unitIdReq' | translate }}
+                            </div>
+                            <div *ngIf="!old_unit_id.errors.required && old_unit_id.errors.onlyNumbers">
+                                {{ 'company.plan.plan-info.numbersOnly' | translate }}
+                            </div>
+                            <div
+                                *ngIf="!old_unit_id.errors.required && !old_unit_id.errors.onlyNumbers && old_unit_id.errors.maxlength">
+                                {{ 'company.plan.plan-info.max9Numbers' | translate }}
+                            </div>
+                            <div *ngIf="old_unit_id.errors.alreadyExist">
+                                {{ 'company.plan.plan-info.unitExist' | translate }}
+                            </div>
+                        </div>
+
+                        <div *ngIf="old_description.invalid && (old_description.dirty || old_description.touched)">
+                            <div *ngIf="old_description.errors.required">
+                                {{ 'company.plan.plan-info.descriptionReq' | translate }}
+                            </div>
+                            <div *ngIf="old_description.errors.maxlength">
+                                {{ 'company.plan.plan-info.descNotGreater50' | translate }}
+                            </div>
+                        </div>
+                        <div
+                            *ngIf="old_effective_date.invalid && (old_effective_date.dirty || old_effective_date.touched)">
+                            <div *ngIf="old_effective_date.errors.required">
+                                {{ 'company.plan.plan-info.effeDateisReq' | translate }}
+                            </div>
+
+                            <div *ngIf="old_effective_date.errors.dateNotValid">
+                                {{ 'company.plan.plan-info.validDate' | translate }}
+                            </div>
+
+                            <div *ngIf="old_effective_date.errors.EffectiveDateNotValid">
+                                {{ 'company.plan.plan-info.dateCantBeLess' | translate }}
+                            </div>
+                        </div>
+                        <div *ngIf="updates_comment.invalid && (updates_comment.dirty || updates_comment.touched)">
+                            <div *ngIf="updates_comment.errors.maxlength">
+                                {{ 'company.plan.plan-info.commentNotGreater500' | translate }}
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Validatoin for old record effective date -->
+                    <!-- Validation Errors -->
+                    <div class="resultsDropdown">Show
+                        <select (change)='onPageChange($event.target.value)'>
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="15">15</option>
+                            <option value="20">20</option>
+                        </select> entries
+                    </div>
+                    <table class="table table-bordered table-stripped" id="planInfoTable">
+                        <thead>
+                            <tr>
+                                <th  width="20%">{{ 'company.plan.plan-info.unitId' | translate }}</th>
+                                <th class="amount_right" width="20%">{{ 'company.plan.plan-info.unitDesc' | translate }}</th>
+                                <th class="amount_right" width="20%">{{ 'company.plan.plan-info.effective-date' | translate }}</th>
+                                <th class="amount_right" width="20%">{{ 'company.plan.plan-info.action' | translate }}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Adding New Row Data Here-->
+                            <tr *ngIf="UnitAddMode">
+                                <td>
+                                    <input #focusAddUnitEl class="fm-txt form-control" type="text"
+                                        [formControl]="new_unit_id" (blur)="validateNewUnitId($event)">
+                                </td>
+                                <td>
+                                    <input id="planInfoDescription" class="fm-txt form-control caps_on" type="text"
+                                        [formControl]="new_description">
+                                </td>
+                                <td>
+                                    <div class="calender-field">
+                                        <my-date-picker id="planInfoeffective_date" [formControl]="new_effective_date"
+                                            [options]="myDatePickerOptions"
+                                            placeholder="{{'common.date-placeholder' | translate}}"
+                                            [selDate]="dateNameArray['NewEffectiveDate']"
+                                            (inputFocusBlur)="changeFilterDateFormat($event, 'new_effective_date', 'NewEffectiveDate', true)">
+                                        </my-date-picker>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <button id="planInfoAddNew1" type="button" (click)="addNewUnit(newUnit)"
+                                        class="table-action-btn save-ico " title="Save">
+                                        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                    </button>
+                                    <button id="planInfoDelete" type="button" (click)="resetNewUnitRow()" title="Cancel"
+                                        class="table-action-btn cancel-ico">
+                                        <i class="fa fa-times" aria-hidden="true"></i>
+                                    </button>
+                                </td>
+                            </tr>
+
+                            <!-- Updating Row Data-->
+                            <div
+                                *ngIf="UnitList.length > 0 || UnitAddMode; then unitRecordFound else unitRecordNotFound">
+                            </div>
+                            <ng-template #unitRecordNotFound>
+                                <tr>
+                                    <td colspan="4" class="text-center">No data available in table.</td>
+                                </tr>
+                            </ng-template>
+
+                            <ng-template #unitRecordFound>
+                                <tr
+                                    *ngFor="let unit of UnitList | paginate: { itemsPerPage: tableItemsPerPage, currentPage: cPage }; let rowIndex = index">
+                                    <td>
+                                        <span *ngIf="rowIndex != selectedUnit.rowIndex">{{unit.unitId}}</span>
+
+                                        <input type="hidden" [formControl]="old_unitKey"
+                                            *ngIf="UnitEditMode && rowIndex == selectedUnit.rowIndex"
+                                            [(ngModel)]="selectedUnit.unitKey">
+
+                                        <input #focusEditUnitEl class="fm-txt form-control" type="text"
+                                            [formControl]="old_unit_id"
+                                            *ngIf="UnitEditMode && rowIndex == selectedUnit.rowIndex"
+                                            [(ngModel)]="selectedUnit.unitId" (blur)="validateOldUnitId(unit.unitId)">
+                                    </td>
+                                    <td class="amount_right">
+                                        <span *ngIf="rowIndex != selectedUnit.rowIndex">{{unit.unitDesc}}</span>
+                                        <input id="planInfoUnitDesc" class="fm-txt form-control" type="text"
+                                            [formControl]="old_description"
+                                            *ngIf="UnitEditMode && rowIndex == selectedUnit.rowIndex"
+                                            [(ngModel)]="selectedUnit.unitDesc">
+                                    </td>
+                                    <td class="alignDpRight amount_right">
+                                        <span
+                                            *ngIf="rowIndex != selectedUnit.rowIndex">{{unit.effectiveOn | dateFormate}}</span>
+
+                                        <div *ngIf="UnitEditMode && rowIndex == selectedUnit.rowIndex"
+                                            class="calender-field">
+                                            <my-date-picker id="planInfoeffective_date1"
+                                                [formControl]="old_effective_date"
+                                                [(ngModel)]="selectedUnit.effectiveOn"
+                                                placeholder="{{'common.date-placeholder' | translate}}"
+                                                [options]="myDatePickerOptions"
+                                                [selDate]="dateNameArray['OldEffectiveOn']"
+                                                (inputFocusBlur)="changeFilterDateFormat($event, 'old_effective_date', 'OldEffectiveOn', true)">
+                                            </my-date-picker>
+                                        </div>
+                                    </td>
+                                    
+                                    <td class="amount_right">
+                                        <!-- Display button in View Mode -->
+                                        <button id="planInfoEdit" *ngIf="rowIndex != selectedUnit.rowIndex"
+                                            type="button" class="table-action-btn edit-ico"
+                                            (click)="enableEditUnit(unit, rowIndex)">
+                                            <i class="fa fa-pencil"></i>
+                                        </button>
+                                        <button id="planInfoDelete1" *ngIf="rowIndex != selectedUnit.rowIndex"
+                                            type="button" class="table-action-btn del-ico"
+                                            (click)="deleteUnit(rowIndex)">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+
+                                        <!-- Display button in Edit Mode -->
+                                        <button id="planInfoUpdate1"
+                                            *ngIf="UnitEditMode && rowIndex == selectedUnit.rowIndex" title="Save"
+                                            type="button" class="table-action-btn save-ico"
+                                            (click)="updateUnit(rowIndex)">
+                                            <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                        </button>
+                                        <button id="planInfoEdit1"
+                                            *ngIf="UnitEditMode && rowIndex == selectedUnit.rowIndex" title="Cancel"
+                                            type="button" class="table-action-btn cancel-ico" (click)="resetUnitInfo()">
+                                            <i class="fa fa-times" aria-hidden="true"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </tbody>
+                    </table>
+                    <div>
+                        <div class="text-left" *ngIf="UnitList.length > 0">
+                            {{ showPaginationCounterHeading(cPage, tableItemsPerPage, UnitList.length) }}
+                        </div>
+
+                        <div class="text-right">
+                            <pagination-controls (pageChange)="cPage = $event" previousLabel="" nextLabel=""
+                                autoHide="false">
+                            </pagination-controls>
+                        </div>
+                    </div>
+                </div>
+                <!-- Table Ends -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Log #1162: Travel Policy Grid Section Start as per new feedback -->
+    <div *ngIf="!addMode" class="grid-box"> 
+        <div class="grid-heading">
+            <h3>{{'company.plan.plan-info.travelPolicySection' | translate }}</h3>
+        </div>
+        <div class="grid-inner">
+            <div class="form-row">
+                <div class="row min-ht-sf">
+                   
+                    <div class="col-md-3 col-xs-12">
+                        <label>{{ 'company.plan.plan-info.effective-date' | translate }}
+                            <span class="required">*</span>
+                        </label>
+                        <div class="calender-field">
+                            <my-date-picker id="companyTravelEffectiveDate" [options]="myDatePickerOptions"
+                                name="travelEffectiveDate" formControlName="travelEffectiveDate"
+                                placeholder="{{'common.date-placeholder' | translate}}"
+                                (inputFocusBlur)="changeDateFormat($event, 'travelEffectiveDate', 'FormGroup', true)">
+                            </my-date-picker>
+                            <show-errors [control]="FormGroup.controls.travelEffectiveDate"></show-errors>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                        <label>{{'company.plan.plan-info.expiry-date' | translate }}</label>
+                        <div class="calender-field">
+                            <my-date-picker id="companyTravelExpiryDate" [options]="myDatePickerOptions"
+                                name="travelExpiryDate" formControlName="travelExpiryDate"
+                                placeholder="{{'common.date-placeholder' | translate}}" [ngClass]="expired  ? 'expired' : 'notExpired'"
+                                (inputFocusBlur)="changeDateFormat($event, 'travelExpiryDate', 'FormGroup', false)">
+                            </my-date-picker>
+                            <show-errors [control]="FormGroup.controls.travelExpiryDate"></show-errors>
+                        </div>
+                    </div>
+                    <div class="col-md-1 col-xs-12 text-right">
+                        <label></label>
+                        <button id="addTravelPolicyBtn" style="margin: 8px 150px 0px 0px !important" *ngIf="!editPolicyTravel" class="green-btn-add btn" (click)="submitTravelPolicy(FormGroup,'travel_policy','editMode')">
+                                <i class="fa fa-plus"></i>{{'button.add'|translate}}</button>
+                        <button id="updateTravelPolicyBtn" style="margin: 8px 150px 0px 0px !important" *ngIf="editPolicyTravel" class="green-btn-add btn" (click)="submitTravelPolicy(FormGroup,'travel_policy','editMode')">
+                                {{'button.update'|translate}}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="grid-inner">
+            <div class="form-row">
+                <div class="row">
+                    <div class="col-md-12 col-xs-12 table-col">
+                        <div class="table-responsive">
+                            <table id='travel_policy' datatable [dtOptions]="dtOptionsTravel" [dtTrigger]="dtTriggerTravel"
+                                class="inlinePopupTable table table-bordered table-stripped">
+                                <thead>
+                                    <tr>
+                                    <th class="" width="10%">{{'common.effectivedate' | translate}} </th>
+                                    <th class="amount_right" width="10%">{{'common.expireddate' | translate}} </th>
+                                    <th class="amount_right" width="5%">{{'common.action' | translate}}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="tableRow" id="{{'row_'+i}}" *ngFor="let dataRow of divTravelEligibiltyList; let i = index">
+                                    <td class="">{{dataRow.effectiveOn}}</td>
+                                    <td class="amount_right">{{dataRow.expiredOn}}</td>
+                                    <td class="amount_right"> 
+                                        <button (click)="getTravelPolicyData(dataRow)"
+                                        class='form_edit_row table-action-btn edit-ico'>
+                                        <i class='fa fa-pencil'></i>
+                                        </button>
+                                        <button class="table-action-btn del-ico"
+                                        (click)="deleteTravelPolicy(dataRow)">
+                                        <i class="fa fa-trash"></i>
+                                        </button>
+                                    </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Travel Policy Grid Section Ends -->
+</form>
+
+<!-- Plan SuspHistory Modal -->
+<div id="PlanSuspHistory" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button id="planInfoReset" type="button" class="close" data-dismiss="modal"
+                    (click)="resetPlanSuspForm()">&times;</button>
+                <h4 class="modal-title"> {{ 'company.plan.plan-info.divSuspendedHistory' | translate }} </h4>
+            </div>
+            <!--modal-header Ends-->
+            <div class="modal-body">
+                <!-- Company General Information Start -->
+                <app-company-general-information [generalInformationFormData]="setGeneralInfo">
+                </app-company-general-information>
+                <!-- Company General Information End -->
+                <div class="grid-box">
+                    <div class="grid-inner">
+                        <form [formGroup]="divisionSuspendedForm">
+                            <div class="form-row">
+                                <div class="row">
+                                    <div class="col-md-3 col-xs-12">
+                                        <label>{{ 'company.plan.plan-info.suspensionDate' | translate }}
+                                            <span class="required">*</span>
+                                        </label>
+                                        <div class="calender-field">
+                                            <my-date-picker id="planInfosuspendOn" [options]="myDatePickerOptions"
+                                                placeholder="dd/mmm/yyyy" name="suspendOn" formControlName="suspendOn"
+                                                (inputFocusBlur)="changeDateFormat2($event, 'suspendOn','divisionSuspendedForm', false)">
+                                            </my-date-picker>
+                                            <show-errors [control]="divisionSuspendedForm.controls.suspendOn">
+                                            </show-errors>
+                                        </div>
+                                        <!-- Calendar Field Ends -->
+                                    </div>
+
+                                    <div class="col-md-3 col-xs-12">
+                                        <label>{{ 'company.plan.plan-info.resumeDate' | translate }}</label>
+                                        <div class="calender-field">
+                                            <my-date-picker id="planInforesumeOn" [options]="myDatePickerOptions"
+                                                name="resumeOn" formControlName="resumeOn" placeholder="dd/mmm/yyyy"
+                                                (inputFocusBlur)="changeDateFormat2($event, 'resumeOn','divisionSuspendedForm', false)">
+                                            </my-date-picker>
+                                            <show-errors [control]="divisionSuspendedForm.controls.resumeOn">
+                                            </show-errors>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-xs-12">
+                                        <label>{{ 'company.plan.plan-info.comment' | translate }}</label>
+                                        <textarea id="planInfocomment" class="notInCaps fm-txt form-control"
+                                            formControlName="suspendDivisionComment"></textarea>
+                                        <show-errors [control]="divisionSuspendedForm.controls.suspendDivisionComment">
+                                        </show-errors>
+                                    </div>
+                                    <div class="col-md-3 col-xs-12">
+                                        <label>&nbsp;</label>
+                                        <button id="planInfoSuspend" *ngIf="!resumeTrue" type="button"
+                                            class="btn green-btn"
+                                            (click)="submitSuspended()">{{'button.suspend' | translate}}</button>
+                                        <button id="planInfoResume" *ngIf="resumeTrue" type="button"
+                                            class="btn green-btn"
+                                            (click)="updateResume(divisionSuspendedForm)">{{'button.resume' | translate}}</button>
+                                    </div>
+                                </div>
+                                <!-- row Ends-->
+                            </div>
+                            <!-- Form Row Ends -->
+
+                        </form>
+                    </div>
+                    <!--grid-iner Ends-->
+                </div>
+                <!--grid-box Ends-->
+                <div class="grid-box">
+                    <div class="grid-heading">
+                        <h3>{{ 'company.company-form.suspend-history' | translate }}</h3>
+                    </div>
+                    <!-- Grid Heading Ends-->
+                    <div class="grid-inner">
+                        <div class="form-row">
+                            <div class="row">
+                                <div class="col-md-12 col-xs-12 table-col">
+                                    <div class="table-responsive">
+                                        <table id="suspend_division"
+                                            class="table table-bordered table-stripped inlinePopupTable">
+                                        </table>
+                                    </div>
+                                    <!-- Table Ends -->
+                                </div>
+                                <!--col Ends-->
+                            </div>
+                            <!-- row Ends-->
+                        </div>
+                        <!-- Form Row ENds -->
+                    </div>
+                    <!-- Grid Inner Ends -->
+                </div>
+                <!-- Grid Box Ends -->
+            </div>
+            <!--modal-body Ends-->
+            <div class="modal-footer">
+                <button id="closeSuspendedhistory" type="button" class="btn grey-btn"
+                    data-dismiss="modal">{{ 'button.close' | translate }}</button>
+            </div>
+            <!--modal-footer Ends-->
+        </div>
+        <!-- Modal Content Ends -->
+
+    </div>
+    <!--modal-dialog Ends-->
+
+</div>
+<!-- Plan SuspHistory Modal End -->
+
+<!--Plan Suspended History Modal-->
+<div id="PlanSuspendedHistory" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button id="PlanSuspendedHistoryClose" type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">{{ 'company.plan.plan-info.divSuspendHistory' | translate }}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="grid-box">
+                    <div class="grid-inner">
+                        <div class="form-row">
+                            <div class="web-reg">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="row">
+                                <div class="col-md-12 col-xs-12 table-col">
+                                    <div class="table-responsive">
+                                        <table id="suspended_division" class="table table-bordered table-stripped">
+                                        </table>
+                                    </div>
+                                    <!-- Table Ends -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Form Row ENds -->
+                    </div>
+                    <!-- Grid Inner Ends -->
+                </div>
+                <!-- Grid Box Ends -->
+            </div>
+            <!-- Modal Body End-->
+            <div class="modal-footer">
+                <button id="PlanSuspendedHistoryClose1" type="button" class="btn grey-btn"
+                    data-dismiss="modal">{{ 'button.close' | translate }}</button>
+            </div>
+            <!-- Modal Footer Ends-->
+        </div>
+    </div>
+</div>
+<!--Plan Suspended History Modal End-->
+
+<!--Division Comments History  Modal-->
+<div id="DivisionCommentsHistory" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button id="DivisionCommentsHistoryClose" type="button" class="close"
+                    data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">{{ 'company.plan.plan-info.divCommentsHistory' | translate }}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="grid-box">
+                    <div class="grid-inner">
+                        <div class="form-row">
+                            <div class="row">
+                                <div class="col-md-12 col-xs-12 table-col">
+                                    <div class="table-responsive">
+                                        <table id="division_comments" datatable
+                                            [dtOptions]="dtOptions['division_comments']"
+                                            [dtTrigger]="dtTrigger['division_comments']"
+                                            class="table table-bordered table-stripped">
+                                        </table>
+                                        
+                                    </div>
+                                    <!-- Table Ends -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Form Row ENds -->
+                    </div>
+                    <!-- Grid Inner Ends -->
+                </div>
+                <!-- Grid Box Ends -->
+            </div>
+            <!-- Modal Body End-->
+            <div class="modal-footer">
+                <button id="DivisionCommentsFooterClose" type="button" class="btn grey-btn"
+                    data-dismiss="modal">{{ 'button.close' | translate }}</button>
+            </div>
+            <!-- Modal Footer Ends-->
+        </div>
+    </div>
+</div>
+<!--Division Comments History Modal End-->
+
+<!-- Prorating Type History  Modal -->
+<div id="ProratingTypeHistory" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button id="ProratingTypeHistoryClose" type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">{{ 'company.plan.plan-info.proTypeHistory' | translate }}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="grid-box">
+                    <div class="grid-inner">
+                        <div class="form-row">
+                            <div class="row">
+                                <div class="col-md-12 col-xs-12 table-col">
+                                    <div class="table-responsive">
+                                        <table id="prorating_type" class="table table-bordered table-stripped">
+                                        </table>
+                                    </div>
+                                    <!-- Table Ends -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Form Row ENds -->
+                    </div>
+                    <!-- Grid Inner Ends -->
+                </div>
+                <!-- Grid Box Ends -->
+            </div>
+            <!-- Modal Body End-->
+            <div class="modal-footer">
+                <button id="ProratingTypeHistoryClose1" type="button" class="btn grey-btn"
+                    data-dismiss="modal">{{ 'button.close' | translate }}</button>
+            </div>
+            <!-- Modal Footer Ends-->
+        </div>
+    </div>
+</div>
+<!-- Prorating Type History Modal End -->
+
+<!-- Deductable Type History  Modal -->
+<div id="DeductableTypeHistory" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button id="DeductableTypeHistoryClose" type="button" class="close"
+                    data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">{{ 'company.plan.plan-view.deductableTypeHistory' | translate }}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="grid-box">
+                    <div class="grid-inner">
+                        <div class="form-row">
+                            <div class="row">
+                                <div class="col-md-12 col-xs-12 table-col">
+                                    <div class="table-responsive">
+                                        <table id="deductable_type" class="table table-bordered table-stripped">
+                                        </table>
+                                    </div>
+                                    <!-- Table Ends -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Form Row ENds -->
+                    </div>
+                    <!-- Grid Inner Ends -->
+                </div>
+                <!-- Grid Box Ends -->
+            </div>
+            <!-- Modal Body End-->
+            <div class="modal-footer">
+                <button id="DeductableTypeHistoryClose1" type="button" class="btn grey-btn"
+                    data-dismiss="modal">{{ 'button.close' | translate }}</button>
+            </div>
+            <!-- Modal Footer Ends-->
+        </div>
+    </div>
+</div>
+<!-- Deductable Type History Modal End -->
+
+<!-- Unit Comments History  Modal -->
+<div id="unitCommentsHistory" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button id="unitCommentsHistoryClose" type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Unit Comment History</h4>
+            </div>
+            <div class="modal-body">
+                <div class="grid-box">
+                    <div class="grid-inner">
+                        <div class="form-row">
+                            <div class="row">
+                                <div class="col-md-12 col-xs-12 table-col">
+                                    <div class="table-responsive">
+                                        <table id="unit_comments_history" class="table table-bordered table-stripped">
+                                        </table>
+                                    </div>
+                                    <!-- Table Ends -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Form Row ENds -->
+                    </div>
+                    <!-- Grid Inner Ends -->
+                </div>
+                <!-- Grid Box Ends -->
+            </div>
+            <!-- Modal Body End-->
+            <div class="modal-footer">
+                <button id="unitCommentsHistoryClose1" type="button" class="btn grey-btn"
+                    data-dismiss="modal">{{ 'button.close' | translate }}</button>
+            </div>
+            <!-- Modal Footer Ends-->
+        </div>
+    </div>
+</div>
+<!-- Unit Comments History Modal End -->

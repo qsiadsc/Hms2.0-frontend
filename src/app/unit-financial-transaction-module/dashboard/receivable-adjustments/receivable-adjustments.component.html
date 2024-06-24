@@ -1,0 +1,366 @@
+<!-- Adjustments Receivable Table for Comparison Section Start -->
+<div class="grid-box">
+  <div class="grid-heading collapse-heading" aria-expanded="false" data-toggle="collapse" data-target="#receivablesAccordion">
+    <h3 aria-expanded="false" data-toggle="collapse" data-target="#receivablesAccordion">{{'uft.dashboard.receivableAdjustments.receivablesList' | translate}}</h3>
+  </div>
+  <div class="collapse" id="receivablesAccordion">
+    <div class="grid-inner">
+      <div class="form-row">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="grid-box">
+              <div class="grid-heading">
+                <h3>{{'uft.dashboard.receivableAdjustments.receipts' | translate}}</h3>
+              </div>
+              <div class="grid-inner">
+                <div class="form-row">
+                  <div class="row">
+                    <div class="col-md-12 col-xs-12 table-col">
+                      <div class="table-responsive">
+                        <form (submit)="searchReceiptsList('receiptsList')">
+                          <div class="form-row content-align">
+                            <button id="receiptsSearchBtn" type="submit" title="{{'common.search' | translate}}" class="btn green-btn searchreset" (click)="searchReceiptsList('receiptsList')">
+                              <span class="glyphicon glyphicon-search"></span>
+                            </button>
+                            <button id="resetReceiptsBtn" title="{{'common.reset' | translate}}" class="btn grey-btn searchreset" (click)="resetReceiptsList('receiptsList')">
+                              <span class="glyphicon glyphicon-repeat"></span>
+                            </button>
+                          </div>
+                          <div class="scroll-receiptsList" id="scroll-receiptsList">
+                            <table id="receiptsList" class="fixedHeader table table-bordered table-stripped dataTables_wrapper">
+                              <thead>
+                              </thead>
+                              <tfoot>
+                                <tr>
+                                  <td width="8%">
+                                    <input type='checkbox' class='selectReceiptAll'>
+                                    <label for="selectall"> {{'uft.dashboard.financePayable.selectAll' | translate }}</label>
+                                  </td>
+                                  <td width="12%">
+                                    <input id="receiptsPayeeNum" class="fm-txt form-control tFootInput inputSearch amount_right_grid" placeholder="{{'uft.dashboard.receivableAdjustments.payeeNumber' | translate }}"
+                                      type="text" name="payNo" />
+                                  </td>
+                                  <td width="12%">
+                                    <input id="receiptsPayeeName" class="fm-txt form-control tFootInput inputSearch amount_right_grid" placeholder="{{'uft.dashboard.receivableAdjustments.payeeName' | translate }}"
+                                      type="text" name="payeeName" />
+                                  </td>
+                                  <!-- <td width="12%">
+                                    <input id="receiptsClaimNum" class="fm-txt form-control tFootInput inputSearch amount_right_grid notIncaps" placeholder="{{'uft.dashboard.receivableAdjustments.claimNo' | translate }}"
+                                      type="text" name="claimNumber" />
+                                  </td> -->
+                                  <td width="12%">
+                                    <input id="receiptsAmount" class="fm-txt form-control tFootInput inputSearch amount_right_grid" placeholder="{{'uft.dashboard.receivableAdjustments.amount' | translate }}"
+                                      type="text" name="transAmt" />
+                                  </td>
+                                  <td width="12%">
+                                    <input id="receiptsTransNum" class="fm-txt form-control tFootInput inputSearch amount_right_grid notIncaps" placeholder="{{'uft.dashboard.receivableAdjustments.transactionNumber' | translate }}"
+                                      type="text" name="transNumber" />
+                                  </td>
+                                </tr>
+                              </tfoot>
+                            </table>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-row text-center">
+              <div class="row">
+                <div class="col-md-12 col-xs-12">
+                  <div class="dropdown pull-right">
+                    <button id="receiptsListExport" class="btn green-btn dropdown-toggle hideGPRunButton" type="button"
+                      data-toggle="dropdown">Export
+                      <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li>
+                        <a href="javascript:void(0)" (click)="exportReceiptsList()">Excel</a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="grid-box">
+              <div class="grid-heading">
+                <h3>{{'uft.dashboard.receivableAdjustments.negativeTransactions' | translate}}</h3>
+              </div>
+              <div class="grid-inner">
+                <div class="form-row">
+                  <div class="row">
+                    <div class="col-md-12 col-xs-12 table-col">
+                      <div class="table-responsive">
+                        <form (submit)="searchNegativeTransactionList('negativeTransactionList')">
+                          <div class="form-row content-align">
+                            <button id="negativeTransactionSearchBtn" type="submit" title="{{'common.search' | translate}}" class="btn green-btn searchreset"
+                              (click)="searchNegativeTransactionList('negativeTransactionList')">
+                              <span class="glyphicon glyphicon-search"></span>
+                            </button>
+                            <button id="resetNegativeTransactionBtn" title="{{'common.reset' | translate}}" class="btn grey-btn searchreset" (click)="resetNegativeTransactionList('negativeTransactionList')">
+                              <span class="glyphicon glyphicon-repeat"></span>
+                            </button>
+                          </div>
+                          <div class="scroll-negativeTransactionList" id="scroll-negativeTransactionList">
+                            <table id="negativeTransactionList" class="fixedHeader table table-bordered table-stripped dataTables_wrapper">
+                              <thead>
+                              </thead>
+                              <tfoot>
+                                <tr>
+                                  <td width="8%">
+                                    <input type='checkbox' class='selectNegativeAll'>
+                                    <label for="selectall"> {{'uft.dashboard.financePayable.selectAll' | translate }}</label>
+                                  </td>
+                                  <td width="12%">
+                                    <input id="negativeTransactionPayeeNum" class="fm-txt form-control tFootInput inputSearch amount_right_grid" placeholder="{{'uft.dashboard.receivableAdjustments.payeeNumber' | translate }}"
+                                      type="text" name="payeeNumber" />
+                                  </td>
+                                  <td width="12%">
+                                    <input id="negativeTransactionPayeeName" class="fm-txt form-control tFootInput inputSearch amount_right_grid" placeholder="{{'uft.dashboard.receivableAdjustments.payeeName' | translate }}"
+                                      type="text" name="payeeName" />
+                                  </td>
+                                  <!-- <td width="12%">
+                                    <input id="negativeTransactionClaimNum" class="fm-txt form-control tFootInput inputSearch amount_right_grid notIncaps" placeholder="{{'uft.dashboard.receivableAdjustments.claimNo' | translate }}"
+                                      type="text" name="referenceCd" />
+                                  </td> -->
+                                  <td width="12%">
+                                    <input id="negativeTransactionAmount" class="fm-txt form-control tFootInput inputSearch amount_right_grid" placeholder="{{'uft.dashboard.receivableAdjustments.amount' | translate }}"
+                                      type="text" name="transactionAmount" />
+                                  </td>
+                                  <td width="12%">
+                                    <input id="negativeTransactionTransNum" class="fm-txt form-control tFootInput inputSearch amount_right_grid notIncaps" placeholder="{{'uft.dashboard.receivableAdjustments.transactionNumber' | translate }}"
+                                      type="text" name="transNumber" />
+                                  </td>
+                                </tr>
+                              </tfoot>
+                            </table>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-row text-center">
+              <div class="row">
+                <div class="col-md-12 col-xs-12">
+                  <div class="dropdown pull-right">
+                    <button id="negativeTransactionListExport" class="btn green-btn dropdown-toggle hideGPRunButton" type="button"
+                      data-toggle="dropdown">Export
+                      <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li>
+                        <a href="javascript:void(0)" (click)="exportNegativeTransactionList()">Excel</a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-row text-center">
+        <div class="row">
+          <div class="col-md-12 col-xs-12 text-right">
+            <button id="clearTransactionsBtn" (click)="submitClearance()" class="green-btn btn" type="button" style="margin-top: 8px;">{{'common.clear' | translate }}</button>
+            <button id="cashAdjustmentBtn" data-toggle="modal" data-target="#cashAdjPopup" class="green-btn btn" type="button" style="margin-top: 8px;">{{'uft.dashboard.cashAdjPopup.cashAdj' | translate }}</button>
+            <button id="adjustmentRequestBtn" data-toggle="modal" data-target="#adjReqPopup" class="green-btn btn" type="button" style="margin-top: 8px;">{{'dashboard.adjustmentRequest' |translate }}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Adjustments Receivable Table for Comparison Section End -->
+
+<!-- Cash Adjustment/Adjustment Request Popup -->
+<div id="adjReqPopup" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button title="{{'button.close' | translate }}" id="closeAdjReqPopup" type="button" class="close" data-dismiss="modal" (click)="closeAdjPopup()">&times;</button>
+        <h4 class="modal-title">{{'dashboard.adjustmentRequest' |translate }}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{'dashboard.adjustmentRequest' |translate }}</h3>
+          </div>
+          <!-- Grid Heading Ends -->
+          <div class="grid-inner">
+            <form [formGroup]="adjRequestForm">
+              <div class="form-row">
+                <div class="row">
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'uft.dashboard.cashAdjPopup.payeeNameNumber' |translate }} 
+                      <span class="required">*</span>
+                    </label>
+                    <input id="payee" type="text" class="form-control" name="payee" formControlName="payee" placeholder="Payee Name & No." />
+                    <show-errors [control]="adjRequestForm.controls.payee"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'dashboard.claimNo' |translate }}
+                      <span class="required">*</span>
+                    </label>
+                    <input id="claimNum" type="text" class="form-control" name="claimNum" formControlName="claimNum" placeholder="Claim Number"
+                    />
+                    <show-errors [control]="adjRequestForm.controls.claimNum"></show-errors>
+                  </div>
+                  <!-- Log #1299: Adjustment Request UI start here -->
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'uft.dashboard.financeReports.documentName' | translate}}</label>
+                    <input style="display: none" type="file" (click)="adjReqFileInput.value = null" (change)="onFileChangedAdjReq($event)" #adjReqFileInput>
+                    <input formControlName="adjRequestDocumentName" class="fm-txt form-control datepicker" type="text" disabled>
+                    <ul *ngIf="error.isError==true" class="validation-errors">
+                      <li style="color: red">{{error.errorMessage}}</li>
+                    </ul>
+                    <ul *ngIf="error1.isError==true" class="validation-errors">
+                      <li style="color: red">{{error1.errorMessage}}</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>&nbsp;</label>
+                    <button class="btn green-btn" (click)="adjReqFileInput.click()">{{'button.selectFile' | translate}}</button>
+                    <button *ngIf="showRemoveBtn" (click)="removeExtensionAdjReq()" class="btn red-btn ">{{'button.remove' | translate}}</button>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>Comments</label>
+                    <textarea id="cashAdj_comments" class="form-control" formControlName="adjRequestComment" placeholder="Comments"></textarea>
+                    <show-errors [control]="adjRequestForm.controls.adjRequestComment"></show-errors>
+                  </div>
+                  <!-- Log #1299: Adjustment Request UI end here -->
+                  <div class="form-row  text-center">
+                    <button id="filterReverse" (click)="onSubmitadjReqForm()" class="btn green-btn">{{'button.confirm' |translate }}</button>
+                    <button id="resetReverse" class="btn grey-btn" data-dismiss="modal" (click)="closeAdjPopup()">{{'button.close' |translate }}</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="cashAdjPopup" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button title="{{'button.close' | translate }}" id="closeCashAdjPopup" type="button" class="close" data-dismiss="modal" (click)="closeCashAdjPopup()">&times;</button>
+        <h4 class="modal-title">{{'uft.dashboard.cashAdjPopup.cashAdj' |translate }}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{'uft.dashboard.cashAdjPopup.cashAdj' |translate }}</h3>
+          </div>
+          <!-- Grid Heading Ends -->
+          <div class="grid-inner">
+            <form [formGroup]="cashAdjForm">
+              <div class="form-row">
+                <div class="row">
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'uft.dashboard.cashAdjPopup.payeeNameNumber' |translate }} 
+                      <span class="required">*</span>
+                    </label>
+                    <input id="payee" type="text" class="form-control" name="payee" formControlName="payee" placeholder="Payee Name & No." />
+                    <show-errors [control]="cashAdjForm.controls.payee"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'common.amount' |translate }}
+                      <span class="required">*</span>
+                    </label>
+                    <div class="calender-field d-amount">
+                      <input id="amount" type="text" class="form-control in-number" name="amount" formControlName="amount" placeholder="Amount" appTwoDigitDecimaNumber />
+                      <show-errors [control]="cashAdjForm.controls.amount"></show-errors>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'dashboard.claimNo' |translate }}
+                    </label>
+                    <input id="claimNum" type="text" class="form-control" name="claimNum" formControlName="claimNum" placeholder="Claim Number"
+                    />
+                    <show-errors [control]="cashAdjForm.controls.claimNum"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <button id="saveCADataBtn" class="green-btn btn savebttn" style="margin-top: 20px;" (click)="saveCashAdjData()">{{'common.search' |translate }}</button>
+                    <button id="clearCAModal" type="button" class="btn grey-btn" style="margin-top: 20px;" (click)="clearCashAdjForm()">{{'button.clear' | translate}}</button>
+                  </div>
+                  <!-- Log #1299 UI start here -->
+                  <div *ngIf="!confirmBtnEnable" class="col-md-3 col-xs-12">
+                    <label>Comments</label>
+                    <textarea id="cashAdj_comments" class="form-control" formControlName="cashAdjComment" placeholder="Comments"></textarea>
+                    <show-errors [control]="cashAdjForm.controls.cashAdjComment"></show-errors>
+                  </div>
+                  <input style="display: none" type="file" (click)="cashPayFileInput.value = null" (change)="onFileChanged($event)" #cashPayFileInput>
+                  <div *ngIf="!confirmBtnEnable" class="col-md-3 col-xs-12">
+                    <label>{{'uft.dashboard.financeReports.documentName' | translate}}</label>
+                    <input formControlName="cashAdjDocumentName" class="fm-txt form-control datepicker" type="text" disabled>
+                    <ul *ngIf="error.isError==true" class="validation-errors">
+                      <li style="color: red">{{error.errorMessage}}</li>
+                    </ul>
+                    <ul *ngIf="error1.isError==true" class="validation-errors">
+                      <li style="color: red">{{error1.errorMessage}}</li>
+                    </ul>
+                  </div>
+                  <div *ngIf="!confirmBtnEnable" class="col-md-3 col-xs-12">
+                    <label>&nbsp;</label>
+                    <button class="btn green-btn" (click)="cashPayFileInput.click()">{{'button.selectFile' | translate}}</button>
+                    <button *ngIf="showRemoveBtn" (click)="removeExtension()" class="btn red-btn ">{{'button.remove' | translate}}</button>
+                  </div>
+                  <!-- Log #1299 UI end here -->
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div>
+          <div class="grid-box" *ngIf="showList">
+            <div class="grid-heading">
+              <h3>{{'feeGuide.dentalService.list' |translate }}</h3>
+            </div>
+            <div class="grid-inner">
+             <div class="form-row">
+                <div class="row">
+                  <div class="col-md-12 col-xs-12 table-col">
+                    <div class="table-responsive">
+                      <table id="cashAdjList" class="display table table-bordered table-stripped">
+                      </table>
+                    </div>
+                    <!-- Table Ends -->
+                  </div>
+                </div>
+              </div>
+              <div class="form-row  text-center">
+                <button id="confirmCAFormBtn" [disabled]="confirmBtnEnable" class="green-btn btn" (click)="cashAdjSubmit()">{{'button.confirm' |translate }}</button>
+                <button id="closeCAModalBtn" type="button" class="btn grey-btn" data-dismiss="modal" (click)="closeCashAdjPopup()">{{'button.close' | translate}}</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div [hidden]="!showLoader" class="loader-outer">
+  <div class="cube-wrapper">
+    <div class="cube-folding">
+      <span class="leaf1"></span>
+      <span class="leaf2"></span>
+      <span class="leaf3"></span>
+      <span class="leaf4"></span>
+    </div>
+    <span class="loading" data-name="Loading">{{'company.plan.benefits.pleaseWait'|translate}}</span>
+  </div>
+</div>

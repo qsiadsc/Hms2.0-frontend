@@ -1,0 +1,59 @@
+<form [formGroup]="BankAccountFormGroup">
+  <div class="grid-box">
+    <div class="grid-inner">
+      <div class="form-row">
+        <div class="row">
+          <div class="col-md-3 col-xs-12">
+            <label>Bank #</label>
+            <input type="text" formControlName="bank" class="fm-txt form-control" />
+            <show-errors [control]="BankAccountFormGroup.controls.bank"></show-errors>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>Branch #</label>
+            <input type="text" formControlName="branch" class="fm-txt form-control" />
+            <show-errors [control]="BankAccountFormGroup.controls.branch"></show-errors>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>Account #</label>
+            <input type="text" formControlName="account" class="fm-txt form-control" />
+            <show-errors [control]="BankAccountFormGroup.controls.account"></show-errors>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>Client Name</label>
+            <input type="text" formControlName="client_name" class="fm-txt form-control" />
+            <show-errors [control]="BankAccountFormGroup.controls.client_name"></show-errors>
+          </div>
+        </div>
+      </div>
+      <!-- Form Row ENds -->
+      <div class="form-row">
+        <div class="row">
+          <div class="col-md-3 col-xs-12">
+            <label> Effective Date</label>
+            <div class="calender-field">
+              <my-date-picker id="datepicker9" [options]="myDatePickerOptions" name="effective_date"
+                placeholder="dd/mmm/yyyy" formControlName="effective_date"
+                (inputFocusBlur)="changeDateFormat($event, 'effective_date','BankAccountFormGroup')">
+              </my-date-picker>
+              <show-errors [control]="BankAccountFormGroup.controls.effective_date"></show-errors>
+            </div>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label> Expiry Date</label>
+            
+            <div class="calender-field">
+              <my-date-picker id="datepicker9" [options]="myDatePickerOptions" name="expired_date"
+                placeholder="dd/mmm/yyyy" formControlName="expired_date"
+                (inputFocusBlur)="changeDateFormat($event, 'expired_date','BankAccountFormGroup')">
+              </my-date-picker>
+              <show-errors [control]="BankAccountFormGroup.controls.expired_date"></show-errors>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-row text-center">
+        <button class="btn green-btn" type="submit" (click)="saveBankAccount(BankAccountFormGroup.value)">Save</button>
+      </div>
+    </div>
+  </div>
+</form>

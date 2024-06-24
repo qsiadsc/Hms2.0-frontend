@@ -1,0 +1,137 @@
+<div id="showClaimItems">
+  <div class="">
+    <!-- Modal content-->
+    <div style="margin-top: 120px;">
+      <div class="modal-header">
+        <button id="btnCloseShowClaimItems" type="button" title="Close" class="close"
+          (click)="activeModal.dismiss('Cancel click')" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">{{'claims.claims-view.claims' | translate}}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="grid-box">
+        
+          <!-- Grid Heading Ends -->
+
+          <div class="grid-inner">
+            <div class="form-row">
+              <div class="row">
+                <div class="col-md-12 col-xs-12 table-col">
+                  <div class="table-responsive">
+                    <table id="claimItemsTable" datatable [dtOptions]="dtOptions['claimItemsTable']"
+                      [dtTrigger]="dtTrigger['claimItemsTable']"
+                      class="row-border hover cardholder-table table-striped table-bordered dataTable">
+                      <thead>
+                        <tr>
+                         
+                          <th>{{'common.date' | translate}} </th>
+                          <th>{{'claims-history.proc' | translate}}</th>
+                          <th *ngIf="discipline == 1">{{'claims-history.tooth' | translate}}</th>
+                          <th *ngIf="discipline == 1">{{'claims-history.surf' | translate}}</th>
+                          <th *ngIf="discipline == 1">{{'claims.claims-view.claim-items.count' | translate}}</th>
+
+                          <th>{{'claims-history.freeclaim' | translate}}</th>
+                          <th *ngIf="discipline == 1">{{'claims.claims-view.claim-items.fee' | translate}}
+                            <br>{{'claims.claims-view.claim-items.elig' | translate}}</th>
+                          <th *ngIf="discipline != 5">{{'claims.claims-view.claim-items.fee-allow' | translate}}</th>
+                          <th>{{'claims-history.freepaid' | translate}}</th>
+                          <th *ngIf="discipline == 5 || discipline == 1">{{'claims-history.labclaim' | translate}}</th>
+                          <th *ngIf="discipline == 1">{{'claims.claims-view.claim-items.lab' | translate}}
+                            <br>{{'claims.claims-view.claim-items.elig' | translate}}</th>
+                          <th *ngIf="discipline == 1">{{'claims.claims-view.claim-items.lab-allow' | translate}}</th>
+                          <th *ngIf="discipline == 5 || discipline == 1">{{'claims-history.labpaid' | translate}}</th>
+                          <th *ngIf="discipline != 6">{{'claims.claims-view.claim-items.cob1' | translate}}</th>
+                          <th *ngIf="discipline == 1">{{'claims.claims-view.claim-items.cob2' | translate}}</th>
+                          <th>{{'claims.claims-view.claim-items.deduct' | translate}}</th>
+                          <th>{{'claims.claims-view.claim-items.total' | translate}}
+                            <br>{{'claims.claims-view.claim-items.paid' | translate}}</th>
+                          <th>{{'claims.claims-view.claim-items.override' | translate}}</th>
+                         
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let claimItem of claimItems; let idx= index" [ngClass]="{
+                          'dental-row': (disciplineKey == 1),
+                          'vision-row': (disciplineKey == 2),
+                          'health-row': (disciplineKey == 3),
+                          'drug-row': (disciplineKey == 4),
+                          'supplement-row': (disciplineKey == 5)
+                        }" (click)="openClaim(claimItem.claimKey,claimItem.disciplineKey, claimItem.dcpKey)">
+                          <td class="amount_right_grid">{{claimItem.itemServiceDt}}</td>
+                          <td class="amount_right_grid">{{claimItem.itemProcedureCd}}</td>
+                          <td class="amount_right_grid" *ngIf="discipline == 1">{{claimItem.toothId}}</td>
+                          <td class="amount_right_grid" *ngIf="discipline == 1">{{claimItem.itemToothSurfaceTxt}}</td>
+                          <td class="amount_right_grid" *ngIf="discipline == 1">{{claimItem.itemUnitCount}}</td>
+                          <td class="amount_right_grid"><span>$</span>{{claimItem.itemFeeClaimAmt | number: '1.2'}}</td>
+                          <td class="amount_right_grid" *ngIf="discipline == 1">
+                            <span>$</span>{{claimItem.itemFeeEligAmt | number: '1.2'}}</td>
+                          <td class="amount_right_grid" *ngIf="discipline != 5">
+                            <span>$</span>{{claimItem.itemFeeAllowAmt | number: '1.2'}}</td>
+                          <td class="amount_right_grid"><span>$</span>{{claimItem.itemFeePaidAmt | number: '1.2'}}</td>
+                          <td *ngIf="discipline == 5 || discipline == 1" class="amount_right_grid">
+                            <span>$</span>{{claimItem.itemLabClaimAmt||0 | number: '1.2'}}
+                          </td>
+                          <td *ngIf="discipline == 1" class="amount_right_grid">
+                            <span>$</span>{{claimItem.itemLabEligAmt||0 | number: '1.2'}}
+                          </td>
+                          <td *ngIf="discipline == 1" class="amount_right_grid">
+                            <span>$</span>{{claimItem.itemLabAllowAmt||0 | number: '1.2'}}
+                          </td>
+                          <td *ngIf="discipline == 5 || discipline == 1" class="amount_right_grid">
+                            <span>$</span>{{claimItem.itemLabPaidAmt||0 | number: '1.2'}}
+                          </td>
+                          <td *ngIf="discipline != 6" class="amount_right_grid">
+                            <span>$</span>{{claimItem.itemCarrierAmt||0 | number: '1.2'}}
+                          </td>
+                          <td *ngIf="discipline == 1" class="amount_right_grid">
+                            <span>$</span>{{claimItem.itemCarrierAmt2||0 | number: '1.2'}}
+                          </td>
+
+                          <td class="amount_right_grid">
+                            <span>$</span>{{claimItem.itemDeductAmt||0 | number: '1.2'}}
+                          </td>
+
+                          <td  class="amount_right_grid">
+                            <span>$</span>{{claimItem.itemTotalPaidAmt||0 | number: '1.2'}}
+                          </td>
+                          <td class="amount_right_grid" >{{claimItem.overrideTypeDesc}}</td>
+                          
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <!-- Table Ends -->
+                </div>
+              </div>
+            </div>
+            <!-- Form Row ENds -->
+            <ul class="color-list" *ngIf="alberta">
+              <li>
+                <span class="color-des violet-color"></span>
+                <h5>Pre-Authorized By Review</h5>
+              </li>
+              <li>
+                <span class="color-des green-color"></span>
+                <h5>Pre-Authorization-Paper</h5>
+              </li>
+              <li>
+                <span class="color-des yellow-color"></span>
+                <h5>Pre-Authorization-Phone-In</h5>
+              </li>
+            </ul>
+          </div>
+          <!-- Grid Inner Ends -->
+
+        </div>
+        <!-- Grid Box Ends -->
+      </div>
+    </div>
+  </div>
+</div>
+<div  class="form-row text-center" style="margin-top: 13px;">
+
+  <button 
+   class="btn green-btn" (click)="continue()">Continue</button>
+   <button 
+   class="btn green-btn" (click)="activeModal.dismiss('Cancel click')">Cancel</button>
+
+</div>

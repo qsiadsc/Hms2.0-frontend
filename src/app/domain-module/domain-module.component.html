@@ -1,0 +1,51 @@
+<div class="container">
+  <div class="section-heading">
+    <h2>{{'domain.domain' |translate}} -
+      <span> {{'domain.domainList' | translate}}</span>
+    </h2>
+  </div>
+  <div class="grid-box">
+    <div class="grid-heading">
+      <h3>{{'domain.domainList' | translate}}</h3>
+      <div class="web-reg">
+      </div>
+    </div>
+    <!-- Grid Heading Ends -->
+    <div class="grid-inner">
+      <div class="form-row">
+        <div class="row">
+          <div class="col-md-12 col-xs-12 table-col">
+            <div class="table-responsive">
+              <form>
+                <table id="domainList" class="table table-bordered table-stripped">
+                  <tfoot>
+                    <tr>
+                      <td>
+                        <input id="displayName" class="fm-txt form-control tFootInput inputSearch" type="text" placeholder="{{'domain.displayName' | translate}}"
+                          name="displayName" />
+                      </td>
+                      <td class="grid_right">
+                        <div class="form-row">
+                          <button id="domainSearchBtn" type="submit" title="{{'common.search' | translate}}" class="btn green-btn searchreset" (click)="searchDomain('domainList')">
+                            <span class="glyphicon glyphicon-search"></span>
+                          </button>
+                          <button id="resetDomainSearchBtn" title="{{'common.reset' | translate}}" class="btn grey-btn searchreset" (click)="resetDomainSearch()">
+                            <span class="glyphicon glyphicon-repeat"></span>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </form>
+            </div>
+            <!-- Table Ends -->
+          </div>
+        </div>
+      </div>
+      <!-- Form Row ENds -->
+      <!-- Form Row ENds -->
+    </div>
+    <!-- Grid Inner Ends -->
+  </div>
+</div>

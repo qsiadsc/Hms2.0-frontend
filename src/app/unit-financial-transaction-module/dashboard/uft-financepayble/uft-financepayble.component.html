@@ -1,0 +1,618 @@
+<div class="section-heading">
+  <h2> {{'uft.dashboard.financePayable.financialPayable' | translate }}</h2>
+</div>
+<!-- Section Heading Ends -->
+<div>
+  <form [formGroup]="paymentGenerateForm" class="ts-main">
+    <div class="grid-box">
+      <div class="grid-heading">
+        <h3>{{'uft.dashboard.financePayable.payablePaymentRun' | translate }}</h3>
+        <div class="web-reg">
+        </div>
+      </div>
+      <!-- Grid Heading Ends -->
+      <div class="grid-inner">
+        <div class="form-row ts-grid">
+          <div class="row min-ht-sf">
+            <div class="col-md-5 col-xs-12 select-options">
+              <label>{{'uft.dashboard.financePayable.corporateType' | translate }}</label>
+              <div class="select-options">
+                <span>
+                  <label>
+                    <span class="custom-check">
+                      <input type="radio" id="planType3" formControlName="planType" value="Q" (change)="attachedClaimStatusChange($event)"> {{'uft.dashboard.financePayable.qsi' | translate }}
+                      <span></span>
+                    </span>
+                  </label>
+                </span>
+                <!-- <span>
+                  <label>
+                    <span class="custom-check">
+                      <input type="radio" id="planType4" formControlName="planType" value="S" (change)="attachedClaimStatusChange($event)"> {{'uft.dashboard.financePayable.adsc' | translate }}
+                      <span></span>
+                    </span>
+                  </label>
+                </span> -->
+                <show-errors [control]="paymentGenerateForm.controls.planType"></show-errors>
+              </div>
+            </div>
+            <div style="display: none;" class="col-md-3 col-xs-12 min-ht-half">
+              <label>{{'uft.dashboard.financePayable.payeeType' | translate }}</label>
+              <select id="payeetype" class="form-control" name="payeetype" formControlName="payeetype" (change)="onChangepayeeType($event.target.value)">
+                <option value="" disabled>{{'common.select' | translate }}</option>
+                <option *ngFor='let payee of Payeetype' value="{{payee.id}}">{{payee.itemName}}</option>
+              </select>
+            </div>
+            <!-- // feedback -->
+            <div class="col-md-3 col-xs-12 min-ht-half">
+              <label></label>
+              <button (click)="onChangepayeeType('all')" class="green-btn-add btn" id="qbPaymentRun" type="button" style="
+              margin-top: 8px;
+            ">{{'uft.dashboard.financePayable.paymentRun' | translate }}</button>
+            </div>
+          </div>
+        </div>
+        <!-- Form Row ENds -->
+      </div>
+      <!-- Grid Inner Ends -->
+      <!-- </div> -->
+      <!-- Grid Box Ends -->
+      <div class="form-row">
+        <div class="grid-box">
+          <div class="grid-heading" *ngIf='showFirst'>
+            <h3>{{'finance.paymentGenerate.processingSteps' | translate}} </h3>
+            <span *ngIf='showPayable'>
+              <h3>{{'uft.dashboard.financePayable.payable' | translate }}</h3>
+            </span>
+          </div>
+          <!-- Grid Heading Ends -->
+          <div class="grid-inner" *ngIf='showFirst'>
+            <div class="form-row">
+              <div class="row">
+                <div class="col-md-12 col-xs-12 table-col">
+                  <div class="table-responsive">
+                    <table id="processingStepList" class="table table-bordered table-stripped">
+                      <thead>
+                        <tr>
+                          <th>{{'finance.transactionSearch.done' | translate}}</th>
+                          <th class="grid_right">{{'finance.transactionSearch.steps' | translate}}</th>
+                          <th class="grid_right">{{'finance.transactionSearch.processing' | translate}}</th>
+                          <th class="grid_right">{{'finance.transactionSearch.result' | translate}}</th>
+                        </tr>
+                      </thead>
+                      <tbody *ngIf="fieldArray.length>0">
+                        <tr *ngFor="let field of fieldArray; let i = index">
+                          <td>
+                            <input type="checkbox" disabled [checked]="(field.done == 0)?false:true" value="field.done">
+                          </td>
+                          <td class="grid_right">{{i+1}}</td>
+                          <td class="grid_right">{{field.processing}}</td>
+                          <td class="grid_right">
+                            <div [innerHTML]="field.result">
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <!-- Table Ends -->
+                </div>
+              </div>
+            </div>
+            <!-- Form Row ENds -->
+          </div>
+          <!-- Grid Inner Ends -->
+          <!-- broker steps/ -->
+          <div class="grid-heading" *ngIf="showBroker">
+            <h3>{{'finance.paymentGenerate.processingSteps' | translate}} {{'uft.dashboard.financePayable.broker' | translate }}</h3>
+          </div>
+          <!-- Grid Heading Ends -->
+          <div class="grid-inner" *ngIf="showBroker">
+            <div class="form-row">
+              <div class="row">
+                <div class="col-md-12 col-xs-12 table-col">
+                  <div class="table-responsive">
+                    <table id="processingStepListBroker" class="table table-bordered table-stripped">
+                      <thead>
+                        <tr>
+                          <th>{{'finance.transactionSearch.done' | translate}}</th>
+                          <th class="grid_right">{{'finance.transactionSearch.steps' | translate}}</th>
+                          <th class="grid_right">{{'finance.transactionSearch.processing' | translate}}</th>
+                          <th class="grid_right">{{'finance.transactionSearch.result' | translate}}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let field of brokerfieldArray; let i = index">
+                          <td>
+                            <input type="checkbox" disabled [checked]="(field.done == 0)?false:true" value="field.done">
+                          </td>
+                          <td class="grid_right">{{i+1}}</td>
+                          <td class="grid_right">{{field.processing}}</td>
+                          <td class="grid_right">
+                            <div [innerHTML]="field.result">
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <!-- Table Ends -->
+                </div>
+              </div>
+            </div>
+            <!-- Form Row ENds -->
+          </div>
+          <!-- Company steps/ -->
+          <div class="grid-heading" *ngIf="showCompany">
+            <h3>{{'finance.paymentGenerate.processingSteps' | translate}} {{'uft.dashboard.financePayable.company' | translate }}</h3>
+          </div>
+          <!-- Grid Heading Ends -->
+          <div class="grid-inner" *ngIf="showCompany">
+            <div class="form-row">
+              <div class="row">
+                <div class="col-md-12 col-xs-12 table-col">
+                  <div class="table-responsive">
+                    <table id="processingStepListCompany" class="table table-bordered table-stripped">
+                      <thead>
+                        <tr>
+                          <th>{{'finance.transactionSearch.done' | translate}}</th>
+                          <th class="grid_right">{{'finance.transactionSearch.steps' | translate}}</th>
+                          <th class="grid_right">{{'finance.transactionSearch.processing' | translate}}</th>
+                          <th class="grid_right">{{'finance.transactionSearch.result' | translate}}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let field of comapnyfieldArray; let i = index">
+                          <td>
+                            <input type="checkbox" disabled [checked]="(field.done == 0)?false:true" value="field.done">
+                          </td>
+                          <td class="grid_right">{{i+1}}</td>
+                          <td class="grid_right">{{field.processing}}</td>
+                          <td class="grid_right">
+                            <div [innerHTML]="field.result">
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <!-- Table Ends -->
+                </div>
+              </div>
+            </div>
+            <!-- Form Row ENds -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<!-- Adjustments Receivable Table for Comparison Section Start -->
+<app-receivable-adjustments></app-receivable-adjustments>
+<!-- Adjustments Receivable Table for Comparison Section End -->
+<div>
+  <div class="grid-box tableGrid">
+    <div class="grid-heading collapse-heading" aria-expanded="true" data-toggle="collapse" data-target="#transactionListAccordion">
+      <h3 aria-expanded="true" data-toggle="collapse" data-target="#transactionListAccordion">{{'uft.dashboard.financePayable.transactionList' | translate }}</h3>
+    </div>
+    <div class="collapse in" id="transactionListAccordion">
+      <div class="grid-inner">
+        <div class="form-row">
+          <div class="row">
+            <div class="col-md-12 col-xs-12 table-col">
+              <div class="table-responsive">
+                <form (submit)="filterListSearch('tableId')">
+                  <div class="form-row content-aling">
+                    <button (click)='filterSearch()' class="btn green-btn searchreset" id="usersSearchLower_search" type="button" title="{{'common.search' | translate }}">
+                      <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                    <button (click)='resetListingFilter()' type="button" class="btn grey-btn searchreset" id="usersSearchLower_reset" title="{{'common.reset' | translate }}">
+                      <span class="glyphicon glyphicon-repeat"></span>
+                    </button>
+                  </div>
+                  <div class="scroll-ListTable" id="scroll-ListTable">
+                    <table id="ListTable" class="www fixedHeader table table-bordered table-stripped dataTables_wrapper">
+                      <tfoot>
+                        <tr>
+                          <td width="40px">
+                            <input type='checkbox' class='selectAll'>
+                            <label for="selectall"> {{'uft.dashboard.financePayable.selectAll' | translate }}</label>
+                          </td>
+                          <td width="100px">
+                            <input placeholder="{{'uft.dashboard.financePayable.transaction' | translate }}" class="fm-txt form-control tFootInput inputSearch notInCaps amount_right_grid" type="text" id="filter_transaction"
+                              name="transaction" [(ngModel)]="filter_transaction" />
+                          </td>
+                          <td width="150px">
+                            <angular2-multiselect tabindex="0" class="form-control" [data]="tarnsTypes" [ngModelOptions]="{standalone: true}" [(ngModel)]="filter_transactionType"
+                              #setFocus (onSelect)="onSelectDropDown3($event)" (onDeSelect)="onDeSelectDropDown3($event)" [settings]="transDropdownSettings"
+                              ng-click="showDropDown(true)">
+                            </angular2-multiselect>
+                          </td>
+                          <td width="140px" class="alignDpRight dateFeild">
+                            <div class="calender-field">
+                              <my-date-range-picker  class="uftPayanbleDatePicker" (dateRangeChanged)="onDateRangeChanged($event)" name="mydaterange" [options]="myDateRangePickerOptions" (inputFocusBlur)="onInputFocusBlur($event)"
+                              [(ngModel)]="model" required></my-date-range-picker>
+                            </div>
+                          </td>
+                          <td width="140px" class="alignDpRight">
+                            <select style="display: none;" class="fm-txt form-control tFootInput inputSearch" name="payeeType" [(ngModel)]="filter_payeeType">
+                              <option value="" selected></option>
+                            </select>
+                            <div id="rulesSelect">
+                              <angular2-multiselect tabindex="0" class="form-control" [data]="rulesDropDown" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedItems"
+                              #setFocus (onSelect)="onSelectDropDown($event)" (onDeSelect)="onDeSelectDropDown($event)" [settings]="dropdownSettings"
+                              ng-click="showDropDown(true)">
+                              </angular2-multiselect>
+                            </div>
+                          </td>
+                          <td width="130px" class="alignDpRight">
+                            <input placeholder="{{'uft.dashboard.financePayable.payeeName' | translate }}" class="notInCaps fm-txt form-control tFootInput inputSearch amount_right_grid" type="text"
+                              id="filter_payeeName" name="payeeName" [(ngModel)]="filter_payeeName" />
+                          </td>
+                          <td width="120px" class="alignDpRight">
+                            <div class="input-group">
+                              <input id="filter_payeeNumber" type="text" name="payeeNumber" [(ngModel)]="filter_payeeNumber" class="notInCaps fm-txt form-control tFootInput inputSearch" placeholder="{{'uft.dashboard.financePayable.payeeNumber' | translate }}" />
+                              <span class="input-group-text" >-</span>
+                              <input id="filter_payeeNumber1" type="text" name="payeeNumber1" [(ngModel)]="filter_payeeNumber1" class="notInCaps fm-txt form-control tFootInput inputSearch" placeholder="{{'uft.dashboard.financePayable.payeeNumber' | translate }}"  />
+                            </div>
+                            <!-- <input placeholder="{{'uft.dashboard.financePayable.payeeNumber' | translate }}" class="notInCaps fm-txt form-control tFootInput inputSearch amount_right_grid" type="text" id="filter_payeeNumber"
+                              name="payeeNumber" [(ngModel)]="filter_payeeNumber" /> -->
+                          </td>
+                          <td width="152px" class="alignDpRight">
+                            <input placeholder="{{'uft.dashboard.financePayable.transactionAmount' | translate }}" class="notInCaps fm-txt form-control tFootInput inputSearch amount_right_grid" type="text"
+                              id="filter_transactionAmount" name="transactionAmount" [(ngModel)]="filter_transactionAmount" />
+                          </td>
+                          <td width="152px" class="alignDpRight">
+                            <angular2-multiselect tabindex="0" class="form-control" [data]="paymentMethod" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedItem"
+                              #setFocus (onSelect)="onSelectDropDown2($event)" (onDeSelect)="onDeSelectDropDown2($event)" [settings]="dropdownSetting"
+                              ng-click="showDropDown(true)">
+                            </angular2-multiselect>
+                          </td>
+                          <td width="80px" class="amount_right_grid">
+                            <input placeholder="{{'uft.dashboard.financePayable.transactionNumber' | translate }}" class="notInCaps fm-txt form-control tFootInput inputSearch amount_right_grid" type="text"
+                            id="filter_referenceInfo" name="referenceCd" [(ngModel)]="filter_referenceInfo" />
+                          </td>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </div>
+                  <div class="form-row text-center">
+                  </div>
+                </form>
+              </div>
+              <!-- Table Ends -->
+            </div>
+          </div>
+        </div>
+        <!-- Form Row ENds -->
+        <div class="form-row text-center">
+          <div class="row">
+            <div class="col-md-12 col-xs-12 text-right">
+              <div class="total-stats disable-totals1" id="disable-totals1" style="display: inline-block; margin-right: 16px; margin-bottom: 15px;">
+                <h4>{{'uft.dashboard.financePayable.subTotal' | translate }}
+                  <span class="amount">{{finalTotal}}</span>
+                </h4>
+                <h4>{{'uft.dashboard.financePayable.total' | translate }}
+                  <span class="amount">{{amountTotal}}</span>
+                </h4>
+                <h4>{{'uft.dashboard.financePayable.receivableTotal' | translate }}
+                  <span class="amount">{{amountNegTotal}}</span>
+                </h4>
+              </div>
+              <div class="dropdown pull-right" style="display: inline-block;">
+                <button id="SearchExport" class="btn green-btn dropdown-toggle hideGPRunButton" type="button" data-toggle="dropdown">{{'button.export' | translate }}
+                  <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <a href="javascript:void(0)" (click)="exportList()">{{'common.excel' | translate }}</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="grid-box tableGrid">
+  <form [formGroup]="transactionSearch" class="ts-main">
+    <div class="grid-box">
+      <div class="grid-heading collapse-heading" aria-expanded="true" data-toggle="collapse" data-target="#issuePaymentAccordion">
+        <h3 aria-expanded="true" data-toggle="collapse" data-target="#issuePaymentAccordion">{{'uft.dashboard.financePayable.issuePayment' | translate }}</h3>
+      </div>
+      <div class="collapse in" id="issuePaymentAccordion">
+      <div class="grid-inner">
+        <div class="form-row ts-grid">
+          <div class="row min-ht-sf">
+            <div class="col-md-3 col-xs-12 min-ht-half">
+              <label>{{'uft.dashboard.financePayable.paymentType' | translate }}</label>
+              <select id="paymentType" class="form-control select2" (keydown.tab)="onSelectFocus($event)" name="paymentType" formControlName="paymentType"
+                (change)="onChangepaymentType($event.target.value,'')">
+                <option value="">{{'common.select' | translate }}</option>
+                <option value="E">{{'uft.dashboard.financePayable.electronic' | translate }}</option>
+                <option value="C">{{'uft.dashboard.financePayable.cheque' | translate }}</option>
+              </select>
+              <show-errors [control]="transactionSearch.controls.paymentType"></show-errors>
+            </div>
+            <div class="col-md-3 col-xs-12 min-ht-half">
+              <label>{{'uft.dashboard.financePayable.paySelection' | translate }}</label>
+              <select id="paySelection" class="form-control" (keydown.tab)="paySelectionFocus($event)" name="paySelection" formControlName="paySelection"
+                (change)="onChangepaySelection($event.target.value)">
+                <option value="" disabled>{{'common.select' | translate }}</option>
+                <option *ngFor='let payOption of payOptions' value="{{payOption.val}}">{{payOption.name}}</option>
+              </select>
+              <show-errors [control]="transactionSearch.controls.paySelection"></show-errors>
+            </div>
+            <div class="col-md-3 col-xs-12 min-ht-half">
+              <label>{{'uft.dashboard.financePayable.bankAccountToUse' | translate }}</label>
+              <select id="payBanktype" class="form-control" name="payBanktype" (keydown.tab)="payBanktypeFocus($event)" (change)="onChangepayeeBank($event.target.value)"
+                formControlName="payBanktype">
+                <option value="" disabled>{{'uft.dashboard.financePayable.selectBank' | translate }}</option>
+                <option *ngFor="let bank of bankData;  let i = index" value="{{i}}">{{bank.obankName}}</option>
+              </select>
+              <show-errors [control]="transactionSearch.controls.payBanktype"></show-errors>
+            </div>
+            <div class="col-md-3 col-xs-12 min-ht-half">
+              <label></label>
+              <!-- check removed recordRecived>0 -->
+              <button [disabled]="total < 0" (click)="onChangepayeeBankType($event)" class="green-btn btn" id="trancsection-form"
+                type="submit" style="margin-top: 8px;">{{'uft.dashboard.financePayable.issuePayment' | translate }}</button>
+              <button [disabled]="issuePayment>0 || reciveClaim.length ==0" (click)="runRecordRecive($event)" class="green-btn btn"
+                id="trancsectionform" type="submit" style="margin-top: 8px;">{{'uft.dashboard.financePayable.recordReceipt' | translate }}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+    </div>
+  </form>
+
+  <div class="grid-box">
+    <div class="grid-heading" *ngIf='showFirstSecond'>
+      <h3>{{'finance.paymentGenerate.processingSteps' | translate}} {{'uft.dashboard.financePayable.report' | translate }} </h3>
+      <span *ngIf='showPayable'>
+        <h3>{{'uft.dashboard.financePayable.payable' | translate }}</h3>
+      </span>
+    </div>
+    <!-- Grid Heading Ends -->
+    <div class="grid-inner" *ngIf='showFirstSecond'>
+      <div class="form-row">
+        <div class="row">
+          <div class="col-md-12 col-xs-12 table-col">
+            <div class="table-responsive">
+              <table id="processingStepList" class="table table-bordered table-stripped">
+                <thead>
+                  <tr>
+                    <th>{{'finance.transactionSearch.done' | translate}}</th>
+                    <th class="grid_right">{{'finance.transactionSearch.steps' | translate}}</th>
+                    <th class="grid_right">{{'finance.transactionSearch.processing' | translate}}</th>
+                    <th class="grid_right">{{'finance.transactionSearch.result' | translate}}</th>
+                  </tr>
+                </thead>
+                <tbody *ngIf="fieldArraySecond.length>0">
+                  <tr *ngFor="let field of fieldArraySecond; let i = index ">
+                    <td>
+                      <input type="checkbox" disabled [checked]="(field.done == 0)?false:true" value="field.done">
+                    </td>
+                    <td class="grid_right">{{i+1}}</td>
+                    <td class="grid_right">{{field.processing}}</td>
+                    <td class="grid_right">
+                      <div [innerHTML]="field.result">
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- Table Ends -->
+          </div>
+        </div>
+      </div>
+      <!-- Form Row ENds -->
+    </div>
+    <!-- Grid Inner Ends  showFirst -->
+    <!-- broker steps/ -->
+    <div class="grid-heading" *ngIf="showBrokerSecond">
+      <h3>{{'finance.paymentGenerate.processingSteps' | translate}} {{'uft.dashboard.financePayable.report' | translate }} {{'uft.dashboard.financePayable.broker' | translate }}</h3>
+    </div>
+    <!-- Grid Heading Ends -->
+    <div class="grid-inner" *ngIf="showBrokerSecond">
+      <div class="form-row">
+        <div class="row">
+          <div class="col-md-12 col-xs-12 table-col">
+            <div class="table-responsive">
+              <table id="processingStepListBroker" class="table table-bordered table-stripped">
+                <thead>
+                  <tr>
+                    <th>{{'finance.transactionSearch.done' | translate}}</th>
+                    <th class="grid_right">{{'finance.transactionSearch.steps' | translate}}</th>
+                    <th class="grid_right">{{'finance.transactionSearch.processing' | translate}}</th>
+                    <th class="grid_right">{{'finance.transactionSearch.result' | translate}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let field of brokerfieldArraySecond; let i = index">
+                    <td>
+                      <input type="checkbox" disabled [checked]="(field.done == 0)?false:true" value="field.done">
+                    </td>
+                    <td class="grid_right">{{i+1}}</td>
+                    <td class="grid_right">{{field.processing}}</td>
+                    <td class="grid_right">
+                      <div [innerHTML]="field.result">
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- Table Ends -->
+          </div>
+        </div>
+      </div>
+      <!-- Form Row ENds -->
+    </div>
+    <!-- Grid Heading Ends showBroker -->
+
+    <!-- Company steps/ -->
+    <div class="grid-heading" *ngIf="showCompanySecond">
+      <h3>{{'finance.paymentGenerate.processingSteps' | translate}} {{'uft.dashboard.financePayable.report' | translate}} {{'uft.dashboard.financePayable.company' | translate }}</h3>
+    </div>
+    <!-- Grid Heading Ends -->
+    <div class="grid-inner" *ngIf="showCompanySecond">
+      <div class="form-row">
+        <div class="row">
+          <div class="col-md-12 col-xs-12 table-col">
+            <div class="table-responsive">
+              <table id="processingStepListCompany" class="table table-bordered table-stripped">
+                <thead>
+                  <tr>
+                    <th>{{'finance.transactionSearch.done' | translate}}</th>
+                    <th class="grid_right">{{'finance.transactionSearch.steps' | translate}}</th>
+                    <th class="grid_right">{{'finance.transactionSearch.processing' | translate}}</th>
+                    <th class="grid_right">{{'finance.transactionSearch.result' | translate}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let field of comapnyfieldArraySecond; let i = index">
+                    <td>
+                      <input type="checkbox" disabled [checked]="(field.done == 0)?false:true" value="field.done">
+                    </td>
+                    <td class="grid_right">{{i+1 }}</td>
+                    <td class="grid_right">{{field.processing}}</td>
+                    <td class="grid_right">
+                      <div [innerHTML]="field.result">
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- Table Ends -->
+          </div>
+        </div>
+      </div>
+      <!-- Form Row ENds -->
+    </div>
+    <!-- Grid showCompany Ends -->
+  </div>
+</div>
+
+<div [hidden]="hiddenPaymentSumPopupBtn">
+  <button class="grey-btn btn" data-toggle="modal" data-target="#paymentSumPopup" id="paymentSumKeyButton">{{'button.payment' | translate}}</button>
+</div>
+<div id="paymentSumPopup" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="closePaymentSumForm" type="button" class="close" data-dismiss="modal" (click)="resetPaymentSumForm()">&times;</button>
+        <h4 class="modal-title">{{'finance.transactionSearch.paymentSum' | translate}}</h4>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="paymentSumForm">
+          <div class="grid-box">
+            <div class="grid-heading">
+              <h3>{{'finance.transactionSearch.paymentSum' | translate}}</h3>
+            </div>
+            <!-- Grid Heading Ends -->
+            <div class="grid-inner">
+              <div class="form-row">
+                <div class="row min-ht-sf">
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'finance.transactionSearch.paymentSumNumber' | translate}}</label>
+                    <input autofocus id="payGenerateCompany" type="text" name="paymentSumNo" formControlName="paymentSumNo" class="form-control"
+                      placeholder="{{'finance.transactionSearch.paymentSumNumber' | translate}}" />
+                    <show-errors [control]="paymentSumForm.controls.paymentSumNo"></show-errors>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button id="paymentSumbtn" class="btn green-btn" (click)="submitPaymentSumForm(paymentSumForm)">{{'button.ok' | translate}}</button>
+        <button id="paymentSumClose" class="btn grey-btn" (click)="resetPaymentSumForm()">{{'button.close' | translate}}</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- -------------------------------loader ------------------------------- -->
+<div id="reportList" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="closeModalCCMaxTotal" type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">{{'uft.dashboard.financePayable.reportList' | translate }}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{'uft.dashboard.financePayable.payableReport' | translate }}</h3>
+          </div>
+          <div class="grid-inner">
+            <div class="form-row">
+              <div class="row">
+                <div class="col-md-12 col-xs-12 table-col">
+                  <div class="table-responsive">
+                        <table id="payableReportList" class="display table table-bordered table-stripped">
+                          <tfoot>
+                            <tr>
+                              <td width="">
+                                <input placeholder="{{'uft.dashboard.financePayable.name' | translate }}" class="fm-txt form-control tFootInput inputSearch notInCaps" type="text" id="paramName" name="paramName"
+                                 />
+                              </td>
+                              <td width="">
+                                <input placeholder="{{'uft.dashboard.financePayable.type' | translate }}" class="fm-txt form-control tFootInput inputSearch notInCaps amount_right_grid" type="text" id="paramType" name="paramType"
+                                  />
+                              </td>
+                              <td width="" class="alignDpRight">
+                                <div class="calender-field">
+                                  <my-date-picker id="payableSearchExpiredOn" class="inputSearch" name="paramIssuedDate"
+                                  data-type="date" [options]="myDatePickerOptions" [selDate]="dateNameArray['paramIssuedDate']"
+                                  [ngClass]="expired  ? 'expired' : 'notExpired'"
+                                  (inputFocusBlur)="changeDateFormat1($event, 'paramIssuedDate')"
+                                  placeholder="{{'common.date-placeholder' | translate}}">
+                                </my-date-picker>
+                                </div>
+                              </td>
+                              <td class="grid_right">
+                                <div class="form-row">
+                                  <button id="payableReportSearchBtn" type="submit" title="{{'common.search' | translate}}" class="btn green-btn search_rpt" (click)="searchPayableReport('payableReportList')">
+                                    <span class="glyphicon glyphicon-search"></span>
+                                  </button>
+                                  <button id="payableReportClearBtn" title="{{'common.reset' | translate}}" class="btn grey-btn search_rpt" (click)="resetPayableReport()">
+                                    <span class="glyphicon glyphicon-repeat"></span>
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          </tfoot>
+                        </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+          <button id="closeSummaryBtn" type="button" class="btn grey-btn" data-dismiss="modal" (click)="resetPayableReport()">{{ 'button.close' | translate }}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div [hidden]="!showLoader" class="loader-outer">
+  <div class="cube-wrapper">
+    <div class="cube-folding">
+      <span class="leaf1"></span>
+      <span class="leaf2"></span>
+      <span class="leaf3"></span>
+      <span class="leaf4"></span>
+    </div>
+    <span class="loading" data-name="Loading">{{'company.plan.benefits.pleaseWait'|translate}}</span>
+  </div>
+</div>

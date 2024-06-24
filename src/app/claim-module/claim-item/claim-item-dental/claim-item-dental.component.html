@@ -1,0 +1,615 @@
+<button id="btnGetClaimItems" (click)="getClaimItems()" style="display:none"></button>
+<a id="btnshowduplicateitemdental" data-toggle="modal" data-target="#showduplicateitemdental"></a>
+<a id="btnshowDuplicateClaimList" data-toggle="modal" data-target="#showDuplicateClaimList"></a>
+
+<!-- Grid Heading Ends -->
+<div class="grid-inner">
+  <div class="form-row">
+    <div class="row">
+
+      <div class="col-md-12 col-xs-12 table-col ">
+        <div class="table-responsive search-table multi-col">
+          <!-- Filter Header Ends -->
+          <table id="claim-item-dental" class="table table-bordered table-stripped dataTable dataTables_wrapper">
+            <thead>
+              <tr>
+                <th width="2%">{{'claims.claims-view.claim-items.reverse' | translate}}</th>
+                <th *ngIf="showClaimedColumn" width="2%">{{'C' | translate}}</th>
+                <th *ngIf="!ClaimAddMode && !addMode && showClaimedColumn" width="2%">S</th>
+                <th width="7%">{{'claims.claims-view.claim-items.date' | translate}}</th>
+                <th width="5%" style="text-align: right;">{{'claims.claims-view.claim-items.proc' | translate}}</th>
+                <th width="4%" style="text-align: right;">{{'claims.claims-view.claim-items.tooth' | translate}}</th>
+                <th width="4%" style="text-align: right;">{{'claims.claims-view.claim-items.surface' | translate}}</th>
+                <th width="3%" style="text-align: right;">{{'claims.claims-view.claim-items.count' | translate}}</th>
+                <th width="6.5%" style="text-align: right;">{{'claims.claims-view.claim-items.fee-claim' | translate}}</th>
+                <th width="5%" style="text-align: right;">{{'claims.claims-view.claim-items.fee' | translate}}
+                  <br>{{'claims.claims-view.claim-items.elig' | translate}}</th>
+                <th width="5%" style="text-align: right;">{{'claims.claims-view.claim-items.fee-allow' | translate}}</th>
+                <th width="5%" style="text-align: right;">{{'claims.claims-view.claim-items.fee-paid' | translate}}</th>
+                <th width="5%" style="text-align: right;">{{'claims.claims-view.claim-items.lab-claim' | translate}}</th>
+                <th width="5%" style="text-align: right;">{{'claims.claims-view.claim-items.lab' | translate}}
+                  <br>{{'claims.claims-view.claim-items.elig' | translate}}</th>
+                <th width="4%" style="text-align: right;">{{'claims.claims-view.claim-items.lab-allow' | translate}}</th>
+                <th width="4%" style="text-align: right;">{{'claims.claims-view.claim-items.lab-paid' | translate}}</th>
+                <th width="4%" style="text-align: right;">{{'claims.claims-view.claim-items.cob1' | translate}}</th>
+                <th width="5%" style="text-align: right;" *ngIf="cobVal == 'T'">{{'claims.claims-view.claim-items.cob2' | translate}}</th>
+                <th width="5%" style="text-align: right;">{{'claims.claims-view.claim-items.deduct' | translate}}</th>
+                <th width="5.2%" style="text-align: right;">{{'claims.claims-view.claim-items.total' | translate}}
+                  <br>{{'claims.claims-view.claim-items.paid' | translate}}</th>
+                <th width="2%" style="text-align: right;">{{'claims.claims-view.claim-items.rr' | translate}}</th>
+                <th width="6%" style="text-align: right;">{{'claims.claims-view.claim-items.override' | translate}}</th>
+                <th style="text-align: right;" *ngIf="!reviewer && !preAuthReverseClaim && this.claimStatus != 'Paid' && this.claimRefered != true"
+                  width="4.8%">{{'claims.claims-view.claim-items.action' | translate}}</th>
+              </tr>
+            </thead>
+            <!-- issue no  737 isQuikcard -->
+            <tfoot *ngIf="arrClaimItems.length > 0 && (isQuikcard == 1 || isQuikcard == 2)" >
+              <tr>
+                <td></td>
+                <td *ngIf="showClaimedColumn"></td>
+                <td *ngIf="!ClaimAddMode && !addMode && showClaimedColumn"></td>
+                <td colspan="5"><span style="width: 40%;text-align: left;">{{arrClaimItems.length}}</span><span
+                    style="width: 60%;text-align: right;float:right;">Total Amount Claimed</span></td>
+                <td><span style="text-align:right; overflow: unset;">{{getSumAmount('feeClaim') | currency:'USD'}}</span></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>
+                </td> 
+                <td><span
+                    style="text-align:right; overflow: unset;">{{getSumAmount('cob') | currency:'USD'}}</span></td>
+                <td  *ngIf="cobVal == 'T'"><span style="text-align:right; overflow: unset;">{{getSumAmount('cob2') | currency:'USD'}}</span></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td
+                  *ngIf="!reviewer && !preAuthReverseClaim && this.claimStatus != 'Paid' && this.claimRefered != true">
+                </td>
+                <td></td>
+              </tr>
+            </tfoot>
+            <tbody>
+              <tr *ngIf="arrClaimItems.length == 0 && !addMode && ClaimAddMode" class="odd">
+                <td valign="top" colspan="20" class="dataTables_empty" *ngIf="(ClaimViewMode  && !showClaimedColumn)">
+                  {{'card.card-holder.data-tables.datamsg' | translate}}</td>
+                <td valign="top" colspan="20" class="dataTables_empty" *ngIf="cobVal != 'T' && !showClaimedColumn">
+                  {{'card.card-holder.data-tables.datamsg' | translate}}</td>
+                <td valign="top" colspan="21" class="dataTables_empty"
+                  *ngIf="!ClaimViewMode && !showClaimedColumn && cobVal == 'T'">
+                  {{'card.card-holder.data-tables.datamsg' | translate}}</td>
+                <td valign="top" colspan="21" class="dataTables_empty" *ngIf="showClaimedColumn">
+                  {{'card.card-holder.data-tables.datamsg' | translate}}
+                </td>
+              </tr>
+
+              <tr *ngFor="let dataRow of arrClaimItems; let i = index"
+                [ngClass]="{pink: (dataRow.itemRejectedInd === 'T' && dataRow.totalPaid == 0  ) || (dataRow.totalPaid == 0 && this.claimStatus != 'Pending' && this.claimStatus != '') && AdjudicateCheck || (dataRow.itemRejectedInd === 'F' && dataRow.totalPaid == 0 && this.claimStatus != 'Pending' && this.claimStatus != '' && !dataRow.isCopy) , yellow: dataRow.itemReviewInd && !this.copyMode && colorCheck}">
+                <td class="checkCss">
+                  <input id="ccid_Rv{{i}}" [disabled]="true" type="checkbox" [(ngModel)]="dataRow.Rv"
+                    [checked]="dataRow.Rv == 'T'">
+                </td>
+
+                <td *ngIf="showClaimedColumn">
+                  <input id="ccid_claimItemClaimed" [disabled]=true type="checkbox" [checked]="dataRow.isClaimed == 'T'"
+                    [(ngModel)]="dataRow.isClaimed">
+                </td>
+                <td *ngIf="!ClaimAddMode && !addMode && showClaimedColumn">
+                  <input id="ccid_claimitemReviewInd" [disabled]="reviewer || ClaimViewMode" type="checkbox"
+                    [checked]="dataRow.itemReviewInd" [(ngModel)]="dataRow.itemReviewInd"
+                    (change)="getClaimItemReviewed(dataRow.id,$event);">
+                </td>
+                <td>
+                  <span *ngIf="dataRow.id != selectedRowId">{{dataRow.date | dateFormate}}</span>
+                  <input id="txtClaimDate{{i}}" type="text" (keyup.enter)="OnEnterPress(i,dataRow,1)"
+                    (keydown.ArrowUp)="onUp(i,dataRow,'txtClaimDate')"
+                    (keydown.ArrowDown)="onDown(i,dataRow,'txtClaimDate')" name="date{{i}}" value="{{dataRow.date}}"
+                    [(ngModel)]="dataRow.date"
+                    [ngClass]="{ 'error_field': dataRow.date == '', 'fm-txt': true, 'form-control':true }"
+                    (keydown.tab)="ChangeInputDateFormat(i,$event);" *ngIf="dataRow.id == selectedRowId">
+                </td>
+                <td>
+                          <!-- // title issue no 661 -->
+
+                  <span *ngIf="dataRow.id != selectedRowId" title="{{dataRow.procDesc}}" style="text-align: right;">{{dataRow.pro}}</span>
+                  <input type="text" id="txtPro{{i}}" name="pro{{i}}" maxlength="5" value="{{dataRow.pro}}"
+                    (keyup.enter)="OnEnterPress(i,dataRow,1)" (keydown.ArrowUp)="onUp(i,dataRow,'txtPro')"
+                    (keydown.ArrowDown)="onDown(i,dataRow,'txtPro')" [(ngModel)]="dataRow.pro"
+                    [ngClass]="{ 'error_field': dataRow.pro == '', 'fm-txt': true, 'form-control':true }"
+                    (keydown.tab)="onProCodeChange($event,$event.target.value,i,1);"
+                    *ngIf="dataRow.id == selectedRowId" > 
+
+                     <!-- // log 833 client feedback + arun Randev's feedback -->
+                </td>
+                <td>
+                  <span *ngIf="dataRow.id != selectedRowId" style="text-align: right;">{{dataRow.tooth}}</span>
+                  <input type="text" OnlyNumber="true" [disabled]="disableToothCode" id="txtTooth{{i}}"
+                    (keyup.enter)="OnEnterPress(i,dataRow,1)" (keydown.ArrowUp)="onUp(i,dataRow,'txtTooth')"
+                    (keydown.ArrowDown)="onDown(i,dataRow,'txtTooth')" maxlength="2" name="tooth{{i}}"
+                    value="{{dataRow.tooth}}" [(ngModel)]="dataRow.tooth"
+                    [ngClass]="{'fm-txt': true, 'form-control':true }" *ngIf="dataRow.id == selectedRowId"
+                    (blur)="validateTooth(i,$event,dataRow)">
+                </td>
+                <td>
+                  <span *ngIf="dataRow.id != selectedRowId" style="text-align: right;">{{dataRow.suff}}</span>
+                  <input type="text" name="suff{{i}}" value="{{dataRow.suff}}" (keyup.enter)="OnEnterPress(i,dataRow,1)"
+                    (keydown.ArrowUp)="onUp(i,dataRow,'txtSuff')" (keydown.ArrowDown)="onDown(i,dataRow,'txtSuff')"
+                    id="txtSuff{{i}}" [(ngModel)]="dataRow.suff" [ngClass]="{'fm-txt': true, 'form-control':true }"
+                    onlyAlphabet="true" *ngIf="dataRow.id == selectedRowId" (blur)="validateSurface(i,$event,dataRow)">
+                </td>
+                <td>
+                  <span *ngIf="dataRow.id != selectedRowId" style="text-align: right;">{{dataRow.cnt}}</span>
+                  <input id="ccid_cntData" type="text" name="cnt{{i}}" value="{{dataRow.cnt}}" [disabled]="true"
+                    class="fm-txt form-control" [(ngModel)]="dataRow.cnt" *ngIf="dataRow.id == selectedRowId">
+                </td>
+                <td>
+                  <span *ngIf="dataRow.id != selectedRowId"
+                    style="text-align:right;" style="text-align: right;">{{dataRow.feeClaim | currency:'USD'}}</span>
+                  <input type="text" OnlyNumber="true" id="txtFeeClaim{{i}}" (keyup.enter)="OnEnterPress(i,dataRow,1)"
+                    (keydown.ArrowUp)="onUp(i,dataRow,'txtFeeClaim')"
+                    (keydown.ArrowDown)="onDown(i,dataRow,'txtFeeClaim')" name="feeClaim{{i}}" style="text-align:right;"
+                    value="{{dataRow.feeClaim}}" [(ngModel)]="dataRow.feeClaim"
+                    [ngClass]="{ 'error_field': (dataRow.feeClaim == '' ), 'fm-txt': true, 'form-control':true }"
+                    (blur)="ConvertAmountToDecimal($event,'feeClaim',dataRow)" *ngIf="dataRow.id == selectedRowId">
+                </td>
+                <td>
+                  <span *ngIf="dataRow.id != selectedRowId" style="text-align:right;">{{dataRow.feeEligAmount | currency:'USD'}}</span>
+                  <input id="ccid_feeEligAmountData" type="text" name="feeEligAmount{{i}}"
+                    value="{{dataRow.feeEligAmount}}" OnlyNumber="true" [(ngModel)]="dataRow.feeEligAmount"
+                    class="fm-txt form-control" [disabled]="true" *ngIf="dataRow.id == selectedRowId"
+                    style="text-align:right;">
+                </td>
+                <td>
+                  <span *ngIf="dataRow.id != selectedRowId" style="text-align:right;">{{dataRow.feeAllow | currency:'USD' }}</span>
+                  <input id="ccid_feeAllowData" type="text" name="feeAllow{{i}}" value="{{dataRow.feeAllow}}"
+                    OnlyNumber="true" [(ngModel)]="dataRow.feeAllow" class="fm-txt form-control" [disabled]="true"
+                    *ngIf="dataRow.id == selectedRowId" style="text-align:right;">
+                </td>
+                <td>
+                  <span *ngIf="dataRow.id != selectedRowId" style="text-align:right;">{{dataRow.feePaid | currency:'USD'}}</span>
+                  <input id="ccid_feePaidData" type="text" name="feePaid{{i}}" value="{{dataRow.feePaid}}"
+                    OnlyNumber="true" [(ngModel)]="dataRow.feePaid" class="fm-txt form-control" [disabled]="true"
+                    *ngIf="dataRow.id == selectedRowId" style="text-align:right;">
+                </td>
+                <td>
+                  <span *ngIf="dataRow.id != selectedRowId" style="text-align:right;">{{dataRow.labClaim || 0 | currency:'USD'}}</span>
+                  <input id="ccid_labClaim{{i}}" (keyup.enter)="OnEnterPress(i,dataRow,1)"
+                    (keydown.ArrowUp)="onUp(i,dataRow,'ccid_labClaim')"
+                    (keydown.ArrowDown)="onDown(i,dataRow,'ccid_labClaim')" type="text" name="labClaim{{i}}"
+                    value="{{dataRow.labClaim}}" (blur)="ConvertAmountToDecimal($event,'ccid_labClaim',dataRow)"
+                    class="fm-txt form-control" OnlyNumber="true" [(ngModel)]="dataRow.labClaim"
+                    *ngIf="dataRow.id == selectedRowId" (blur)="ConvertAmountToDecimal($event,'labClaim',dataRow)"
+                    style="text-align:right;">
+                </td>
+                <td>
+                  <span *ngIf="dataRow.id != selectedRowId" style="text-align:right;">{{dataRow.labElig | currency:'USD'}}</span>
+                  <input id="ccid_labEligData" type="text" name="labElig{{i}}" value="{{dataRow.labElig}}"
+                    OnlyNumber="true" [(ngModel)]="dataRow.labElig" [disabled]="true" class="fm-txt form-control"
+                    *ngIf="dataRow.id == selectedRowId" style="text-align:right;">
+                </td>
+                <td>
+                  <span *ngIf="dataRow.id != selectedRowId" style="text-align:right;">{{dataRow.labAllow | currency:'USD'}}</span>
+                  <input id="ccid_labAllowData" type="text" name="labAllow{{i}}" value="{{dataRow.labAllow}}"
+                    OnlyNumber="true" [(ngModel)]="dataRow.labAllow" [disabled]="true" class="fm-txt form-control"
+                    *ngIf="dataRow.id == selectedRowId" style="text-align:right;">
+                </td>
+                <td>
+                  <span *ngIf="dataRow.id != selectedRowId" style="text-align:right;">{{dataRow.labPaid ||0 | currency:'USD'}}</span>
+                  <input id="ccid_labPaidData" type="text" name="labPaid{{i}}" value="{{dataRow.labPaid}}"
+                    [disabled]="true" OnlyNumber="true" [(ngModel)]="dataRow.labPaid" class="fm-txt form-control"
+                    [disabled]="true" *ngIf="dataRow.id == selectedRowId">
+                </td>
+                <td>
+                  <span *ngIf="dataRow.id != selectedRowId" style="text-align:right;">{{dataRow.cob | currency:'USD'}}</span>
+                  <input id="ccid_cob{{i}}" type="text" (keyup.enter)="OnEnterPress(i,dataRow,1)"
+                    (keydown.ArrowUp)="onUp(i,dataRow,'ccid_cob')" (keydown.ArrowDown)="onDown(i,dataRow,'ccid_cob')"
+                    name="cob{{i}}" value="{{dataRow.cob}}" OnlyNumber="true" [(ngModel)]="dataRow.cob"
+                    (blur)="ConvertAmountToDecimal($event,'cob',dataRow)" class="fm-txt form-control"
+                    [ngClass]="{ 'fm-txt': true, 'form-control':true }" *ngIf="dataRow.id == selectedRowId"
+                    [disabled]="isDasp == 'T' ? 'true':'false'" style="text-align:right;">
+                    
+                </td>
+                <td *ngIf="cobVal == 'T'">
+                  <span *ngIf="dataRow.id != selectedRowId" style="text-align:right;">{{dataRow.cob2 | currency:'USD'}}</span>
+                  <input type="text" name="cob2{{i}}" value="{{dataRow.cob2}}" OnlyNumber="true"
+                    [(ngModel)]="dataRow.cob2" (blur)="ConvertAmountToDecimal($event,'cob2',dataRow)"
+                    class="fm-txt form-control" *ngIf="dataRow.id == selectedRowId" style="text-align:right;" [disabled]="cobValDisable">
+                </td>
+                <td>
+                  <span *ngIf="dataRow.id != selectedRowId" style="text-align:right;">{{dataRow.Deduct | currency:'USD'}}</span>
+                  <input id="Deduct{{i}}" (keyup.enter)="OnEnterPress(i,dataRow,1)" [disabled]="true"
+                    (keydown.ArrowUp)="onUp(i,dataRow,'Deduct')" (keydown.ArrowDown)="onDown(i,dataRow,'Deduct')"
+                    type="text" name="Deduct{{i}}" value="{{dataRow.Deduct}}" OnlyNumber="true"
+                    [(ngModel)]="dataRow.Deduct" class="fm-txt form-control"
+                    (blur)="ConvertAmountToDecimal($event,'Deduct',dataRow)" *ngIf="dataRow.id == selectedRowId"
+                    style="text-align:right;">
+                </td>
+                <td>
+                  <span *ngIf="dataRow.id != selectedRowId" style="text-align:right;">{{dataRow.totalPaid | currency:'USD'}}</span>
+                  <input id="ccid_totalPaidData" type="text" name="totalPaid{{i}}" value="{{dataRow.totalPaid}}"
+                    [disabled]="true" OnlyNumber="true" [(ngModel)]="dataRow.totalPaid" class="fm-txt form-control"
+                    *ngIf="dataRow.id == selectedRowId" style="text-align:right;">
+                </td>
+                <td class="checkCss" style="text-align: right;">
+                  <input id="rr{{i}}" [disabled]="true" type="checkbox" [(ngModel)]="dataRow.RR"
+                    [checked]="dataRow.RR == 'T'">
+                </td>
+                <td>
+                  <span [ngClass]="{'disableInput': claimItemAuth.addOverides == 'F'}"
+                    *ngIf="dataRow.id != selectedRowId" style="text-align: right;">{{dataRow.orverideText}}</span>
+                  <select [ngClass]="{'disableInput': claimItemAuth.addOverides == 'F'}" id="ddlOverideType{{i}}"
+                    name="orverideType{{i}}" [(ngModel)]="dataRow.orverideType" *ngIf="dataRow.id == selectedRowId"
+                    class="fm-txt form-control" (change)="OnOverrideChange(i,$event,dataRow)">
+                    <option [ngValue]="null" disabled hidden selected>{{'common.select' | translate}}</option>
+                    <option *ngFor="let type of arrOverrideTypes" [value]="type.overrideTypeKey">
+                      {{type.overrideTypeDesc}}
+                    </option>
+                  </select>
+                </td>
+                <td style="text-align: right;"
+                  *ngIf="!reviewer && !preAuthReverseClaim && this.claimStatus != 'Paid' && this.claimRefered != true">
+                  <button id="claimItemDental-edit" (click)="EditInfo(i,dataRow)" title="Edit" class='edit_row table-action-btn edit-ico'
+                    *ngIf="dataRow.id != selectedRowId">
+                    <i class='fa fa-pencil'></i>
+                  </button>
+
+                  <button
+                    [ngClass]="{ 'save_row': true, 'table-action-btn': true, 'edit-ico': true, 'disabled': disableSave}"
+                    title="Save" *ngIf="dataRow.id == selectedRowId" (click)="UpdateInfo(i,dataRow)">
+                    <i class="fa fa-save"></i>
+                  </button>
+                  <button title="Cancel" class="delete_row table-action-btn del-ico" (click)="CancelInfo(i,dataRow,0,true)"
+                    (blur)="CancelInfo(i,dataRow,1,false)" *ngIf="dataRow.id == selectedRowId">
+                    <i class="fa fa-times"></i>
+                  </button>
+
+                  <button title="Delete" class="delete_row table-action-btn del-ico" (click)="DeleteInfo(i,dataRow)"
+                    *ngIf="dataRow.id != selectedRowId" id="claimItemDental-delete">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+              <tr class="tableRow" [hidden]="!addMode">
+                <td class="checkCss">
+                  <input id="ccid_Rv" type="checkbox" [disabled]="true" name="Rv" [(ngModel)]="arrNewClaimItem.Rv"
+                    [checked]="arrNewClaimItem.Rv == 'T'">
+                </td>
+                <td *ngIf="showClaimedColumn">
+                  <input id="ccid_Claimed" type="checkbox" name="Claimed">
+                </td>
+                <td width="200px">
+                 <input id="txtClaimDate" type="text" (keyup.enter)="onEnterSaveInfo(0)"
+                    (keydown.ArrowUp)="onUpAddMode('txtClaimDate')" (keydown.ArrowDown)="onDownAddMode('txtClaimDate')"
+                    value="" class="fm-txt form-control" name="date"
+                    [ngClass]="{ 'error_field': newRecordValidate && arrNewClaimItem.date == '' }"
+                    [(ngModel)]="arrNewClaimItem.date" (blur)="ChangeInputDateFormat(0,$event);">
+                </td>
+                <td width="100px">
+                  <input type="text" id="txtPro" value="" class="fm-txt form-control" (keyup.enter)="onEnterSaveInfo(0)"
+                    (keydown.ArrowUp)="onUpAddMode('txtPro')" (keydown.ArrowDown)="onDownAddMode('txtPro')" name="pro"
+                    [ngClass]="{ 'error_field': newRecordValidate && arrNewClaimItem.pro == '' }"
+                    [(ngModel)]="arrNewClaimItem.pro" maxlength="5"
+                    (keydown.tab)="onProCodeChange($event,$event.target.value,0,1);" >
+
+                </td>
+                <td width="100px">
+                  <input type="text" OnlyNumber="true" [disabled]="disableToothCode" value="" id="txtTooth"
+                    (keyup.enter)="onEnterSaveInfo(0)" (keydown.ArrowUp)="onUpAddMode('txtTooth')"
+                    (keydown.ArrowDown)="onDownAddMode('txtTooth')" maxlength="2" class="fm-txt form-control"
+                    name="tooth" OnlyNumber="true" [(ngModel)]="arrNewClaimItem.tooth"
+                    (blur)="validateTooth(0,$event,arrNewClaimItem)">
+                </td>
+                <td width="100px">
+                  <input type="text" value="" class="fm-txt form-control" id="txtSuff"
+                    (keyup.enter)="onEnterSaveInfo(0)" (keydown.ArrowUp)="onUpAddMode('txtSuff')"
+                    (keydown.ArrowDown)="onDownAddMode('txtSuff')" name="suff"
+                    (blur)="validateSurface(0,$event,arrNewClaimItem)" onlyAlphabet="true"
+                    [(ngModel)]="arrNewClaimItem.suff">
+                </td>
+                <td>
+                  <input id="ccid_cnt" type="text" value="" name="cnt" class="fm-txt form-control" [disabled]="true"
+                    [(ngModel)]="arrNewClaimItem.cnt">
+                </td>
+                <td>
+                  <input type="text" OnlyNumber="true" id="txtFeeClaim" value="" (keyup.enter)="onEnterSaveInfo(0)"
+                    (keydown.ArrowUp)="onUpAddMode('txtFeeClaim')" class="fm-txt form-control" name="feeClaim"
+                    [ngClass]="{ 'error_field': newRecordValidate && (arrNewClaimItem.feeClaim == '')}"
+                    [(ngModel)]="arrNewClaimItem.feeClaim" (blur)="ConvertAmountToDecimal($event,'feeClaim')"
+                    style="text-align:right;">
+                </td>
+                <td>
+                  <input id="ccid_feeEligAmount" type="text" value="" OnlyNumber="true" class="fm-txt form-control"
+                    name="feeEligAmount" [(ngModel)]="arrNewClaimItem.feeEligAmount" [disabled]="true"
+                    style="text-align:right;">
+                </td>
+                <td>
+                  <input id="ccid_feeAllow" type="text" value="" OnlyNumber="true" class="fm-txt form-control"
+                    name="feeAllow" [(ngModel)]="arrNewClaimItem.feeAllow" [disabled]="true" style="text-align:right;">
+                </td>
+                <td>
+                  <input id="ccid_feePaid" type="text" value="" OnlyNumber="true" class="fm-txt form-control"
+                    name="feePaid" [(ngModel)]="arrNewClaimItem.feePaid" [disabled]="true" style="text-align:right;">
+
+                </td>
+                <td>
+                  <input id="ccid_labClaim" type="text" value="" (keyup.enter)="onEnterSaveInfo(0)"
+                    (keydown.ArrowUp)="onUpAddMode('ccid_labClaim')"
+                    (keydown.ArrowDown)="onDownAddMode('ccid_labClaim')" OnlyNumber="true" class="fm-txt form-control"
+                    name="ccid_labClaim" [(ngModel)]="arrNewClaimItem.labClaim" style="text-align:right;"
+                    (blur)="ConvertAmountToDecimal($event,'labClaim')">
+                </td>
+                <td>
+                  <input id="ccid_labElig" type="text" value="" OnlyNumber="true" class="fm-txt form-control"
+                    name="labElig" [(ngModel)]="arrNewClaimItem.labElig" [disabled]="true" style="text-align:right;">
+                </td>
+                <td>
+                  <input id="ccid_labAllow" type="text" value="" OnlyNumber="true" class="fm-txt form-control"
+                    name="labAllow" [(ngModel)]="arrNewClaimItem.labAllow" [disabled]="true" style="text-align:right;">
+
+                </td>
+                <td>
+                  <input id="ccid_labPaid" type="text" value="" OnlyNumber="true" class="fm-txt form-control"
+                    name="labPaid" [(ngModel)]="arrNewClaimItem.labPaid" [disabled]="true" style="text-align:right;">
+                </td>
+                <td>
+                  <input id="ccid_cob" type="text" value="" (keyup.enter)="onEnterSaveInfo(0)"
+                    (keydown.ArrowUp)="onUpAddMode('ccid_cob')" (keydown.ArrowDown)="onDownAddMode('ccid_cob')"
+                    OnlyNumber="true" class="fm-txt form-control" name="cob"
+                    (blur)="ConvertAmountToDecimal($event,'cob')" [disabled]="isDasp == 'T' ? 'true':'false'"
+                    [ngClass]="{ 'error_field': (newRecordValidate && arrNewClaimItem.cob == ''&& (cobVal == 'T' && cardBusinessTypeKey == 2)) }"
+                    [(ngModel)]="arrNewClaimItem.cob" style="text-align:right;">
+                </td>
+                <td *ngIf="cobVal == 'T'">
+                  <input id="ccid_cob2" type="text" value="" OnlyNumber="true" class="fm-txt form-control" name="cob2"
+                    (blur)="ConvertAmountToDecimal($event,'cob2')" [(ngModel)]="arrNewClaimItem.cob2" [disabled]="cobValDisable"
+                    style="text-align:right;">
+                </td>
+                <td>
+                  <input id="ccid_Deduct" type="text" value="" OnlyNumber="true" class="fm-txt form-control"
+                    name="Deduct" [(ngModel)]="arrNewClaimItem.Deduct" [disabled]="true" style="text-align:right;">
+                </td>
+                <td>
+                  <input id="ccid_totalPaid" type="text" value="" OnlyNumber="true" class="fm-txt form-control"
+                    name="totalPaid" [(ngModel)]="arrNewClaimItem.totalPaid" [disabled]="true"
+                    style="text-align:right;">
+                </td>
+                <td class="checkCss">
+                  <input id="rr" type="checkbox" [disabled]="true" name="RR" [(ngModel)]="arrNewClaimItem.RR"
+                    [checked]="arrNewClaimItem.RR == 'T'">
+                </td>
+                <td>
+                  <select [ngClass]="{'disableInput': claimItemAuth.addOverides == 'F'}" id="ddlOverideType"
+                    name="orverideType" [(ngModel)]="arrNewClaimItem.orverideType" class="fm-txt form-control"
+                    (change)="OnOverrideChange(0,$event)" required>
+                    <option [ngValue]="null" disabled hidden selected>{{'common.select' |translate}}</option>
+                    <option *ngFor="let type of arrOverrideTypes" [value]="type.overrideTypeKey">
+                      {{type.overrideTypeDesc}}
+                    </option>
+                  </select>
+                </td>
+                <td
+                  *ngIf="!reviewer && !preAuthReverseClaim && this.claimStatus != 'Paid' && this.claimRefered != true">
+                  <button href="javascript:void(0)" id="saveClaim" class="save_row table-action-btn edit-ico"
+                   title="Save" (click)="SaveInfo(0)">  <!-- Next Blank Claim item is not populating When first claim item is saved in case of Dental Claim(point no-186) --> <!-- Log #1054: set 0 to 1 -->    
+                    <i class="fa fa-save"></i>
+                  </button>
+                  <button href="javascript:void(0)" id="addModeDelete" (keydown.tab)="SaveInfo(1)"
+                    class="delete_row table-action-btn del-ico" (click)="DeleteInfo()" title="Cancel">
+                    <i class="fa fa-times"></i>
+                  </button>
+                </td>
+              </tr>
+              <!--  issue number 670 start -->
+              <div id="search-claim-table_processing" class="dataTables_processing" style="display: block;">Processing...</div>
+              <!--  issue number 670 end -->
+            </tbody>
+          </table>
+        </div>
+        <!-- Table Ends -->
+      </div>
+    </div>
+
+  </div>
+  <!-- Form Row ENds -->
+  <div id="Totals" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button id="btnCloseClaimItemDental" type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">{{'common.totals' | translate}}</h4>
+        </div>
+
+        <div class="modal-body">
+
+          <div class="grid-box">
+            <div class="grid-heading">
+              <h3>{{'common.totals' | translate}}</h3>
+
+            </div>
+            <!-- Grid Heading Ends -->
+
+            <div class="grid-inner">
+              <div class="form-row">
+                <div class="row">
+                  <div class="col-md-12 col-xs-12 table-col">
+                    <div class="table-responsive">
+
+                      <table id='contact-history' datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
+                        class="inlinePopupTable table table-bordered table-stripped">
+                        <thead>
+                          <tr>
+                            <th>{{'common.max_type' | translate}}</th>
+                            <th>{{'common.period_type' | translate}}</th>
+                            <th>{{'common.afwd_amt' | translate}}</th>
+                            <th>{{'common.prorated_max' | translate}}</th>
+                            <th>{{'common.cfed_expense' | translate}}</th>
+                            <th>{{'common.preauth_amt' | translate}}</th>
+                            <th>{{'common.expense_adj' | translate}}</th>
+                            <th>{{'common.paid_to_date' | translate}}</th>
+                            <th>{{'common.amt_avail' | translate}}</th>
+                            <th>{{'common.year_type' | translate}}</th>
+                            <th>{{'common.period_start' | translate}}</th>
+                            <th>{{'common.period_end' | translate}}</th>
+                            <th>{{'common.dental' | translate}}</th>
+                            <th>{{'common.vision' | translate}}</th>
+                            <th>{{'common.health' | translate}}</th>
+                            <th>{{'common.drug' | translate}}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr class="tableRow" id="{{'row_'+i}}"
+                            *ngFor="let dataRow of contactHistorytableData; let i = index">
+
+                            <td>{{dataRow.max_type}}</td>
+                            <td>{{dataRow.period_type}}</td>
+                            <td>{{dataRow.prorated_max}}</td>
+                            <td>{{dataRow.cfed_expense}}</td>
+                            <td>{{dataRow.preauth_amt}}</td>
+                            <td>{{dataRow.expense_adj}}</td>
+                            <td>{{dataRow.afwd_amt}}</td>
+                            <td>{{dataRow.paid_to_date}}</td>
+                            <td>{{dataRow.amt_avail}}</td>
+                            <td>{{dataRow.year_type}}</td>
+                            <td>{{dataRow.period_start}}</td>
+                            <td>{{dataRow.period_end}}</td>
+                            <td>{{(dataRow.dental == 'T') ? 'Yes' : 'No'}}</td>
+                            <td>{{(dataRow.vision == 'T') ? 'Yes' : 'No'}}</td>
+                            <td>{{(dataRow.health == 'T') ? 'Yes' : 'No'}}</td>
+                            <td>{{(dataRow.drug == 'T') ? 'Yes' : 'No'}}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Form Row ENds -->
+            </div>
+            <!-- Grid Inner Ends -->
+
+
+          </div>
+          <!-- Grid Box Ends -->
+        </div>
+        <!-- Modal Body End-->
+        <div class="modal-footer">
+          <button id="closeClaimItemDental" class="btn grey-btn"
+            data-dismiss="modal">{{'button.close'|translate}}</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <!-- Form Row ENds -->
+  <div [hidden]="!showLoader" class="loader-outer">
+    <div class="cube-wrapper">
+      <div class="cube-folding">
+        <span class="leaf1"></span>
+        <span class="leaf2"></span>
+        <span class="leaf3"></span>
+        <span class="leaf4"></span>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Grid Inner Ends -->
+<!-- add for log 833 -->
+
+<!-- log 833  -->
+<button class="btn green-btn-add" id="openClaimList"  style="display: none;"  data-toggle="modal"
+  data-target="#showClaimItems" title="View">
+  {{'claims.claims-view.claims' | translate}}
+</button>
+<div>
+  <div id="showClaimItems" class="modal fade" *ngIf="claimItems" role="dialog" data-keyboard="false"
+    data-backdrop="static">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button id="btnCloseShowClaimItems" type="button" title="Close" class="close"
+            data-dismiss="modal">&times;</button>
+          <h4 class="modal-title"> {{'claims.claims-view.duplicate-claims' | translate}}</h4>
+        </div>
+        <div class="modal-body">
+          <div class="grid-box">
+            <div class="grid-heading">
+              <h3>{{'claims.claims-view.duplicate-claims' | translate}}</h3>
+            </div>
+            <!-- Grid Heading Ends -->
+
+            <div class="grid-inner">
+              <div class="form-row">
+                <div class="row">
+                  <div class="col-md-12 col-xs-12 table-col">
+                    <div class="table-responsive">
+
+                      <table id="claimItemsTableD" datatable [dtOptions]="dtOptions['claimItemsTableD']"
+                        class="row-border hover cardholder-table table-striped table-bordered dataTable">
+                        <thead>
+                          <tr>
+                            <th>{{'claims-history.discipline' | translate}}</th>
+                            <th>{{'claims.claims-add.claims-general-information.reference_no' | translate}}</th>
+                            <th>{{'claims-history.claimtype' | translate}}</th>
+                            <th>{{'claims-history.entryDate' | translate}} </th>
+                            <th>{{'claims-history.status' | translate}}</th>
+                            <th>{{'claims-history.claimType' | translate}}</th>
+                            <th>{{'claims-history.totalCount' | translate}}</th>
+                            <th>{{'claims-history.totalClaimedAmount' | translate}}</th>
+                            <th>{{'claims-history.totalPayableAmount' | translate}}</th>
+                          </tr>
+                        </thead>
+                        
+
+                        <tbody>
+                          <tr *ngFor="let claimItem of claimItems; let idx= index" [ngClass]="{'hPreAuthReview-row': (claimItem.claimType == 'Pre-Authorized By Review' && alberta),
+                          'hactive-row': (claimItem.claimType == 'Pre-Authorization - Paper' && alberta),
+                          'hsuspended-row': (claimItem.claimType == 'Pre-Authorization - Phone-In' && alberta),
+                          'dental-row': (claimItem.disciplineKey == 1 && !alberta),
+                          'vision-row': (claimItem.disciplineKey == 2 && !alberta),
+                          'health-row': (claimItem.disciplineKey == 3 && !alberta),
+                          'drug-row': (claimItem.disciplineKey == 4 && !alberta),
+                          'supplement-row': (claimItem.disciplineKey == 5 && !alberta)
+                        }" (click)="openClaim(claimItem)">
+                            <td>{{claimItem.disciplineName}}</td>
+                            <td class="amount_right_grid">{{claimItem.refId}}</td>
+                            <td class="amount_right_grid">{{claimItem.claimType}}</td>
+                            <td class="amount_right_grid">{{claimItem.entryDate}}</td>
+                            <td class="amount_right_grid">{{claimItem.status}}</td>
+                            <td class="amount_right_grid">{{claimItem.claimType}}</td>
+                            <td class="amount_right_grid">{{claimItem.items.length}}</td>
+                            <td class="amount_right_grid">{{claimItem.totalClaimedAmount | currency:'USD'}}</td>
+                            <td class="amount_right_grid">{{claimItem.totalPayableAmount | currency:'USD'}}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Grid Inner Ends -->
+
+          </div>
+          <!-- Grid Box Ends -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- log 833 -->
+<!-- add for log 833 -->
+<div id="showduplicateitemdental" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+  <app-duplicate-claim-item-detail [customComments]="customComments" [claimItems]="duplicateClaimItems" [discipline]="1" [claimData]="duplicateClaimData">
+  </app-duplicate-claim-item-detail>
+</div>
+<!-- add for log 833 new  feedback -->
+<div id="showDuplicateClaimList" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+  <app-duplicate-claim-list    [listclaimItems]="duplicateClaimItems" [listdiscipline]="1" [listclaimData]="duplicateClaimData" >
+  </app-duplicate-claim-list>  
+</div>

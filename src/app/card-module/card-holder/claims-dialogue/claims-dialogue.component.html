@@ -1,0 +1,148 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <button id="btnCloseShowClaimItems" type="button" title="Close" class="close"
+      data-dismiss="modal">&times;</button>
+    <h4 class="modal-title">{{'claims.claims-view.claims' | translate}}</h4>
+  </div>
+
+  <div class="modal-body">
+    <div class="grid-box">
+      <div class="grid-heading">
+        <h3>{{'claims.claims-view.claims' | translate}}</h3>
+      </div>
+      <!-- Grid Heading Ends -->
+      <div class="grid-inner">
+        <div class="form-row">
+          <div class="row">
+            <div class="col-md-12 col-xs-12 table-col">
+              <div class="table-responsive">
+                <table id="claimItemsTableD" datatable [dtOptions]="dtOptions['claimItemsTableD']"
+                  [dtTrigger]="dtTrigger['claimItemsTableD']"
+                  class="row-border hover cardholder-table table-striped table-bordered dataTable">
+                  <thead>
+                    <tr>
+                      <th>{{'claims-history.discipline' | translate}}</th>
+                      <th>{{'claims.claims-add.claims-general-information.reference_no' | translate}}</th>
+                      <th>{{'claims-history.claimtype' | translate}}</th>
+                      <th>{{'common.date' | translate}} </th>
+                      <th>{{'claims-history.proc' | translate}}</th>
+                      <th>{{'claims-history.tooth' | translate}}</th>
+                      <th>{{'claims-history.surf' | translate}}</th>
+                      <th>{{'claims-history.freeclaim' | translate}}</th>
+                      <th>{{'claims-history.freepaid' | translate}}</th>
+                      <th>{{'claims-history.labclaim' | translate}}</th>
+                      <th>{{'claims-history.labpaid' | translate}}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <ng-container *ngIf="bussinesType == 'S'">
+                      <tr *ngFor="let claimItem of claimItems; let idx= index" [ngClass]="
+                          {'hPreAuthReview-row': (claimItem.isReversed == 'F' && claimItem.itemRejectedInd == 'F' && claimItem.claimType == 'Pre-Authorized By Review'),
+                          'hactive-row': (claimItem.isReversed == 'F' && claimItem.itemRejectedInd == 'F' && claimItem.claimType == 'Pre-Authorization - Paper'),
+                          'hsuspended-row': (claimItem.isReversed == 'F' && claimItem.itemRejectedInd == 'F' && claimItem.claimType == 'Pre-Authorization - Phone-In'),
+                          'historyPink': (claimItem.isReversed == 'T' || claimItem.itemRejectedInd == 'T')
+                          }"(click)="openClaim(claimItem.claimKey,claimItem.disciplineKey, claimItem.dcpKey,claimItem)">
+                          <td>{{claimItem.discipline}}</td>
+                          <td class="amount_right_grid">{{claimItem.refId}}</td>
+                          <td class="amount_right_grid">{{claimItem.claimType}}</td>
+                          <td class="amount_right_grid">{{claimItem.itemServiceDt}}</td>
+                          <td class="amount_right_grid">{{claimItem.itemProcedureCd}}</td>
+                          <td class="amount_right_grid" *ngIf="claimItem.itemToothId == -1"></td>
+                          <td class="amount_right_grid" *ngIf="claimItem.itemToothId >= 0">{{claimItem.itemToothId}}</td>
+                          <td class="amount_right_grid">{{claimItem.itemToothSurfaceTxt}}</td>
+                          <td class="amount_right_grid"><span>$</span>{{claimItem.itemFeeClaimAmt | number: '1.2'}}</td>
+                          <td class="amount_right_grid"><span>$</span>{{claimItem.itemFeePaidAmt | number: '1.2'}}</td>
+                          <td class="amount_right_grid"><span>$</span>{{claimItem.itemLabClaimAmt||0 | number: '1.2'}}</td>
+                          <td class="amount_right_grid"><span>$</span>{{claimItem.itemLabPaidAmt||0 | number: '1.2'}}</td>
+                        </tr>
+                    </ng-container>
+                    <ng-container *ngIf="bussinesType == 'Q'">
+                    <tr *ngFor="let claimItem of claimItems; let idx= index" [ngClass]="
+                        {'hsuspended-row': (claimItem.isReversed == 'F' && claimItem.itemRejectedInd == 'F' && claimItem.disciplineKey == 2),
+                          'hPreAuthReview-row': (claimItem.isReversed == 'F' && claimItem.itemRejectedInd == 'F' && (claimItem.disciplineKey == 3 || claimItem.disciplineKey == 4)),
+                          'hsa-row': (claimItem.isReversed == 'F' && claimItem.itemRejectedInd == 'F' && claimItem.disciplineKey == 5),
+                          'wellness-row': (claimItem.isReversed == 'F' && claimItem.itemRejectedInd == 'F' && claimItem.disciplineKey == 6),
+                          'hactive-row' : (claimItem.isReversed == 'F' && claimItem.itemRejectedInd == 'F' && claimItem.claimType == 'Pre-Authorization - Paper' && claimItem.disciplineKey == 1),
+                          'historyPink': (claimItem.isReversed == 'T' || claimItem.itemRejectedInd == 'T') 
+                        }" 
+                      (click)="openClaim(claimItem.claimKey,claimItem.disciplineKey, claimItem.dcpKey,claimItem)">
+                      <td>{{claimItem.discipline}}</td>
+                      <td class="amount_right_grid">{{claimItem.refId}}</td>
+                      <td class="amount_right_grid">{{claimItem.claimType}}</td>
+                      <td class="amount_right_grid">{{claimItem.itemServiceDt}}</td>
+                      <td class="amount_right_grid">{{claimItem.itemProcedureCd}}</td>
+                      <td class="amount_right_grid" *ngIf="claimItem.itemToothId == -1"></td>
+                      <td class="amount_right_grid" *ngIf="claimItem.itemToothId >= 0">{{claimItem.itemToothId}}
+                      </td>
+                      <td class="amount_right_grid">{{claimItem.itemToothSurfaceTxt}}</td>
+                      <td class="amount_right_grid"><span>$</span>{{claimItem.itemFeeClaimAmt | number: '1.2'}}</td>
+                      <td class="amount_right_grid"><span>$</span>{{claimItem.itemFeePaidAmt | number: '1.2'}}</td>
+                      <td class="amount_right_grid"><span>$</span>{{claimItem.itemLabClaimAmt||0 | number: '1.2'}}</td>
+                      <td class="amount_right_grid"><span>$</span>{{claimItem.itemLabPaidAmt||0 | number: '1.2'}}</td>
+                    </tr>
+                  </ng-container>
+                  </tbody>
+                </table>
+              </div>
+              <!-- Table Ends -->
+            </div>
+          </div>
+        </div>
+        <!-- Form Row ENds -->
+        <ul class="color-list" *ngIf="bussinesType == 'S'">
+          <li>
+            <span class="color-des violet-color"></span>
+            <h5>Pre-Authorized By Review</h5>
+          </li>
+          <li>
+            <span class="color-des green-color"></span>
+            <h5>Pre-Authorization-Paper</h5>
+          </li>
+          <li>
+            <span class="color-des yellow-color"></span>
+            <h5>Pre-Authorization-Phone-In</h5>
+          </li>
+          <li>
+            <span class="color-des historyPink"></span>
+            <h5>Rejected/Reversed</h5>
+          </li>
+        </ul>
+        <ul class="color-list" *ngIf="bussinesType == 'Q'">
+          <li>
+            <span class="color-des yellow-color"></span>
+            <h5>Vision</h5>
+          </li>
+          <li>
+            <span class="color-des violet-color"></span>
+            <h5>Health/Drug</h5>
+          </li>
+          <li>
+            <span class="color-des hsa-row"></span>
+            <h5>Supplement</h5>
+          </li>
+          <li>
+            <span class="color-des wellness-row"></span>
+            <h5>Wellness</h5>
+          </li>
+          <li>
+            <span class="color-des historyPink"></span>
+            <h5>Rejected/Reversed</h5>
+          </li>
+        </ul>
+      </div>
+      <!-- Grid Inner Ends -->
+    </div>
+    <!-- Grid Box Ends -->
+  </div>
+</div>
+
+<div [hidden]="!showLoader" class="loader-outer">
+  <div class="cube-wrapper">
+    <div class="cube-folding">
+      <span class="leaf1"></span>
+      <span class="leaf2"></span>
+      <span class="leaf3"></span>
+      <span class="leaf4"></span>
+    </div>
+  </div>
+</div>

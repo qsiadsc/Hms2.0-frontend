@@ -1,0 +1,67 @@
+<form [formGroup]="CardHolderGeneralInformationFormGroup">
+  <div class="grid-box">
+    <div class="grid-heading collapse-heading" aria-expanded="false" data-toggle="collapse"
+      data-target="#cardHolderGeneralInformationForm">
+      <h3 aria-expanded="false" data-toggle="collapse" data-target="#cardHolderGeneralInformationForm">
+        {{'common.generalinfo' | translate}}</h3>
+    </div>
+    <div class="collapse" id="cardHolderGeneralInformationForm">
+      <div class="grid-inner">
+        <div class="form-row">
+          <div class="row min-ht-sf">
+            <div class="col-md-3 col-xs-12 " *ngIf="!addModeCard">
+              <label>{{'common.card-id' | translate}}</label>
+              <input type="text" id="cch_generalInfoCardId" name="card_id"
+                placeholder="{{'common.card-id' | translate}}" formControlName="card_id" class="fm-txt form-control"
+                readonly>
+              <show-errors [control]="CardHolderGeneralInformationFormGroup.controls.card_id"></show-errors>
+            </div>
+            <div class="col-md-3 col-xs-12">
+              <label>{{'common.last-name' | translate}} <span class="required">*</span></label>
+              <input type="text" id="txtLastName" name="last_name" placeholder="{{'common.last-name' | translate}}"
+                formControlName="last_name" class="fm-txt form-control" />
+              <show-errors [control]="CardHolderGeneralInformationFormGroup.controls.last_name"></show-errors>
+            </div>
+            <div class="col-md-3 col-xs-12">
+              <label>{{'common.first-name' | translate}} <span class="required">*</span></label>
+              <input type="text" id="cch_generalInfoFirstName" name="first_name"
+                placeholder="{{'common.first-name' | translate}}" formControlName="first_name"
+                class="fm-txt form-control" />
+              <show-errors [control]="CardHolderGeneralInformationFormGroup.controls.first_name"></show-errors>
+            </div>
+            <div class="col-md-3 col-xs-12">
+              <label>{{'common.gender' | translate}} <span class="required">*</span></label>
+              <select name="gender" id="cch_generalInfoGender" placeholder="Gender" formControlName="gender"
+                class="fm-txt form-control">
+                <option [ngValue]="null" disabled hidden selected>{{'common.select' | translate}}</option>
+                <option *ngFor="let gender of arrGenderList" [value]="gender.genderName">
+                  {{gender.genderDescription}}
+                </option>
+              </select>
+              <show-errors [control]="CardHolderGeneralInformationFormGroup.controls.gender"></show-errors>
+            </div>
+            <div class="col-md-3 col-xs-12">
+              <label>{{'common.date-of-birth' | translate}}<span class="required">*</span></label>
+              <div class="calender-field">
+                <my-date-picker id="cch_generalInfodatepicker" [ngClass]="(editMode == false) ? 'removeCross':''"
+                  [options]="myDatePickerOptions" placeholder="{{'common.date-placeholder' | translate}}"
+                  name="date_of_birth" formControlName="date_of_birth"
+                  (inputFocusBlur)="changeDateFormat($event, 'date_of_birth' ,'CardHolderGeneralInformationFormGroup')">
+                </my-date-picker>
+                <span id="lblCardHolderAge" style="display:none">{{cardHolderAge}}</span>
+                <show-errors [control]="CardHolderGeneralInformationFormGroup.controls.date_of_birth"></show-errors>
+              </div>
+            </div>
+            <div [hidden]="alberta" class="col-sm-4">
+              <label>&nbsp;</label>
+              <label><span class="custom-check"><input type="checkbox" id="chkCompanyEmployee" name="company_employee"
+                    formControlName="company_employee" (click)="ValidateRole($event)">
+                  {{'common.company_employee' | translate}} <span></span></span></label>
+              <show-errors [control]="CardHolderGeneralInformationFormGroup.controls.company_employee"></show-errors>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

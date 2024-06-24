@@ -1,0 +1,351 @@
+<div class="grid-box">
+  <div class="accordion" id="accordionCardAddress">
+    <div class="accordion-group">
+      <div class="grid-heading collapse-heading" aria-expanded="false" data-toggle="collapse"
+        data-target="#cardaddressAccording">
+        <h3 aria-expanded="false" id="cardContactAddress" data-toggle="collapse" data-target="#cardaddressAccording">
+          {{'card.card-address.card-contact-address' | translate}}</h3>
+        </div>
+        <div class="cardViewHistoryButtons">
+          <button *ngIf="adrsEditMode || adrsViewMode" title="Card Contact Address History"
+            (click)="cardContactHistoryDetails()" href='#' class="history-ico card-contact-address-historyicon"
+            alt="History" data-toggle="modal" data-target="#CardContact">
+            <i class="fa fa-history" aria-hidden="true"></i>
+          </button>
+        </div>
+    </div>
+    
+    <div class="collapse" id="cardaddressAccording">
+      <div class="grid-inner">
+        <form [formGroup]="cardaddress">
+          <div class="form-row">
+            <div class="row min-ht-sf">
+              <div class="col-md-3 col-xs-12">
+                <label>{{'common.address-line-1' | translate}}
+                  <span *ngIf="!albertaBsnsType" class="required">*</span>
+                </label>
+                <input type="text" placeholder="{{'common.address-line-1' | translate}}" formControlName="cca_line"
+                  id="cca_line1" (blur)="checkValForAlb()" class="fm-txt form-control" required />
+                <show-errors [control]="cardaddress.controls.cca_line"></show-errors>
+              </div>
+
+              <div class="col-md-3 col-xs-12">
+                <label>{{'common.address-line-2' |translate}} </label>
+                <input type="text" placeholder="{{'common.address-line-2' |translate}}" formControlName="cca_line2"
+                  id="cca_line2" (blur)="checkValForAlb()" class="fm-txt form-control" />
+                <show-errors [control]="cardaddress.controls.cca_line2"></show-errors>
+              </div>
+
+              <div class="col-md-3 col-xs-12">
+                <label>{{'common.postal-code' | translate}}
+                  <span *ngIf="!albertaBsnsType" class="required">*</span>
+                </label>
+                <input type="text" placeholder="{{'common.postal-code' | translate}}"
+                  (blur)="isCompanyPostalcodeValid($event)" formControlName="cca_postalcode" id="cca_postalcode"
+                  class="upperCase fm-txt form-control" />
+                <show-errors [control]="cardaddress.controls.cca_postalcode"></show-errors>
+              </div>
+
+              <div class="col-md-3 col-xs-12">
+                <label>{{'common.city' | translate}}
+                  <span *ngIf="!albertaBsnsType" class="required">*</span>
+                </label>
+                <input type="text" placeholder="{{'common.city' | translate}}"
+                  (blur)="isCompanyPostalVerifyValid($event, 'cca_city')" formControlName="cca_city" id="cca_city"
+                  class="fm-txt form-control" />
+                <show-errors [control]="cardaddress.controls.cca_city"></show-errors>
+              </div>
+
+              <div class="col-md-3 col-xs-12">
+                <label>{{'common.province' | translate}}
+                  <span *ngIf="!albertaBsnsType" class="required">*</span>
+                </label>
+                <input type="text" placeholder="{{'common.province' | translate}}"
+                  (blur)="isCompanyPostalVerifyValid($event, 'cca_province')" formControlName="cca_province"
+                  id="cca_province" class="fm-txt form-control">
+                <show-errors [control]="cardaddress.controls.cca_province"></show-errors>
+              </div>
+
+              <div class="col-md-3 col-xs-12">
+                <label>{{'common.country' | translate}}
+                  <span *ngIf="!albertaBsnsType" class="required">*</span>
+                </label>
+                <input type="text" placeholder="{{'common.country' | translate}}"
+                  (blur)="isCompanyPostalVerifyValid($event, 'cca_country')" formControlName="cca_country"
+                  id="cca_country" class="fm-txt form-control">
+                <show-errors [control]="cardaddress.controls.cca_country"></show-errors>
+              </div>
+
+              <div class="col-md-3 col-xs-12">
+                <div class="row min-ht-sf">
+                  <div class="col-md-5 col-xs-12">
+                    <label>{{'common.ext' | translate}}</label>
+                    <input placeholder="{{'common.ext' | translate}}" type="text" formControlName="cca_extension"
+                      id="cca_extension" class="fm-txt form-control">
+                    <show-errors [control]="cardaddress.controls.cca_extension"></show-errors>
+                  </div>
+                  <div class="col-md-7 col-xs-12">
+                    <label>{{'common.phone' | translate}}</label>
+                    <input [textMask]="{mask: phoneMask}" placeholder="{{'common.phone' | translate}}" type="text"
+                      formControlName="cca_phone" id="cca_phone" class="fm-txt form-control">
+                    <show-errors [control]="cardaddress.controls.cca_phone"></show-errors>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-3 col-xs-12">
+                <label>{{'common.fax-no' | translate}}</label>
+                <input [textMask]="{mask: phoneMask}" placeholder="{{'common.fax-no' | translate}}" type="text"
+                  formControlName="cca_fax" id="cca_fax" class="fm-txt form-control">
+                <show-errors [control]="cardaddress.controls.cca_fax"></show-errors>
+              </div>
+
+              <div class="col-md-3 col-xs-12">
+                <label>{{'common.email-address' | translate}}</label>
+                <input type="text" placeholder="{{'common.email-address' | translate}} " formControlName="cca_email"
+                  id="cca_email" class="fm-txt form-control">
+                <show-errors [control]="cardaddress.controls.cca_email"></show-errors>
+              </div>
+
+              <div class="col-md-3 col-xs-12">
+                <label>{{'common.effectivedate' | translate}}
+                  <span *ngIf="!albertaBsnsType" class="required">*</span>
+                </label>
+                <div class="calender-field">
+                  <my-date-picker [ngClass]="(adrsViewMode == true) ? 'removeCross':''" id="cca_effectivedate"
+                    placeholder="{{'common.date-placeholder' | translate}}" [options]="myDatePickerOptions"
+                    name="cca_effectivedate"
+                    (inputFocusBlur)="changeDateFormat($event, 'cca_effectivedate' ,'cardaddress')"
+                    formControlName="cca_effectivedate">
+                  </my-date-picker>
+                  <show-errors [control]="cardaddress.controls.cca_effectivedate"></show-errors>
+                </div>
+              </div>
+
+              <div class="col-md-3 col-xs-12">
+                <label>{{'common.expirydate' | translate}}</label>
+                <div class="calender-field">
+                  <my-date-picker [ngClass]="[expired  ? 'expired' : 'notExpired' , (adrsViewMode == true) ? 'removeCross':'']" id="cca_expirydate"
+                    placeholder="{{'common.date-placeholder' | translate}}" [options]="myDatePickerOptions"
+                    name="cca_expirydate"  (inputFocusBlur)="changeDateFormat($event, 'cca_expirydate' ,'cardaddress')"
+                    formControlName="cca_expirydate">
+                  </my-date-picker>
+                  <show-errors [control]="cardaddress.controls.cca_expirydate"></show-errors>
+                </div>
+              </div>
+
+              <div class="col-md-3 col-xs-12" *ngIf="adrsEditMode || adrsViewMode">
+                <label>{{'common.webUserId' | translate}}</label>
+                <input placeholder="{{'common.webUserId' | translate}}" type="text" [ngClass]="{'disableInput':true}"
+                  formControlName="cca_webUserId" id="cca_webUserId" class="fm-txt form-control">
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="CardContact" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button title="Close" id="closeCardContact" (click)="resetCardContactHistory()" type="button" class="close"
+          data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">{{'card.card-address.card-contact-address' | translate}}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{addEditText}} {{'card.card-address.card-contact-address' | translate}}</h3>
+          </div>
+          <div class="grid-inner">
+            <div class="form-row">
+              <form [formGroup]="cardaddressHistory">
+                <div class="row min-ht-sf">
+                  <div class="col-sm-3">
+                    <label>{{'common.card-id' | translate}}
+                      <span *ngIf="!albertaBsnsType" class="required">*</span>
+                    </label>
+                    <input type="text" disabled placeholder="{{'common.card-id' | translate}}" id="cardContactId"
+                      value={{savedCardNumber}} class="fm-txt form-control" />
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'common.address-line-1' | translate}}
+                      <span *ngIf="!albertaBsnsType" class="required">*</span>
+                    </label>
+                    <input type="text" placeholder="{{'common.address-line-1' | translate}}"
+                      formControlName="cardContactLine1MailAdd" id="cardContactLine1MailAdd" class="fm-txt form-control"
+                      required />
+                    <show-errors [control]="cardaddressHistory.controls.cardContactLine1MailAdd"></show-errors>
+                  </div>
+
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'common.address-line-2' |translate}}</label>
+                    <input type="text" placeholder="{{'common.address-line-2' |translate}}"
+                      formControlName="cardContactLine2MailAdd" id="cardContactLine2MailAdd"
+                      class="fm-txt form-control" />
+                    <show-errors [control]="cardaddressHistory.controls.cardContactLine2MailAdd"></show-errors>
+                  </div>
+
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'common.postal-code' | translate}}
+                      <span *ngIf="!albertaBsnsType" class="required">*</span>
+                    </label>
+                    <input type="text" placeholder="{{'common.postal-code' | translate}}"
+                      (blur)="isCompanyPostalcodeHistoryValid($event)" formControlName="postalCD" id="postalCD"
+                      class="upperCase fm-txt form-control" />
+                    <show-errors [control]="cardaddressHistory.controls.postalCD"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'common.city' | translate}}
+                      <span *ngIf="!albertaBsnsType" class="required">*</span>
+                    </label>
+                    <input type="text" placeholder="{{'common.city' | translate}}"
+                      (blur)="isCompanyPostalVerifyHistoryValid($event, 'cityName')" formControlName="cityName"
+                      id="cityName" class="fm-txt form-control" />
+                    <show-errors [control]="cardaddressHistory.controls.cityName"></show-errors>
+                  </div>
+
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'common.province' | translate}}
+                      <span *ngIf="!albertaBsnsType" class="required">*</span>
+                    </label>
+                    <input type="text" placeholder="{{'common.province' | translate}}"
+                      (blur)="isCompanyPostalVerifyHistoryValid($event, 'provinceName')" formControlName="provinceName"
+                      id="provinceName" class="fm-txt form-control">
+                    <show-errors [control]="cardaddressHistory.controls.provinceName"></show-errors>
+                  </div>
+
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'common.country' | translate}}
+                      <span *ngIf="!albertaBsnsType" class="required">*</span>
+                    </label>
+                    <input type="text" placeholder="{{'common.country' | translate}} "
+                      (blur)="isCompanyPostalVerifyHistoryValid($event, 'countryName')" formControlName="countryName"
+                      id="countryName" class="fm-txt form-control">
+                    <show-errors [control]="cardaddressHistory.controls.countryName"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'common.ext' | translate}}</label>
+                    <input placeholder="{{'common.ext' | translate}} " type="text"
+                      formControlName="cardContactExtension" id="cardContactExtension" class="fm-txt form-control">
+                    <show-errors [control]="cardaddressHistory.controls.cardContactExtension"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'common.fax-no' | translate}}</label>
+                    <input [textMask]="{mask: phoneMask}" placeholder="{{'common.fax-no' | translate}}" type="text"
+                      formControlName="cardContactFaxNum" id="cardContactFaxNum" class="fm-txt form-control">
+                    <show-errors [control]="cardaddressHistory.controls.cardContactFaxNum"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'common.phone' | translate}}</label>
+                    <input [textMask]="{mask: phoneMask}" placeholder="{{'common.phone' | translate}} " type="text"
+                      formControlName="cardContactPhoneNum" id="cardContactPhoneNum" class="fm-txt form-control">
+                    <show-errors [control]="cardaddressHistory.controls.cardContactPhoneNum"></show-errors>
+                  </div>
+
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'common.email-address' | translate}}</label>
+                    <input type="text" placeholder="{{'common.email-address' | translate}}"
+                      formControlName="cardContactEmailAdd" id="cardContactEmailAdd" class="fm-txt form-control">
+                    <show-errors [control]="cardaddressHistory.controls.cardContactEmailAdd"></show-errors>
+                  </div>
+
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'common.effectivedate' | translate}}
+                      <span *ngIf="!albertaBsnsType" class="required">*</span>
+                    </label>
+                    <div class="calender-field">
+                      <my-date-picker id="effectiveOn" placeholder="{{'common.date-placeholder' | translate}}"
+                        [options]="myDatePickerOptions" name="effectiveOn"
+                        (inputFocusBlur)="changeDateFormatHistory($event, 'effectiveOn' ,'cardaddressHistory')"
+                        formControlName="effectiveOn">
+                      </my-date-picker>
+                      <show-errors [control]="cardaddressHistory.controls.effectiveOn"></show-errors>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'common.expirydate' | translate}}</label>
+                    <div class="calender-field">
+                      <my-date-picker id="expiredOn" placeholder="{{'common.date-placeholder' | translate}}"
+                        [options]="myDatePickerOptions" name="expiredOn"
+                        [ngClass]="expired  ? 'expired' : 'notExpired'"
+                        (inputFocusBlur)="changeDateFormatHistory($event, 'expiredOn' ,'cardaddressHistory')"
+                        formControlName="expiredOn">
+                      </my-date-picker>
+                      <show-errors [control]="cardaddressHistory.controls.expiredOn"></show-errors>
+                    </div>
+                  </div>
+                </div>
+                <div class="min-ht-half">
+                  <button id="updateCardContactHis" title="Save Card Contact History" class="btn green-btn btn-lg"
+                    type="submit" (click)="updateCardContactHistory()">{{buttonText}}</button>
+                  <button id="updateCardContactHisReset" title="Clear Card Contact History" class="btn grey-btn btn-lg"
+                    type="submit" (click)="resetCardContactHistory()">Clear</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-box">    
+          <div class="grid-heading">
+            <h3>{{'card.card-address.card-contact-history' | translate}}</h3>
+          </div>
+          <div class="grid-inner">
+            <div class="form-row">
+              <div class="row">
+                <div class="col-md-12 col-xs-12 table-col">
+                  <div class="table-responsive">
+                    <table id='contact-history' datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
+                      class="inlinePopupTable table table-bordered table-stripped">
+                      <thead>
+                        <tr>
+                          <th width="35%">{{'common.location' | translate}}</th>
+                          <th class="amount_right" width="10%">{{'common.phone' | translate}}</th>
+                          <th class="amount_right" width="10%">{{'common.fax-no' | translate}}</th>
+                          <th class="amount_right" width="20%">{{'common.email-address' | translate}}</th>
+                          <th class="amount_right" width="10%">{{'common.effectivedate' | translate}} </th>
+                          <th class="amount_right" width="10%">{{'common.expireddate' | translate}} </th>
+                          <th class="amount_right" width="5%">{{'common.action' | translate}}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr [ngClass]="isExpired(dataRow.expiredOn) ? 'hterminated-row':''" class="tableRow"
+                          id="{{'row_'+i}}" *ngFor="let dataRow of contactHistorytableData; let i = index">
+                          <td>
+                            {{dataRow.cardContactLine1MailAdd}} {{dataRow.cardContactLine2MailAdd}}
+                            {{dataRow.cityName}}, {{dataRow.provinceName}}, {{dataRow.countryName}},
+                            {{dataRow.postalCD}}
+                          </td>
+                          <td class="amount_right">{{dataRow.cardContactPhoneNum}}</td>
+                          <td class="amount_right">{{dataRow.cardContactFaxNum}}</td>
+                          <td class="amount_right">{{dataRow.cardContactEmailAdd}}</td>
+                          <td class="amount_right">{{dataRow.effectiveOn}}</td>
+                          <td class="amount_right">{{dataRow.expiredOn}}</td>
+                          <td class="amount_right" *ngIf=" i == 0">
+                            <button (click)="setCardAddressForm(dataRow)"
+                              class='form_edit_row table-action-btn edit-ico'>
+                              <i class='fa fa-pencil'></i>
+                            </button>
+                          </td>
+                          <td *ngIf=" i > 0"></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="closeCardAddressForm" type="button" title="Close" class="btn grey-btn"
+          (click)="resetCardContactHistory()" data-dismiss="modal">{{'button.close' | translate}}</button>
+      </div>
+    </div>
+  </div>
+</div>

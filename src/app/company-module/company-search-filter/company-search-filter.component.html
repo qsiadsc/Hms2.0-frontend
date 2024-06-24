@@ -1,0 +1,279 @@
+<div class="section-heading">
+  <h2>{{ 'company.company-search.company' | translate }} -
+    <span>{{ 'company.company-search.search' | translate }}</span>
+    <span></span>
+  </h2>
+</div>
+<!-- Section Heading Ends -->
+<div class="grid-box">
+  <div class="grid-heading">
+    <h3>{{ 'company.company-search.search-company' | translate }}</h3>
+    <div class="web-reg">
+      <a *ngIf="mainCompanyArray[0].addCompany == 'T'" id="companySearchAddCompany" [routerLink]="['/company/add']" class="green-btn-add btn">
+        <i class="fa fa-plus"></i>{{ 'button.add-company' | translate }}</a>
+    </div>
+  </div>
+  <!-- Grid Heading Ends -->
+  <div class="grid-inner">
+    <form [formGroup]="filterCompany" (ngSubmit)="onSubmit(filterCompany)">
+      <div class="form-row">
+        <div class="row min-ht-sf">
+          <div class="col-md-3 col-xs-12">
+            <label>{{ 'common.company-name' | translate }}</label>
+            <app-search-company (getCompanyName)="getCompanyName($event)" (keydownEvent)="onKeyPressEvent($event)"></app-search-company>
+            </div>
+
+          <div class="col-md-3 col-xs-12">
+            <label>{{ 'company.company-search.city' | translate }}</label>
+            <ng2-completer formControlName="companyCity" [datasource]="cityDataRemote" [minSearchLength]="2" [fillHighlighted]="false"
+              [placeholder]="'Search City'" [textSearching]="'Please wait...'" [inputClass]="'form-control'" [clearUnselected]="true">
+            </ng2-completer>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{ 'company.company-search.province' | translate }}</label>
+            <ng2-completer formControlName="companyProvince" [datasource]="provinceDataRemote" [minSearchLength]="2" [fillHighlighted]="false"
+              [placeholder]="'Search Province'" [textSearching]="'Please wait...'" [inputClass]="'form-control'" [clearUnselected]="true">
+            </ng2-completer>
+          </div>
+          <div *ngIf="showHideBusinessTypeDropDown" class="col-md-3 col-xs-12">
+            <label>{{ 'company.company-search.business-type' | translate }}</label>
+            <ng2-completer 
+              formControlName="companyBusinessType" 
+              [datasource]="businessTypeData" 
+              [minSearchLength]="0" 
+              [openOnFocus]="true"
+              (opened)="onOpened($event)" 
+              [fillHighlighted]="false" 
+              [placeholder]="'Search Business Type'" 
+              [textSearching]="'Please wait...'"
+              [inputClass]="'form-control'" 
+              [clearUnselected]="true"
+              [autoHighlight]="true">
+            </ng2-completer>
+          </div>
+        
+          <div class="col-md-3 col-xs-12">
+            <label>{{ 'company.company-search.effective-date' | translate }}</label>
+            <div class="calender-field">
+              <my-date-picker id="companysearch_effectedDate" [options]="myDatePickerOptions" name="effectedDate" formControlName="effectedDate"
+                (inputFocusBlur)="changeDateFormat($event, 'effectedDate','filterCompany')" placeholder="{{ 'company.company-search.dd/mm/yyyy' | translate }}"
+                (keyup)="onKeyPressEvent($event)">
+              </my-date-picker>
+              <show-errors [control]="filterCompany.controls.effectedDate"></show-errors>
+              <ul *ngIf="error.isError==true" class="validation-errors">
+                <li style="color: red">{{error.errorMessage}}</li>
+              </ul>
+            </div>
+            <!-- Calendar Field Ends -->
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{ 'company.company-search.terminated-date' | translate }}</label>
+            <div class="calender-field">
+              <my-date-picker id="companysearch_terminatedDate" [options]="myDatePickerOptions" name="terminatedDate" formControlName="terminatedDate"
+                (inputFocusBlur)="changeDateFormat($event, 'terminatedDate','filterCompany')" placeholder="{{ 'company.company-search.dd/mm/yyyy' | translate }}"
+                (keyup)="onKeyPressEvent($event)">
+              </my-date-picker>
+              <show-errors [control]="filterCompany.controls.terminatedDate"></show-errors>
+              <ul *ngIf="error.isError==true" class="validation-errors">
+                <li style="color: red">{{error.errorMessage}}</li>
+              </ul>
+            </div>
+            <!-- Calendar Field Ends -->
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{ 'company.company-search.company-status' | translate }}</label>
+            <ng2-completer formControlName="companyStatus" [datasource]="companyStatusList" [minSearchLength]="0" [openOnFocus]="true"
+              (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Search Company Status'" [textSearching]="'Please wait...'"
+              [inputClass]="'form-control'" (selected)="onCompanyStatusSelected($event)" [clearUnselected]="true">
+            </ng2-completer>
+          </div>
+        </div>
+      </div>
+      <!-- Form Row ENds -->
+      <div class="form-row">
+        <button *ngIf="mainCompanyArray[0].searchCompany == 'T'" id="companySearchFilterSave" type="submit" class="btn green-btn" (keyup)="onKeyPressEvent($event)"> {{ 'button.search' | translate }}</button>
+        <button id="companySearchFilterClear" type="button" class="btn grey-btn" (click)="resetSearchForm()">{{ 'button.clear' | translate }}</button>
+      </div>
+    </form>
+  </div>
+  <!-- Grid Inner Ends -->
+</div>
+<!-- Grid Box Ends -->
+<div [hidden]="!showCompanyList">
+  <div class="grid-box">
+    <div class="grid-heading">
+      <h3>{{ 'company.company-search.list-of-companies' | translate }}</h3>
+    </div>
+    <!-- Grid Heading Ends -->
+    <div class="grid-inner">
+      <form>
+        <div class="form-row text-right search-top">
+          <button type= "submit" id="companySearchFilterSearch" class="btn green-btn searchreset" (click)="filterCompanySearch('tableId')" title="Search">
+            <span class="glyphicon glyphicon-search"></span>
+          </button>
+          <button id="companySearchFilterReset" class="btn grey-btn searchreset" (click)="onSubmit(filterCompany)">
+            <span class="glyphicon glyphicon-repeat" title="Clear"></span>
+          </button>
+        </div>
+        <div class="form-row">
+          <div class="row">
+            <div class="col-md-12 col-xs-12 table-col">
+              <div class="table-responsive">
+                  <table id="company-list" class="table table-bordered table-stripped">
+                    <tfoot>
+                      <tr>
+                        <td width="50px">
+                          <input id="companySearchFilterCompanyNo" class="fm-txt form-control tFootInput inputSearch" type="text" placeholder="{{ 'company.company-search.company-no.' | translate }}"
+                            name="coId" [(ngModel)]="companyNumber"/>
+                        </td>
+                        <td width="143px">
+                          <input id="companySearchFilterCompanyName" class="fm-txt form-control tFootInput inputSearch in-number" type="text" placeholder="{{ 'company.company-search.name' | translate }}" name="coName" [(ngModel)]="companyName"/>
+                        </td>
+                        <td width="109px">
+                          <ng2-completer 
+                            [inputName]="'cityName'" 
+                            name="cityName" 
+                            class="predictiveSearchLower" 
+                            [datasource]="cityDataRemoteLower"
+                            [minSearchLength]="2" 
+                            [fillHighlighted]="false" 
+                            [placeholder]="'Search City'" 
+                            [textSearching]="'Please wait...'"
+                            [inputClass]="'form-control inputSearch in-number'" data-type="predective" 
+                            id="companyCity1Search" 
+                            [clearUnselected]="true" 
+                            [(ngModel)]="companyCity">
+                          </ng2-completer>
+                        </td>
+                        <td width="154px">
+                          <ng2-completer 
+                            [inputName]="'provinceName'" 
+                            name="provinceName" 
+                            class="predictiveSearchLower" 
+                            [datasource]="provinceDataRemoteLower"
+                            [minSearchLength]="2" 
+                            [fillHighlighted]="false" 
+                            [placeholder]="'Search Province'" 
+                            [textSearching]="'Please wait...'"
+                            [inputClass]="'form-control inputSearch in-number'" 
+                            data-type="predective" 
+                            id="companyProvince1Search" 
+                            [clearUnselected]="true"
+                            [(ngModel)]="companyProvince">
+                          </ng2-completer>
+                        </td>
+                        <td width="127px" class="alignDpRight">
+                          <div class="calender-field">
+                            <my-date-picker id="effectiveOn" class="inputSearch" name="effectiveOn" data-type="date" [options]="myDatePickerOptions"
+                              [selDate]="dateNameArray['effectiveOn']" (inputFocusBlur)="changeFilterDateFormat($event, 'effectiveOn')"
+                              placeholder="{{ 'company.company-search.dd/mm/yyyy' | translate }}">
+                            </my-date-picker>
+                          </div>
+                        </td>
+                        <td width="151px" class="alignDpRight">
+                          <div class="calender-field">
+                            <my-date-picker id="terminatedOn" class="inputSearch" name="coTerminatedOn" data-type="date" [options]="myDatePickerOptions"
+                              [selDate]="dateNameArray['terminatedOn']" (inputFocusBlur)="changeFilterDateFormat($event, 'terminatedOn')"
+                              placeholder="{{ 'company.company-search.dd/mm/yyyy' | translate }}">
+                            </my-date-picker>
+                          </div>
+                        </td>
+                        <td width="161px">
+                          <ng2-completer 
+                            [(ngModel)]="businessTypeLower"                             
+                            [inputName]="'businessTypeDesc'" 
+                            name="businessTypeDesc" 
+                            class="predictiveSearchLower" 
+                            [datasource]="businessTypeData"
+                            [minSearchLength]="0" 
+                            [openOnFocus]="true" 
+                            (opened)="onOpened($event)"
+                            [fillHighlighted]="false" 
+                            [placeholder]="'Search Business Type'" 
+                            [textSearching]="'Please wait...'"
+                            [inputClass]="'form-control inputSearch in-number'" 
+                            data-type="predective" 
+                            id="companySearchFilterBusinessType1" 
+                            [clearUnselected]="true">
+                          </ng2-completer>
+                        </td>
+                      </tr>
+                    </tfoot>
+                  </table>
+              </div>
+              <!-- Table Ends -->
+              <ul class="color-list">
+                <li>
+                  <span class="color-des green-color"></span>
+                  <h5>{{'common.active' | translate }}</h5>
+                </li>
+                <li>
+                  <span class="color-des red-color"></span>
+                  <h5>{{'common.inactive' | translate }}</h5>
+                </li>
+                <li>
+                  <span class="color-des yellow-color"></span>
+                  <h5>{{'common.suspended' | translate }}</h5>
+                </li>
+                <li>
+                  <span class="color-des gracePeriod-color"></span>
+                  <h5>{{'common.gracePeriod' | translate }}</h5>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </form>  
+      <!-- Form Row ENds -->
+      <div class="form-row">
+        <div class="row">
+          <div class="col-md-12 col-xs-12" style="display:none">
+            <div class="dropdown pull-left">
+              02/03/2018 5:00pm
+            </div>
+            <div class="dropdown pull-right">
+              <button id="companySearchFilterExport" class="btn green-btn dropdown-toggle" type="button" data-toggle="dropdown"> {{ 'button.export' | translate }}
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu">
+                <li>
+                  <a href="#"> {{ 'common.csv' | translate }}</a>
+                </li>
+                <li>
+                  <a href="#">{{ 'common.excel' | translate }}</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Form Row ENds -->
+      <div class="form-row text-center">
+          <div class="row">
+            <div class="col-md-12 col-xs-12">
+              <div class="dropdown pull-right">
+                <button id="companySearchExport" class="btn green-btn dropdown-toggle hideGPRunButton" type="button" data-toggle="dropdown">Export
+                  <span class="caret"></span></button>
+                <ul class="dropdown-menu">
+                  <li><a href="javascript:void(0)" (click)="exportCompanyList()">Excel</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+    <!-- Grid Inner Ends -->
+  </div>
+</div>
+<!-- Grid Box Ends -->
+<div *ngIf="showLoader" class="loader-outer">
+  <div class="cube-wrapper">
+    <div class="cube-folding">
+      <span class="leaf1"></span>
+      <span class="leaf2"></span>
+      <span class="leaf3"></span>
+      <span class="leaf4"></span>
+    </div>
+    <span class="loading" data-name="Loading">{{ 'common.pleaseWait' | translate}}</span>
+  </div>
+</div>

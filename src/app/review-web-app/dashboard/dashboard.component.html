@@ -1,0 +1,204 @@
+<div class="web-reg">
+  <button id="AddBulletin" href="javascript:void();" class="green-btn-add btn" *ngIf="addBulatineBtn" data-toggle="modal" data-target="#Bulletin"
+    (click)="getBulletin(businessTypeCd)">
+    <i class="fa fa-plus"></i>Add Bulletin</button>
+  <button *ngIf="showBulletin && deleteBulatineBtn" id="deleteBulletin" class="green-btn-add btn" (click)="deleteBulletin(businessTypeCd)">Delete Bulletin</button>
+</div>
+
+<div class="b-marquee">
+  <span class="m-heading">{{'reviewApp.dashboard.updates' | translate}}</span>
+  <marquee scrollamount="4">{{bulletinTxt}} </marquee>
+</div>
+<div class="section-heading">
+  <h2>{{'reviewApp.dashboard.heading' | translate}} </h2>
+</div>
+<!-- Section Heading Ends -->
+
+<div class="form-row dashboard">
+  <div class="row reviewer-tabs">
+    <div class="col-md-3 col-xs-12">
+      <a (click)="getClaimInfo('NEW')" href="javascript:void(0)">
+        <div class="db-box">
+          <h3>{{'reviewApp.dashboard.blocks.new-claims' | translate}} ({{month}})</h3>
+          <div class="fig-facts">{{claimCountWithNewStatus}}</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="col-md-3 col-xs-12">
+      <a (click)="getClaimInfo('APPROVED')" href="javascript:void(0)">
+        <div class="db-box cl2">
+          <h3>{{'reviewApp.dashboard.blocks.total-approved' | translate}} ({{month}})</h3>
+          <div class="fig-facts">{{claimCountWithApprovedStatus}}</div>
+        </div>
+      </a>
+      <!-- Db Box Ends -->
+    </div>
+
+    <div class="col-md-3 col-xs-12">
+      <a (click)="getClaimInfo('DENIED')" href="javascript:void(0)">
+        <div class="db-box cl3">
+          <h3>{{'reviewApp.dashboard.blocks.total-denied' | translate}} ({{month}})</h3>
+          <div class="fig-facts">{{claimCountWithDeniedStatus}}</div>
+        </div>
+      </a>
+      <!-- Db Box Ends -->
+    </div>
+    <div *ngIf="userRole != 'govOfficial' " class="col-md-3 col-xs-12">
+      <a (click)="getClaimInfo('PARTIALLY APPROVED')" href="javascript:void(0)">
+        <div class="db-box cl4">
+          <h3>{{'reviewApp.dashboard.blocks.partial-approved' | translate}} ({{month}})</h3>
+          <div class="fig-facts">{{claimCountPartialApprov}}</div>
+        </div>
+      </a>
+      <!-- Db Box Ends -->
+    </div>
+    
+    <div *ngIf="userRole != 'govOfficial' " class="col-md-3 col-xs-12">
+      <a (click)="getClaimInfo('ADDITIONAL INFORMATION')" href="javascript:void(0)">
+        <div class="db-box cl5">
+          <h3>{{'reviewApp.dashboard.blocks.additional-info' | translate}} ({{month}})</h3>
+          <div class="fig-facts">{{claimCountWithAdditionalInformationRequiredStatus}}</div>
+        </div>
+      </a>
+      <!-- Db Box Ends -->
+    </div>
+
+    <!-- add for log 762 -->
+    <div *ngIf="userRole != 'govOfficial' " class="col-md-3 col-xs-12">
+      <a (click)="getClaimInfo('REFER TO CONSULTANT')" href="javascript:void(0)">
+        <div class="db-box cl5">
+          <h3>{{'reviewApp.dashboard.blocks.re-Reviewed-claims' | translate}}</h3>
+          <div class="fig-facts">{{claimCountWithBackToConsultant}}</div>
+        </div>
+      </a>
+      <!-- Db Box Ends -->
+    </div>
+  </div>
+</div>
+<!-- Form Row ENds -->
+
+<!-- Log #1010 -->
+<div class="form-group claim-dashboard">
+  <div class="grid-box">
+    <div class="company-tabs consultant-dashboard-tabs">
+      <ul class="nav nav-pills">
+        <li id="consultant-dashboard-tab" class="active">
+          <a id="enterdClaimTab" data-toggle="pill" (click)="getCategoryList('LI')">Low Income</a>
+        </li>
+        <li id="consultant-dashboard-tab">
+          <a data-toggle="pill" (click)="getCategoryList('DSP')">DASP</a>
+        </li>
+      </ul>
+    </div>
+      <div class="row">
+      <!-- Category should be show when backend completed for Log #1010 -->
+      <div class="col-md-12 col-xs-12">
+        <div class="grid-heading">
+          <h3>{{'claims.claims-search.claims-claim-date.select' | translate}} {{'company.plan.category' |translate }}</h3>
+        </div>
+        <div class="grid-box">
+          <div class="col-md-12 col-xs-12">
+          </div>
+          <div class="col-md-12 col-xs-12">
+            <select class="fm-txt form-control" (change)="getListing($event)" name="category" id="category">
+              <option value="" selected>{{'common.select' | translate}}</option>
+              <option *ngFor="let category of categories" [value]="category.treatmentCategoryDescp">{{category.treatmentCategoryDescp}}</option> <!-- parTreatmentCatDaspKey -->
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12 col-xs-12">
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{'reviewApp.dashboard.search-table-column.heading' | translate}}</h3>
+          </div>
+          <div class="grid-inner">
+            <form (submit)="getClaimListByGridFilteration('categoryClameList')">
+              <div class="form-row text-right claim-search-top">
+                <button type="button" id="btnResettableSearch" class="btn grey-btn searchreset" (click)="getClaimFileList('')">
+                  <span class="glyphicon glyphicon-repeat"></span>
+                </button>
+              </div>
+              <div class="form-row">
+                <div class="row">
+                  <div class="col-md-12 col-xs-12 table-col">
+                    <div class="table-responsive">
+                      <table id="review-claim-table" class="display table table-bordered table-stripped">
+                        <thead>
+                        </thead>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- loader -->
+<div *ngIf="showLoader" class="loader-outer">
+  <div class="cube-wrapper">
+    <div class="cube-folding">
+      <span class="leaf1"></span>
+      <span class="leaf2"></span>
+      <span class="leaf3"></span>
+      <span class="leaf4"></span>
+    </div>
+    <span class="loading" data-name="Loading">{{loaderPlaceHolder}}</span>
+  </div>
+</div>
+<!-- </div> -->
+<div id="Bulletin" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" (click)="resetBulletinForm()">&times;</button>
+        <h4 class="modal-title">Add Bulletin</h4>
+      </div>
+      <div class="modal-body">
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>Bulletin Board</h3>
+          </div>
+          <div class="grid-inner">
+            <form [formGroup]="bulletinForm">
+              <div class="form-row">
+                <div class="add-comments">
+                  <div class="row">
+                    <div class="col-sm-8">
+                      <label>&nbsp;</label>
+                      <textarea #focusAddBulatineEl class="fm-txt form-control notInCaps" formControlName="bulletinTxt"></textarea>
+                      <show-errors [control]="bulletinForm.controls.bulletinTxt"></show-errors>
+                    </div>
+                    <div class="col-sm-2">
+                      <label>&nbsp;</label>
+                      <button class="green-btn-add btn" (click)="addBulatine()">
+                        Publish </button>
+                      <!-- Please don't remove following button -->
+                      <button id="btnResetBulatine" class="green-btn-add btn" style="display:none">
+                        <i class="fa fa-plus"></i> Cancel </button>
+                    </div>
+                  </div>
+                </div>
+                <!-- Add Comments Ends -->
+              </div>
+            </form>
+          </div>
+          <!-- Grid Inner Ends -->
+        </div>
+        <!-- Grid Box Ends -->
+      </div>
+      <!-- Modal Body End-->
+      <div class="modal-footer">
+        <button type="button" class="btn grey-btn" data-dismiss="modal" (click)="resetBulletinForm()">Close</button>
+      </div>
+      <!-- Modal  Footer Ends -->
+    </div>
+  </div>
+</div>

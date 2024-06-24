@@ -1,0 +1,57 @@
+<form [formGroup]="CardHolderRoleAssignedFormGroup">
+  <div class="grid-box">
+    <div class="grid-heading collapse-heading" aria-expanded="false" data-toggle="collapse"
+      data-target="#cardHolderRoleAssignedForm">
+      <h3 aria-expanded="false" data-toggle="collapse" data-target="#cardHolderRoleAssignedForm">
+        {{'card.card-holder.role-assigned.role-assigned' | translate }}
+        <a href="javascript:;" title="Role Assigned History" *ngIf="!addMode" class="history-ico" alt="History"
+          data-toggle="modal" (click)="RoleAssignedHistory()"><!--For (Task 612 HMS Issue) data-target removed-->
+          <i class="fa fa-history" aria-hidden="true"></i>
+        </a>
+      </h3>
+    </div>
+    <div class="collapse" id="cardHolderRoleAssignedForm">
+      <div class="grid-inner">
+        <div class="form-row">
+          <div class="row min-ht-sf ">
+            <div class="col-md-3 col-xs-12">
+              <label>{{'card.card-holder.role-assigned.description' | translate }} <span
+                  class="required">*</span></label>
+              <select name="description" id="ddlRoleDescription" placeholder="Description" formControlName="description"
+                (change)="validateCardHolderRole($event)" class="fm-txt form-control">
+                <option hidden value="">{{'common.select' | translate}}</option>
+                <option *ngFor="let role of arrRoleList" [value]="role.chRoleKey">
+                  {{role.chRoleDesc}}
+                </option>
+              </select>
+              <show-errors [control]="CardHolderRoleAssignedFormGroup.controls.description"></show-errors>
+            </div>
+            <div class="col-md-3 col-xs-12">
+              <label>{{'common.effectivedate' | translate}} <span class="required">*</span></label>
+              <div class="calender-field">
+                <my-date-picker viewMode [ngClass]="(viewMode == true) ? 'removeCross':''"
+                  id="cch_roleAssignedEffectivedate" [options]="myDatePickerOptions" name="effective_date"
+                  placeholder="{{'common.date-placeholder' | translate}}" formControlName="effective_date"
+                  (inputFocusBlur)="changeDateFormat($event, 'effective_date','CardHolderRoleAssignedFormGroup',true)">
+                </my-date-picker>
+                <show-errors [control]="CardHolderRoleAssignedFormGroup.controls.effective_date"></show-errors>
+              </div>
+            </div>
+            <div [hidden]="alberta" class="col-md-3 col-xs-12">
+              <label>{{'common.expirydate' | translate}}</label>
+              <div class="calender-field">
+                <my-date-picker id="cch_roleAssignedExpirydate" [ngClass]="[expired  ? 'expired' : 'notExpired', (viewMode == true) ? 'removeCross':'']"
+                  [options]="myDatePickerOptions" name="expiry_date"
+                  placeholder="{{'common.date-placeholder' | translate}}" formControlName="expiry_date"
+                  (inputFocusBlur)="changeDateFormat($event, 'expiry_date' ,'CardHolderRoleAssignedFormGroup')">
+                </my-date-picker>
+                <show-errors [control]="CardHolderRoleAssignedFormGroup.controls.expiry_date"></show-errors>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<button id="btnValidateRole" (click)="validateRoleByCardHolderDOB()" style="display: none"></button>

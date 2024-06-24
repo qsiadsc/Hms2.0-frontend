@@ -1,0 +1,421 @@
+<div class="section-heading">
+  <h2>{{'qsi-loader-report.title' | translate}} -
+    <span> {{'qsi-loader-report.mode' | translate}}</span>
+  </h2>
+</div>
+<form [formGroup]=   "qsiForm">
+  <div class="grid-box">
+    <div class="grid-heading">
+      <h3>{{'qsi-loader-report.fileType' | translate}}</h3>
+    </div>
+    <div class="grid-inner">
+      <div class="form-row">
+        <div class="row min-ht-sf">
+          <div class="col-md-8 col-xs-12 min-ht-half">
+            <div class="select-options ">
+              <span>
+                <label>
+                  <span class="custom-check">
+                    <input type="radio" formControlName="fileType" value="P" (change)="onChangeFileType($event)"> {{'qsi-loader-report.paymentUCFile' | translate}}
+                    <span></span>
+                  </span>
+                </label>
+              </span>
+            </div>
+            <div class="select-options">
+              <span>
+                <label>
+                  <span class="custom-check">
+                    <input type="radio" formControlName="fileType" value="D" (change)="onChangeFileType($event)"> {{'qsi-loader-report.dailyFile' | translate}}
+                    <span></span>
+                  </span>
+                </label>
+              </span>
+            </div>
+            <div class="select-options">
+              <span>
+                <label>
+                  <span class="custom-check">
+                    <input type="radio" formControlName="fileType" value="B" (change)="onChangeFileType($event)"> {{'qsi-loader-report.both' | translate}}
+                    <span></span>
+                  </span>
+                </label>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-box">
+    <div class="grid-heading">
+      <h3>{{'qsi-loader-report.filesList' | translate}}</h3>
+    </div>
+    <!-- Grid Heading Ends -->
+    <div class="grid-inner">
+      <div class="form-row">
+        <div class="row">
+          <div class="col-md-12 col-xs-12">
+            <div class="table-responsive ">
+              <form (submit)="filterFileTypeList('file_type_datatable')">
+                <div class="form-row text-right search-top">
+                  <div class="form-row">
+                    <button id="filterSearch" type="submit" title="{{'common.search' | translate}}" class="btn green-btn searchreset">
+                      <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                    <button id="filterReset" title="{{'common.reset' | translate}}" class="btn grey-btn searchreset" (click)="resetListingFilter()">
+                      <span class="glyphicon glyphicon-repeat"></span>
+                    </button>
+                  </div>
+                </div>
+                <table id="file_type_datatable" class="display table table-bordered table-stripped">
+                  <thead>
+                  </thead>
+                  <!--[Start Grid1 Column Filter]-->
+                  <tfoot>
+                    <tr>
+                      <td>
+                        <input id="fileid" class="fm-txt form-control tFootInput inputSearch" type="text" placeholder="{{'qsi-loader-report.fileId' | translate}}" name="fId" />
+                      </td>
+                      <td>
+                        <input id="filename" class="fm-txt form-control tFootInput inputSearch in-number" type="text" placeholder="{{'qsi-loader-report.fileName' | translate}}" name="fileName"
+                        />
+                      </td>
+                      <td class="alignDpRight" width="13%">
+                        <div class="calender-field">
+                          <my-date-picker id="processedDate" class="inputSearch" name="processedDate" data-type="date" [options]="myDatePickerOptions"
+                            [selDate]="dateNameArray['processedDate']" [ngClass]="expired  ? 'expired' : 'notExpired'" (inputFocusBlur)="changeDateFormat1($event, 'processedDate')"
+                            placeholder="{{'common.date-placeholder' | translate}}">
+                          </my-date-picker>
+                        </div>
+                      </td>
+                      <td class="alignDpRight" width="13%">
+                        <div class="calender-field">
+                          <my-date-picker id="paidDate" class="inputSearch" name="paidDate" data-type="date" [options]="myDatePickerOptions" [selDate]="dateNameArray['paidDate']"
+                            [ngClass]="expired  ? 'expired' : 'notExpired'" (inputFocusBlur)="changeDateFormat1($event, 'paidDate')"
+                            placeholder="{{'common.date-placeholder' | translate}}">
+                          </my-date-picker>
+                        </div>
+                      </td>
+                    </tr>
+                  </tfoot>
+                  <!--[End Grid1 Column Filter]-->
+                </table>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-box" class="unprocessedData">
+    <div class="grid-heading">
+      <h3>{{'qsi-loader-report.unprocessedData' | translate}}</h3>
+    </div>
+    <div class="grid-inner">
+      <div class="grid-inner checkpading">
+        <div class="select-options">
+          <span>
+            <label>
+              <span class="custom-check">
+                <input type="radio" formControlName="unprocessedType" value="ws" (change)="unProcessDataFilter()"> {{'qsi-loader-report.wrongSin' | translate}}
+                <span></span>
+              </span>
+            </label>
+          </span>
+        </div>
+        <div class="select-options">
+          <span>
+            <label>
+              <span class="custom-check">
+                <input type="radio" formControlName="unprocessedType" value="wp" (change)="unProcessDataFilter()">{{'qsi-loader-report.wrongPolicy' | translate}}
+                <span></span>
+              </span>
+            </label>
+          </span>
+        </div>
+        <div class="select-options">
+          <span>
+            <label>
+              <span class="custom-check">
+                <input type="radio" formControlName="unprocessedType" value="ip" (change)="unProcessDataFilter()"> {{'qsi-loader-report.ineligiblePatient' | translate}}
+                <span></span>
+              </span>
+            </label>
+          </span>
+        </div>
+        <div class="select-options">
+          <span>
+            <label>
+              <span class="custom-check">
+                <input type="radio" formControlName="unprocessedType" value="un" (change)="unProcessDataFilter()"> {{'qsi-loader-report.unmatchedNameFile' | translate}}
+                <span></span>
+              </span>
+            </label>
+          </span>
+        </div>
+
+        <div class="select-options">
+          <span>
+            <label>
+              <span class="custom-check">
+                <input type="radio" formControlName="unprocessedType" value="wu" (change)="unProcessDataFilter()"> {{'qsi-loader-report.wrongDivUnit' | translate}}
+                <span></span>
+              </span>
+            </label>
+          </span>
+        </div>
+        <div class="select-options">
+          <span>
+            <label>
+              <span class="custom-check">
+                <input type="radio" formControlName="unprocessedType" value="all" (change)="unProcessDataFilter()"> {{'qsi-loader-report.allUnprocessedData' | translate}}
+                <span></span>
+              </span>
+            </label>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-box" class="unprocessedData">
+    <div class="grid-heading">
+      <h3>{{'qsi-loader-report.unprocessedDataList' | translate}}</h3>
+    </div>
+    <!-- Grid Heading Ends -->
+    <div class="grid-inner">
+      <div class="form-row">
+        <div class="row">
+          <div class="col-md-12 col-xs-12">
+            <div class="table-responsive ">
+              <form id="unprocessform" (submit)="unprocessedSearch('unprocessed_data_datatable')" style="overflow: scroll;">
+                <div class="form-row text-right search-top">
+                  <div class="form-row">
+                    <button id="unprocessedfilterSearch" type="submit" title="{{'common.search' | translate}}" class="btn green-btn searchreset">
+                      <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                    <button id="unprocessedReset" title="{{'common.reset' | translate}}" type="button" class="btn grey-btn searchreset" (click)="resetUnprocessedListingFilter()">
+                      <span class="glyphicon glyphicon-repeat"></span>
+                    </button>
+                  </div>
+                </div>
+                <table id="unprocessed_data_datatable" class="display table table-bordered table-stripped">
+                  <thead>
+                  </thead>
+                  <!--[Start Grid1 Column Filter]-->
+                  <tfoot>
+                    <tr>
+                      <td>
+                        <input id="sin" class="fm-txt form-control tFootInput inputSearch col-width" type="text" placeholder="{{'qsi-loader-report.sin' | translate}}" name="sin" />
+                      </td>
+                      <td>
+                        <input id="firstName" class="fm-txt form-control tFootInput inputSearch in-number col-width" type="text" placeholder="{{'qsi-loader-report.firstName' | translate}}"
+                          name="firstName" />
+                      </td>
+                      <td>
+                        <input id="lastName" class="fm-txt form-control tFootInput inputSearch in-number col-width" type="text" placeholder="{{'qsi-loader-report.lastName' | translate}}"
+                          name="lastName" />
+                      </td>
+                      <td>
+                        <input id="paidAmount" class="fm-txt form-control tFootInput inputSearch in-number col-width" type="number" placeholder="{{'qsi-loader-report.paidAmount' | translate}}"
+                          name="paidAmount" />
+                      </td>
+
+                      <td class="alignDpRight">
+                        <div class="calender-field">
+                          <!-- Id changed of below one field -->
+                          <my-date-picker id="unprocessedDataListPaidDate" class="inputSearch" name="paidDate" data-type="date" [options]="myDatePickerOptions" [selDate]="dateNameArray['paidDate']"
+                            [ngClass]="expired  ? 'expired' : 'notExpired'" (inputFocusBlur)="changeDateFormat1($event, 'paidDate')"
+                            placeholder="{{'common.date-placeholder' | translate}}">
+                          </my-date-picker>
+                        </div>
+                      </td>
+                      <td>
+                        <input id="policy" class="fm-txt form-control tFootInput inputSearch in-number col-width" type="text" placeholder="{{'qsi-loader-report.policy#' | translate}}"
+                          name="policy" />
+                      </td>
+                      <td>
+                        <input id="group" class="fm-txt form-control tFootInput inputSearch in-number col-width" type="text" placeholder="{{'qsi-loader-report.group#' | translate}}"
+                          name="group" />
+                      </td>
+                      <td class="alignDpRight">
+                        <div class="calender-field">
+                          <my-date-picker id="dispensedDate" class="inputSearch" name="dispensedDate" data-type="date" [options]="myDatePickerOptions"
+                            [selDate]="dateNameArray['dispensedDate']" [ngClass]="expired  ? 'expired' : 'notExpired'" (inputFocusBlur)="changeDateFormat1($event, 'dispensedDate')"
+                            placeholder="{{'common.date-placeholder' | translate}}">
+                          </my-date-picker>
+                        </div>
+                      </td>
+
+                      <td class="alignDpRight">
+                        <div class="calender-field">
+                          <my-date-picker id="adjudicationDate" class="inputSearch" name="adjudicationDate" data-type="date" [options]="myDatePickerOptions"
+                            [selDate]="dateNameArray['adjudicationDate']" [ngClass]="expired  ? 'expired' : 'notExpired'" (inputFocusBlur)="changeDateFormat1($event, 'adjudicationDate')"
+                            placeholder="{{'common.date-placeholder' | translate}}">
+                          </my-date-picker>
+                        </div>
+                      </td>
+                      <td class="alignDpRight">
+                        <div class="calender-field">
+                          <my-date-picker id="dob1" class="inputSearch" name="dob" data-type="date" [options]="myDatePickerOptions" [selDate]="dateNameArray['dob']"
+                            [ngClass]="expired  ? 'expired' : 'notExpired'" (inputFocusBlur)="changeDateFormat1($event, 'dob')"
+                            placeholder="{{'common.date-placeholder' | translate}}">
+                          </my-date-picker>
+                        </div>
+                      </td>
+                      <td>
+                        <select class="fm-txt amount_right_grid form-control inputSearch" name="wrongFirstName" id="wrongFirstName">
+                          <option value="" selected>{{'qsi-loader-report.select' | translate}}</option>
+                          <option value="1">{{'qsi-loader-report.yes' | translate}}</option>
+                          <option value="0">{{'qsi-loader-report.no' | translate}}</option>
+                        </select>
+                      </td>
+                      <td>
+                        <select class="fm-txt amount_right_grid form-control inputSearch" name="wrongLastName" id="wrongLastName">
+                          <option value="" selected>{{'qsi-loader-report.select' | translate}}</option>
+                          <option value="1">{{'qsi-loader-report.yes' | translate}}</option>
+                          <option value="0">{{'qsi-loader-report.no' | translate}}</option>
+                        </select>
+                      </td>
+                      <td>
+                        <select class="fm-txt amount_right_grid form-control inputSearch" name="wrongPharmacyId" id="wrongPharmacyId">
+                          <option value="" selected>{{'qsi-loader-report.select' | translate}}</option>
+                          <option value="1">{{'qsi-loader-report.yes' | translate}}</option>
+                          <option value="0">{{'qsi-loader-report.no' | translate}}</option>
+                        </select>
+                      </td>
+                      <td>
+                        <select class="fm-txt amount_right_grid form-control inputSearch" name="wrongPolicyNo" id="wrongPolicyNo">
+                          <option value="" selected>{{'qsi-loader-report.select' | translate}}</option>
+                          <option value="1">{{'qsi-loader-report.yes' | translate}}</option>
+                          <option value="0">{{'qsi-loader-report.no' | translate}}</option>
+                        </select>
+                      </td>
+                      <td>
+                        <select class="fm-txt amount_right_grid form-control inputSearch" name="wrongSin" id="wrongSin">
+                          <option value="" selected>{{'qsi-loader-report.select' | translate}}</option>
+                          <option value="1">{{'qsi-loader-report.yes' | translate}}</option>
+                          <option value="0">{{'qsi-loader-report.no' | translate}}</option>
+                        </select>
+                      </td>
+                      <td>
+                        <select class="fm-txt amount_right_grid form-control inputSearch" name="wrongUnitOrDivision" id="wrongUnitOrDivision">
+                          <option value="" selected>{{'qsi-loader-report.select' | translate}}</option>
+                          <option value="1">{{'qsi-loader-report.yes' | translate}}</option>
+                          <option value="0">{{'qsi-loader-report.no' | translate}}</option>
+                        </select>
+                      </td>
+                      <td>
+                        <select class="fm-txt amount_right_grid form-control inputSearch" name="notEligPatient" id="notEligPatient">
+                          <option value="" selected>{{'qsi-loader-report.select' | translate}}</option>
+                          <option value="1">{{'qsi-loader-report.yes' | translate}}</option>
+                          <option value="0">{{'qsi-loader-report.no' | translate}}</option>
+                        </select>
+                      </td>
+                      <td>
+                        <select class="fm-txt amount_right_grid form-control inputSearch" name="orgClaimCdNotFound" id="orgClaimCdNotFound">
+                          <option value="" selected>Select</option>
+                          <option value="1">Yes</option>
+                          <option value="0">No</option>
+                        </select>
+                      </td>
+                      <td>
+                        <select class="fm-txt amount_right_grid form-control inputSearch" name="itemHasBeenReverted" id="itemHasBeenReverted">
+                          <option value="" selected>{{'qsi-loader-report.select' | translate}}</option>
+                          <option value="1">{{'qsi-loader-report.yes' | translate}}</option>
+                          <option value="0">{{'qsi-loader-report.no' | translate}}</option>
+                        </select>
+                      </td>
+                      <td>
+                        <input id="divisionNumber" class="fm-txt form-control tFootInput inputSearch in-number col-width" type="text" placeholder="{{'qsi-loader-report.divisionNumber' | translate}}"
+                          name="divisionNumber" />
+                      </td>
+                      <td>
+                        <input id="cdRejected" class="fm-txt form-control tFootInput inputSearch in-number col-width" type="text" placeholder="{{'qsi-loader-report.cdReject' | translate}}"
+                          name="cdRejected" />
+                      </td>
+                      <td>
+                        <input id="correctedChCd" class="fm-txt form-control tFootInput inputSearch in-number col-width" type="text" placeholder="{{'qsi-loader-report.correctedCd' | translate}}"
+                          name="correctedChCd" />
+                      </td>
+                      <td>
+                        <input id="csQsiDrugDailyClaimCd" class="fm-txt form-control tFootInput inputSearch in-number col-width" type="text" placeholder="{{'qsi-loader-report.csQsiDrug' | translate}}"
+                          name="csQsiDrugDailyClaimCd" />
+                      </td>
+                      <td>
+                        <input id="csTransCd" class="fm-txt form-control tFootInput inputSearch in-number col-width" type="text" placeholder="{{'qsi-loader-report.transCd' | translate}}"
+                          name="csTransCd" />
+                      </td>
+                      <td>
+                        <input id="fileId" class="fm-txt form-control tFootInput inputSearch in-number col-width" type="text" placeholder="{{'qsi-loader-report.fileId' | translate}}"
+                          name="fileId" />
+                      </td>
+                      <td>
+                        <input id="din" class="fm-txt form-control tFootInput inputSearch in-number col-width" type="text" placeholder="{{'qsi-loader-report.din' | translate}}" name="din"
+                        />
+                      </td>
+                      <td>
+                        <input id="pharmacyId" class="fm-txt form-control tFootInput inputSearch in-number col-width" type="text" placeholder="{{'qsi-loader-report.pharmacyId' | translate}}"
+                          name="pharmacyId" />
+                      </td>
+                      <td>
+                        <input id="quantity" class="fm-txt form-control tFootInput inputSearch in-number col-width" type="text" placeholder="{{'qsi-loader-report.quantity' | translate}}"
+                          name="quantity" />
+                      </td>
+                      <td>
+                        <input id="relationshipCode" class="fm-txt form-control tFootInput inputSearch in-number col-width" type="text" placeholder="{{'qsi-loader-report.relationshipCode' | translate}}"
+                          name="relationshipCode" />
+                      </td>
+                      <td>
+                        <input id="unitNo" class="fm-txt form-control tFootInput inputSearch in-number col-width" type="text" placeholder="{{'qsi-loader-report.unitNo' | translate}}"
+                          name="unitNo" />
+                      </td>
+                      <td>
+                        <input id="submittedGross" class="fm-txt form-control tFootInput inputSearch in-number col-width" type="text" placeholder="{{'qsi-loader-report.submittedGross' | translate}}"
+                          name="submittedGross" />
+                      </td>
+                      <td>
+                        <input id="calDispensingFeePaid" class="fm-txt form-control tFootInput inputSearch in-number col-width" type="text" placeholder="{{'qsi-loader-report.calDispensingFeePaid' | translate}}"
+                          name="calDispensingFeePaid" />
+                      </td>
+                      <td>
+                        <input id="duplcateClaim" class="fm-txt form-control tFootInput inputSearch in-number col-width" type="text" placeholder="{{'qsi-loader-report.duplcateClaim' | translate}}"
+                          name="duplcateClaim" />
+                      </td>
+                    </tr>
+                  </tfoot>
+                  <!--[End Grid1 Column Filter]-->
+                </table>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="form-row" *ngIf='shouldShowButtons'>
+    <button type="button" class="btn green-btn" [disabled]=" (qsiForm.controls.fileType.value == 'P' || qsiForm.controls.fileType.value == 'B')">
+      {{'qsi-loader-report.loadedDailyFilesReports' | translate}}
+    </button>
+    <button type="button" class="btn green-btn" [disabled]=" (qsiForm.controls.fileType.value == 'D' || qsiForm.controls.fileType.value == 'B')">
+      {{'qsi-loader-report.trialBalanceReport' | translate}}
+    </button>
+    <button type="button" class="btn grey-btn" (click)="resetSearchForm()">      {{'qsi-loader-report.close' | translate}}
+    </button>
+  </div>
+</form>
+
+<div *ngIf="showDataQsiLoader" class="loader-outer">
+  <div class="cube-wrapper">
+    <div class="cube-folding">
+      <span class="leaf1"></span>
+      <span class="leaf2"></span>
+      <span class="leaf3"></span>
+      <span class="leaf4"></span>
+    </div>
+    <span class="loading" data-name="Loading">{{loaderPlaceHolder}}</span>
+  </div>
+</div>

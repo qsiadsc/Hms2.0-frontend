@@ -1,0 +1,105 @@
+<div class="search-field">
+  <form class="form-horizontal" [formGroup]="FormGroup">
+    <ng2-completer [(ngModel)]="companyName5" [inputId]="'searchCompany'" id="searchCompany" formControlName="searchCompany"
+      [datasource]="companyDataRemote" [minSearchLength]="2" [placeholder]="'Search Company'" [textSearching]="'Please wait...'"
+      [inputClass]="'form-control'" [fillHighlighted]="false" (selected)="onCompanyNameSelected($event)" (blur)="onBlurMethod()"
+      [disableInput]="editMode || companyCard" [autoHighlight]="true" [selectOnFocus]="true" (keydown)="keydownEventAction($event)">
+    </ng2-completer>
+    <div *ngIf="searchCompanyError" [ngStyle]="{'color':'red'}">Please select company name</div>
+    <a *ngIf="!companyField && !uftCompanySearch && !editMode" data-toggle="modal" class="search--inner" data-target="#CompanySearch"
+      (click)="getAllCompanyList()" [class.disabled]="editMode" [attr.disabled]="editMode == true ? true : null">
+      <i class="fa fa-search"></i>
+    </a>
+    <a *ngIf="!companyField && !uftCompanySearch && editMode" class="search--inner" (click)="redirectCompanyList()">
+      <i class="fa fa-search"></i>
+    </a>
+  </form>
+  <!-- Search Field Ends -->
+
+  <!-- Company Search Modal -->
+  <div id="CompanySearch" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button id="closeSearchCompany" type="button" class="close" (click)="closeModal()" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Search Company</h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-12 col-xs-12 table-col">
+              <div class="filter-hdr">
+                <div class="filter-column">
+                  <div class="form-row text-right">
+                    <button type="button" class="btn green-btn searchreset" (click)="getCompanyListByGridFilteration('company-search')">
+                      <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                    <button type="button"  class="btn grey-btn searchreset" (click)="resetCompanySearch()">
+                      <span class="glyphicon glyphicon-repeat"></span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="table-responsive">
+                <table id="company-search" class="table table-bordered table-stripped">
+                  <thead>
+                  </thead>
+                  <tfoot>
+                    <tr>
+                      <td width="10%">
+                        <input type="text" placeholder="Company No." class="fm-txt form-control inputSearch" name="coId" />
+                      </td>
+                      <td width="10%">
+                        <input type="text" placeholder="Company Name" class="fm-txt form-control inputSearch in-number" name="coName" />
+                      </td>
+                      <td width="10%">
+                        <ng2-completer [(ngModel)]="cityNameLower" class="predictiveSearchLowerCardHolder inputSearch" [inputName]="cityName" name="cityName"
+                          [datasource]="cityDataRemoteLower" [minSearchLength]="2" [placeholder]="'Search City'" [textSearching]="'Please wait...'"
+                          [inputClass]="'form-control in-number'" data-type="predective" id="companyCitySearch">
+                        </ng2-completer>
+                      </td>
+                      <td width="15%">
+                        <ng2-completer [(ngModel)]="provinceNameLower" class="predictiveSearchLowerCardHolder inputSearch" [inputName]="'provinceName'"
+                          name="provinceName" [datasource]="provinceDataRemoteLower" [minSearchLength]="2" [placeholder]="'Search Province'"
+                          [textSearching]="'Please wait...'" [inputClass]="'form-control in-number'" data-type="predective" id="companyProvinceSearch">
+                        </ng2-completer>
+                      </td>
+                      <td width="10%">
+                        <select *ngIf="isBothAccess" dir="rtl" class="fm-txt form-control tFootInput inputSearch" name="businessTypeDesc">
+                          <option hidden value="">Select</option>
+                          <option *ngFor="let businessType of businessTypeList" value="{{businessType.businessTypeDesc}}">{{businessType.businessTypeDesc}}</option>
+                        </select>
+                        <select *ngIf="isQuikcard" dir="rtl" class="fm-txt form-control tFootInput inputSearch" name="businessTypeDesc">
+                          <option hidden value="">Select</option>
+                          <option value="Quikcard">Quikcard</option>
+                        </select>
+                        <select *ngIf="isAlberta" dir="rtl" class="fm-txt form-control tFootInput inputSearch" name="businessTypeDesc">
+                          <option hidden value="">Select</option>
+                          <option value="AB Gov.">AB Gov.</option>
+                        </select>
+                      </td>
+                      <td width="10%">
+                        <select dir="rtl" class="fm-txt form-control tFootInput inputSearch" name="status">
+                          <option hidden value="">Select</option>
+                          <option value="Active">Active</option>
+                          <option value="Suspended">Suspended</option>
+                          <option value="Inactive">Inactive</option>
+                        </select>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+              <!-- Table Ends -->
+            </div>
+          </div>
+        </div>
+        <!-- Modal Body Ends -->
+        <div class="modal-footer">
+          <button type="button" class="btn grey-btn" (click)="closeModal()" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      <!-- Modal Content Ends -->
+    </div>
+  </div>
+  <!-- Company Search Modal -->

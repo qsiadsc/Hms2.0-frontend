@@ -1,0 +1,168 @@
+<button class="btn green-btn sm-width" id="btnModalCOBHistory"  data-toggle="modal"
+(click)="getRoleHistory();" data-target="#ModalCOBHistory" style="display:none"></button>
+<div id="ModalCOBHistory" class="modal fade dbPopup" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="btnCloseCardholderCobhistory" type="button" title="Close" class="close" data-dismiss="modal" >&times;</button>
+        <h4 class="modal-title">{{'card.card-holder.cob.cob-history' | translate}}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="grid-box">
+					<div class="grid-heading">
+						<h3>{{'card.card-holder.cob.otherplan' | translate}}</h3>
+          </div>
+          <form [formGroup]="CardHolderPopUpCOBFormGroup">
+            <div class="grid-inner">
+              
+              <div class="form-row">
+                <div class="row">
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'card.card-holder.cob.carrier' | translate}}<span class="required">*</span></label>
+                    <select id="cch_cobhistoryCarrier" class="fm-txt form-control" placeholder="Carrier" 
+                       formControlName="carrier">
+                      <option [ngValue]="null" disabled hidden selected >{{'common.select' | translate}}</option>
+                      <option *ngFor="let carrier of arrCarrierList" [value]="carrier.otherPlanKey">
+                        {{carrier.otherPlanDesc}}
+                      </option>
+                    </select>
+                    <show-errors [control]="CardHolderPopUpCOBFormGroup.controls.carrier"></show-errors> 
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'card.card-holder.cob.policyno' | translate}}</label>
+                    <input id="cch_cobhistoryPolicyno" type="text" title="Policy" placeholder="{{'card.card-holder.cob.policyno' | translate}}" formControlName="policy" class="fm-txt form-control" 
+                    (blur)="onBlur()" (keydown)="onlyNumberKey($event)"   (keyup)="onKeyPress($event)" maxlength="15"/>
+                    <show-errors [control]="CardHolderPopUpCOBFormGroup.controls.policy"></show-errors> 
+                  </div>  
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'common.effectivedate' | translate}}<span class="required">*</span></label>
+                    <div class="calender-field">
+                      <my-date-picker id="cch_cobhistorydatepicker1"
+                      [options]="myDatePickerOptions"
+                      name="effective_date" 
+                      placeholder="{{'common.date-placeholder' | translate}}"
+                      formControlName="effective_date" 
+                      (inputFocusBlur)="changeDateFormat($event, 'effective_date' ,'CardHolderPopUpCOBFormGroup',true)">
+                    </my-date-picker>
+                    <show-errors [control]="CardHolderPopUpCOBFormGroup.controls.effective_date"></show-errors> 
+                    </div>
+                  </div>
+                <div class="col-md-3 col-xs-12">
+                  <label>{{'common.expirydate' | translate}}</label>
+                  <div class="calender-field">
+                    <my-date-picker id="cch_cobhistorydatepicker2"
+                    [options]="myDatePickerOptions"
+                    name="expiry_date" placeholder="{{'common.date-placeholder' | translate}}"
+                    formControlName="expiry_date" 
+                    (inputFocusBlur)="changeDateFormat($event, 'expiry_date' ,'CardHolderPopUpCOBFormGroup')">
+                  </my-date-picker>
+                  <show-errors [control]="CardHolderPopUpCOBFormGroup.controls.expiry_date"></show-errors>
+                </div>
+                <show-errors [control]="CardHolderPopUpCOBFormGroup.controls.exp"></show-errors> 
+              </div>
+              <div class="col-md-12 col-xs-12">
+                <label>{{'card.card-holder.cob.coordinationbenefits' | translate}}<span class="required">*</span></label>
+                    <div class="select-options">
+                      <span><label><input id="cch_cobhistoryDental" type="checkbox" (change)="benifitChange($event)" formControlName="cobDental" name="cobDental"
+                        value="Dental"> {{'card.card-holder.cob.dental' | translate}}</label></span>
+                    
+                      <span *ngIf="!alberta"><label><input id="cch_cobhistoryHealth" type="checkbox" formControlName="cobHealth" (change)="benifitChange($event)"
+                        value="Health"> {{'card.card-holder.cob.health' | translate}}</label></span>
+
+                      <span *ngIf="!alberta"><label><input id="cch_cobhistoryVision" type="checkbox" formControlName="cobVision" (change)="benifitChange($event)"
+                        value="Vision"> {{'card.card-holder.cob.vision' | translate}}</label></span>
+
+                      <span *ngIf="!alberta"><label><input id="cch_cobhistoryHsa" type="checkbox" formControlName="cobHSA" (change)="benifitChange($event)" 
+                        value="HSA"> {{'card.card-holder.cob.supplemental' | translate}}</label></span>
+
+                      <span *ngIf="!alberta"><label><input id="cch_cobhistoryDrug" type="checkbox" formControlName="cobDrug" (change)="benifitChange($event)"
+                        value="Drug">{{'card.card-holder.cob.drug' | translate}}</label></span>
+                    </div>
+                    <ul class="validation-errors" *ngIf="isBenifitError">
+                      <li style="color: red">{{'common.fieldRequired' | translate}}</li>
+                    </ul>
+                </div>
+                  <div class="col-md-3 col-xs-12 min-ht-half">
+                    <button id="btnSaveCobHistory" class="btn green-btn btn-lg" type="submit" (click)="SaveCHCOBHistory()" >
+                      {{COBSubmitButtonText}}</button>
+                  </div>
+                </div>
+                </div>
+                    </div>  
+                  </form> 
+                </div>
+                <div class="grid-box">
+                  <div class="grid-heading">
+                    <h3>{{'card.card-holder.cob.cob-history' | translate}}</h3>
+                  </div>
+                  <div class="grid-inner">
+                    <div class="form-row">
+                      <div class="row">
+                        <div class="col-md-12 col-xs-12 table-col">
+                          <div class="table-responsive">
+                           <table id="COBHistory" datatable [dtOptions]="dtOptions['COBHistory']"                                   
+                           [dtTrigger]="dtTrigger['COBHistory']" class="table table-bordered table-stripped inlinePopupTable">
+                            <thead>
+                              <tr>
+                                <th width="10%">{{'card.card-holder.cob.otherplan-name' | translate}}</th>
+                                <th width="10%" class="amount_right_grid">{{'card.card-holder.cob.policyno' | translate}}</th>
+                                <th width="10%" class="amount_right_grid">{{'card.card-holder.cob.dental' | translate}}</th>
+                                <th width="10%" *ngIf="!albertaVal" class="amount_right_grid">{{'card.card-holder.cob.health' | translate}}</th>
+                                <th width="10%" *ngIf="!albertaVal" class="amount_right_grid">{{'card.card-holder.cob.vision' | translate}}</th>
+                                <th width="10%" *ngIf="!albertaVal" class="amount_right_grid">{{'card.card-holder.cob.supplemental' | translate}}</th>
+                                <th width="10%" *ngIf="!albertaVal" class="amount_right_grid">{{'card.card-holder.cob.drug' | translate}}</th>
+                                <th width="10%" class="amount_right_grid">{{'common.effectivedate' | translate}}</th>
+                                <th width="10%" class="amount_right_grid">{{'common.expirydate' | translate}}</th>
+                                <th width="10%" class="amount_right_grid">{{'common.action' | translate}}</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr class="tableRow" *ngFor="let dataRow of cobHistorytableData; let i = index" id="{{'row_'+i}}">
+                                <td>{{dataRow.chOtherPlanName}}</td>
+                                <td class="amount_right_grid">
+                                 
+                                  {{dataRow.cobPolicyNum}}
+                                </td>
+                                <td dir="rtl">
+                                    <span *ngIf="dataRow.cobDental == 'T'">{{'common.true' | translate}}</span>
+                                    <span *ngIf="dataRow.cobDental == 'F'">{{'common.false' | translate}}</span>
+                                  </td>
+                                <td dir="rtl" *ngIf="!alberta">
+                                 <span *ngIf="dataRow.cobHealth == 'T'">{{'common.true' | translate}}</span>
+                                  <span *ngIf="dataRow.cobHealth == 'F'">{{'common.false' | translate}}</span>
+                                </td>
+                                <td dir="rtl" *ngIf="!alberta">
+                                 <span *ngIf="dataRow.cobVision == 'T'">{{'common.true' | translate}}</span>
+                                  <span *ngIf="dataRow.cobVision == 'F'">{{'common.false' | translate}}</span>
+                                </td>
+                                <td dir="rtl" *ngIf="!alberta">
+                                 <span *ngIf="dataRow.cobHSA == 'T'">{{'common.true' | translate}}</span>
+                                  <span *ngIf="dataRow.cobHSA == 'F'">{{'common.false' | translate}}</span>
+                                </td>
+                                <td dir="rtl" *ngIf="!alberta">
+                                  <span *ngIf="dataRow.cobDrug == 'T'">{{'common.true' | translate}}</span>
+                                  <span *ngIf="dataRow.cobDrug == 'F'">{{'common.false' | translate}}</span>
+                                </td>
+                                <td class="amount_right_grid">{{dataRow.cobEffectiveOn}}</td>
+                                <td class="amount_right_grid expiryDate">{{dataRow.cobExpiryOn}}</td>
+                                <td class="amount_right_grid"><a href='javascript:void(0)' (click)="setCOBHistoryForm(dataRow)"
+                                  class='edit_row table-action-btn edit-ico' ><i class='fa fa-pencil'></i>
+                                </a>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>  
+          </div>
+          <div class="modal-footer">
+            <button id="closeCobHistoryPopup" title="Close" class="btn grey-btn" data-dismiss="modal">{{'button.close' | translate}}</button>
+          </div>
+        </div>
+      </div>
+</div>

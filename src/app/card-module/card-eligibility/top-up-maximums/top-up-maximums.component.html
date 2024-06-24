@@ -1,0 +1,143 @@
+<button id="btnRefreshTopupMaximums" (click)="BindGridData()" style="display:none">{{'button.refresh' | translate}}</button>
+ <div class="table-responsive" *ngIf="disciplineKey">
+    <div class="web-reg">
+      <button id="addNewTopUpMax" class="green-btn-add btn" (click)="AddNew()"><i class="fa fa-plus"></i>{{'button.add-new'|translate}}</button>
+    </div>
+    <table id="cardEligibilityTopUpMax" class="table table-bordered table-stripped dataTable">
+      <thead>
+        <tr>
+          <th width="15%">{{ 'card.card-eligibility.over-rides.card-maximums.top-up-maximums.period-type' | translate }}</th>
+          <th class="amount_right" width="15%">{{ 'card.card-eligibility.over-rides.card-maximums.top-up-maximums.description' | translate }}</th>
+          <th class="amount_right_grid" width="10%">{{ 'card.card-eligibility.over-rides.card-maximums.top-up-maximums.amount' | translate }}</th>
+          <th class="amount_right" width="10%">{{ 'card.card-eligibility.over-rides.card-maximums.top-up-maximums.effective-date' | translate }}</th>
+          <th class="amount_right" width="10%">{{ 'card.card-eligibility.over-rides.card-maximums.top-up-maximums.expiry-date' | translate }}</th>
+          <th class="amount_right" width="10%">{{ 'card.card-eligibility.over-rides.card-maximums.top-up-maximums.action' | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="arrMaximumArray.length == 0 && !addMode" class="odd">
+          <td valign="top" colspan="6" class="dataTables_empty">{{'card.card-holder.data-tables.datamsg' | translate}}</td>
+        </tr>
+        <tr *ngFor="let dataRow of arrMaximumArray;let i = index">
+          <td *ngIf="isMaximum">    <!--This td with condition is set to show and save Period type(top-up-maximums) in Maximums-->
+              <span *ngIf="dataRow.cardHsaMaxKey != selectedRowId">{{dataRow.hsaMaxPeriodTypeDesc}}</span>
+              <select [(ngModel)]="dataRow.hsaMaxPeriodTypeKey" class="form-control" id="topUpMaxPeriodType"
+              [ngClass]="{ 'error_field': dataRow.hsaMaxPeriodTypeKey == ''}"  *ngIf="dataRow.cardHsaMaxKey == selectedRowId"> 
+              <option hidden value="">{{ 'card.card-eligibility.over-rides.card-maximums.top-up-maximums.select' | translate }}</option>
+              <option value="{{periodType.hsaMaxPeriodTypeDesc}}" *ngFor="let periodType of arrMaxPeriodType">
+                {{periodType.hsaMaxPeriodTypeDesc}}
+              </option>
+              </select>
+            </td>
+          <td *ngIf="isOverrides">    <!--This condition is set to show and save Period type(top-up-maximums) in Overrides-->
+            <span *ngIf="dataRow.cardHsaMaxKey != selectedRowId">{{dataRow.hsaMaxPeriodTypeDesc}}</span>
+            <select [(ngModel)]="dataRow.hsaMaxPeriodTypeKey" class="form-control" id="topUpMaxPeriodType"
+            [ngClass]="{ 'error_field': dataRow.hsaMaxPeriodTypeKey == ''}"  *ngIf="dataRow.cardHsaMaxKey == selectedRowId"> 
+            <option hidden value="">{{ 'card.card-eligibility.over-rides.card-maximums.top-up-maximums.select' | translate }}</option>
+            <option value="{{periodType.hsaMaxPeriodTypeKey}}" *ngFor="let periodType of arrMaxPeriodType">
+              {{periodType.hsaMaxPeriodTypeDesc}}
+            </option>
+          </select>
+        </td>
+        <td class="amount_right">
+          <span *ngIf="dataRow.cardHsaMaxKey != selectedRowId">{{dataRow.cardHsaMaxDesc}}</span>
+          <input  type="text" name="cardHsaMaxDesc{{i}}" value="{{dataRow.cardHsaMaxDesc}}" [(ngModel)]="dataRow.cardHsaMaxDesc" 
+          id="topUpMaxCardHsaMaxKey" *ngIf="dataRow.cardHsaMaxKey == selectedRowId"
+          [ngClass]="{ 'error_field': dataRow.cardHsaMaxDesc == '', 'fm-txt': true, 'form-control':true }" >
+        </td>
+        <td  class="amount_right_grid">
+          <div *ngIf="dataRow.cardHsaMaxKey != selectedRowId">
+            <span style="float:left !important;">$</span>{{dataRow.cardHsaMaxAmt}}
+          </div>
+          <input type="text" name="cardHsaMaxAmt{{i}}" value="{{dataRow.cardHsaMaxAmt}}" id="topUpMaxCardHsaMaxAmt"
+          OnlyNumber="true" [(ngModel)]="dataRow.cardHsaMaxAmt"  class="fm-txt form-control"
+          (blur)="ConvertAmountToDecimal($event,dataRow)"
+          *ngIf="dataRow.cardHsaMaxKey == selectedRowId">
+        </td>
+        <td class="amount_right">
+          <span *ngIf="dataRow.cardHsaMaxKey != selectedRowId">{{dataRow.effectiveOn | dateFormate}}</span>
+          <input type="text" name="EffectiveOn{{i}}" value="{{dataRow.effectiveOn}}"  [(ngModel)]="dataRow.effectiveOn"
+          id="txtEffectiveOn{{i}}" [ngClass]="{ 'error_field': dataRow.effectiveOn == '', 'fm-txt': true, 'form-control':true }" 
+          (blur)="ChangeInputDateFormat($event,i,'effectiveOn');"              
+          *ngIf="dataRow.cardHsaMaxKey == selectedRowId">
+        </td>
+        <td class="amount_right">
+          <span *ngIf="dataRow.cardHsaMaxKey != selectedRowId && dataRow.checkDate" style="color: rgb(235, 87, 87);font-weight: bold;">{{dataRow.expiredOn | dateFormate}}</span>
+          <span *ngIf="dataRow.cardHsaMaxKey != selectedRowId && !dataRow.checkDate">{{dataRow.expiredOn | dateFormate}}</span>
+          <input type="text" name="expiredOn{{i}}" value="{{dataRow.expiredOn}}"  [(ngModel)]="dataRow.expiredOn"
+          id="txtExpireOn{{i}}" [ngClass]="{ 'error_field': dataRow.expiredOn == '', 'fm-txt': true, 'form-control':true, 'expiredCss' : dataRow.checkDate }" 
+          (blur)="ChangeInputDateFormat($event,i,'expiredOn');"              
+          *ngIf="dataRow.cardHsaMaxKey == selectedRowId">
+        </td>
+        <td *ngIf="!ClaimViewMode">
+          <a  (click)="EditInfo(dataRow)"
+            class='edit_row table-action-btn edit-ico' *ngIf="dataRow.cardHsaMaxKey != selectedRowId">
+            <i class='fa fa-pencil'></i>
+          </a>
+      
+          <a (click)="UpdateInfo(dataRow)" class="save_row table-action-btn edit-ico" *ngIf="dataRow.cardHsaMaxKey == selectedRowId">
+            <i class="fa fa-save"></i>
+          </a>
+          <a href="javascript:void(0)" title="Delete" class="delete_row table-action-btn del-ico" 
+          (click)="CancelInfo()"
+          *ngIf="dataRow.cardHsaMaxKey == selectedRowId">
+            <i class="fa fa-times"></i></a>
+          <a  class="delete_row table-action-btn del-ico" (click)="DeleteInfo(dataRow)" *ngIf="dataRow.cardHsaMaxKey != selectedRowId">
+            <i class="fa fa-trash"></i>
+          </a>
+        </td>
+      </tr>
+      <tr class="tableRow" *ngIf="addMode">
+        <td>
+          <select [(ngModel)]="arrNewMaximumArray.hsaMaxPeriodTypeKey" class="form-control" id="topUpMaxPerioTypeAddMode"
+          [ngClass]="{ 'error_field': newRecordValidate && arrNewMaximumArray.hsaMaxPeriodTypeKey == ''}"  > 
+            <option hidden value="">{{ 'card.card-eligibility.over-rides.card-maximums.top-up-maximums.select' | translate }}</option>
+            <option value="{{periodType.hsaMaxPeriodTypeKey}}" *ngFor="let periodType of arrMaxPeriodType">
+              {{periodType.hsaMaxPeriodTypeDesc}}
+            </option>
+          </select>
+        </td>
+        <td>
+          <input type="text" name="description" [(ngModel)]="arrNewMaximumArray.cardHsaMaxDesc" class="fm-txt form-control"
+          id="topUpMaxDescription" [ngClass]="{ 'error_field': newRecordValidate && arrNewMaximumArray.cardHsaMaxDesc == ''}" >
+        </td>
+        <td>
+          <input type="number" class="fm-txt form-control"  value="" OnlyNumber="true" class="fm-txt form-control"   name="cardHsaMaxAmt" 
+          id="topUpMaxCardHsaMaxAmt" [ngClass]="{ 'error_field': newRecordValidate && arrNewMaximumArray.cardHsaMaxAmt == ''}" 
+          [(ngModel)]="arrNewMaximumArray.cardHsaMaxAmt" (blur)="ConvertAmountToDecimal($event)" required>
+        </td>
+        <td>
+          <input type="text" value=""  class="fm-txt form-control"  name="effectiveOn" 
+          [ngClass]="{ 'error_field': newRecordValidate && arrNewMaximumArray.effectiveOn == '' }"
+          id="txtEffectiveOn" [(ngModel)]="arrNewMaximumArray.effectiveOn" (blur)="ChangeInputDateFormat($event,0,'effectiveOn');">
+        </td>
+        <td>
+          <input type="text" value=""  class="fm-txt form-control"  name="expiredOn" 
+          [ngClass]="{ 'error_field': newRecordValidate && arrNewMaximumArray.expiredOn == '', 'expiredCss' : arrNewMaximumArray.checkDate }"
+          id="txtExpireOn" [(ngModel)]="arrNewMaximumArray.expiredOn" (blur)="ChangeInputDateFormat($event,0,'expiredOn');">
+        </td>
+        <td>
+          <a href="javascript:void(0)" class="save_row table-action-btn edit-ico" 
+          (click)="SaveInfo()">
+            <i class="fa fa-save"></i>
+          </a>
+          <a href="javascript:void(0)" class="delete_row table-action-btn del-ico" 
+          (click)="DeleteInfo()">
+            <i class="fa fa-times"></i>
+          </a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div [hidden]="!showLoader" class="loader-outer">
+    <div class="cube-wrapper">
+        <div class="cube-folding">
+            <span class="leaf1"></span>
+            <span class="leaf2"></span>
+            <span class="leaf3"></span>
+            <span class="leaf4"></span>
+        </div>
+        <span class="loading" data-name="Loading">{{'company.plan.benefits.pleaseWait'|translate}}</span>
+    </div>
+</div>

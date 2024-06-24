@@ -1,0 +1,35 @@
+<div class="otp-box">
+  <div class="otp-box-inner">
+    <form [formGroup]="otpForm">
+      <div class="login-logo">
+        <img src="assets/images/quikcard-logo-full.svg" alt="">
+      </div>
+      <label style="font-size:15px;font-weight: bold;">Enter OTP<span class="required">*</span></label>
+      <div class="form-row">
+        <input type="text" class="form-control" formControlName="otp" id="otp" autofocus placeholder="Enter OTP"
+          (blur)="onBlur()" />
+        <show-errors [control]="otpForm.controls.otp"></show-errors>
+      </div>
+      <a style="margin-left: 385px;" class="" (click)="resendOTP()" href="javascript:void(0)">(Resend
+        OTP)</a>
+      <div class="form-row">
+        <input [ngClass]="(disabledItem != true) ? 'green-btn form-control': 'disabled-btn form-control'"
+          style="margin-top:25px" [attr.disabled]="disabledItem ? true : null" type="button"
+          value="{{currentUserService.buttonText}}" (click)="submitOTP()" />
+      </div>
+    </form>
+  </div>
+  <p> {{ 'Disclaimer.text' | translate }}</p>
+  <p> {{ 'Disclaimer.text1' | translate }}</p>
+</div>
+<div [hidden]="!showLoader" class="loader-outer">
+  <div class="cube-wrapper">
+    <div class="cube-folding">
+      <span class="leaf1"></span>
+      <span class="leaf2"></span>
+      <span class="leaf3"></span>
+      <span class="leaf4"></span>
+    </div>
+    <span class="loading" data-name="Loading">{{'company.plan.benefits.pleaseWait'|translate}}</span>
+  </div>
+</div>

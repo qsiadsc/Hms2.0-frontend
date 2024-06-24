@@ -1,0 +1,186 @@
+<div class="container">
+  <div class="section-heading">
+    <h2>{{'admin.adminRate.adminRate' | translate}}
+      <span>{{'admin.adminRate.list' | translate}}</span>
+    </h2>
+  </div>
+  <div class="grid-box">
+    <div class="grid-heading">
+      <h3>{{'admin.adminRate.adminList' | translate}}</h3>
+      <div class="web-reg">
+        <button id="addAdminInfoBtn" *ngIf="adminInfoArray[0].addAdminRate == 'T'" class="green-btn-add btn"
+          data-toggle="modal" data-target="#AddNewAdminInfo" (click)="enableAddMode()"><i class="fa fa-plus"></i>
+          {{'admin.adminRate.addAdminRate' | translate}} </button>
+      </div>
+    </div>
+    <div class="grid-inner">
+      <div class="form-row">
+        <div class="row">
+          <div class="col-md-12 col-xs-12 table-col">
+            <div class="table-responsive">
+              <form>
+                <table id="adminInfoList" class="table table-bordered table-stripped">
+                  <tfoot>
+                    <tr>
+                      <td>
+                        <ng2-completer [inputName]="'businessTypeDesc'" name="businessTypeDesc"
+                          [datasource]="businessTypeData" [minSearchLength]="0" [openOnFocus]="true"
+                          (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Search Plan Type'"
+                          [textSearching]="'Please wait...'" [inputClass]="'form-control inputSearch'"
+                          data-type="predective" [inputId]="'adminInfoPlanTypeFooter'" id="adminInfoPlanTypeFooter"
+                          (selected)="onSelectedBusinessType($event)" [clearUnselected]="true">
+                        </ng2-completer>
+                      </td>
+                      <td>
+                        <input id="adminInfoAdminRateFooter"
+                          class="fm-txt form-control tFootInput inputSearch grid_right" type="text"
+                          placeholder="{{'admin.adminRate.admRate' | translate }}" name="serviceProvAdminFeeRate" />
+                      </td>
+                      <td>
+                        <input id="adminInfoChequeAccFooter"
+                          class="fm-txt form-control tFootInput inputSearch grid_right" type="text"
+                          placeholder="{{'admin.adminRate.chequeAccount' | translate}}" name="chequeAcctPrefix" />
+                      </td>
+                      <td>
+                        <input id="adminInfoChequeNo" class="fm-txt form-control tFootInput inputSearch grid_right"
+                          type="text" placeholder="{{'admin.adminRate.chequeNo' | translate}}" name="chequeNum" />
+                      </td>
+                      <td class="alignDpRight">
+                        <div class="calender-field">
+                          <my-date-picker id="adminInfoEffectiveOnFooter" class="inputSearch" name="effectiveOn"
+                            data-type="date" [options]="myDatePickerOptions" [selDate]="dateNameArray['effectiveOn']"
+                        
+                            (inputFocusBlur)="changeDateFormat1($event, 'effectiveOn')"
+                            placeholder="{{'common.date-placeholder' | translate}}">
+                          </my-date-picker>
+                        </div>
+                      </td>
+                      <td class="alignDpRight">
+                        <div class="calender-field">
+                          <my-date-picker id="adminInfoExpiredOnFooter" class="inputSearch" name="expiredOn"
+                            data-type="date" [options]="myDatePickerOptions" [selDate]="dateNameArray['expiredOn']"
+                            [ngClass]="expired  ? 'expired' : 'notExpired'"
+                            (inputFocusBlur)="changeDateFormat1($event, 'expiredOn')"
+                            placeholder="{{'common.date-placeholder' | translate}}">
+                          </my-date-picker>
+                        </div>
+                      </td>
+                      <td class="grid_right">
+                        <div class="form-row">
+                          <button id="adminInfoSearchBtn" type="submit" title="{{'common.search' | translate}}"
+                            class="btn green-btn searchreset" (click)="searchAdminInfo('adminInfoList')">
+                            <span class="glyphicon glyphicon-search"></span>
+                          </button>
+                          <button id="resetAdminInfoSearchBtn" title="{{'common.reset' | translate}}"
+                            class="btn grey-btn searchreset" (click)="resetAdminInfoSearch()">
+                            <span class="glyphicon glyphicon-repeat"></span>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="AddNewAdminInfo" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="resetAdminInfoForm" type="button" class="close" data-dismiss="modal"
+          (click)="resetAdminInfoForm()">&times;</button>
+        <h4 *ngIf="addMode" class="modal-title">{{'admin.adminRate.addAdminRate' | translate}}</h4>
+        <h4 *ngIf="viewMode" class="modal-title">{{'admin.adminRate.adminRateDetail' | translate}}</h4>
+        <h4 *ngIf="editMode" class="modal-title">{{'admin.adminRate.editAdminRateDetail' | translate}}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{'admin.adminRate.admRate' | translate}}</h3>
+          </div>
+          <div class="grid-inner">
+            <form [formGroup]="addAdminInfo">
+              <div class="form-row">
+                <div class="row min-ht-sf">
+                  <div class="col-md-2 col-xs-12">
+                    <label>{{'admin.adminRate.planType' | translate}}<span class="required">*</span></label>
+                    <ng2-completer formControlName="planType" name="planType" [datasource]="businessTypeData"
+                      [minSearchLength]="0" [openOnFocus]="true" (opened)="onOpened($event)" [fillHighlighted]="false"
+                      [placeholder]="'Search Plan Type'" [textSearching]="'Please wait...'"
+                      [inputClass]="'form-control inputSearch'" data-type="predective" [inputId]="'adminInfoPlanType'"
+                      id="adminInfoPlanType" (selected)="onSelectedBusinessType($event)" [clearUnselected]="true">
+                    </ng2-completer>
+                    <show-errors [control]="addAdminInfo.controls.planType"></show-errors>
+                  </div>
+                  <div class="col-md-5 col-xs-12">
+                    <label>{{'admin.adminRate.accountPrefix' | translate}}<span class="required">*</span></label>
+                    <input id="adminInfoAccPrefix" type="text" name="accPrefix" formControlName="accPrefix"
+                      class="form-control" placeholder="{{'admin.adminRate.accountPrefix' | translate}}">
+                    <show-errors [control]="addAdminInfo.controls.accPrefix"></show-errors>
+                  </div>
+                  <div class="col-md-5 col-xs-12">
+                    <label>{{'admin.adminRate.admRate' | translate}}<span class="required">*</span></label>
+                    <input id="adminInfoAdminRate" type="text" name="adminRate" formControlName="adminRate"
+                      class="form-control" placeholder="{{'admin.adminRate.admRate' | translate}}">
+                    <show-errors [control]="addAdminInfo.controls.adminRate"></show-errors>
+                  </div>
+                  <div class="col-md-5 col-xs-12">
+                    <label>{{'admin.adminRate.chequeNumber' | translate}}<span class="required">*</span></label>
+                    <input id="adminInfoChequeNo" type="text" name="chequeNumber" formControlName="chequeNumber"
+                      class="form-control" placeholder="{{'admin.adminRate.chequeNumber' | translate}}">
+                    <show-errors [control]="addAdminInfo.controls.chequeNumber"></show-errors>
+                  </div>
+                  <div class="col-md-2 col-xs-12">
+                    <label>{{'admin.adminRate.effDate' | translate}}<span class="required">*</span></label>
+                    <div class="calender-field">
+                      <my-date-picker id="adminInfoEffectiveDate" [options]="myDatePickerOptions" name="effectiveOn"
+                        formControlName="effectiveOn"
+                        (inputFocusBlur)="changeDateFormat($event, 'effectiveOn','addAdminInfo', true)"
+                        placeholder="{{'common.date-placeholder' | translate}}">
+                      </my-date-picker>
+                      <show-errors [control]="addAdminInfo.controls.effectiveOn"></show-errors>
+                    </div>
+                  </div>
+                  <div class="col-md-2 col-xs-12">
+                    <label>{{'admin.adminRate.exDate' | translate}}</label>
+                    <div class="calender-field">
+                      <my-date-picker id="adminInfoExpiredOn" [options]="myDatePickerOptions" name="expiredOn"
+                        formControlName="expiredOn"  
+                        (inputFocusBlur)="changeDateFormat($event, 'expiredOn','addAdminInfo', false)"
+                        [ngClass]="expired  ? 'expired' : 'notExpired'"
+                        placeholder="{{'common.date-placeholder' | translate}}">
+                      </my-date-picker>
+                      <show-errors [control]="addAdminInfo.controls.expiredOn"></show-errors>
+                    </div> 
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="saveAdminInfoForm" *ngIf="adminInfoArray[0].saveAdminRate == 'T'" type="button" class="btn green-btn" (keyup.arrowLeft) = "focusNextEle($event,'closeAdminInfoForm')" (keyup.arrowRight) = "focusNextEle($event,'closeAdminInfoForm')" (click)="submitAdminInfo()">{{buttonText}}</button>
+        <button id="closeAdminInfoForm" type="button" class="btn grey-btn" data-dismiss="modal" (keyup.arrowLeft) = "focusNextEle($event,'saveAdminInfoForm')" (keyup.arrowRight) = "focusNextEle($event,'saveAdminInfoForm')" (click)="resetAdminInfoForm()">{{'button.close' | translate}}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div [hidden]="!showLoader" class="loader-outer">
+  <div class="cube-wrapper">
+    <div class="cube-folding">
+      <span class="leaf1"></span>
+      <span class="leaf2"></span>
+      <span class="leaf3"></span>
+      <span class="leaf4"></span>
+    </div>
+    <span class="loading" data-name="Loading">{{'company.plan.benefits.pleaseWait'|translate}}</span>
+  </div>
+</div>

@@ -1,0 +1,251 @@
+<div class="main-header">
+  <div class="top-bar">
+    <div class="container">
+      <div class="logo">
+      </div>
+      <!-- Logo Ends Here -->
+      <div class="top-bar-right">
+        <div class="topRoleDrpDwn">
+          <!-- [Start Role Assigned Dropdown] -->
+          <div *ngFor="let appMenu of rolAssignedTypeList">
+            <a [ngClass]="appMenu.hmsAppKey == applicationRoleKey ? 'active': 'inactive'" href="javascript:;"
+              (click)="onClickAppHeaderMenu(appMenu)">{{appMenu.hmsAppDesc}}</a>
+          </div>
+          <!--[End Role Assigned Dropdown]-->
+        </div>
+        <!-- Single button -->
+        <button class="green-btn-add btn" id="btnModalTimeOut" data-toggle="modal" data-target="#ModalTimeOut"
+          style="display:none">
+          <i class="fa fa-plus"></i>
+        </button>
+        <a href="javascript:;" (click)='toggleLogoutMenu($event)'> {{'header.hi' | translate}} {{user}}</a>
+        <li class="logout-header" (click)='toggleLogoutMenu($event)'><i class="fa fa-angle-down"></i>
+          <ng-container>
+            <div class="logout-dropdownheader" [hidden]="showMenu">
+              <button class="btn green-btn" id="changePasswordButtonPopUpSelf" data-toggle="modal"
+                data-target="#changePasswordSelf">{{'header.changePassword' | translate}}</button>
+              <button (click)="LogOut()" class="btn red-btn">{{'header.logout' | translate}}</button>
+            </div>
+          </ng-container>
+        </li>
+      </div>
+      <!-- Top Bar Right Ends -->
+    </div>
+  </div>
+  <!-- Top Bar Ends -->
+  <div class="main-menu">
+    <div class="container">
+      <div class="menu">
+        <ul id="grouplist" class="list-group" >
+          <li *ngFor="let item of menuByOrder" [routerLinkActive]="['active']"
+            [routerLinkActiveOptions]="{ exact: true }">
+            <a href="javascript:;" title={{item.title}} id={{item.id}}
+              *ngIf="item.children && item.children.length > 0 && item.deleteChildren == false && item.menuAccess ">{{item.title}}</a>
+            <a href="javascript:;" title={{item.title}} id={{item.id}}
+              *ngIf="item.children && item.deleteChildren == true && item.routerLink != '' && item.menuAccess"
+              (click)="changeTheme(item.routerLink)" [routerLink]='item.routerLink' [routerLinkActive]="['active']"
+              [routerLinkActiveOptions]="{ exact: true }">{{item.title}}</a>
+            <a href="javascript:;" title={{item.title}} id={{item.id}}
+              *ngIf="item.children && item.children.length == 0 && item.routerLink == '' && item.menuAccess">{{item.title}}</a>
+            <ul *ngIf="item.children && item.children.length > 0 && item.deleteChildren == false">
+              <li>
+                <ul [ngClass]="(item.menuShortDesc == 'FGU')? 'fee-menu' : 'asd'">
+                  <li *ngFor="let citem of item.children">
+                    <a *ngIf="citem.actionAccess && citem.menuShortDesc != 'SUB' && citem.routerLink != false"
+                      (click)="changeTheme(citem.routerLink,$event)" [routerLink]="citem.routerLink"
+                      [routerLinkActive]="['active']" [routerLinkActiveOptions]="{ exact: true }">{{citem.title}}</a>
+                    <a *ngIf="citem.actionAccess && citem.menuShortDesc == 'SUB'" style="cursor: pointer"
+                      (click)="getBatchNo('click')" data-toggle="modal" data-target="#SubmitBatch" data-backdrop="static"
+                      data-keyboard="false">{{'common.submit'|translate}}</a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- Container Ends -->
+  </div>
+  <!-- MEnu Ends  HEre -->
+</div>
+<div id="ModalTimeOut" class="modal fade" role="dialog">
+  <div class="modal-dialog" style="width:30%">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">{{'header.sessionTimeOut' | translate}}</h4>
+      </div>
+      <!-- model body section -->
+      <div class="modal-body">
+        {{idleState}}
+      </div>
+      <!-- Main form for Card Holder Sections -->
+      <div class="modal-footer">
+        <button type="button" id="btnCloseTimeOutWindow" class="btn btn-default"
+          data-dismiss="modal">{{'button.close' | translate}}</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Main HEader Ends -->
+<div id="SubmitBatch" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">{{'dataEntry.header.submit-batch.heading'|translate}}</h4>
+      </div>
+
+      <div class="modal-body">
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{'dataEntry.header.submit-batch.heading'|translate}}</h3>
+          </div>
+          <!-- Grid Heading Ends -->
+          <div class="grid-inner">
+            <form [formGroup]="submitBatchForm">
+              <div class="form-row">
+                <div class="row">
+                  <div class="col-md-2 col-xs-12">
+                    <label>{{'dataEntry.header.Batch'|translate}}<span class="required"> *</span></label>
+                    <!-- Remove disabled as per log #805 on May 5 2020 -->
+                    <input  type="text" class="fm-txt form-control" formControlName="batch" />
+                    <show-errors [control]="submitBatchForm.controls.batch"></show-errors>
+                  </div>
+                  <div class="col-md-2 col-xs-12">
+                    <label>{{'dataEntry.common.date'|translate}}</label>
+                    <div class="calender-field">
+                      <my-date-picker [disabled]=true id="SubmitBatchDate" [options]="myDatePickerOptions"
+                        placeholder="{{'common.datepicker-placeholder'|translate}}" name="SubmitBatchDate"
+                        formControlName="date">
+                      </my-date-picker>
+                    </div>
+                    <!-- Calendar Field Ends -->
+                  </div>
+                  <div class="col-md-2 col-xs-12">
+                    <label>{{'dataEntry.header.submit-batch.submit-by'|translate}}</label>
+                    <input type="text" disabled class="fm-txt form-control" formControlName="submitBy" />
+                  </div>
+                  <div class="col-md-2 col-xs-12">
+                    <label>{{'dataEntry.header.submit-batch.submit-on'|translate}}</label>
+                    <div class="calender-field">
+                      <my-date-picker [disabled]=true id="SubmitBatchSubmitOn" [options]="myDatePickerOptions"
+                        placeholder="{{'common.datepicker-placeholder'|translate}}" name="SubmitBatchSubmitOn"
+                        formControlName="submitOn">
+                      </my-date-picker>
+                    </div>
+                    <!-- Calendar Field Ends -->
+                  </div>
+                  <div class="col-md-4 col-xs-12">
+                    <label>&nbsp;</label>
+                    <button (click)="generateBatchFile()"
+                      title="{{'dataEntry.header.submit-batch.generate-file'|translate}}"
+                      class="btn green-btn">{{'dataEntry.header.submit-batch.generate-file'|translate}}</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{'dataEntry.header.submit-batch.batch-claim'|translate}}</h3>
+          </div>
+          <!-- Grid Heading Ends -->
+          <div class="grid-inner">
+            <div class="form-row">
+              <div class="row">
+                <div class="col-md-12 col-xs-12 table-col">
+                  <div class="table-responsive">
+                    <table id="genrateBatchList" class="table table-bordered table-stripped">
+                    </table>
+                  </div>
+                  <!-- Table Ends -->
+                </div>
+              </div>
+            </div>
+            <!-- Form Row ENds -->
+          </div>
+          <!-- Grid Inner Ends -->
+        </div>
+        <!-- Grid Box Ends -->
+      </div>
+      <!-- Modal Body End-->
+      <div class="modal-footer">
+        <button class="btn grey-btn" title="Close" data-dismiss="modal">{{'button.close' | translate}}</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--Submit-Batch Modal -->
+<!--Change Password Modal-->
+<div id="changePasswordSelf" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="changePasswordClsoeHeaderTop" type="button" class="close" data-dismiss="modal"
+          (click)="resetChangePasswordForm()">&times;</button>
+        <h4 class="modal-title">{{'header.changePassword' | translate}}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="grid-heading">
+          <h3>{{'header.changePassword' | translate}}</h3>
+        </div>
+        <div class="grid-box">
+          <div class="grid-inner">
+            <form [formGroup]="changePasswordForm" (ngSubmit)="onSubmitChangePassword(changePasswordForm)">
+              <div class="form-row">
+                <div class="row">
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'header.oldPassword' | translate}}<span class="required">*</span></label>
+                    <input type="password" id="oldPassword" formControlName="oldPassword" class="fm-txt form-control"
+                      placeholder="{{'header.oldPassword' | translate}}" />
+                    <show-errors [control]="changePasswordForm.controls.oldPassword"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'header.newPassword' | translate}}<span class="required">*</span></label>
+                    <input type="password" class="fm-txt form-control" name="newPassword" id="newPassword"
+                      formControlName="newPassword" placeholder="{{'header.newPassword' | translate}}"
+                      (blur)="validateConfirmPassword(changePasswordForm)" />
+                    <show-errors [control]="changePasswordForm.controls.newPassword"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'header.confirmPassword' | translate}}<span class="required">*</span></label>
+                    <input type="password" name="branch" id="confirmPassword" formControlName="confirmPassword"
+                      class="fm-txt form-control" placeholder="{{'header.confirmPassword' | translate}}"
+                      (blur)="validateConfirmPassword(changePasswordForm)" />
+                    <show-errors [control]="changePasswordForm.controls.confirmPassword"></show-errors>
+                  </div>
+                  <!-- Calendar Field Ends -->
+                  <div class="col-md-3 col-xs-12">
+                    <label>&nbsp;</label>
+                    <button id="changePasswordButton" class="btn green-btn">{{'button.update' | translate}}</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="changePasswordClsoeHeaderBottom" type="button" class="btn grey-btn" data-dismiss="modal"
+          (click)="resetChangePasswordForm()">{{ 'button.close' | translate }}</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div [hidden]="!showLoader" class="loader-outer">
+  <div class="cube-wrapper">
+    <div class="cube-folding">
+      <span class="leaf1"></span>
+      <span class="leaf2"></span>
+      <span class="leaf3"></span>
+      <span class="leaf4"></span>
+    </div>
+    <span class="loading" data-name="Loading">{{'company.plan.benefits.pleaseWait'|translate}}</span>
+  </div>
+</div>

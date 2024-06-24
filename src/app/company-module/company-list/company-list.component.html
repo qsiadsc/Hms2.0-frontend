@@ -1,0 +1,81 @@
+<div class="grid-box">
+	<div class="grid-heading">
+		<h3>{{ 'company.company-search.list-of-companies' | translate }}</h3>
+	</div>
+	<!-- Grid Heading Ends -->
+	<div class="grid-inner">
+		<div class="form-row">
+			<div class="row">
+                <div class="col-md-12 col-xs-12 table-col">
+                    <div class="table-responsive">
+                        <table id="company-list" class="table table-bordered table-stripped">
+                            <tfoot>
+                                <tr>
+                                    <td width="2%">&nbsp;</td>
+                                    <td width="10%">
+                                        <input id="companyListCompanyNo." class="fm-txt form-control tFootInput" type="text" name="search-id"/ placeholder="{{ 'company.company-search.company-no.' | translate }}">
+                                    </td>
+                                    <td width="10%">
+                                        <input id="companyListFirstName" class="fm-txt form-control tFootInput" type="text" name="search-first-name"/>
+                                    </td>
+                                    <td width="10%">
+                                        <input id="companyListSearchFirstName" class="fm-txt form-control tFootInput" type="text" name="search-first-name"/>
+                                    </td>
+                                    <td width="10%">
+                                        <div class="calender-field">
+                                            <input id="companyListdatepicker33" type="text" class="fm-txt form-control datepicker">
+                                            <label for="companyListdatepicker33" class="input-group-addon btn dt-picker">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td width="10%">
+                                        <div class="calender-field">
+                                        <input id="companyListdatepicker34" type="text" class="fm-txt form-control datepicker">
+                                            <label for="companyListdatepicker34" class="input-group-addon btn dt-picker">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td width="15%">
+                                        <input class="fm-txt form-control tFootInput" type="text" name="search-first-name"/>
+                                    </td>
+                                    <td width="15%">&nbsp;</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <!-- Table Ends -->
+                </div>
+            </div>
+        </div>
+        <!-- Form Row ENds -->
+        <div class="form-row">
+            <div class="row">
+                <div class="col-md-12 col-xs-12">
+                    <div class="dropdown pull-left">
+                        02/03/2018 5:00pm
+                    </div>
+                    <div class="dropdown pull-right">
+                        <button id="companyListExport" class="btn green-btn dropdown-toggle" type="button" data-toggle="dropdown">{{ 'button.export' | translate }}
+            
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="#">{{ 'common.csv' | translate }}</a>
+                            </li>
+                            <li>
+                                <a href="#">{{ 'common.excel' | translate }}</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Form Row ENds -->
+    </div>
+    <!-- Grid Inner Ends -->
+</div>
+<!-- Grid Box Ends -->
+

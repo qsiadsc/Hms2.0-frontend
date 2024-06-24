@@ -1,0 +1,26 @@
+<div class="grid-box">
+  <div class="grid-heading">
+    <h3>{{'claims.claims-view.claim-items.claim-items' | translate}}</h3>
+    <div class="web-reg">
+
+     
+      <button id="btnAddNewClaimItemDental" [ngClass]="{'disabled': (!hasCrdHolder || claimItemDenatlMode) }"
+        class="green-btn-add btn" (click)="AddNew()" (blur)="AddNew()"
+        *ngIf="claimItemAuth.addNewClaimItem == 'T' && !reviewer && !preAuthReverseClaim && this.claimStatus != 'Paid' && this.claimRefered != true">
+        <i class="fa fa-plus"></i> {{'button.add-new'|translate}}</button>
+
+    </div>
+    <!-- Web Reg Ends -->
+
+  </div>
+  <app-claim-dental-item [ClaimId]="ClaimId" [CHRecievedDate]="CHRecievedDate"
+    (ClaimItemInsert)="OnClaimItemSave($event)" [claimStatus]="claimStatus" [claimRefered]="claimRefered"
+    [ClaimAddMode]="addMode" [ClaimViewMode]="viewMode" [ClaimEditMode]="editMode" [claimItemAuth]='claimItemAuth'
+    *ngIf="DisciplineKey=='1'" [cardBusinessTypeKey]="cardBusinessTypeKey" [resetForm]="resetForm" [cardholderKey] = "cardholderKey" [claimTypeKey]="claimTypeKey">
+  </app-claim-dental-item>
+  <app-claim-item-vision [DisciplineKey]="DisciplineKey" (ClaimItemInsert)="OnClaimItemSave($event)" [ClaimId]="ClaimId"
+    [ClaimAddMode]="addMode" [ClaimViewMode]="viewMode" [ClaimEditMode]="editMode" [claimStatus]="claimStatus"
+    [claimRefered]="claimRefered" [CHRecievedDate]="CHRecievedDate" [claimItemAuth]='claimItemAuth'
+    [cardBusinessTypeKey]="cardBusinessTypeKey" *ngIf="DisciplineKey !='1'" [resetForm]="resetForm" [cardholderKey] = "cardholderKey" [claimTypeKey]="claimTypeKey">
+  </app-claim-item-vision>
+</div>

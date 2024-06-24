@@ -1,0 +1,117 @@
+<div class="grid-box">
+  <div class="grid-heading">
+    <h3>{{ 'company.broker-list.list-of-brokers' | translate }}</h3>
+  </div>
+  <!-- Grid Heading Ends -->
+  <div class="grid-inner">
+    <div class="form-row">
+      <div class="row">
+        <div class="col-md-12 grid-filter">
+          <div class="pull-left">
+            <select id="broker_list" class="fm-txt form-control">
+              <option>10</option>
+              <option>20</option>
+              <option>30</option>
+            </select>
+          </div>
+          <div class="pull-right">
+            <div class="search-field">
+              <input type="text" class="fm-txt form-control">
+              <a href="#" class="search--inner" data-toggle="modal" data-target="#CompanySearch"><i class="fa fa-search"></i></a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 col-xs-12 table-col">
+          <div class="table-responsive search-table">
+            <table class="table table-bordered table-stripped">
+              <thead>
+                <tr>
+                  <th width="2%">{{ 'company.broker-list.datatables.id' | translate }}</th>
+                  <th width="10%">{{ 'company.broker-list.datatables.name' | translate }}</th>
+                  <th width="10%">{{ 'company.broker-list.datatables.city-name' | translate }}</th>
+                  <th width="10%">{{ 'company.broker-list.datatables.province-name' | translate }}</th>
+                  <th width="10%">{{ 'company.broker-list.datatables.effected-on' | translate }}</th>
+                  <th width="10%">{{ 'company.broker-list.datatables.expired-on' | translate }}</th>
+                  <th width="15%">{{ 'company.broker-list.datatables.action' | translate }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><a href="javascript:;">11</a></td>
+                  <td><a href="javascript:;">Seasia</a></td>
+                  <td><a href="javascript:;">Calgary</a></td>
+                  <td><a href="javascript:;">Alberta</a></td>
+                  <td><a href="javascript:;">12/3/1997</a></td>
+                  <td><a href="javascript:;">12/4/2019</a></td>
+                  <td data-toggle="modal" data-target="#cardHolderTable">
+                    <a [routerLink]="['../edit-broker', 1]" class="table-action-btn edit-ico"><i class="fa fa-pencil"></i></a>
+                    <a href="javascript:;" class="table-action-btn del-ico"><i class="fa fa-trash"></i></a>
+                  </td>
+                </tr>
+                <tr>
+                  <td> &nbsp;</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td width="2%">&nbsp;</td>
+                  <td width="10%"><input class="fm-txt form-control" type="text"></td>
+                  <td width="10%"><input class="fm-txt form-control" type="text"></td>
+                  <td width="10%"><input class="fm-txt form-control" type="text"></td>
+                  <td width="10%">
+                    <div class="calender-field">
+                      <my-date-picker id="broker-list_ce_effectedDate"
+                        [options]="myDatePickerOptions"
+                        (inputFocusBlur)="changeDateFormat($event, '')">
+                      </my-date-picker>
+                    </div>
+                  </td>
+                  <td width="10%">
+                    <div class="calender-field">
+                    
+                      <my-date-picker id="broker-list_ce_effected_Date"
+                        [options]="myDatePickerOptions"
+                        (inputFocusBlur)="changeDateFormat($event, '')">
+                      </my-date-picker>
+                    </div>
+                  </td>
+                  <td width="15%">&nbsp;</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+          <!-- Table Ends -->
+        </div>
+      </div>
+    </div>
+    <!-- Form Row ENds -->
+    <div class="form-row">
+      <div class="row">
+        <div class="col-md-12 col-xs-12">
+          <div class="dropdown pull-left">
+            02/03/2018    5:00pm
+          </div>
+          <div class="dropdown pull-right">
+            <button id="broker-list_export"class="btn green-btn dropdown-toggle" type="button" data-toggle="dropdown">
+                {{ 'button.export' | translate }}
+                <span class="caret"></span>
+              </button>
+            <ul class="dropdown-menu">
+              <li><a href="#">{{ 'common.csv' | translate }}</a></li>
+              <li><a href="#">{{ 'common.excel' | translate }}</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Form Row ENds -->
+  </div>
+  <!-- Grid Inner Ends -->
+</div>
+<!-- Grid Box Ends -->

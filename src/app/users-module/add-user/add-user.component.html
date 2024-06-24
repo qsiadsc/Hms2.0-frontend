@@ -1,0 +1,335 @@
+<nav class="breadcrumb">
+  <span class="breadcrumb-item" (click)="goBack()">{{'user.addEditViewUsers.users' | translate}}</span> >
+  <span *ngIf="addMode" class="breadcrumb-item active"
+    [routerLink]="['/users/addUser']">{{'user.addEditViewUsers.add' | translate}}</span>
+  <span *ngIf="viewMode" class="breadcrumb-item active"
+    [routerLink]="">{{'user.addEditViewUsers.view' | translate}}</span>
+  <span *ngIf="editMode" class="breadcrumb-item active"
+    [routerLink]="['/users/view']">{{'user.addEditViewUsers.edit' | translate}}</span>
+</nav>
+<div class="section-heading">
+  <h2>{{'user.addEditViewUsers.user' | translate}}
+    <span *ngIf="addMode">{{'user.addEditViewUsers.add' | translate}}</span>
+    <span *ngIf="viewMode">{{'user.addEditViewUsers.view' | translate}}</span>
+    <span *ngIf="editMode">{{'user.addEditViewUsers.edit' | translate}}</span>
+  </h2>
+</div>
+<div class="grid-box">
+  <div class="grid-heading">
+    <h3 *ngIf="addMode">{{'user.addEditViewUsers.addnu' | translate}}</h3>
+    <h3 *ngIf="viewMode">{{'user.addEditViewUsers.viewUser' | translate}}</h3>
+    <h3 *ngIf="editMode">{{'user.addEditViewUsers.editUser' | translate}}</h3>
+    <div class="web-reg">
+      <button id="edit_user" *ngIf="viewMode && usersAuthCheck[0].editUser == 'T'" (click)="editUser()" class="btn green-btn-add">{{'user.addEditViewUsers.edit' | translate}}</button>
+     <button id="update_user" *ngIf="editMode" (click)="updateUser()"  class="btn green-btn-add" type="submit">{{'user.addEditViewUsers.update' | translate}}</button>
+     <a *ngIf="viewMode" id="AddUsers" [routerLink]="['/users/addUser']"
+      class="green-btn-add btn" >
+      <i class="fa fa-plus"></i>{{'user.user-search-filter.addUser' | translate}}</a>
+   </div>
+  </div>
+  <div class="grid-inner addUserForm">
+    <form [formGroup]="addEditUserForm">
+      <div class="form-row">
+        <div class="row min-ht-sf">
+          <div class="col-md-3 col-xs-12">
+            <label>{{'user.addEditViewUsers.fname' | translate}}
+              <span class="required">*</span>
+            </label>
+            <input type="text" placeholder="{{'user.addEditViewUsers.fname' | translate}}" class="fm-txt form-control abb"
+              formControlName="firstName" />
+            <show-errors [control]="addEditUserForm.controls.firstName"></show-errors>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{'user.addEditViewUsers.lname' | translate}}
+              <span class="required">*</span>
+            </label>
+            <input type="text" placeholder="{{'user.addEditViewUsers.lname' | translate}}" (blur)="openRoleDropdown()"
+              class="fm-txt form-control" formControlName="lastName" />
+            <show-errors [control]="addEditUserForm.controls.lastName"></show-errors>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{'user.addEditViewUsers.email' | translate}}
+              <span class="required">*</span>
+            </label>
+            <input type="text" placeholder="{{'user.addEditViewUsers.email' | translate}}" class="fm-txt form-control"
+              formControlName="email" (blur)="onBlurMethod()" />
+            <show-errors [control]="addEditUserForm.controls.email"></show-errors>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{'common.extension' | translate}}</label>
+            <input type="text" placeholder="{{'common.extension' | translate}}" class="fm-txt form-control"
+              formControlName="extension" />
+            <show-errors [control]="addEditUserForm.controls.extension"></show-errors>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{'user.addEditViewUsers.phonenum' | translate}}
+              <span class="required">*</span>
+            </label>
+            <input [textMask]="{mask: phoneMask}" type="text"
+              placeholder="{{'user.addEditViewUsers.phonenum' | translate}}" class="fm-txt form-control"
+              formControlName="phoneNumber" />
+            <show-errors [control]="addEditUserForm.controls.phoneNumber"></show-errors>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{'user.addEditViewUsers.postalcode' | translate}}
+              <span class="required">*</span>
+            </label>
+            <input (blur)="isUserPostalcodeValid($event)" type="text"
+              placeholder="{{'user.addEditViewUsers.postalcode' | translate}}" class="upperCase fm-txt form-control notInCaps"
+              formControlName="postalCode" />
+            <show-errors [control]="addEditUserForm.controls.postalCode"></show-errors>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{'user.addEditViewUsers.city' | translate}}
+              <span class="required">*</span>
+            </label>
+            <input (blur)="isUserPostalVerifyValid($event, 'city')" type="text"
+              placeholder="{{'user.addEditViewUsers.city' | translate}}" class="fm-txt form-control notInCaps"
+              formControlName="city" />
+            <show-errors [control]="addEditUserForm.controls.city"></show-errors>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{'user.addEditViewUsers.province' | translate}}
+              <span class="required">*</span>
+            </label>
+            <input (blur)="isUserPostalVerifyValid($event, 'province')" type="text"
+              placeholder="{{'user.addEditViewUsers.province' | translate}}" class="fm-txt form-control notInCaps"
+              formControlName="province" />
+            <show-errors [control]="addEditUserForm.controls.province"></show-errors>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{'user.addEditViewUsers.country' | translate}}
+              <span class="required">*</span>
+            </label>
+            <input (blur)="isUserPostalVerifyValid($event, 'country')" type="text"
+              placeholder="{{'user.addEditViewUsers.country' | translate}}" class="fm-txt form-control notInCaps"
+              formControlName="country" />
+            <show-errors [control]="addEditUserForm.controls.country"></show-errors>
+          </div>
+          <div class="col-md-3 col-xs-12" *ngIf="addMode">
+            <label>{{'user.addEditViewUsers.password' | translate}}
+              <span class="required">*</span>
+            </label>
+            <input autocomplete="new-password" id="password" type="password"
+              placeholder="{{'user.addEditViewUsers.password' | translate}}" class="fm-txt form-control"
+              formControlName="password" (blur)="validateConfirmPassword(addEditUserForm)" />
+            <show-errors [control]="addEditUserForm.controls.password"></show-errors>
+          </div>
+          <div class="col-md-3 col-xs-12" *ngIf="addMode">
+            <label>{{'user.addEditViewUsers.confirpassword' | translate}}
+              <span class="required">*</span>
+            </label>
+            <input type="password" placeholder="{{'user.addEditViewUsers.confirpassword' | translate}}"
+              class="fm-txt form-control" formControlName="confirmPassword"
+              (blur)="validateConfirmPassword(addEditUserForm)" />
+            <show-errors [control]="addEditUserForm.controls.confirmPassword"></show-errors>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>OTP</label>
+            <select id="isOTP" class="fm-txt form-control" placeholder="OTP" name="isOTP" formControlName="isOTP">
+              <option value="F">OFF</option>
+              <option value="T">ON</option>
+            </select>
+          </div>
+          <!--[Start Placing All Dropdowns Here]-->
+          <div *ngIf="viewMode || editMode" class="col-md-3 col-xs-12">
+            <label>{{'user.addEditViewUsers.status' | translate}}
+              <span class="required">*</span>
+            </label>
+            <div id="" [ngClass]="{'disableMultiselect': viewMode}">
+              <ng2-completer formControlName="userStatus" [datasource]="userStatusData" [minSearchLength]="0"
+                [openOnFocus]="true" (opened)="onOpened($event)" [fillHighlighted]="false"
+                [placeholder]="'Search User Status'" [textSearching]="'Please wait...'" [inputClass]="'form-control'"
+                (selected)="onUserStatusSelected($event)" [clearUnselected]="true">
+              </ng2-completer>
+            </div>
+            <show-errors [control]="addEditUserForm.controls.userStatus"></show-errors>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{'user.addEditViewUsers.businessType' | translate}}
+              <span class="required">*</span>
+              <span *ngIf="viewMode" class="comment-fm assign-cat">
+                <button class="btn green-btn"><i class="fa fa-eye"></i></button>
+                <div class="comment-top">
+                  <p *ngFor="let businessTypeList of businessType; let rowIndex = index">
+                    {{businessTypeList.itemName}}{{rowIndex === businessType.length - 1 ? '' : ', '}}</p>
+                </div>
+              </span>
+            </label>
+            <div class="" id="" [ngClass]="{'disableMultiselect': viewMode}">
+              <angular2-multiselect tabindex="0" [data]="bussTypeList" [(ngModel)]="businessType"
+                [ngModelOptions]="{standalone: true}" (onSelect)="onSelectDropDown($event,'businessType')"
+                (onDeSelect)="onDeSelectDropDown($event,'businessType')"
+                (onSelectAll)="onSelectAll($event,'businessType')" [settings]="dropdownSettings"></angular2-multiselect>
+            </div>
+            <show-errors [control]="addEditUserForm.controls.businessType"></show-errors>
+          </div>
+          <!-- [Application Access Field Shown in Edit or View Mode Only As Per Requirement] -->
+          <div class="col-md-3 col-xs-12">
+            <label>{{'user.addEditViewUsers.aassigned' | translate}}
+              <span class="required">*</span>
+              <span *ngIf="viewMode" class="comment-fm assign-cat">
+                <button class="btn green-btn"><i class="fa fa-eye"></i></button>
+                <div class="comment-top">
+                  <p *ngFor="let applicationAccsesList of applicationAccses; let rowIndex = index">
+                    {{applicationAccsesList.itemName}}{{rowIndex === applicationAccses.length - 1 ? '' : ', '}}</p>
+                </div>
+              </span>
+            </label>
+            <div [ngClass]="{'disableMultiselect': viewMode,'drop-rel':addMode}">
+              <angular2-multiselect tabindex="0" [data]="additonalInfoList" [(ngModel)]="applicationAccses"
+                [ngModelOptions]="{standalone: true}" (onSelect)="onSelectDropDown($event,'applicationAccses')"
+                (onDeSelect)="onDeSelectDropDown($event,'applicationAccses')"
+                (onSelectAll)="onSelectAll($event,'applicationAccses')" [settings]="dropdownSettings">
+              </angular2-multiselect>
+            </div>
+            <show-errors [control]="addEditUserForm.controls.applicationAccses"></show-errors>
+          </div>
+          <!--[Role Assigned Field]-->
+          <div class="col-md-3 col-xs-12">
+            <label>{{ 'company.company-form.rassigned' | translate }}
+              <span class="required">*</span>
+              <span *ngIf="viewMode" class="comment-fm assign-cat">
+                <button class="btn green-btn"><i class="fa fa-eye"></i></button>
+                <!-- Added class in role assigned view icon so that it show all entries on hover. -->
+                <div class="comment-top commentTolltip">
+                  <p *ngFor="let rolAssignedList of rolAssigned; let rowIndex = index">
+                    {{rolAssignedList.itemName}}{{rowIndex === rolAssigned.length - 1 ? '' : ', '}}</p>
+                </div>
+              </span>
+            </label>
+            <div class="drop-rel" id="" [ngClass]="{'disableMultiselect': viewMode}">
+              <angular2-multiselect tabindex="0" [data]="rolAssignedTypeList" [(ngModel)]="rolAssigned"
+                [ngModelOptions]="{standalone: true}" (onSelect)="onSelectDropDown($event,'rolAssigned')"
+                (onDeSelect)="onDeSelectDropDown($event,'rolAssigned')"
+                (onSelectAll)="onSelectAll($event,'rolAssigned')" [settings]="dropdownSettings"></angular2-multiselect>
+            </div>
+            <show-errors [control]="addEditUserForm.controls.rolAssigned"></show-errors>
+          </div>
+          <!-- discussion with Arun Sir -->
+          <div class="col-md-3 col-xs-12">
+            <div>
+              <label>{{'user.addEditViewUsers.defaultMenu' | translate}}
+                <span class="required">*</span>
+              </label>
+              <ng2-completer [ngClass]="{'disableCompliter':!isRoleAssigned}" formControlName="userMenuRefKey" [datasource]="menuData" [minSearchLength]="0"
+                [openOnFocus]="true" [fillHighlighted]="false" [placeholder]="'Search Menu'"
+                [textSearching]="'Please wait...'" [inputClass]="'form-control'" (selected)="onMenuSelected($event)"
+                [clearUnselected]="false" [autoHighlight]="true" [selectOnFocus]="true">
+              </ng2-completer>
+              <show-errors [control]="addEditUserForm.controls.userMenuRefKey"></show-errors>
+            </div>
+          </div>
+          <!--[Default Menu Field]-->
+          <!-- issue number 537 supervisor field start -->
+          <div class="col-md-3 col-xs-12">
+            <label>{{ 'company.company-form.supervisor' | translate }}
+            </label>
+            <div class="drop-rel" id="" >
+              <select id="" class="fm-txt form-control" placeholder="Supervisor" name="supervisor" formControlName="supervisor" [value]='0' [ngClass]="{'disableMultiselect': viewMode}">
+                <option value='0' selected>Select Supervisor</option>
+                <option *ngFor="let supervisorList of supervisor; let rowIndex = index" value='{{supervisorList.userKey}}'>{{supervisorList.fullName  | titlecase}}</option>
+              </select>
+            </div>
+          </div>
+          <!-- issue number 537 supervisor field end -->
+          <!--[Sub Menu Field]-->
+          <!--[Below field will auto populate based on the selection of fields Role Assigned & Default Menu]-->
+          <div class="col-md-3 col-xs-12">
+            <div *ngIf="showHideSubMenu">
+              <label>{{'user.addEditViewUsers.subMenu' | translate}}
+              </label>
+              <ng2-completer formControlName="userSubMenuRefKey" [datasource]="subMenuData" [minSearchLength]="0"
+                [openOnFocus]="true" [fillHighlighted]="false" [placeholder]="'Search Sub Menu'"
+                [textSearching]="'Please wait...'" [inputClass]="'form-control'" (selected)="onSubMenuSelected($event)"
+                [clearUnselected]="false" [autoHighlight]="true" [selectOnFocus]="true">
+              </ng2-completer>
+              <show-errors [control]="addEditUserForm.controls.userSubMenuRefKey"></show-errors>
+            </div>
+          </div>
+          <!--[End Placing All Dropdowns Here]-->
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="row">
+          <div class="form-row text-center saveBtn">
+            <button id="add_user" *ngIf="addMode" (click)="addNewUser()" type="submit"
+              class="btn green-btn btn-lg">{{'user.addEditViewUsers.save' | translate}}</button>
+            <button id="edit_user" *ngIf="viewMode && usersAuthCheck[0].editUser == 'T'" (click)="editUser()"
+              class="btn green-btn btn-lg">{{'user.addEditViewUsers.edit' | translate}}</button>
+            <button id="update_user" *ngIf="editMode" (click)="updateUser()" class="btn green-btn btn-lg"
+              type="submit">{{'user.addEditViewUsers.update' | translate}}</button>
+            <button *ngIf="editMode || viewMode" class="btn green-btn btn-lg" data-toggle="modal"
+              id="changePasswordButtonPopUpOther"
+              data-target="#changePasswordOther">{{'user.addEditViewUsers.changePassword' | translate}}</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <!-- Grid Inner Ends -->
+</div>
+<!-- Grid Box Ends -->
+<!--Change Password Modal-->
+<div id="changePasswordOther" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="changePasswordClsoeUpper" type="button" class="close" data-dismiss="modal"
+          (click)="resetChangePasswordForm()">&times;</button>
+        <h4 class="modal-title">{{'user.addEditViewUsers.changePassword' | translate}}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="grid-heading">
+          <h3>{{'user.addEditViewUsers.changePassword' | translate}}</h3>
+        </div>
+        <div class="grid-box">
+          <div class="grid-inner">
+            <form [formGroup]="changePasswordForm" (ngSubmit)="onSubmitChangePassword(changePasswordForm)">
+              <div class="form-row">
+                <div class="row">
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'user.addEditViewUsers.newPassword' | translate}}<span class="required">*</span></label>
+                    <input type="password" class="fm-txt form-control" name="newPassword" id="newPassword"
+                      formControlName="password" placeholder="{{'user.addEditViewUsers.newPassword' | translate}}"
+                      (blur)="validateConfirmPassword(changePasswordForm)" />
+                    <show-errors [control]="changePasswordForm.controls.password"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'user.addEditViewUsers.confirmPassword' | translate}}<span
+                        class="required">*</span></label>
+                    <input type="password" name="branch" id="confirmPassword" formControlName="confirmPassword"
+                      class="fm-txt form-control" placeholder="{{'user.addEditViewUsers.confirmPassword' | translate}}"
+                      (blur)="validateConfirmPassword(changePasswordForm)" />
+                    <show-errors [control]="changePasswordForm.controls.confirmPassword"></show-errors>
+                  </div>
+                  <!-- Calendar Field Ends -->
+                  <div class="col-md-3 col-xs-12">
+                    <label>&nbsp;</label>
+                    <button id="changePasswordButton" class="btn green-btn">{{'button.update' | translate}}</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="changePasswordClsoeBottom" type="button" class="btn grey-btn" data-dismiss="modal"
+          (click)="resetChangePasswordForm()">{{ 'button.close' | translate }}</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div [hidden]="!showLoader" class="loader-outer">
+  <div class="cube-wrapper">
+    <div class="cube-folding">
+      <span class="leaf1"></span>
+      <span class="leaf2"></span>
+      <span class="leaf3"></span>
+      <span class="leaf4"></span>
+    </div>
+    <span class="loading" data-name="Loading">{{'company.plan.benefits.pleaseWait'|translate}}</span>
+  </div>
+</div>

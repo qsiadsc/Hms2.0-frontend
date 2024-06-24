@@ -1,0 +1,39 @@
+.form-row .col-md-12 {
+    min-height: 35px !important;
+}
+.top{
+    top: 14px;
+}
+
+.option_label{
+    
+        width: 90%;
+    
+}
+.hidden{
+    display: none;
+}
+.error{
+    color: red;
+    padding: 15px 0px 0px 47px;
+}
+
+.custom-check {
+    padding-left: 0px;
+}
+
+.checkpading input{
+    margin: 14px;
+}
+
+#step2 .step2Label{
+    padding: 10px;
+}
+
+.form-row .lastRow  div[class^="col-"]{
+    min-height: 73px;
+}
+.effDate{
+    padding: 11px;
+}
+.tabCur li { cursor: pointer; }

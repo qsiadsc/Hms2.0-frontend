@@ -1,0 +1,14 @@
+.accordion-toggle h3{
+    float: left;
+}
+.accordion-toggle .web-reg{
+    float:left;
+}
+.accordion-toggle .history-ico{
+    border-radius: 3px;  
+    background: #00bbb5 !important;
+    margin: 3px 10px;
+    width: 26px !important;
+    -webkit-appearance: button;
+    cursor: pointer;
+}

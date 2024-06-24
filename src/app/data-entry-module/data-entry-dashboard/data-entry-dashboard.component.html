@@ -1,0 +1,215 @@
+<div class="container">
+  <div class="section-heading">
+    <h2 class="inline-heading">Dashboard - <span> AHC </span></h2>
+    <div class="web-reg">
+    </div>
+  </div>
+  <!-- Section Heading Ends -->
+  <form [formGroup]="claimCountForm">
+    <div class="form-group claim-dashboard">
+      <div class="row">
+        <div class="col-md-5 col-xs-12" *ngIf="authCheck[0].claimsEnteredBy == 'T'">
+          <div class="db-box cl1">
+            <h2>Claims Entered By
+              <span>(Operator name)</span>
+              <span class="pull-right opt-dropdown dt-box">
+                <select class="form-control" (change)="getuserCount($event.target.value)" placeholder="Select Users" name="operatorName"
+                  id="decClaimInfo_claimType" formControlName="operatorName">
+                  <!-- Added for log 917 -->
+                  <option [value]="" selected>All</option>
+                  <option *ngFor="let type of arrClaimType" [value]="type.username">{{type.username}}</option>
+                </select>
+              </span>
+            </h2>
+            <div class="table-responsive">
+              <table class="table table-bordered">
+                <tbody *ngIf="showCount">
+                  <tr *ngFor="let cnt of weeklyClaimCountList ; let i = index">
+                    <td width="50%" *ngIf="cnt.claimCount != 0">
+                      <div class="fig-facts">
+                        <a href="javascript:;">{{cnt.date}}</a>
+                        <span>
+                          <a href="javascript:;">Date</a>
+                        </span>
+                      </div>
+                    </td>
+                    <td width="50%" *ngIf="cnt.claimCount != 0">
+                      <div class="fig-facts">
+                        <a href="javascript:;">{{cnt.claimCount}}</a>
+                        <span>
+                          <a href="javascript:;">Claims</a>
+                        </span>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="50%">
+                      <div class="fig-facts">
+                        <a href="javascript:;"></a>
+                        <span>
+                          <a href="javascript:;">Total</a>
+                        </span>
+                      </div>
+                    </td>
+                    <td width="50%">
+                      <div class="fig-facts">
+                        <a href="javascript:;">{{totalClaimCountByAuthor}}</a>
+                        <span class="cd-title">
+                          <a href="javascript:;">Claims</a>
+                        </span>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+                <tbody *ngIf="showLoader">
+                  <tr>
+                    <td width="100%">
+                      <div class="fig-facts">
+                        <span>Loading...</span>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-7 col-xs-12" *ngIf="authCheck[0].claimsReassessed == 'T'">
+          <div class="db-box cl3">
+            <h2>Count By Claim Status
+              <span class="pull-right opt-dropdown dt-box">
+                <my-date-picker id="batchSearch_claimEntryDate" [options]="myDatePickerOptions" name="toDate" formControlName="toDate" (inputFocusBlur)="changeDateFormatEnd($event, 'toDate')"
+                  placeholder="{{'common.date-placeholder' | translate}}">
+                </my-date-picker>
+              </span>
+              <span class="pull-right opt-dropdown dt-box">
+                <my-date-picker id="batchSearch_claimEntryDate" [options]="myDatePickerOptions" name="fromDate" formControlName="fromDate"
+                  (inputFocusBlur)="changeDateFormat($event, 'fromDate')" placeholder="{{'common.date-placeholder' | translate}}">
+                </my-date-picker>
+              </span>
+            </h2>
+            <table class="table table-bordered">
+              <tbody>
+                <tr *ngIf="showCount">
+                  <td width="25%" *ngFor="let discipline of disciplineArray; let i = index">
+                    <div class="fig-facts">
+                      <a class="notclick" href="javascript:;">{{discipline.count}}</a>
+                      <span>
+                        <a class="notclick" href="javascript:;">{{discipline.heading}}</a>
+                      </span>
+                    </div>
+                  </td>
+                </tr>
+                <tr *ngIf="showLoader">
+                  <td width="100%">
+                    <div class="fig-facts">
+                      <span>Loading...</span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+  <!-- Form Row ENds -->
+  <!-- Production Grid added for Log #989 as per client comment -->
+  <div class="grid-box">
+    <div class="grid-heading">
+      <h3>Production</h3>
+    </div>
+    <div class="grid-inner">
+      <div class="form-row">
+        <div class="row">
+          <div class="col-md-12 col-xs-12 table-col">
+            <div class="table-responsive">
+              <table id="productionReportList" class="display table table-bordered table-stripped">
+              </table>
+            </div>
+            <div class="form-row text-center disable-export-button" id="productionReportList_reportsPdfButton">
+              <div class="row">
+                <div class="col-md-12 col-xs-12">
+                  <div class="dropdown pull-right">
+                    <button class="btn green-btn" type="button" (click)="downloadProductionReport()">Generate PDF</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Prodution Grid Here -->
+</div>
+<!-- Container Ends -->
+<!-- #1426 - AHC Dashboard Comment Button functionality Start -->
+<button class="green-btn-add btn" data-toggle="modal" id="ahcDashboardCommentModal" data-target="#ahcDashboardCommentPopup" style="display:none"></button>
+<div id="ahcDashboardCommentPopup" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" (click)="resetCommentForm()">&times;</button>
+        <h4 class="modal-title">{{'common.comment' | translate}}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="grid-box">
+          <div class="grid-inner">
+            <form [formGroup]="ahcCommentForm">
+              <div class="form-row">
+                <label>{{'common.addcomment' | translate}}</label>
+                <div class="add-comments">
+                  <div class="row">
+                    <div class="col-sm-4">
+                      <textarea id="ahcDshCommentTxt" class="notInCaps fm-txt form-control"
+                        formControlName="commentTxt"></textarea>
+                      <show-errors [control]="ahcCommentForm.controls.commentTxt"></show-errors>
+                    </div>
+                    <div class="col-sm-2 text-right">
+                      <button id="addAhcCommentBtn" style="float: left" class="green-btn-add btn"
+                      (click)="saveAhcDashboardCommment(ahcCommentForm,'save')">{{'button.save' | translate}} </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div [attr.hidden]="true">
+  <button id="viewAhcCommentsPopup" class="green-btn-add btn" data-toggle="modal" data-target="#viewAhcComments"></button>
+</div>
+<div id="viewAhcComments" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Comments</h4>
+      </div>
+      <div class="modal-body">
+        <div class="text-center">
+          <h3 class="success-msg" [innerHTML]="ahcDashboardCommentText"> </h3>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="ahcDshCommentBtn" data-dismiss="modal" class="btn grey-btn" autofocus>{{'button.ok'|translate}}</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- #1426 - AHC Dashboard Comment Button functionality End -->
+<div *ngIf="showPageLoader" class="loader-outer">
+  <div class="cube-wrapper">
+    <div class="cube-folding">
+      <span class="leaf1"></span>
+      <span class="leaf2"></span>
+      <span class="leaf3"></span>
+      <span class="leaf4"></span>
+    </div>
+    <span class="loading" data-name="Loading">{{loaderPlaceHolder}}</span>
+  </div>
+</div>

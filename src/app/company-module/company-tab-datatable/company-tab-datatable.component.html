@@ -1,0 +1,1206 @@
+<div class="grid-box">
+  <div class="grid-inner">
+    <div class="form-row">
+      <ul class="nav company-tabs nav-pills">
+        <li id="contactTab" class="active"><a data-toggle="pill" href="#home" (click)="resetTableSearch('company-contact')">{{
+            'company.company-tab-datatable.contact-datatables.contact' | translate }}</a></li>
+        <li *ngIf="!alberta"><a data-toggle="pill" href="#menu2" (click)="resetTableSearch('company-broker')">{{
+            'company.company-tab-datatable.broker-datatables.broker' | translate }}</a></li>
+        <li id="planTab" ><a data-toggle="pill" href="#menu1" id="planTab" (click)="resetTableSearch('plan-datatable')">{{
+            'company.company-tab-datatable.plan-datatables.plan' | translate }}</a></li>
+        <li><a data-toggle="pill" href="#menu3" (click)="resetTableSearch('companySearchCardTable')">{{
+            'company.company-tab-datatable.cardholder' | translate }}</a></li>
+            <button style="display:none" type="button" data-toggle="pill" href="#menu1" id="planTabClick" (click)="resetTableSearch('plan-datatable')"></button>
+      </ul>
+      <div class="tab-content">
+        <!-- First ID-->
+        <div id="menu1" class="tab-pane fade">
+          <a *ngIf="!planListExist && mainCompanyArray[0].addPlan == 'T'" class="tab-grid-btn green-btn-add btn"
+            [routerLink]="['/company/plan/add']" [queryParams]="{'companyId':companyId}">
+            <i class="fa fa-plus"></i>
+            {{ 'button.add-plan' | translate }}
+          </a>
+          <a *ngIf="planListExist && mainCompanyArray[0].companyComments == 'T'" class="tab-grid-btn green-btn-add btn"
+            [routerLink]="['/company/plan/add-division']"
+            [queryParams]="{'companyId':companyId, 'yrTypeKey':yrTypeKey, 'yrTypeDesc':yrTypeDesc, 'planType':'addDivision'}">
+            <i class="fa fa-plus"></i>
+            {{ 'button.add-division' | translate }}
+          </a>
+          <button id="companyTabsuspendPlan1" *ngIf="planListExist && mainCompanyArray[0].suspendPlan == 'T' "
+            class="tab-grid-btn green-btn-add btn" data-toggle="modal" data-target="#PlanSuspHistory"
+            (click)="resetplanSuspendedForm()">
+            {{ 'button.suspend-plan' | translate }}
+          </button>
+          <!--Terminate Plan Button-->
+          <a href="javascript:;" *ngIf="isPlanTerminated == 'Active' && mainCompanyArray[0].terminatePlan == 'T'"
+            class="tab-grid-btn btn red-btn-del" data-toggle="modal" data-target="#TerminatePlan"
+            (click)="planTerminationListHistory()"> {{
+            'button.terminate-plan' | translate }}</a>
+          <!--Reactivate Plan Button-->
+          <a href="javascript:;" *ngIf="isPlanTerminated == 'Terminated'" class="tab-grid-btn btn green-btn-add"
+            data-toggle="modal" data-target="#TerminatePlan" (click)="planTerminationListHistory()"> {{
+            'button.reactivate' | translate }}</a>
+
+          <div class="table-responsive">
+            <form>
+              <table id="plan-datatable" class="table table-bordered table-stripped text-left col-lt-search">
+                <div *ngIf="noDataVal" class="dataTables_processing background-cd" style="position: absolute;">Processing...
+                  <div><div></div><div></div><div></div><div></div></div>
+                </div>
+                <tfoot>
+                  <tr>
+                    <td width="10%">
+                      <input id="companyTabDivisionName" class="fm-txt form-control tFootInput inputSearch"
+                        placeholder="{{ 'company.company-tab-datatable.plan-datatables.division-name' | translate }}"
+                        type="text" name="divisionName" />
+                    </td>
+                    <td width="10%">
+                      <input id="companyTabDivisionId" class="fm-txt form-control tFootInput inputSearch in-number"
+                        placeholder="{{ 'company.company-tab-datatable.plan-datatables.division-no.' | translate }}"
+                        type="text" name="divisionId" />
+                    </td>
+                    <td width="10%">
+                      <ng2-completer [inputName]="'plansSuspendInd'" name="plansSuspendInd"
+                        [datasource]="planStatusData" [minSearchLength]="0" [openOnFocus]="true"
+                        (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Status'"
+                        [textSearching]="'Please wait...'" [inputClass]="'form-control inputSearch in-number'"
+                        data-type="predective" [inputId]="'companyTabStatus'" id="companyTabStatus"
+                        [clearUnselected]="true" (selected)="onPlanStatusSelected($event)">
+                      </ng2-completer>
+                    </td>
+                    <td width="1%" class="alignDpRight">
+                      <div class="calender-field">
+                        <my-date-picker id="companyTabeffectiveOn" class="inputSearch" name="effectiveOn"
+                          data-type="date" [options]="myDatePickerfilterOptions"
+                          [selDate]="dateNameArray['effectiveOn']"
+                          (inputFocusBlur)="changeDateFormat1($event, 'effectiveOn')"
+                          placeholder="{{ 'company.company-search.dd/mm/yyyy' | translate }}">
+                        </my-date-picker>
+                      </div>
+                    </td>
+                    <td width="10%" class="in-number">
+                      <div class="form-row">
+                        <button type="submit" id="companyTabSearchPlan" (click)="filterCompanyPlanSearch()"
+                          class="btn green-btn searchreset searchbtntooltip"><span
+                            class="glyphicon glyphicon-search"></span></button>
+                        <button id="companyTabresetTableSearch" (click)="resetTableSearch('plan-datatable')"
+                          class="btn grey-btn searchreset resetbtntooltip"><span
+                            class="glyphicon glyphicon-repeat"></span></button>
+                      </div>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </form>
+          </div>
+
+          <ul class="color-list">
+            <li>
+              <span class="color-des green-color"></span>
+              <h5>{{ 'common.active' | translate}}</h5>
+            </li>
+            <li>
+              <span class="color-des red-color"></span>
+              <h5>{{ 'common.terminated' | translate}}</h5>
+            </li>
+            <li>
+              <span class="color-des yellow-color"></span>
+              <h5>{{ 'common.suspended' | translate}}</h5>
+            </li>
+          </ul>
+          <!-- Table Ends -->
+        </div>
+        <!-- First ID-->
+        <!-- Second ID-->
+        <div id="home" class="tab-pane fade in active">
+          <button *ngIf="mainCompanyArray[0].addCompanyContact == 'T'" id="companyTabadd"
+            class="tab-grid-btn green-btn-add btn" data-toggle="modal" (click)="enableAddMode()"
+            data-target="#CompanyAddContact"><i class="fa fa-plus"></i>
+            {{ 'button.add-contact' | translate }}</button>
+          <div class="table-responsive">
+            <table id="company-contact" class="table table-bordered table-stripped text-left col-lt-search"
+              style="width: 100%">
+              <tfoot>
+                <tr>
+                  <td width="7%">
+                    <input id="companycontactlastName" class="fm-txt form-control tFootInput inputSearch"
+                      placeholder="{{ 'company.company-tab-datatable.contact-datatables.last-name' | translate }}"
+                      type="text" name="lastName" />
+                  </td>
+                  <td width="7%">
+                    <input id="companycontactfirstName" class="fm-txt form-control tFootInput inputSearch in-number"
+                      placeholder="{{ 'company.company-tab-datatable.contact-datatables.first-name' | translate }}"
+                      type="text" name="firstName" />
+                  </td>
+                  <td width="8%">
+                    <input id="companycontactcityName" class="fm-txt form-control tFootInput inputSearch in-number"
+                      placeholder="{{ 'company.company-tab-datatable.contact-datatables.city' | translate }}"
+                      type="text" name="cityName" />
+                  </td>
+                  <td width="8%">
+                    <input id="companycontactprovinceName" class="fm-txt form-control tFootInput inputSearch in-number"
+                      placeholder="{{ 'company.company-tab-datatable.contact-datatables.province' | translate }}"
+                      type="text" name="provinceName" />
+                  </td>
+                  <td width="7%">
+                    <input id="companycontactcountryName" class="fm-txt form-control tFootInput inputSearch in-number"
+                      placeholder="{{ 'company.company-tab-datatable.contact-datatables.country' | translate }}"
+                      type="text" name="countryName" />
+                  </td>
+                  <td width="8%">
+                    
+                    <input id="companycontactphoneNo" class="fm-txt form-control tFootInput inputSearch in-number notIncaps" 
+                      placeholder="{{ 'company.company-tab-datatable.contact-datatables.phone-no' | translate }}"
+                      type="text" name="phone" [textMask]="{mask: phoneMask}" />
+                  </td>
+                  <td width="8%">
+                    <input id="companycontactemail" class="fm-txt form-control tFootInput inputSearch in-number"
+                      placeholder="{{ 'company.company-tab-datatable.contact-datatables.email-address' | translate }}"
+                      type="text" name="email" />
+                  </td>
+                  <td width="8%" class="alignDpRight">
+                    <div class="calender-field">
+                      <my-date-picker id="effectiveOnContact" class="inputSearch" name="effectiveOn" data-type="date"
+                        [options]="myDatePickerfilterOptions" [selDate]="dateNameArray['effectiveOn']"
+                        (inputFocusBlur)="changeDateFormat1($event, 'effectiveOn')"
+                        (keydown)="filterSearchOnEnter($event,'company-contact')"
+                        placeholder="{{ 'company.company-tab-datatable.contact-datatables.dd/mm/yyyy' | translate }}">
+                      </my-date-picker>
+                    </div>
+                  </td>
+                  <td width="8%" class="alignDpRight">
+                  
+                    <div class="calender-field">
+                      <my-date-picker id="expiredOnContact" class="inputSearch" name="expiredOn" data-type="date"
+                        [options]="myDatePickerfilterOptions" [selDate]="dateNameArray['expiredOn']" [ngClass]="expired  ? 'expired' : 'notExpired'"
+                        (inputFocusBlur)="changeDateFormat1($event, 'expiredOn')"
+                        (keydown)="filterSearchOnEnter($event,'company-contact')"
+                        placeholder="{{ 'company.company-tab-datatable.contact-datatables.dd/mm/yyyy' | translate }}">
+                      </my-date-picker>
+                    </div>
+                  </td>
+                  <td width="7%">
+                    &nbsp;
+                  </td>
+                  <td width="14%" class="in-number amount_right_grid">
+                    <div class="form-row">
+                      <button id="companyTabsearch" (click)="filterCompanyContactSearch()"
+                        class="btn green-btn searchreset searchbtntooltip"><span
+                          class="glyphicon glyphicon-search"></span></button>
+                      <button id="companyTabreset" (click)="resetTableSearch('company-contact')"
+                        class="btn grey-btn searchreset resetbtntooltip"><span
+                          class="glyphicon glyphicon-repeat"></span></button>
+                    </div>
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+            <button id="companyContactPopup" [hidden]="true" data-toggle="modal" data-target="#CompanyAddContact"> {{
+              'button.open-modal' | translate }}</button>
+          </div>
+
+          <ul class="color-list">
+            <li>
+              <span class="color-des green-color2"></span>
+              <h5>{{ 'common.primary' | translate}}</h5>
+            </li>
+            <li>
+              <span class="color-des red-color"></span>
+               
+              <h5>{{ 'common.expired' | translate}}</h5>
+            </li>
+          </ul>
+        </div>
+        <!-- Second ID-->
+        <!-- Third ID-->
+        <div id="menu2" class="tab-pane fade">
+        
+          <!-- disable added to in button to restrict if once clicked until pop up closed again -->
+          <button *ngIf="mainCompanyArray[0].addLinkedBroker == 'T'" [disabled]="linkBrokerDisable" id="companycontactlinkBroker"
+            class="tab-grid-btn green-btn-add btn" data-toggle="modal" (click)="enableAddModeBrokerLink()"><i
+              class="fa fa-plus"></i> {{ 'button.link-broker'
+            | translate }}</button>
+          <div class="table-responsive">
+            <table id="company-broker" class="table table-bordered table-stripped text-left col-lt-search"
+              style="width: 100%">
+              <tfoot>
+                <tr>
+                  <td width="10%">
+                    <input id="menu2brokerIdAndName" class="fm-txt form-control tFootInput inputSearch"
+                      placeholder="{{ 'company.company-tab-datatable.broker-datatables.broker-name-id' | translate }}"
+                      type="text" name="brokerIdAndName" />
+                  </td>
+                  <td width="10%">
+                      <input id="menu2brokerPhone" class="fm-txt form-control tFootInput inputSearch in-number"
+                      placeholder="{{ 'company.company-tab-datatable.broker-datatables.broker-phone-no' | translate }}"
+                      type="text" name="brokerPhone" />
+                  </td>
+                  <td width="10%">
+                    <input class="fm-txt form-control tFootInput inputSearch in-number"
+                      placeholder="{{ 'company.company-tab-datatable.broker-datatables.commission-rate' | translate }}"
+                      type="text" name="brokerCoComissionRate" />
+                  </td>
+                  <td width="10%">
+                    <input id="menu2brokerEmail" class="fm-txt form-control tFootInput inputSearch in-number"
+                      placeholder="{{ 'company.company-tab-datatable.broker-datatables.email-address' | translate }}"
+                      type="text" name="brokerEmail" />
+                  </td>
+                  <td width="10%" class="alignDpRight">
+                    
+                    <div class="calender-field">
+                      <my-date-picker id="effectiveOnBroker" class="inputSearch" name="effectiveOn" data-type="date"
+                        [options]="myDatePickerfilterOptions" [selDate]="dateNameArray['effectiveOn']" 
+                        (inputFocusBlur)="changeDateFormat1($event, 'effectiveOn')"
+                        (keydown)="filterSearchOnEnter($event,'company-broker')"
+                        placeholder="{{ 'company.company-tab-datatable.broker-datatables.dd/mm/yyyy' | translate }}">
+                      </my-date-picker>
+                    </div>
+                  </td>
+                  <td width="10%" class="alignDpRight">
+                    <div class="calender-field">
+    
+                      <my-date-picker id="expiredOnBroker" class="inputSearch" name="expiredOn" data-type="date"
+                        [options]="myDatePickerfilterOptions" [selDate]="dateNameArray['expiredOn']" [ngClass]="expired  ? 'expired' : 'notExpired'"
+                        (inputFocusBlur)="changeDateFormat1($event, 'expiredOn')"
+                        (keydown)="filterSearchOnEnter($event,'company-broker')"
+                        placeholder="{{ 'company.company-tab-datatable.broker-datatables.dd/mm/yyyy' | translate }}">
+                      </my-date-picker>
+                    </div>
+                  </td>
+                  <td width="10%">
+                    &nbsp;
+                  </td>
+                  <td width="10%" class="in-number">
+                    <div class="form-row">
+                      <button id="CompanyTabFilterSearch" (click)="filterCompanyLinkBrokerSearch()"
+                        class="btn green-btn searchreset searchbtntooltip"><span
+                          class="glyphicon glyphicon-search"></span></button>
+                      <button id="companyTabresetTableSearch1" (click)="resetTableSearch('company-broker')"
+                        class="btn grey-btn searchreset resetbtntooltip"><span
+                          class="glyphicon glyphicon-repeat"></span></button>
+                    </div>
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+            <button id="companyLinkBrokerPopup" [hidden]="true" data-toggle="modal" data-target="#AddBroker">{{
+              'button.open-modal' | translate }}</button>
+          </div>
+
+          <ul class="color-list">
+            <li>
+              <span class="color-des green-color2"></span>
+              <h5>{{ 'common.primary' | translate}}</h5>
+            </li>
+            <li>
+              <span class="color-des red-color"></span>
+              <h5>{{ 'common.expired' | translate}}</h5>
+            </li>
+          </ul>
+        </div>
+        <!-- Third ID-->
+        <!-- Fourth ID-->
+        <div id="menu3" class="tab-pane fade">
+          <a class="tab-grid-btn green-btn-add btn" (click)="setCompany(companyId)" [routerLink]="['/card']" [queryParams]="{'companyId':companyId}">
+            <i class="fa fa-plus"></i>
+            {{ 'button.add-card' | translate }}
+          </a>
+          <div class="form-row text-right">
+            <button id="menu3Search" (click)="filterCardSearch(false)"
+              class="btn green-btn searchreset searchbtntooltip"><span
+                class="glyphicon glyphicon-search"></span></button>
+            <button id="menu3Reset" (click)="resetTableSearch('companySearchCardTable')"
+              class="btn grey-btn searchreset resetbtntooltip"><span class="glyphicon glyphicon-repeat"></span></button>
+          </div>
+          <div class="table-responsive">
+            <form [formGroup]="companyCardholder">
+              <table id="companySearchCardTable" class="display table table-bordered table-stripped">
+                <thead>
+                </thead>
+                <tfoot>
+                  <tr>
+                    <td width="10%"><input type="text"
+                        placeholder="{{ 'company.company-tab-datatable.card-holder-datatables.card-id' | translate }}"
+                        class="fm-txt form-control inputSearch" name="cardId" /></td>
+                    <td width="10%"><input type="text"
+                        placeholder="{{ 'company.company-tab-datatable.card-holder-datatables.last-name' | translate }}"
+                        class="fm-txt form-control inputSearch in-number" name="lastName" /></td>
+                    <td width="10%"><input type="text"
+                        placeholder="{{ 'company.company-tab-datatable.card-holder-datatables.first-name' | translate }}"
+                        class="fm-txt form-control inputSearch in-number" name="firstName" /></td>
+                    <td width="10%">
+                      <ng2-completer [inputName]="'gender'" name="gender" [datasource]="cardHolderGenderData"
+                        [minSearchLength]="0" [openOnFocus]="true" (opened)="onOpened($event)" [fillHighlighted]="false"
+                        [placeholder]="'Gender'" [textSearching]="'Please wait...'"
+                        [inputClass]="'form-control inputSearch in-number'" data-type="predective"
+                        [inputId]="'menu3Search'" id="menu3Search" (selected)="onGenderSelected($event)"
+                        [clearUnselected]="true">
+                      </ng2-completer>
+                    </td>
+                    <td width="10%" class="alignDpRight">
+                      <div class="calender-field">
+                        <my-date-picker id="company-tab-dob"
+                          (keydown)="filterSearchOnEnter($event,'companySearchCardTable')"
+                          placeholder="{{ 'company.company-tab-datatable.card-holder-datatables.dd/mm/yyyy' | translate }}"
+                          class="inputSearch" name="dob" data-type="date" [options]="myDatePickerOptions"
+                          [selDate]="dateNameArray['dob']" (inputFocusBlur)="changeDateFormat1($event, 'dob')">
+                        </my-date-picker>
+                      </div>
+                    </td>
+                    <td width="10%" class="alignDpRight">
+                      <div class="calender-field">
+                        <my-date-picker id="company-tab-termination-date"
+                          (keydown)="filterSearchOnEnter($event,'companySearchCardTable')"
+                          placeholder="{{ 'company.company-tab-datatable.card-holder-datatables.dd/mm/yyyy' | translate }}"
+                          class="inputSearch" name="terminateDate" data-type="date" [options]="myDatePickerOptions"
+                          [selDate]="dateNameArray['terminateDate']"
+                          (inputFocusBlur)="changeDateFormat1($event, 'terminateDate')">
+                        </my-date-picker>
+                      </div>
+                    </td>
+                    <td width="13%"><input type="text"
+                        placeholder="{{ 'company.company-tab-datatable.card-holder-datatables.email' | translate }}"
+                        class="fm-txt form-control inputSearch in-number" name="email" /></td>
+
+                    <td width="9%">
+                      <ng2-completer [inputName]="'cardHolderRole'" name="cardHolderRole"
+                        formControlName="cardHolderRole" [datasource]="cardHolderRoleData" [minSearchLength]="0"
+                        [openOnFocus]="true" (opened)="onOpened($event)" [fillHighlighted]="false"
+                        [placeholder]="'Role'" [textSearching]="'Please wait...'"
+                        [inputClass]="'form-control inputSearch in-number'" data-type="predective"
+                        [inputId]="'cardHolderRoleSelect'" id="cardHolderRoleSelect" [clearUnselected]="true">
+                      </ng2-completer>
+                    </td>
+
+                    <td width="9%">
+                      <ng2-completer [inputName]="'cardType'" name="cardType" [datasource]="cardHolderCardTypeData"
+                        [minSearchLength]="0" [openOnFocus]="true" (opened)="onOpened($event)" [fillHighlighted]="false"
+                        [placeholder]="'Card Type'" [textSearching]="'Please wait...'"
+                        [inputClass]="'form-control inputSearch in-number'" data-type="predective"
+                        [inputId]="'cardTypeSelect'" id="cardTypeSelect" [clearUnselected]="true">
+                      </ng2-completer>
+                    </td>
+                    <td width="9%">
+                      <ng2-completer [inputName]="'status'" name="status" formControlName="status"
+                        [datasource]="cardHolderStatusData" [minSearchLength]="0" [openOnFocus]="true"
+                        (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Status'"
+                        [textSearching]="'Please wait...'" [inputClass]="'form-control inputSearch in-number'"
+                        data-type="predective" [inputId]="'statusSelect'" id="statusSelect" [clearUnselected]="true">
+                      </ng2-completer>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </form>
+          </div>
+
+          <ul class="color-list">
+            
+            <li>
+              <span class="color-des green-color"></span>
+              <h5>{{ 'common.active' | translate}}</h5>
+            </li>
+            <li>
+              <span class="color-des red-color"></span>
+              <h5>{{ 'common.inactive' | translate}}</h5>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <!-- Form Row ENds -->
+      <div class="form-row text-center">
+        <div class="row">
+          <div class="col-md-12 col-xs-12">
+            <div class="dropdown pull-right">
+              <button id="company-con-TabExport" class="btn green-btn dropdown-toggle " type="button"
+                data-toggle="dropdown">Export
+                <span class="caret"></span></button>
+              <ul class="dropdown-menu">
+                <li>
+                  <a href="javascript:void(0)" *ngIf="planSearch" (click)="exportPlanList()">Excel</a>
+                  <a href="javascript:void(0)" *ngIf="contactSearch" (click)="exportCompanyContactList()">Excel</a>
+                  <a href="javascript:void(0)" *ngIf="cardSearch" (click)="exportCardHolderList()">Excel</a>
+                  <a href="javascript:void(0)" *ngIf="brokerSearh" (click)="exportBrokerList()">Excel</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+    <!-- Grid Inner Ends -->
+  </div>
+  <!-- Grid Box Ends -->
+</div>
+
+<!--Add Contact  Modal -->
+<div id="CompanyAddContact" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="companyAddContactButton" type="button" class="close" id="btnCloseCompanyAddContact"
+          data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">{{ 'company.company-tab-datatable.contact-datatables.add-contact' | translate }}</h4>
+      </div>
+      <div class="modal-body">
+        <!-- Company General Information Start -->
+        <app-company-general-information></app-company-general-information>
+        <!-- Company General Information End -->
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{ 'company.company-tab-datatable.contact-datatables.contact' | translate }}</h3>
+          </div>
+          <div class="grid-inner">
+            <form [formGroup]="addContact" (ngSubmit)="addUpdateCompanyContact(addContact)">
+              <div class="row">
+                <div class="form-row">
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{ 'company.company-tab-datatable.contact-datatables.first-name' | translate }}<span
+                        class="required">*</span></label>
+                    <input id="companyTabFirstName" type="text" class="fm-txt form-control" name="firstName"
+                      formControlName="firstName"
+                      placeholder="{{ 'company.company-tab-datatable.contact-datatables.first-name' | translate }}" />
+                    <show-errors [control]="addContact.controls.firstName"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{ 'company.company-tab-datatable.contact-datatables.last-name' | translate }}<span
+                        class="required">*</span></label>
+                    <input id="companyTabLastName" type="text" class="fm-txt form-control" name="lastName"
+                      formControlName="lastName"
+                      placeholder="{{ 'company.company-tab-datatable.contact-datatables.last-name' | translate }}" />
+                    <show-errors [control]="addContact.controls.lastName"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{ 'company.company-tab-datatable.contact-datatables.language' | translate }}<span
+                        class="required">*</span></label>
+                    <ng2-completer formControlName="language" [datasource]="contactLanguageData" [minSearchLength]="0"
+                      [openOnFocus]="true" (opened)="onOpened($event)" [fillHighlighted]="false"
+                      [placeholder]="'Search Language'" [textSearching]="'Please wait...'" [inputClass]="'form-control'"
+                      (selected)="onLanguageSelected($event)" [clearUnselected]="false">
+                    </ng2-completer>
+                    <show-errors [control]="addContact.controls.language"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{ 'company.company-tab-datatable.contact-datatables.fax-no.' | translate }}</label>
+                    <input id="companyTabFaxNo" type="text" class="fm-txt form-control" name="fax" formControlName="fax"
+                      [textMask]="{mask: phoneMask}"
+                      placeholder="{{ 'company.company-tab-datatable.contact-datatables.fax-no.' | translate }}" />
+                    <show-errors [control]="addContact.controls.fax"></show-errors>
+                  </div>
+                  <!--[Start]-->
+                  <div class="col-md-3 col-xs-12">
+                    <div class="row min-ht-sf">
+                      <div class="col-md-5 col-xs-12">
+                        <label>{{ 'common.extension' | translate }}</label>
+                        <input id="companyTabExtension" type="text" class="fm-txt form-control" name="extension"
+                          formControlName="extension" placeholder="{{ 'common.extension' | translate }}" />
+                        <show-errors [control]="addContact.controls.extension"></show-errors>
+                      </div>
+                      <div class="col-md-7 col-xs-12">
+                        <label>{{ 'company.company-tab-datatable.contact-datatables.phone-no' | translate }}</label>
+                        <input id="companyTabPhoneNo" type="text" class="fm-txt form-control" name="phone"
+                          formControlName="phone" [textMask]="{mask: phoneMask}"
+                          placeholder="{{ 'company.company-tab-datatable.contact-datatables.phone-no' | translate }}" />
+                        <show-errors [control]="addContact.controls.phone"></show-errors>
+                      </div>
+                    </div>
+                  </div>
+                  <!--[End]-->
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{ 'company.company-tab-datatable.contact-datatables.email-address' | translate }}</label>
+                    <input id="companyTabMailId" type="text" class="fm-txt form-control" name="email"
+                      formControlName="email"
+                      placeholder="{{ 'company.company-tab-datatable.contact-datatables.email-address' | translate }}" />
+                    <show-errors [control]="addContact.controls.email"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{ 'company.company-tab-datatable.contact-datatables.address-line-1' | translate }}
+                    </label>
+                    <input id="companyTabAddress1" type="text" class="fm-txt form-control" name="address1"
+                      formControlName="address1"
+                      placeholder="{{ 'company.company-tab-datatable.contact-datatables.address-line-1' | translate }}"
+                      autofocus />
+                    <show-errors [control]="addContact.controls.address1"></show-errors>
+                    <!-- Web Reg Ends -->
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{ 'company.company-tab-datatable.contact-datatables.address-line-2' | translate }}</label>
+                    <input id="companyTabAddress2" type="text" class="fm-txt form-control" name="address2"
+                      formControlName="address2"
+                      placeholder="{{ 'company.company-tab-datatable.contact-datatables.address-line-2' | translate }}" />
+                    <show-errors [control]="addContact.controls.address2"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{ 'company.company-tab-datatable.contact-datatables.postal-code' | translate }}
+                    </label>
+                    <input id="companyTabPostalCode" type="text" class="upperCase fm-txt form-control" name="postalCode"
+                      formControlName="postalCode" autocomplete="off" (blur)="isContactPostalcodeValid($event)"
+                      placeholder="{{ 'company.company-tab-datatable.contact-datatables.postal-code' | translate }}" />
+                    <show-errors [control]="addContact.controls.postalCode"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    
+                    <label>{{ 'company.company-tab-datatable.contact-datatables.city' | translate }}<span class="required">*</span>
+                    </label>
+                    <input id="companyTabCity" type="text" class="fm-txt form-control" data-cityId="12" name="city"
+                      formControlName="city" (blur)="isContactPostalVerifyValid($event,'city')"
+                      placeholder="{{ 'company.company-tab-datatable.contact-datatables.city' | translate }}" />
+                    <show-errors [control]="addContact.controls.city"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    
+                    <label>{{ 'company.company-tab-datatable.contact-datatables.province' | translate }}<span class="required">*</span>
+                    </label>
+                   
+                    <input id="companyTabProvince" type="text" class="fm-txt form-control" name="province"
+                      formControlName="province" (blur)="isContactPostalVerifyValid($event,'province')"
+                      placeholder="{{ 'company.company-tab-datatable.contact-datatables.province' | translate }}" />
+                    <show-errors [control]="addContact.controls.province"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{ 'company.company-tab-datatable.contact-datatables.country' | translate }}
+                    </label>
+                    <input id="companyTabCountry" type="text" class="fm-txt form-control" name="country"
+                      formControlName="country"
+                      placeholder="{{ 'company.company-tab-datatable.contact-datatables.country' | translate }}"
+                      (blur)="isContactPostalVerifyValid($event,'country')" />
+                    <show-errors [control]="addContact.controls.country"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{ 'company.company-tab-datatable.contact-datatables.effective-date' | translate }}<span
+                        class="required">*</span></label>
+                    <div class="calender-field focusEffectiveDate">
+                      <my-date-picker [ngClass]="(viewMode == true) ? 'removeCross':''" id="companyTabEffectiveOn"
+                        [options]="myDatePickerOptions" name="effectiveOn"
+                        placeholder="{{ 'company.company-tab-datatable.contact-datatables.dd/mm/yyyy' | translate }}"
+                        formControlName="effectiveOn"
+                        (inputFocusBlur)="changeDateFormat($event, 'effectiveOn', 'addContact',true)">
+                      </my-date-picker>
+                      <show-errors [control]="addContact.controls.effectiveOn"></show-errors>
+                    </div>
+                    <!-- Calendar Field Ends -->
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                   
+                    <label>{{ 'company.company-tab-datatable.contact-datatables.expired-date' | translate }}</label>
+                    <div class="calender-field">
+                      <my-date-picker [ngClass]="[expired  ? 'expired' : 'notExpired',(viewMode == true) ? 'removeCross':'']" id="companyTabExpiredOn"
+                        [options]="myDatePickerOptions" name="expiredOn"
+                        placeholder="{{ 'company.company-tab-datatable.contact-datatables.dd/mm/yyyy' | translate }}"
+                        formControlName="expiredOn"
+                        (inputFocusBlur)="changeDateFormat($event, 'expiredOn', 'addContact')">
+                      </my-date-picker>
+                      <show-errors [control]="addContact.controls.expiredOn"></show-errors>
+                      <ul *ngIf="error.isError==true" class="validation-errors">
+                       <li style="color: red">{{error.errorMessage}}</li>
+                      </ul>
+                    </div>
+                    <!-- Calendar Field Ends -->
+                  </div>
+                  <div class="col-md-6 col-xs-12">
+                    <div class="select-options-addContactCompany">
+                      <span><label><span class="custom-check"><input type="checkbox" name="mainContact"
+                              formControlName="mainContact">{{
+                            'company.company-tab-datatable.contact-datatables.primary-contact' | translate }}<span></span></span>
+                        </label>
+                      </span>
+                      <span><label><span class="custom-check"><input type="checkbox" name="mailingAddress"
+                              formControlName="mailingAddress"
+                              (change)="checkValue($event)">{{
+                            'company.company-tab-datatable.contact-datatables.mail-address-line' | translate }}<span></span></span>
+                        </label>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-row text-center">
+                <button id="companyAddSave" *ngIf="addMode" class="btn green-btn" type="submit">{{ 'button.save' |
+                  translate }}</button>
+                <button id="companyViewEdit" *ngIf="viewMode" class="btn green-btn" (click)="editCompanyAddContact()">
+                  {{ 'button.edit' | translate }}</button>
+                <button id="companyEditUpdate" *ngIf="editMode" class="btn green-btn" type="submit"> {{ 'button.update'
+                  | translate }}</button>
+                <button id="companyTabClose" class="btn grey-btn"
+                  data-dismiss="modal">{{ 'button.close' | translate }}</button>
+              </div>
+            </form>
+          </div>
+        </div>
+        <!-- Grid Box Ends -->
+      </div>
+      <!-- Modal Body Ends -->
+    </div>
+  </div>
+  <!-- modal Content Ends -->
+</div>
+<!--Add Contact  Modal -->
+<!--Add Broker  Modal -->
+<div id="AddBroker" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <!-- click added to in button to enable button when pop up is closed -->
+        <button type="button" id="btnCloseCompanyLinkBroker" (click)="linkBrokerDisable=false" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">{{ 'company.company-tab-datatable.broker-datatables.add-link-broker' | translate }}</h4>
+      </div>
+      <div class="modal-body">
+        <!-- Company General Information Start -->
+        <div *ngIf="viewMode" class="grid-box">
+          <div class="grid-heading">
+            <h3>{{ 'company.edit-broker.broker-detail' | translate }}</h3>
+          </div>
+          <div class="grid-inner">
+            <form [formGroup]="brokerForm">
+              <div class="form-row">
+                <div class="add-comments">
+                  <div class="row">
+                    <div class="col-md-3 col-xs-12">
+                      <label>{{ 'company.edit-broker.broker-id' | translate }}</label>
+                      <input type="text" name="broker_id" formControlName="broker_id" class="fm-txt form-control">
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                      <label>{{ 'company.edit-broker.broker-name' | translate }}</label>
+                      <input type="text" name="broker_name" formControlName="broker_name" class="fm-txt form-control">
+                    </div>
+
+                    <div class="col-md-3 col-xs-12">
+                      <label>{{ 'company.edit-broker.gst-registration' | translate }}</label>
+                      <input class="fm-txt form-control"
+                        placeholder="{{ 'company.edit-broker.gst-registration' | translate }}" name="gts_registration"
+                        id="broker_edit_broker_gts_registration" formControlName="gts_registration" type="text" />
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                      <label>{{ 'company.edit-broker.address1' | translate }}</label>
+                      <input class="fm-txt form-control" placeholder="{{ 'company.edit-broker.address1' | translate }}"
+                        name="address1" id="broker_address_1" formControlName="address1" type="text" />
+                    </div>
+
+                    <div class="col-md-3 col-xs-12">
+                      <label>{{ 'company.edit-broker.address2' | translate }}</label>
+                      <input class="fm-txt form-control" name="address2"
+                        placeholder="{{ 'company.edit-broker.address2' | translate }}" formControlName="address2"
+                        id="broker_address_2" type="text" />
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                      <label>{{ 'company.edit-broker.postal-code' | translate }}</label>
+                      <input class="upperCase fm-txt form-control"
+                        placeholder="{{ 'company.edit-broker.postal-code' | translate }}" name="postalCode"
+                        id="broker_postal_code" formControlName="postalCode" type="text" />
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                      <label>{{ 'company.edit-broker.city' | translate }}</label>
+                      <input class="fm-txt form-control" placeholder="{{ 'company.edit-broker.city' | translate }}"
+                        name="city" id="broker_city" formControlName="city" type="text" />
+                    </div>
+
+                    <div class="col-md-3 col-xs-12">
+                      <label>{{ 'company.edit-broker.province' | translate }}</label>
+                      <input class="fm-txt form-control" placeholder="{{ 'company.edit-broker.province' | translate }}"
+                        name="province" id="broker_province" formControlName="province" type="text" />
+                    </div>
+
+                    <div class="col-md-3 col-xs-12">
+                      <label>{{ 'company.edit-broker.country' | translate }}</label>
+                      <input class="fm-txt form-control" placeholder="{{ 'company.edit-broker.country' | translate }}"
+                        name="country" id="broker_country" formControlName="country" type="text" />
+                    </div>
+
+                    <div class="col-md-3 col-xs-12">
+                      <label>{{ 'company.edit-broker.email-address' | translate }}</label>
+                      <input class="fm-txt form-control"
+                        placeholder="{{ 'company.edit-broker.email-address' | translate }}" name="email"
+                        formControlName="email" id="broker_email" type="text" />
+                    </div>
+
+                    <div class="col-md-3 col-xs-12">
+                      <label>{{ 'common.extension' | translate }}</label>
+                      <input class="fm-txt form-control" name="extension"
+                        placeholder="{{ 'common.extension' | translate }}" formControlName="extension"
+                        id="broker_extension" type="text" />
+                    </div>
+
+                    <div class="col-md-3 col-xs-12">
+                      <label>{{ 'company.edit-broker.phone-no' | translate }}</label>
+                      <input class="fm-txt form-control" [textMask]="{mask: phoneMask}" name="phone_no"
+                        placeholder="{{ 'company.edit-broker.phone-no' | translate }}" formControlName="phone_no"
+                        id="broker_phone_no" type="text" />
+                    </div>
+
+                    <div class="col-md-3 col-xs-12">
+                      <label>{{ 'company.edit-broker.fax-no' | translate }}</label>
+                      <input class="fm-txt form-control" [textMask]="{mask: phoneMask}" name="fax_no"
+                        placeholder="{{ 'company.edit-broker.fax-no' | translate }}" formControlName="fax_no"
+                        id="broker_fax_no" type="text" />
+                    </div>
+
+                    <div class="col-md-3 col-xs-12">
+                      <label>{{ 'company.edit-broker.effective-date' | translate }}</label>
+                      <div class="calender-field">
+                        <!-- Task 543, to correct date format caused by options -->
+                        <my-date-picker id="brokerEffectiveDate" [options]="myDatePickerOptions"
+                          [placeholder]="myDatePlaceholder" name="effective_date" formControlName="effective_date">
+                        </my-date-picker>
+                      </div>
+                      <!-- Calendar Field Ends -->
+                    </div>
+
+                    <div class="form-row">
+                      <div class="col-md-12 col-xs-12 min-ht-half">
+                        <div class="select-options">
+                          <span>
+                            <label>
+                              <input type="checkbox" name="optoutCompanyEmailInd"
+                                formControlName="optoutCompanyEmailInd">
+                              {{ 'company.edit-broker.opt_out_of_company_mail_email' | translate }}
+                            </label>
+                          </span>
+                          <span>
+                            <label>
+                              <input type="checkbox" name="brokerMultiCommAgrInd"
+                                formControlName="brokerMultiCommAgrInd">
+                              {{ 'company.edit-broker.multiple-commission' | translate }}
+                            </label>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Company General Information End -->
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{ 'company.company-tab-datatable.broker-datatables.link-broker' | translate }}</h3>
+          </div>
+          <div class="grid-inner">
+            <form [formGroup]="linkBrokerForm">
+              <div class="form-row">
+                <div class="row">
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{ 'company.company-tab-datatable.broker-datatables.broker-name' | translate }}<span
+                        class="required">*</span></label>
+                    <ng2-completer #brokerName *ngIf="addMode" formControlName="brokerId" [datasource]="brokerNameData"
+                      [minSearchLength]="2" [openOnFocus]="false" (opened)="onOpened($event)" [fillHighlighted]="false"
+                      [placeholder]="'Search Broker Name'" [textSearching]="'Please wait...'"
+                      [inputClass]="'form-control'" (selected)="onBrokerNameSelected($event)" [clearUnselected]="true">
+                    </ng2-completer>
+                    <input *ngIf="!addMode" type="text" name="brokerId" formControlName="brokerId"
+                      class="fm-txt form-control">
+                    <show-errors [control]="linkBrokerForm.controls.brokerId"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{ 'company.company-tab-datatable.broker-datatables.commission-rate' | translate }}<span
+                        class="required">*</span></label>
+                    <input #commissionRateID type="text" class="fm-txt form-control" name="commissionRate"
+                      formControlName="commissionRate"
+                      placeholder="{{ 'company.company-tab-datatable.broker-datatables.commission-rate' | translate }}" />
+                    <show-errors [control]="linkBrokerForm.controls.commissionRate"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{ 'company.company-tab-datatable.broker-datatables.effective-date' | translate }}<span
+                        class="required">*</span></label>
+                    <div class="calender-field">
+                   
+                      <my-date-picker [ngClass]="(viewMode == true) ? 'removeCross':''" id="companyTabEffectiveOn1"
+                        [options]="myDatePickerOptions" name="effectiveDate"
+                        placeholder="{{ 'company.company-tab-datatable.broker-datatables.dd/mm/yyyy' | translate }}"
+                        formControlName="effectiveDate"
+                        (inputFocusBlur)="changeDateFormat($event, 'effectiveDate', 'linkBrokerForm',true)">
+                      </my-date-picker>
+                      <show-errors [control]="linkBrokerForm.controls.effectiveDate"></show-errors>
+                    </div>
+                    <!-- Calendar Field Ends -->
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    
+                    <label>{{ 'company.company-tab-datatable.broker-datatables.expired-date' | translate }}</label>
+                    <div class="calender-field">
+                      <my-date-picker [ngClass]="[expired  ? 'expired' : 'notExpired',(viewMode == true) ? 'removeCross':'']" id="companyTabExpiredOn1"
+                        [options]="myDatePickerOptions" name="expiredDate"
+                         placeholder="{{ 'company.company-tab-datatable.broker-datatables.dd/mm/yyyy' | translate }}"
+                        formControlName="expiredDate"
+                        
+                        (inputFocusBlur)="changeDateFormat($event, 'expiredDate', 'linkBrokerForm')">
+                      </my-date-picker>
+                     <show-errors [control]="linkBrokerForm.controls.expiredDate"></show-errors>
+                      <ul *ngIf="error.isError==true" class="validation-errors">
+                        <li style="color: red">{{error.errorMessage}}</li>
+                      </ul>
+                    </div>
+                    <!-- Calendar Field Ends -->
+                  </div>
+                  <div class="col-md-4 col-xs-12 min-ht-half">
+                    <div class="select-options">
+                      <span><label><span class="custom-check"><input type="checkbox" name="mainContact"
+                              formControlName="mainContact">{{
+                            'company.company-tab-datatable.broker-datatables.primary-contact' | translate }}<span></span></span>
+                        </label>
+                      </span>
+                      <span><label><span class="custom-check"><input type="checkbox" name="noMail"
+                              formControlName="noMail">{{
+                            'company.company-tab-datatable.broker-datatables.no-mail' | translate }}<span></span></span>
+                        </label>
+                      </span>
+                    </div>
+                  </div>
+                   <!-- to fixed Link broker Popup SAVE CLOSE buttons issues (point no -89) -->
+                   <div class="form-row text-center"> 
+                    <button id="companyTabSave" *ngIf="addMode" class="btn green-btn"
+                      (click)="addUpdateCompanyLinkBroker(linkBrokerForm)">{{
+                      'button.save' | translate }}</button>
+                    <button id="companyTabEdit" *ngIf="viewMode" class="btn green-btn"
+                      (click)="editCompanyLinkBroker()">{{
+                      'button.edit' | translate }}</button>
+                    <button id="companyTabUpdate" *ngIf="editMode" class="btn green-btn"
+                      (click)="addUpdateCompanyLinkBroker(linkBrokerForm)">{{
+                      'button.update' | translate }}</button>
+                    <!-- (click) added to enable Link broker button when pop up is closed -->
+                    <button id="companyTabClose1" class="btn grey-btn" data-dismiss="modal"  (click)="linkBrokerDisable=false">{{ 'button.close' |
+                      translate }}</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <!-- Grid Box Ends -->
+    </div>
+    <!-- Modal Body Ends -->
+  </div>
+</div>
+<!-- modal Content Ends -->
+
+<!-- Plan SuspHistory Modal -->
+<div id="PlanSuspHistory" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="planSuspReset" type="button" class="close" data-dismiss="modal" (click)="reset()">&times;</button>
+        <h4 class="modal-title"> {{ 'company.plan.plan-info.planSuspendedHistory' | translate }} </h4>
+      </div>
+      <!--modal-header Ends-->
+      <div class="modal-body">
+        <!-- Company General Information Start -->
+        <app-company-general-information [generalInformationFormData]="setGeneralInfo">
+        </app-company-general-information>
+        <!-- Company General Information End -->
+        <div class="grid-box">
+          <div class="grid-inner">
+            <form [formGroup]="planSuspendedForm">
+              <div class="form-row">
+                <div class="row">
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{ 'company.company-tab-datatable.suspend-plan-form.plan-suspend-date' | translate }}<span
+                        class="required">*</span></label>
+                    <div class="calender-field">
+                      <my-date-picker id="companyTabsuspendOn" [options]="myDatePickerOptions"
+                        placeholder="{{ 'company.company-search.dd/mm/yyyy' | translate }}" name="suspendOn"
+                        formControlName="suspendOn"
+                        (inputFocusBlur)="changeDateFormat2($event, 'suspendOn','planSuspendedForm', false)">
+                      </my-date-picker>
+                      <show-errors [control]="planSuspendedForm.controls.suspendOn"></show-errors>
+                    </div>
+                    <!-- Calendar Field Ends -->
+                  </div>
+
+                  <div class="col-md-3 col-xs-12">
+                    
+                    <label>{{ 'company.company-tab-datatable.suspend-plan-form.plan-resume-date' | translate }}</label>
+                    <div class="calender-field">
+                      <my-date-picker id="companyTabresumeOn" [options]="myDatePickerOptions" name="resumeOn"
+                        formControlName="resumeOn" placeholder="{{ 'company.company-search.dd/mm/yyyy' | translate }}"
+                        (inputFocusBlur)="changeDateFormat2($event, 'resumeOn','planSuspendedForm', false)">
+                      </my-date-picker>
+                      <show-errors [control]="planSuspendedForm.controls.resumeOn"></show-errors>
+                    </div>
+                    <!-- Calendar Field Ends -->
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{ 'company.company-tab-datatable.suspend-plan-form.plan-comment' | translate }}</label>
+                    <textarea id="companyTabsuspendPlan" class="fm-txt form-control"
+                      formControlName="suspendPlanComment"></textarea>
+                    <show-errors [control]="planSuspendedForm.controls.suspendPlanComment"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>&nbsp;</label>
+                    <button id="companyTabSave1" *ngIf="!resumeTrue" type="button" class="btn green-btn"
+                      (click)="submitSuspendedPlan()">{{
+                      'button.suspend' | translate }}</button>
+                    <button id="companyTabResume" *ngIf="resumeTrue" type="button" class="btn green-btn"
+                      (click)="updateResumePlan(planSuspendedForm)">{{
+                      'button.resume' | translate }}</button>
+                  </div>
+                </div>
+                <!-- row Ends-->
+              </div>
+              <!-- Form Row Ends -->
+
+            </form>
+          </div>
+          <!--grid-iner Ends-->
+        </div>
+        <!--grid-box Ends-->
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{ 'company.company-form.suspend-history' | translate }}</h3>
+          </div>
+          <!-- Grid Heading Ends-->
+          <div class="grid-inner">
+            <div class="form-row">
+              <div class="row">
+                <div class="col-md-12 col-xs-12 table-col">
+                  <div class="table-responsive">
+                    <table id="suspend_plan" class="table table-bordered table-stripped inlinePopupTable">
+                    </table>
+                  </div>
+                  <!-- Table Ends -->
+                </div>
+                <!--col Ends-->
+              </div>
+              <!-- row Ends-->
+            </div>
+            <!-- Form Row ENds -->
+          </div>
+          <!-- Grid Inner Ends -->
+        </div>
+        <!-- Grid Box Ends -->
+      </div>
+      <!--modal-body Ends-->
+      <div class="modal-footer">
+        <button id="closeSuspendedhistory" type="button" class="btn grey-btn" (click)=reset() data-dismiss="modal">{{
+          'button.close' | translate }}</button>
+      </div>
+      <!--modal-footer Ends-->
+    </div>
+    <!-- Modal Content Ends -->
+
+  </div>
+  <!--modal-dialog Ends-->
+
+</div>
+<!-- Plan SuspHistory Modal End -->
+
+<!--Plan Terminate Modal Start-->
+<div id="TerminatePlan" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <!-- To remove console error on click of terminate button in plan tab of company view page. -->
+    <div class="footerClass"> 
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" id="terminateCompany"
+          (click)="resetPlanTerminateForm()">&times;</button>
+        <h4 *ngIf="isPlanTerminated == 'Active'" class="modal-title">{{ 'button.terminate-plan' | translate }}</h4>
+        <h4 *ngIf="isPlanTerminated == 'Terminated'" class="modal-title">{{ 'button.reactivate-plan' | translate }}</h4>
+      </div>
+
+      <div class="modal-body">
+        <!-- Company General Information Start -->
+        <app-company-general-information></app-company-general-information>
+        <!-- Company General Information End -->
+        <div class="grid-heading">
+          <h3 *ngIf="isPlanTerminated == 'Active'">{{ 'button.terminate' | translate }}</h3>
+          <h3 *ngIf="isPlanTerminated == 'Terminated'">{{ 'button.reactivate' | translate }}</h3>
+        </div>
+        <div class="grid-box" *ngIf="isPlanTerminated == 'Active'">
+          <div class="grid-inner">
+            <form [formGroup]="terminateForm" (ngSubmit)="submitPlanTerminateForm(terminateForm)">
+              <div class="form-row">
+                <div class="row">
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{ 'company.company-terminate.termination-date' | translate }}<span
+                        class="required">*</span></label>
+                    <div class="calender-field">
+                      <my-date-picker id="companyTabterminateDate" [options]="myDatePickerOptions" name="terminateDate"
+                        placeholder="{{ 'company.company-terminate.dd/mm/yyyy' | translate }}"
+                        formControlName="terminateDate"
+                        (inputFocusBlur)="changeDateFormat($event, 'terminateDate','terminateForm',true)">
+                      </my-date-picker>
+                      <show-errors [control]="terminateForm.controls.terminateDate"></show-errors>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>&nbsp;</label>
+                    <button id="formRowSubmit" class="red-btn btn" *ngIf="!isValid" type="submit"> {{
+                      'button.terminate' | translate }}</button>
+                  </div>
+                </div>
+              </div>
+
+            </form>
+            <!-- Form Row ENds -->
+          </div>
+        </div>
+
+        <div class="grid-box" *ngIf="isPlanTerminated == 'Terminated'">
+          <div class="grid-inner">
+            <div class="form-row text-center">
+              <button id="isPlanTerminatedReactivate" class="green-btn btn" type="submit" (click)=reactiveCompanyPlan()>
+                {{ 'button.reactivate' | translate }}</button>
+            </div>
+            <!-- Form Row Ends -->
+          </div>
+        </div>
+
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{ 'company.company-terminate.termination-history' | translate }}</h3>
+          </div>
+          <!-- Grid Heading Ends -->
+          <div class="grid-inner">
+            <div class="form-row">
+              <div class="row">
+                <div class="col-md-12 col-xs-12 table-col">
+                  <div class="table-responsive">
+                    <table id="termination-plan-history" class="table table-bordered table-stripped inlinePopupTable">
+                    </table>
+                  </div>
+                  <!-- Table Ends -->
+                </div>
+              </div>
+            </div>
+            <!-- Form Row ENds -->
+          </div>
+          <!-- Grid Inner Ends -->
+        </div>
+      </div>
+      <!-- Modal Body End-->
+      <div class="modal-footer">
+        <button id="modalFooterClose" type="button" class="btn grey-btn" data-dismiss="modal"
+          (click)="resetPlanTerminateForm()">{{
+          'button.close' | translate }}</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--Plan Terminate Modal End-->
+
+<!--Division Terminate Modal Start-->
+<div id="TerminatePlanDivisionPopup" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" id="TerminatePlanDivision"
+          (click)="filterCompanyPlanSearch()">&times;</button>
+        <h4 *ngIf="isPlanDivisionTerminated == 'Active'" class="modal-title">{{
+          'company.company-tab-datatable.plan-datatables.terminate-division' | translate }}</h4>
+        <h4 *ngIf="isPlanDivisionTerminated == 'Terminated'" class="modal-title">{{
+          'company.company-tab-datatable.plan-datatables.reactivate-division' | translate }}</h4>
+      </div>
+
+      <div class="modal-body">
+        <!-- Company General Information Start -->
+        <app-company-general-information></app-company-general-information>
+        <!-- Company General Information End -->
+        <div class="grid-heading">
+          <!-- Task 590 Check changed to show terminate division in case of suspended plan in company-->
+          <h3 *ngIf="isPlanDivisionTerminated != 'Terminated'">
+            {{ 'company.company-tab-datatable.plan-datatables.terminate' | translate }}</h3>
+          <h3 *ngIf="isPlanDivisionTerminated == 'Terminated'">
+            {{'company.company-tab-datatable.plan-datatables.reactivate-division' | translate }}</h3>
+        </div>
+        <!-- Task 590 Check changed to show terminate division in case of suspended plan in company -->
+        <div class="grid-box" *ngIf="isPlanDivisionTerminated != 'Terminated'">
+          <div class="grid-inner">
+            <form [formGroup]="terminateDivisionForm"
+              (ngSubmit)="submitPlanDivisionTerminateForm(terminateDivisionForm)">
+              <div class="form-row">
+                <div class="row">
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{ 'company.company-terminate.termination-date' | translate }}<span
+                        class="required">*</span></label>
+                    <div class="calender-field">
+                      <my-date-picker id="companyTabterminateDivisionDate" [options]="myDatePickerOptions"
+                        name="terminateDivisionDate"
+                        placeholder="{{ 'company.company-terminate.dd/mm/yyyy' | translate }}"
+                        formControlName="terminateDivisionDate"
+                        (inputFocusBlur)="changeDateFormat($event, 'terminateDivisionDate','terminateDivisionForm',true)">
+                      </my-date-picker>
+                      <show-errors [control]="terminateDivisionForm.controls.terminateDivisionDate"></show-errors>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>&nbsp;</label>
+                    <button id="formRowSubmit" class="red-btn btn" *ngIf="!isValidDivision" type="submit"> {{
+                      'button.terminate' | translate }}</button>
+                  </div>
+                  <!-- Form Row Ends -->
+                </div>
+              </div>
+
+            </form>
+            <!-- Form Row ENds -->
+          </div>
+        </div>
+
+        <div class="grid-box" *ngIf="isPlanDivisionTerminated == 'Terminated'">
+          <div class="grid-inner">
+            <div class="form-row text-center">
+              <button id="isPlanDivisionTerminatedReactivate" class="green-btn btn" type="submit"
+                (click)=reactiveCompanyPlanDivision()>
+                {{ 'button.reactivate' | translate }}</button>
+            </div>
+            <!-- Form Row Ends -->
+          </div>
+        </div>
+
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{ 'company.company-terminate.termination-history' | translate }}</h3>
+          </div>
+          <!-- Grid Heading Ends -->
+          <div class="grid-inner">
+            <div class="form-row">
+              <div class="row">
+                <div class="col-md-12 col-xs-12 table-col">
+                  <div class="table-responsive">
+                    <table id="termination-division-history"
+                      class="table table-bordered table-stripped inlinePopupTable">
+                    </table>
+                  </div>
+                  <!-- Table Ends -->
+                </div>
+              </div>
+            </div>
+            <!-- Form Row ENds -->
+          </div>
+          <!-- Grid Inner Ends -->
+        </div>
+      </div>
+      <!-- Modal Body End-->
+      <div class="modal-footer">
+        <button id="modalFooterClose" type="button" class="btn grey-btn" data-dismiss="modal"
+          (click)="filterCompanyPlanSearch()">{{
+          'button.close' | translate }}</button>
+      </div>
+    </div>
+  </div>
+</div>
+<button id="DivisionTerminateBtn" [hidden]="true" data-toggle="modal" data-target="#TerminatePlanDivisionPopup"> {{'button.open-modal' | translate }}</button>
+<button id="DivisionUnitsBtn" [hidden]="true" data-toggle="modal" data-target="#planUnits"> {{
+    'button.open-modal' | translate }}</button>
+<!--Plan Terminate Modal End-->
+<div [hidden]="!showLinkLoader" class="loader-outer">
+  <div class="cube-wrapper">
+    <div class="cube-folding">
+      <span class="leaf1"></span>
+      <span class="leaf2"></span>
+      <span class="leaf3"></span>
+      <span class="leaf4"></span>
+    </div>
+    <span class="loading" data-name="Loading">{{'company.plan.benefits.pleaseWait'|translate}}</span>
+  </div>
+</div>

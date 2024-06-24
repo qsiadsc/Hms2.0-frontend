@@ -1,0 +1,18 @@
+<router-outlet name="header"></router-outlet> <!-- render header for whole site -->
+<div class="site-content">
+    <div class="container">
+        <router-outlet></router-outlet> <!-- render rest of whole application html -->
+    </div><!-- Container Ends -->
+</div><!-- Site Content Ends -->
+<app-main-footer></app-main-footer>
+<div [hidden]="!showLoader" class="loader-outer">
+    <div class="cube-wrapper">
+        <div class="cube-folding">
+            <span class="leaf1"></span>
+            <span class="leaf2"></span>
+            <span class="leaf3"></span>
+            <span class="leaf4"></span>
+        </div>
+        <span class="loading" data-name="Loading">{{'company.plan.benefits.pleaseWait'|translate}}</span>
+    </div>
+</div>

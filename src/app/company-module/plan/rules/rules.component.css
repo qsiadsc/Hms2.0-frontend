@@ -1,0 +1,34 @@
+.del-ico[disabled]{
+    cursor: not-allowed;
+    box-shadow: none;
+    opacity: .65;
+}
+/* Below 3 css added to align add, update and search Rule buttons */
+.alignUpdateRuleButton{
+    margin-left: 14.5%;
+    width: 7.5%;
+}
+.alignAddRuleButton{
+    margin-left: 14.5%;
+    width: 7.5%;
+}
+.alignSearchRuleButton{
+    width: 7.5%;
+}
+
+/* Below 4 css are for rules table */
+.m-0{
+    margin: 0 !important;
+}
+
+.me-1{
+    margin-right: 8px !important;
+}
+
+.me-4{
+    margin-right: 4px !important;
+}
+
+.p-0{
+    padding: 0 !important;
+}

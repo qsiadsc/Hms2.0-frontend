@@ -1,0 +1,40 @@
+#cgI_claimType{
+    text-transform: uppercase;
+  }
+#claimType_search{
+  display: none;
+}
+  #claimType_search {
+    padding: 6px;
+    border: 1px solid;
+    position: relative;
+    max-height: 182px;
+    overflow-y: scroll;
+    background: #ffffff;
+    position: relative;
+    z-index: 200
+}
+.option {
+  padding: 3px;
+  cursor: pointer;
+}
+.highlite{
+  background-color: rgb(0, 190, 253);
+}
+
+.option:hover {
+  background-color:  rgb(0, 190, 253);
+}
+
+.genralForm{
+  max-height: 75px;
+ 
+}
+.removeMargin{
+  margin-right: 0px !important;
+}
+
+:host ::ng-deep .contract .col-md-2{
+  width: 11.666667%;
+}
+

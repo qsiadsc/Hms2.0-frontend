@@ -1,0 +1,893 @@
+<nav class="breadcrumb">
+	<span class="breadcrumb-item" [routerLink]="['/company']"> {{ 'button.company' | translate }}</span> >
+	<a *ngIf="addMode" class="active serviceProviderActive"> {{ 'button.add' | translate }}</a>
+	<a *ngIf="editMode" class="active serviceProviderActive"> {{ 'button.edit' | translate }}</a>
+	<a *ngIf="viewMode" class="active serviceProviderActive"> {{ 'button.view' | translate }}</a>
+</nav>
+
+<div class="section-heading">
+	<h2 *ngIf="addMode">{{ 'company.company-form.company' | translate }} -
+		<span>{{ 'company.company-form.add' | translate }}</span>
+	</h2>
+	<h2 *ngIf="viewMode">{{ 'company.company-form.company' | translate }} -
+		<span>{{ 'company.company-form.view' | translate }}</span>
+		<span class="comment-fm" *ngIf="hideCommentButton=='Y'">
+			<i class="fa fa-flag" aria-hidden="true" data-toggle="modal" aria-hidden="true" data-target="#Comments" (click)="reloadCompanyCommentList('importantComment')"
+			 style="cursor:pointer"></i>
+			<div class="comment-top">
+				<p>{{firstComment}}</p>
+			</div>
+		</span>
+		<div class="web-reg">
+			<button *ngIf="mainCompanyArray[0].editCompany == 'T'" style="cursor: pointer" id="CompanyEdit" class="claim-status btn status-btn"
+			 type="submit" (click)="editCompany(FormGroup)">{{ 'button.edit' | translate }}</button>
+		</div>
+	</h2>
+	<h2 *ngIf="editMode">{{ 'company.company-form.company' | translate }} -
+		<span>{{ 'company.company-form.edit' | translate }}</span>
+		<span class="comment-fm" *ngIf="hideCommentButton=='Y'">
+			<i class="fa fa-flag" aria-hidden="true" data-toggle="modal" aria-hidden="true" data-target="#Comments" (click)="reloadCompanyCommentList('importantComment')"
+			 style="cursor:pointer"></i>
+			<div class="comment-top">
+				<p>{{firstComment}}</p>
+			</div>
+		</span>
+		<div class="web-reg">
+			<button id="companyUpdate" style="cursor: pointer" *ngIf="mainCompanyArray[0].companyComments == 'T' && editMode" class="claim-status btn status-btn"
+			 type="submit" (click)="onSubmit(FormGroup)">{{ 'button.update' | translate }}</button>
+		</div>
+
+	</h2>
+
+</div>
+<!-- Section Heading Ends -->
+
+<div class="grid-box">
+	<div class="grid-heading {{companyService.getCompanyStatus()}}">
+		<h3 *ngIf="addMode">{{ 'company.company-form.add-company' | translate }}</h3>
+		<!-- Add Company -->
+		<h3 *ngIf="viewMode">{{ 'company.company-form.company-details' | translate }}</h3>
+		<h3 *ngIf="editMode">{{ 'company.company-form.edit-company' | translate }}</h3>
+		<!-- Edit Company -->
+		<h3 *ngIf="!addMode">({{companyService.getCompanyStatus()}})</h3>
+		<div class="web-reg">
+			<a *ngIf="companySearchBtn" style="cursor: pointer" class="green-btn-add btn" (click)="backToSearch()">
+				<i class="fa fa-share" aria-hidden="true"></i>Back To Search</a>
+		</div>
+	</div>
+	<app-company-form (selectedBusinessTypeKey)="businessTypeKeyHandler($event)" [companyId]="coKey" [companySetupForm]="FormGroup.controls.companySetupForm"
+	 [mainCompanyArray]="mainCompanyArray" [companyFormEditMode]="editMode" [financialFormAddMode]="addMode" [isTerminated]="isTerminated"
+	 (compareEffectiveOnDate)="compareDatesWithCompanyEffectiveDate($event)" [isTerminationDate]="isTerminationDate"></app-company-form>
+</div>
+<!-- Grid Box Ends -->
+<app-company-financial-data [mainCompanyArray]="mainCompanyArray" [companyId]="coKey" [financialDataForm]="FormGroup.controls.financialDataForm"
+ [financialFormEditMode]="editMode" [financialFormAddMode]="addMode" [hideButton]="hideButton" (compareEffectiveOnDate)="compareDatesWithCompanyEffectiveDate($event)"></app-company-financial-data>
+
+<app-company-travel-insurance [hidden]='alberta' [mainCompanyArray]="mainCompanyArray" [travelInsuranceForm]="FormGroup.controls.travelInsuranceForm"
+ [travelFormEditMode]="editMode" (compareEffectiveOnDate)="compareDatesWithCompanyEffectiveDate($event)"></app-company-travel-insurance>
+
+<!-- Sales Data Start -->
+<app-sales-data [salesDataForm]="FormGroup.controls.salesDataForm" [salesDataFormEditMode]="editMode" (selectedReferralTypeKey)="getSelectedReferralKey($event)"
+ (selectedReferralTypeCd)="getSelectedReferralTypeCd" (selectedReferralOtherName)="getSelectedOtherKey($event)" (compareEffectiveOnDate)="compareDatesWithCompanyEffectiveDate($event)"></app-sales-data>
+<!-- Sales Data End -->
+
+<app-company-upload-document [uploadDocEditMode]="editMode" [uploadDocAddMode]="addMode" [companyId]="coKey"></app-company-upload-document>
+
+<form [formGroup]="FormGroup">
+	<!-- Buttons for card section-->
+	<div *ngIf="addMode && mainCompanyArray[0].saveCompany == 'T'" class="form-row text-center">
+		<button id="CompanySave" class="btn green-btn btn-lg" type="submit" (click)="onSubmit(FormGroup)">{{ 'button.save' | translate }}</button>
+		<a *ngIf="mainCompanyArray[0].companyComments == 'T'" id="CompanyAddComment" href="javascript:;" class="btn green-btn btn-lg"
+		 data-toggle="modal" data-target="#Comments" (click)="reloadCompanyCommentList('allComments')">{{ 'company.company-comments.comments' | translate }}</a>
+	</div>
+	<!-- viewMode -->
+	<div *ngIf="viewMode" class="form-row text-center">
+		<button *ngIf="mainCompanyArray[0].editCompany == 'T'" id="CompanyEdit" class="btn green-btn btn-lg" type="submit" (click)="editCompany(FormGroup)">
+			{{ 'button.edit' | translate }}</button>
+
+		<button *ngIf="mainCompanyArray[0].companyComments == 'T'" id="companyComments" type="button" class="btn green-btn" data-toggle="modal"
+		 data-target="#Comments" (click)="reloadCompanyCommentList('allComments')">{{ 'company.company-comments.comments' | translate }}</button>
+
+		<button id="companyCreditLimit" *ngIf="!alberta && mainCompanyArray[0].creditLimit == 'T'" type="button" class="btn green-btn"
+		 data-toggle="modal" data-target="#CreditLimit" (click)="creditLimitHistory()">{{ 'company.company-credit-limit.credit-limit' | translate }}</button>  
+
+<!-- Log #1265 Checkbox "Bank information" removed and button "Add Bank Account" enabled for same: -->
+		<button id="companyAddBankAccount" *ngIf="!alberta && mainCompanyArray[0].companyBankAccount == 'T'"
+		 type="button" class="btn green-btn" data-toggle="modal" data-target="#CompanyAddBankAccounts" (click)="bankAccountHistoryDetails()"> {{ 'company.company-bank-account.bank-accounts' | translate }}</button>
+	
+		<button id="companyTerminate" type="button" *ngIf="(isTerminated == 'Active' || (isTerminated == 'GracePeriod' && !isTerminationDate)) && mainCompanyArray[0].terminateCompany == 'T'"
+		 class="btn red-btn" data-toggle="modal" data-target="#TerminateCompany" (click)="terminationListHistory()"> {{ 'button.terminate' | translate }}</button>
+
+		<button id="companyReactivate" type="button" *ngIf="isTerminated == 'Inactive' || (isTerminated == 'GracePeriod' && isTerminationDate) && mainCompanyArray[0].reactivateCompany == 'T'"
+		 class="btn green-btn" data-toggle="modal" data-target="#TerminateCompany" (click)="terminationListHistory()">{{ 'button.reactivate' | translate }}</button>
+
+	</div>
+
+	<div *ngIf="editMode" class="form-row text-center">
+		<button id="companyUpdate" *ngIf="mainCompanyArray[0].companyComments == 'T'" class="btn green-btn btn-lg" type="submit"
+		 (click)="onSubmit(FormGroup)">{{ 'button.update' | translate }}</button>
+		<a id="companyUpdateComments" href="javascript:;" class="btn green-btn" data-toggle="modal" data-target="#Comments" (click)="reloadCompanyCommentList('allComments')">{{ 'company.company-comments.comments' | translate }} </a>
+
+		<a id="companyUpdateCreditLimit" href="javascript:;" *ngIf="!alberta && mainCompanyArray[0].creditLimit == 'T'" class="btn green-btn"
+		 data-toggle="modal" data-target="#CreditLimit" (click)="creditLimitHistory()">{{ 'company.company-credit-limit.credit-limit' | translate }}</a>
+
+		<a id="companyUpdateAddBankAcc" href="javascript:;" *ngIf="!alberta && mainCompanyArray[0].companyBankAccount == 'T'"
+		 class="btn green-btn" data-toggle="modal" data-target="#CompanyAddBankAccounts" (click)="bankAccountHistoryDetails()">{{ 'company.company-bank-account.bank-accounts' | translate }}</a>
+
+		<a id="companyAkiraBenefit" href="javascript:;" *ngIf="!alberta" class="btn green-btn" data-toggle="modal" data-target="#AkiraBenefitPopup"
+		 (click)="getAkiraBenefitList()">{{ 'company.plan.benefits.akira-benefit' | translate}}</a>
+
+		 <a id="companyEFAPBenefit" href="javascript:;" *ngIf="!alberta" class="btn green-btn" data-toggle="modal" data-target="#EFAPBenefitPopup"
+		 (click)="getEFAPBenefitList()">{{ 'company.plan.benefits.efap-benefit' | translate}}</a>
+
+		<a id="companyUpdateTerminate" href="javascript:;" *ngIf="(isTerminated == 'Active' || (isTerminated == 'GracePeriod' && !isTerminationDate)) && mainCompanyArray[0].terminateCompany == 'T'"
+		 class="btn red-btn" data-toggle="modal" data-target="#TerminateCompany" (click)="terminationListHistory()"> {{ 'button.terminate' | translate }}</a>
+
+		<a id="companyUpdateReactivate" href="javascript:;" *ngIf="isTerminated == 'Inactive' || (isTerminated == 'GracePeriod' && isTerminationDate) && mainCompanyArray[0].reactivateCompany == 'T'"
+		 class="btn green-btn" data-toggle="modal" data-target="#TerminateCompany" (click)="terminationListHistory()"> {{ 'button.reactivate' | translate }}</a>
+	</div>
+</form>
+
+<app-company-tab-datatable [mainCompanyArray]="mainCompanyArray" [companyId]="coKey" *ngIf="!addMode"></app-company-tab-datatable>
+
+<!-- Comment module starts -->
+<div id="Comments" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button id="CommentsClose" type="button" class="close" data-dismiss="modal" (click)="resetCommentForm()">&times;</button>
+				<div *ngIf="showImportantCommentList; then showImportant else hideImportant "></div>
+				<ng-template #showImportant>
+					<h4 class="modal-title">{{ 'company.company_comments' | translate }}
+						<span class="comment-fm">
+							<i class="fa fa-flag" style="color:red;" aria-hidden="true"></i>
+						</span>
+					</h4>
+				</ng-template>
+				<ng-template #hideImportant>
+					<h4 class="modal-title">{{ 'company.company-comments.add-comments' | translate }}</h4>
+				</ng-template>
+
+			</div>
+			<!--modal-header Ends-->
+			<div class="modal-body">
+				<!-- Company General Information Start -->
+				<app-company-general-information [generalInformationFormData]="setGeneralInfo" *ngIf="!addMode"></app-company-general-information>
+				<!-- Company General Information End -->
+				<div class="grid-box">
+					<div *ngIf="!showImportantCommentList" class="grid-heading">
+						<h3>{{ 'company.company-comments.comments' | translate }}</h3>
+					</div>
+					<!-- Grid Heading Ends -->
+					<app-comment-model [enableAddButton]="mainCompanyArray[0].addCompanyComments" *ngIf="addMode" [commentFormEditMode]=true>
+					</app-comment-model>
+
+					<app-comment-edit-model [enableAddButton]="mainCompanyArray[0].addCompanyComments" *ngIf="!addMode" [commentsParams]="{  
+								getCommentsListUrl: 'company-service/companyCommentList', 
+								addCommentUrl: 'company-service/companyComment',
+								coKey: coKey,
+								requestMode: 'post' 
+							}" [commentColumns]="[
+							{'title':'Date', 'data':'createdOn'},
+							{'title':'User Name', 'data':'username'},
+							{'title':'Department', 'data':'department'},
+							{'title':'Comments', 'data':'commentTxt'},
+							{'title':'Expiry Date', 'data':'expiredOn'},
+
+							{'title':'Importance', 'data':'commentImportance'}
+							]" [getCommentJson]="{'key':'coKey', 'value':coKey}" [newCommentJson]="[ 'key','commentTxt','commentImportance']">
+					</app-comment-edit-model>
+					<div class="modal-footer">
+						<button id="CompanyModuleClose" type="button" class="btn grey-btn" data-dismiss="modal" (click)="resetCommentForm()">{{ 'button.close' | translate }}</button>
+					</div>
+					<!--modal-footer Ends-->
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Grid Box Ends -->
+
+<!--Company Add Bank Accounts Modal-->
+<div id="CompanyAddBankAccounts" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button id="CompanyAddBankAccountsClose" type="button" class="close" data-dismiss="modal" (click)="resetBankAccForm()">&times;</button>
+				<h4 class="modal-title">{{ 'company.company-bank-account.bank-accounts' | translate }}</h4>
+			</div>
+
+			<div class="modal-body">
+				<div class="grid-heading">
+					<h3>{{ 'company.company-bank-account.add-bank-account' | translate }}</h3>
+				</div>
+				<!-- Company General Information Start -->
+				<app-company-general-information></app-company-general-information>
+				<!-- Company General Information End -->
+				<app-company-bank-account [mainCompanyArray]="mainCompanyArray" [companyId]="coKey"></app-company-bank-account>
+			</div>
+			<!-- Modal Body End-->
+			<div class="modal-footer">
+				<button id="CompanyAddBankAccountsClose1" type="button" class="btn grey-btn" data-dismiss="modal" (click)="resetBankAccForm()">{{ 'button.close' | translate }}</button>
+			</div>
+			<!-- Modal Footer Ends-->
+		</div>
+	</div>
+</div>
+<!--Company Bank Accounts Modal-->
+
+<!--Terminate Company Modal Start-->
+<div id="TerminateCompany" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" id="terminateCompany" (click)="resetTerminateForm()">&times;</button>
+				<h4 *ngIf="(isTerminated == 'Active' || (isTerminated == 'GracePeriod' && !isTerminationDate))" class="modal-title">{{ 'company.company-terminate.terminate-company' | translate }}</h4>
+				<h4 *ngIf="isTerminated == 'Inactive' || (isTerminated == 'GracePeriod' && isTerminationDate)" class="modal-title">{{ 'company.company-terminate.reactivate-company' | translate }}</h4>
+			</div>
+
+			<div class="modal-body">
+				<!-- Company General Information Start -->
+				<app-company-general-information></app-company-general-information>
+				<!-- Company General Information End -->
+				<div class="grid-heading">
+					<h3 *ngIf="(isTerminated == 'Active' || (isTerminated == 'GracePeriod' && !isTerminationDate))">{{ 'button.terminate' | translate }}</h3>
+					<h3 *ngIf="isTerminated == 'Inactive' || (isTerminated == 'GracePeriod' && isTerminationDate)">{{ 'button.reactivate' | translate }}</h3>
+				</div>
+				<div class="grid-box" *ngIf="(isTerminated == 'Active' || (isTerminated == 'GracePeriod' && !isTerminationDate))">
+					<div class="grid-inner">
+						<div class="form-row">
+							<form [formGroup]="terminateForm">
+								<div class="row min-ht-sf">
+									<div class="col-md-3 col-xs-12">
+										<label>{{ 'company.company-terminate.entry-date' | translate }}
+											<span class="required">*</span>
+										</label>
+										<div class="calender-field">
+											<my-date-picker id="datepicker6" [options]="myDatePickerOptions" name="entryDate" placeholder="{{ 'company.company-terminate.dd/mm/yyyy' | translate }}"
+											 formControlName="entryDate" (inputFocusBlur)="changeDateFormat($event, 'entryDate','terminateForm',false)">
+											</my-date-picker>
+											<show-errors [control]="terminateForm.controls.entryDate"></show-errors>
+										</div>
+									</div>
+
+									<div class="col-md-3 col-xs-12">
+										<label>{{ 'company.company-terminate.termination-date' | translate }}
+											<span class="required">*</span>
+										</label>
+										<div class="calender-field">
+											<my-date-picker id="datepicker6" [options]="myDatePickerOptions" name="terminateDate" placeholder="{{ 'company.company-terminate.dd/mm/yyyy' | translate }}"
+											 formControlName="terminateDate" (inputFocusBlur)="changeDateFormat($event, 'terminateDate','terminateForm',false)">
+											</my-date-picker>
+											<show-errors [control]="terminateForm.controls.terminateDate"></show-errors>
+										</div>
+									</div>
+
+									<div class="col-md-3 col-xs-12">
+										<label>{{ 'company.company-terminate.termination-reason' | translate }}
+											<span class="required">*</span>
+										</label>
+										<ng2-completer formControlName="terminationCategory" [datasource]="terminationReasonData" [minSearchLength]="0" [openOnFocus]="true"
+										 (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Search Termination Reason'" [textSearching]="'Please wait...'"
+										 [inputClass]="'form-control'" (selected)="onTerminationReasonSelected($event)">
+										</ng2-completer>
+										<show-errors [control]="terminateForm.controls.terminationCategory"></show-errors>
+									</div>
+
+									<!-- Log #1148: Grace Period Field added -->
+									<div class="col-md-3 col-xs-12">
+										<label>{{ 'company.company-form.grace-period' | translate }}<span class="required">*</span></label>
+										<input class="fm-txt form-control" type="text" name="gracePeriod" id="company-form_grace_period"
+											formControlName="gracePeriod" placeholder="{{ 'company.company-form.grace-period' | translate }}">
+										<show-errors [control]="terminateForm.controls.gracePeriod"></show-errors>
+									</div>
+
+									<div class="col-md-3 col-xs-12">
+										<label>Document Name</label>
+										<input style="display: none" type="file" (click)="cdFileInput.value = null" (change)="onFileChanged($event)" #cdFileInput>
+										<input formControlName="fileName" class="fm-txt form-control datepicker" type="text">
+										<ul *ngIf="error1.isError==true" class="validation-errors">
+											<li style="color: red">{{error1.errorMessage}}</li>
+										</ul>
+										<ul *ngIf="error2.isError==true" class="validation-errors">
+											<li style="color: red">{{error2.errorMessage}}</li>
+										</ul>
+									</div>
+									
+									<div class="col-md-3 col-xs-12">
+										<label>&nbsp;</label>
+										<button class="btn green-btn" (click)="cdFileInput.click()">{{ 'button.selectFile' | translate }}</button>
+										<button *ngIf="this.selectedFileName" (click)="removeExtension()" class="btn red-btn ">{{ 'button.remove' | translate }}</button>
+									</div>
+
+									<div class="col-md-3 col-xs-12" style="float:right;">
+										<label>&nbsp;</label>
+										<button *ngIf="mainCompanyArray[0].terminateCompPopupBtn == 'T'" id="companyTerminateButton" class="red-btn btn" type="submit" (click)="submitTerminateForm(terminateForm)">
+											{{ 'button.terminate' | translate }}</button>
+									</div>
+								</div>
+							</form>
+						</div>
+						<!-- Form Row ENds -->
+					</div>
+				</div>
+
+				<div class="grid-box" *ngIf="isTerminated == 'Inactive' || (isTerminated == 'GracePeriod' && isTerminationDate)">
+					<div class="grid-inner">
+						<div class="form-row text-center">
+							<button id="CompanyTerminationReasonReactivate" class="green-btn btn" type="submit" (click)=reactiveCompany()> {{ 'button.reactivate' | translate }}</button>
+						</div>
+						<!-- Form Row Ends -->
+					</div>
+				</div>
+
+				<div class="grid-box">
+					<div class="grid-heading">
+						<h3>{{ 'company.company-terminate.termination-history' | translate }}</h3>
+					</div>
+					<!-- Grid Heading Ends -->
+					<div class="grid-inner">
+						<div class="form-row">
+							<div class="row">
+								<div class="col-md-12 col-xs-12 table-col">
+									<div class="table-responsive">
+										<table id="termination-history" class="table table-bordered table-stripped inlinePopupTable">
+										</table>
+									</div>
+									<!-- Table Ends -->
+								</div>
+							</div>
+						</div>
+						<!-- Form Row ENds -->
+					</div>
+					<!-- Grid Inner Ends -->
+				</div>
+			</div>
+			<!-- Modal Body End-->
+			<div class="modal-footer">
+				<button id="CompanyResetTerminateClose" type="button" class="btn grey-btn" data-dismiss="modal" (click)="resetTerminateForm()">{{ 'button.close' | translate }}</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!--Terminate Company Modal End-->
+
+<div id="CreditLimit" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog">
+
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button id="CreditLimitClose" type="button" class="close" data-dismiss="modal" (click)="resetCreditLimitForm()">&times;</button>
+				<h4 class="modal-title">{{ 'company.company-credit-limit.add-credit-limit' | translate }}</h4>
+			</div>
+
+			<div class="modal-body">
+
+				<div class="grid-inner grid-box">
+					<div class="form-row">
+						<form [formGroup]="addCreditLimitPopupForm" (ngSubmit)="updateCreditLimit(addCreditLimitPopupForm)">
+							<div class="row min-ht-sf">
+								<div class="col-md-3 col-xs-12">
+									<label>{{ 'company.company-credit-limit.credit-limit-multiplier' | translate }}
+										<span class="required">*</span>
+									</label>
+									<div class="calender-field">
+										<input #CompanycreditLimitMultiplier type="text" class="fm-txt form-control" placeholder="{{ 'company.company-credit-limit.credit-limit-multiplier' | translate }}"
+										 name="creditLimitMultiplierValue" formControlName="creditLimitMultiplierValue" />
+										<show-errors [control]="addCreditLimitPopupForm.controls.creditLimitMultiplierValue"></show-errors>
+									</div>
+								</div>
+
+								<div class="col-md-3 col-xs-12">
+									<label>{{ 'company.company-credit-limit.comments' | translate }}
+									</label>
+									<div class="calender-field">
+										<input id="CompanycreditLimitComments" type="text" class="fm-txt form-control" name="comment" placeholder="{{ 'company.company-credit-limit.comments' | translate }}"
+										 formControlName="creditLimitComment" />
+										<show-errors [control]="addCreditLimitPopupForm.controls.creditLimitComment"></show-errors>
+									</div>
+								</div>
+								<div class="col-md-2 col-xs-12">
+									<label>{{ 'company.company-credit-limit.effective-date' | translate }}
+										<span class="required">*</span>
+									</label>
+									<div class="calender-field">
+										<my-date-picker id="CompanyEffectiveOn" placeholder="{{ 'company.company-credit-limit.dd/mm/yyyy' | translate }}" [options]="myDatePickerOptions"
+										 name="effectiveOnPopup" formControlName="effectiveOnPopup" (inputFocusBlur)="changeDateFormatCreditLimit($event, 'effectiveOnPopup' ,'addCreditLimitPopupForm', true)">
+										</my-date-picker>
+										<show-errors [control]="addCreditLimitPopupForm.controls.effectiveOnPopup"></show-errors>
+									</div>
+
+								</div>
+								<div class="col-md-2 col-xs-12">
+									<label>{{ 'company.company-credit-limit.expiry-date' | translate }}</label>
+									<div class="calender-field">
+										<my-date-picker id="CompanyExpiredOn" placeholder="{{ 'company.company-credit-limit.dd/mm/yyyy' | translate }}" [options]="myDatePickerOptions"
+										 name="expiredOnPopup" formControlName="expiredOnPopup" [ngClass]="expired  ? 'expired' : 'notExpired'" (inputFocusBlur)="changeDateFormatCreditLimit($event, 'expiredOnPopup' ,'addCreditLimitPopupForm',false)">
+										</my-date-picker>
+										<show-errors [control]="addCreditLimitPopupForm.controls.expiredOnPopup"></show-errors>
+									</div>
+
+								</div>
+
+								<div class="col-md-2 col-xs-12 min-ht-half">
+									<label>&nbsp;</label>
+									<button *ngIf="mainCompanyArray[0].saveUpdateCreditLimit == 'T'" id="CompanycreditLimitSubmit" class="btn green-btn btn-lg"
+									 type="submit">{{buttonText}}</button>
+								</div>
+							</div>
+						</form>
+					</div>
+
+				</div>
+
+				<div class="grid-heading">
+					<h3>{{ 'company.company-credit-limit.list-of-credit-limits' | translate }}</h3>
+				</div>
+				<table id='credit-limit' class="table table-bordered table-stripped inlinePopupTable">
+
+				</table>
+			</div>
+			<!-- Modal Body End-->
+			<div class="modal-footer">
+				<button id="companyReset" type="button" class="btn grey-btn" data-dismiss="modal" (click)="resetCreditLimitForm()">{{ 'button.close' | translate }}</button>
+			</div>
+			<!-- Modal Footer Ends-->
+		</div>
+	</div>
+</div>
+
+<div id="planUnits" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog">
+
+		<div class="modal-content">
+			<div class="modal-header">
+				<button id="planUnitsClose" type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Units</h4>
+			</div>
+			<div class="modal-body">
+				<div class="form-row">
+					<div class="pull-right">
+						<button id="planInfoAddNew" class="green-btn-add btn" (click)="enableAddUnit()">
+							<i class="fa fa-plus"></i>{{ 'company.plan.plan-info.addNewUnit' | translate }}</button>
+					</div>
+					<!-- Grid Filters Ends -->
+					<div class="row">
+						<div class="col-md-12 col-xs-12 table-col">
+							<div class="table-responsive">
+								<!-- Validation Errors Messages for new row -->
+
+								<div style="color: red" class="alert alert-danger" *ngIf="(new_unit_id.invalid && (new_unit_id.dirty || new_unit_id.touched)) 
+									|| (new_description.invalid && (new_description.dirty || new_description.touched)) 
+									|| (new_effective_date.invalid && (new_effective_date.dirty || new_effective_date.touched))">
+
+									<!-- Validatoin for new record unit id -->
+									<div *ngIf="new_unit_id.invalid && (new_unit_id.dirty || new_unit_id.touched)">
+										<div *ngIf="new_unit_id.errors.required">
+											{{ 'company.plan.plan-info.unitIdReq' | translate }}
+										</div>
+										<div *ngIf="!new_unit_id.errors.required && new_unit_id.errors.onlyNumbers">
+											{{ 'company.plan.plan-info.numbersOnly' | translate }}
+										</div>
+										<div *ngIf="!new_unit_id.errors.required && !new_unit_id.errors.onlyNumbers && new_unit_id.errors.maxlength">
+											{{ 'company.plan.plan-info.max9Numbers' | translate }}
+										</div>
+
+										<div *ngIf="new_unit_id.errors.alreadyExist">
+											{{ 'company.plan.plan-info.unitExist' | translate }}
+										</div>
+									</div>
+
+									<!-- Validatoin for new record description -->
+									<div *ngIf="new_description.invalid && (new_description.dirty || new_description.touched)">
+										<div *ngIf="new_description.errors.required">
+											{{ 'company.plan.plan-info.descriptionReq' | translate }}
+										</div>
+
+										<div *ngIf="new_description.errors.maxlength">
+											{{ 'company.plan.plan-info.descNotGreater50' | translate }}
+										</div>
+									</div>
+									<!-- Validatoin for new record effective date -->
+									<div *ngIf="new_effective_date.invalid && (new_effective_date.dirty || new_effective_date.touched)">
+										<div *ngIf="new_effective_date.errors.required">
+											{{ 'company.plan.plan-info.effeDateisReq' | translate }}
+										</div>
+
+										<div *ngIf="new_effective_date.errors.dateNotValid">
+											{{ 'company.plan.plan-info.validDate' | translate }}
+										</div>
+										<div *ngIf="new_effective_date.errors.EffectiveDateNotValid">
+											{{ 'company.plan.plan-info.dateCantBeLess' | translate }} </div>
+									</div>
+
+								</div>
+
+								<!-- Validatoin for old record description -->
+								<div style="color: red" class="alert alert-danger" *ngIf="(old_unit_id.invalid && (old_unit_id.dirty || old_unit_id.touched))
+									|| (old_description.invalid && (old_description.dirty || old_description.touched)) 
+									|| (updates_comment.invalid && (updates_comment.dirty || updates_comment.touched)) 
+									|| (old_effective_date.invalid && (old_effective_date.dirty || old_effective_date.touched))">
+
+									<div *ngIf="old_unit_id.invalid && (old_unit_id.dirty || old_unit_id.touched)">
+										<div *ngIf="old_unit_id.errors.required">
+											{{ 'company.plan.plan-info.unitIdReq' | translate }}
+										</div>
+										<div *ngIf="!old_unit_id.errors.required && old_unit_id.errors.onlyNumbers">
+											{{ 'company.plan.plan-info.numbersOnly' | translate }}
+										</div>
+										<div *ngIf="!old_unit_id.errors.required && !old_unit_id.errors.onlyNumbers && old_unit_id.errors.maxlength">
+											{{ 'company.plan.plan-info.max9Numbers' | translate }}
+										</div>
+										<div *ngIf="old_unit_id.errors.alreadyExist">
+											{{ 'company.plan.plan-info.unitExist' | translate }}
+										</div>
+									</div>
+
+									<div *ngIf="old_description.invalid && (old_description.dirty || old_description.touched)">
+										<div *ngIf="old_description.errors.required">
+											{{ 'company.plan.plan-info.descriptionReq' | translate }}
+										</div>
+										<div *ngIf="old_description.errors.maxlength">
+											{{ 'company.plan.plan-info.descNotGreater50' | translate }}
+										</div>
+									</div>
+									<div *ngIf="old_effective_date.invalid && (old_effective_date.dirty || old_effective_date.touched)">
+										<div *ngIf="old_effective_date.errors.required">
+											{{ 'company.plan.plan-info.effeDateisReq' | translate }}
+										</div>
+
+										<div *ngIf="old_effective_date.errors.dateNotValid">
+											{{ 'company.plan.plan-info.validDate' | translate }}
+										</div>
+
+										<div *ngIf="old_effective_date.errors.EffectiveDateNotValid">
+											{{ 'company.plan.plan-info.dateCantBeLess' | translate }}
+										</div>
+									</div>
+									<div *ngIf="updates_comment.invalid && (updates_comment.dirty || updates_comment.touched)">
+										<div *ngIf="updates_comment.errors.maxlength">
+											{{ 'company.plan.plan-info.commentNotGreater500' | translate }}
+										</div>
+									</div>
+								</div>
+								<!-- Validatoin for old record effective date -->
+								<!-- Validation Errors -->
+								<div class="resultsDropdown">Show
+									<select (change)='onPageChange($event.target.value)'>
+										<option value="5">5</option>
+										<option value="10">10</option>
+										<option value="15">15</option>
+										<option value="20">20</option>
+									</select> entries
+								</div>
+								<table class="table table-bordered table-stripped" id="planInfoTable">
+									<thead>
+										<tr>
+											<th width="20%">{{ 'company.plan.plan-info.unitId' | translate }}</th>
+											<th class="amount_right" width="20%">{{ 'company.plan.plan-info.unitDesc' | translate }}</th>
+											<th class="amount_right" width="20%">{{ 'company.plan.plan-info.effective-date' | translate }}</th>
+											<th class="amount_right caps_on" width="20%">{{ 'company.plan.plan-info.action' | translate }}
+											</th>
+										</tr>
+									</thead>
+									<tbody>
+										<!-- Adding New Row Data Here-->
+										<tr *ngIf="UnitAddMode">
+											<td>
+												<input #focusAddUnitEl class="fm-txt form-control" type="text" [formControl]="new_unit_id" (blur)="validateNewUnitId($event)">
+											</td>
+											<td>
+												<input id="planInfoDescription" class="fm-txt form-control" type="text" [formControl]="new_description">
+											</td>
+											<td>
+												<div class="calender-field">
+													<my-date-picker id="planInfoeffective_date" [formControl]="new_effective_date" [options]="myDatePickerOptions" placeholder="{{'common.date-placeholder' | translate}}"
+													 [selDate]="dateNameArray['NewEffectiveDate']" (inputFocusBlur)="changeFilterDateFormat($event, 'new_effective_date', 'NewEffectiveDate', true)">
+													</my-date-picker>
+												</div>
+											</td>
+											<td class="text-center">
+												<button id="planInfoAddNew1" type="button" (click)="addNewUnit(newUnit)" class="table-action-btn save-ico " title="Save">
+													<i class="fa fa-floppy-o" aria-hidden="true"></i>
+												</button>
+												<button id="planInfoDelete" type="button" (click)="resetNewUnitRow()" title="Cancel" class="table-action-btn cancel-ico">
+													<i class="fa fa-times" aria-hidden="true"></i>
+												</button>
+											</td>
+										</tr>
+
+										<!-- Updating Row Data-->
+										<div *ngIf="UnitList.length > 0 || UnitAddMode; then unitRecordFound else unitRecordNotFound">
+										</div>
+										<ng-template #unitRecordNotFound>
+											<tr>
+												<td colspan="4" class="text-center">{{ 'company.plan.benefits.no_data_available' | translate }}</td>
+											</tr>
+										</ng-template>
+
+										<ng-template #unitRecordFound>
+											<tr *ngFor="let unit of UnitList | paginate: { itemsPerPage: tableItemsPerPage, currentPage: cPage }; let rowIndex = index">
+												<td>
+													<span *ngIf="rowIndex != selectedUnit.rowIndex">{{unit.unitId}}</span>
+
+													<input type="hidden" [formControl]="old_unitKey" *ngIf="UnitEditMode && rowIndex == selectedUnit.rowIndex" [(ngModel)]="selectedUnit.unitKey">
+
+													<input #focusEditUnitEl class="fm-txt form-control" type="text" [formControl]="old_unit_id" *ngIf="UnitEditMode && rowIndex == selectedUnit.rowIndex"
+													 [(ngModel)]="selectedUnit.unitId" (blur)="validateOldUnitId(unit.unitId)">
+												</td>
+												<td class="amount_right">
+													<span *ngIf="rowIndex != selectedUnit.rowIndex">{{unit.unitDesc}}</span>
+													<input id="planInfoUnitDesc" class="fm-txt form-control" type="text" [formControl]="old_description" *ngIf="UnitEditMode && rowIndex == selectedUnit.rowIndex"
+													 [(ngModel)]="selectedUnit.unitDesc">
+												</td>
+												<td class="alignDpRight amount_right">
+													<span *ngIf="rowIndex != selectedUnit.rowIndex">{{unit.effectiveOn | dateFormate}}</span>
+
+													<div *ngIf="UnitEditMode && rowIndex == selectedUnit.rowIndex" class="calender-field">
+														<my-date-picker id="planInfoeffective_date1" [formControl]="old_effective_date" [(ngModel)]="selectedUnit.effectiveOn" placeholder="{{'common.date-placeholder' | translate}}"
+														 [options]="myDatePickerOptions" [selDate]="dateNameArray['OldEffectiveOn']" (inputFocusBlur)="changeFilterDateFormat($event, 'old_effective_date', 'OldEffectiveOn', true)">
+														</my-date-picker>
+													</div>
+												</td>
+												<td class="amount_right">
+													<!-- Display button in View Mode -->
+													<button id="planInfoEdit" *ngIf="rowIndex != selectedUnit.rowIndex" type="button" class="table-action-btn edit-ico" (click)="enableEditUnit(unit, rowIndex)">
+														<i class="fa fa-pencil"></i>
+													</button>
+													<button id="planInfoDelete1" *ngIf="rowIndex != selectedUnit.rowIndex" type="button" class="table-action-btn del-ico" (click)="deleteUnit(rowIndex)">
+														<i class="fa fa-trash"></i>
+													</button>
+
+													<!-- Display button in Edit Mode -->
+													<button id="planInfoUpdate1" *ngIf="UnitEditMode && rowIndex == selectedUnit.rowIndex" title="Save" type="button" class="table-action-btn save-ico"
+													 (click)="updateUnit(rowIndex)">
+														<i class="fa fa-floppy-o" aria-hidden="true"></i>
+													</button>
+													<button id="planInfoEdit1" *ngIf="UnitEditMode && rowIndex == selectedUnit.rowIndex" title="Cancel" type="button" class="table-action-btn cancel-ico"
+													 (click)="resetUnitInfo()">
+														<i class="fa fa-times" aria-hidden="true"></i>
+													</button>
+												</td>
+											</tr>
+										</ng-template>
+									</tbody>
+								</table>
+								<div>
+									<div class="text-left" *ngIf="UnitList.length > 0">
+										{{ showPaginationCounterHeading(cPage, tableItemsPerPage, UnitList.length) }}
+									</div>
+
+									<div class="text-right">
+										<pagination-controls (pageChange)="cPage = $event" previousLabel="" nextLabel="" autoHide="false">
+										</pagination-controls>
+									</div>
+								</div>
+							</div>
+							<!-- Table Ends -->
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- AKIRA Benefit Functionality Start Here  -->
+<div id="AkiraBenefitPopup" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button id="CreditLimitClose" type="button" class="close" data-dismiss="modal" (click)="resetAkiraBenefitForm()">&times;</button>
+				<h4 class="modal-title">{{ 'company.plan.benefits.akira-benefit' | translate }}</h4>
+			</div>
+			<div class="modal-body">
+				<div class="grid-inner grid-box">
+					<div class="form-row">
+						<form [formGroup]="addAkiraBenefitForm" (ngSubmit)="submitAkiraBenefitForm(addAkiraBenefitForm)">
+							<div class="row min-ht-sf">
+								<div class="col-md-3 col-xs-12">
+									<!-- 463 Localization issue -->
+									<label>{{ 'company.plan.plan-info.company-name' | translate }}
+										<span class="required">*</span>
+									</label>
+									<div class="calender-field">
+										<input id="benefitCompanyName" type="text" class="fm-txt form-control" placeholder="{{ 'company.plan.plan-info.company_name' | translate }}" name="companyName" formControlName="companyName"
+										disabled/>
+										<show-errors [control]="addAkiraBenefitForm.controls.companyName"></show-errors>
+									</div>
+								</div>
+
+								<div class="col-md-3 col-xs-12">
+									<label>{{ 'company.company-financial-data.admin-rate' | translate }}
+										<span class="required">*</span>
+									</label>
+									<div class="calender-field d-amount">
+										<input #benefitAdminRate type="text" class="fm-txt form-control in-number" name="adminRate" placeholder="{{ 'company.company-financial-data.admin-rate' | translate }}"
+										 formControlName="adminRate" (blur)="addDecimal($event,'adminRate')" />
+										<show-errors [control]="addAkiraBenefitForm.controls.adminRate"></show-errors>
+									</div>
+								</div>
+								<div class="col-md-2 col-xs-12">
+									<label>{{ 'common.effectivedate' | translate }}
+										<span class="required">*</span>
+									</label>
+									<div class="calender-field">
+										<my-date-picker id="benefitEffectiveOn" placeholder="{{ 'company.company-credit-limit.dd/mm/yyyy' | translate }}" [options]="myDatePickerOptions"
+										 name="effectiveDate" formControlName="effectiveDate" (inputFocusBlur)="changeDateFormatCreditLimit($event, 'effectiveDate' ,'addAkiraBenefitForm', true)">
+										</my-date-picker>
+										<show-errors [control]="addAkiraBenefitForm.controls.effectiveDate"></show-errors>
+									</div>
+
+								</div>
+								<div class="col-md-2 col-xs-12">
+									<label>{{ 'common.expirydate' | translate }}</label>
+									<div class="calender-field">
+										<my-date-picker id="benefitExpiredOn" placeholder="{{ 'company.company-credit-limit.dd/mm/yyyy' | translate }}" [options]="myDatePickerOptions"
+										 name="expiryDate" formControlName="expiryDate" [ngClass]="expired  ? 'expired' : 'notExpired'" (inputFocusBlur)="changeDateFormatCreditLimit($event, 'expiryDate' ,'addAkiraBenefitForm',false)">
+										</my-date-picker>
+										<show-errors [control]="addAkiraBenefitForm.controls.expiryDate"></show-errors>
+									</div>
+								</div>
+
+								<div class="col-md-2 col-xs-12 min-ht-half">
+									<label>&nbsp;</label>
+									<button id="submitAkiraBenefitForm" class="btn green-btn btn-lg" type="submit">{{buttonTextBenefit}}</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+
+				<div class="grid-heading">
+					<h3>{{ 'company.plan.benefits.akiraBenefitsList' | translate }}</h3>
+				</div>
+				<table id='akiraBenefitList' class="table table-bordered table-stripped inlinePopupTable">
+
+				</table>
+			</div>
+			<!-- Modal Body End-->
+			<div class="modal-footer">
+				<button id="resetAkiraBenefit" type="button" class="btn grey-btn" data-dismiss="modal" (click)="resetAkiraBenefitForm()">{{ 'button.close' | translate }}</button>
+			</div>
+			<!-- Modal Footer Ends-->
+		</div>
+	</div>
+</div>
+<!-- AKIRA Benefit Functionality End Here -->
+
+<div *ngIf="showLoader" class="loader-outer">
+	<div class="cube-wrapper">
+		<div class="cube-folding">
+			<span class="leaf1"></span>
+			<span class="leaf2"></span>
+			<span class="leaf3"></span>
+			<span class="leaf4"></span>
+		</div>
+		<span class="loading" data-name="Loading">{{ 'company.plan.benefits.pleaseWait' | translate }}</span>
+	</div>
+</div>
+
+  <!-- Log #1151: Letter To Broker -->
+  <div id="letterToBrokerContent" style="display: none">
+
+	<p>{{ CURRENT_DATE | date }}</p>
+	<p>{{BROKER_NAME}} <br>
+	  {{BROKER_ADDRESS_LINE}} <br>
+	  {{BROKER_CITY}}, {{BROKER_PROVINCE}} {{BROKER_POSTAL_CODE}}</p>
+	  
+	<p> {{'uft.dashboard.terminationRefunds.dear' | translate }} &nbsp; {{BROKER_PRIMARY_CONTACT_FIRST_NAME}} {{BROKER_PRIMARY_CONTACT_LAST_NAME}}:</p>
+	<p>{{'uft.dashboard.terminationRefunds.exportLetterContent.weHaveReceivedNotificationFrom' | translate}} {{COMPANY_NAME}} ({{'uft.dashboard.terminationRefunds.exportLetterContent.group' | translate}} {{COMPANY_NUMBER}}) {{'uft.dashboard.terminationRefunds.exportLetterContent.advisingUsToTerminateItsQuikcardHealthSpendingAccountEffective' | translate}} {{TERMINATION_DATE| date }}. </p>
+  
+	<p>{{'uft.dashboard.terminationRefunds.exportLetterContent.weHaveSentALetterPara' | translate}}</p>
+  
+	<p>{{'uft.dashboard.terminationRefunds.exportLetterContent.pleaseContactOurAdmin' | translate}} <a href="mailto:admin@quikcard.com">admin@quikcard.com</a> {{'uft.dashboard.terminationRefunds.exportLetterContent.ifYouHaveAnyQues' | translate }}</p>
+	
+  </div>
+  
+  <!-- Log #1151: Letter to Plan Admin -->
+  <div id="planAdminLetterContent" style="display: none">
+  
+	<p>{{ CURRENT_DATE | date }}</p>
+	<p>{{COMPANY_NAME}} <br>
+	  {{COMPANY_ADDRESS_LINE}} <br>
+	  {{COMPANY_CITY}}, {{COMPANY_PROVINCE}} {{COMPANY_POSTAL_CODE}}</p>  
+	<p>{{'uft.dashboard.terminationRefunds.planAdminLetterContent.dear' | translate}} &nbsp; {{COMPANY_PRIMARY_CONTACT_FIRST_NAME}} {{COMPANY_PRIMARY_CONTACT_LAST_NAME}}:</p>
+	<p>{{'uft.dashboard.terminationRefunds.planAdminLetterContent.weHaveReceivedNotificationFrom' | translate }} {{COMPANY_NAME}} ({{'uft.dashboard.terminationRefunds.planAdminLetterContent.group' | translate}} {{COMPANY_NUMBER}}) {{'uft.dashboard.terminationRefunds.planAdminLetterContent.advisingUsToTerminateItsQuikcardHealthSpendingAccountEffective' | translate}} {{TERMINATION_DATE | date}}.  {{'uft.dashboard.terminationRefunds.planAdminLetterContent.weAreSorry' | translate }}</p>
+	<p>{{'uft.dashboard.terminationRefunds.planAdminLetterContent.yourEmployeesMayPara' | translate }} {{GRACE_PERIOD}} {{'uft.dashboard.terminationRefunds.planAdminLetterContent.daysPastTheTerminationDate' | translate }}</p>
+	<p>{{'uft.dashboard.terminationRefunds.planAdminLetterContent.preAuthorizedMonthlyPara' | translate }}</p>
+	<p>{{'uft.dashboard.terminationRefunds.planAdminLetterContent.atTheConclusionPara' | translate }}</p>
+	<p>{{'uft.dashboard.terminationRefunds.planAdminLetterContent.onceAnyPendingPara' | translate }}</p>
+	<p>{{'uft.dashboard.terminationRefunds.planAdminLetterContent.pleaseContactOurAdmin' | translate }} <a href="mailto:admin@quikcard.com">admin@quikcard.com</a> {{'uft.dashboard.terminationRefunds.planAdminLetterContent.ifYouHaveAnyQues' | translate }}</p>
+	<p>{{'uft.dashboard.terminationRefunds.planAdminLetterContent.onceAgainPara' | translate }}</p>
+	
+  </div>
+
+  <!-- EFAP Benefit Functionality Start Here  -->
+<div id="EFAPBenefitPopup" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button id="CreditLimitClose" type="button" class="close" data-dismiss="modal" (click)="resetEFAPBenefitForm()">&times;</button>
+				<h4 class="modal-title">{{ 'company.plan.benefits.efap-benefit' | translate }}</h4>
+			</div>
+
+			<div class="modal-body">
+				<div class="grid-inner grid-box">
+					<div class="form-row">
+						<form [formGroup]="addEFAPBenefitForm" (ngSubmit)="submitEFAPBenefitForm(addEFAPBenefitForm)">
+							<div class="row min-ht-sf">
+								<div class="col-md-3 col-xs-12">
+									<label>{{ 'company.plan.plan-info.company-name' | translate }}
+										<span class="required">*</span>
+									</label>
+									<div class="calender-field">
+										<input id="EFAPBenefitCompanyName" type="text" class="fm-txt form-control" placeholder="{{ 'company.plan.plan-info.company-name' | translate }}" name="efapCompanyName" formControlName="efapCompanyName"
+										disabled/>
+										<show-errors [control]="addEFAPBenefitForm.controls.efapCompanyName"></show-errors>
+									</div>
+								</div>
+
+								<div class="col-md-3 col-xs-12">
+									<label>{{ 'company.company-financial-data.efap-rate' | translate }}
+										<span class="required">*</span>
+									</label>
+									<div class="calender-field d-amount">
+										<input #benefitAdminRate type="text" class="fm-txt form-control in-number" name="efapRate" placeholder="{{ 'company.company-financial-data.efap-rate' | translate }}"
+										 formControlName="efapRate" (blur)="addDecimal($event,'adminRate')" />
+										<show-errors [control]="addEFAPBenefitForm.controls.efapRate"></show-errors>
+									</div>
+								</div>
+								<div class="col-md-2 col-xs-12">
+									<label>{{ 'common.effectivedate' | translate }}
+										<span class="required">*</span>
+									</label>
+
+									<div class="calender-field">
+										<my-date-picker id="efapBenefitEffectiveOn" placeholder="{{ 'company.company-credit-limit.dd/mm/yyyy' | translate }}" [options]="myDatePickerOptions"
+										 name="efapEffectiveDate" formControlName="efapEffectiveDate" (inputFocusBlur)="changeDateFormatCreditLimit($event, 'efapEffectiveDate' ,'addEFAPBenefitForm', true)">
+										</my-date-picker>
+										<show-errors [control]="addEFAPBenefitForm.controls.efapEffectiveDate"></show-errors>
+									</div>
+
+								</div>
+								<div class="col-md-2 col-xs-12">
+									<label>{{ 'common.expirydate' | translate }}</label>
+									
+									<div class="calender-field">
+										<my-date-picker id="efapBenefitExpiredOn" placeholder="{{ 'company.company-credit-limit.dd/mm/yyyy' | translate }}" [options]="myDatePickerOptions"
+										 name="efapExpiryDate" formControlName="efapExpiryDate" [ngClass]="expired  ? 'expired' : 'notExpired'" (inputFocusBlur)="changeDateFormatCreditLimit($event, 'efapExpiryDate' ,'addEFAPBenefitForm',false)">
+										</my-date-picker>
+										<show-errors [control]="addEFAPBenefitForm.controls.efapExpiryDate"></show-errors>
+									</div>
+								</div>
+
+								<div class="col-md-2 col-xs-12 min-ht-half">
+									<label>&nbsp;</label>
+									<button id="submitEFAPBenefitForm" class="btn green-btn btn-lg" type="submit">{{buttonEFAPBenefit}}</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+
+				<div class="grid-heading">
+					<h3>{{ 'company.plan.benefits.efapBenefitsList' | translate }}</h3>
+				</div>
+				<table id='efapBenefitList' class="table table-bordered table-stripped inlinePopupTable">
+
+				</table>
+			</div>
+
+			<div class="modal-footer">
+				<button id="resetEFAPBenefit" type="button" class="btn grey-btn" data-dismiss="modal" (click)="resetEFAPBenefitForm()">{{ 'button.close' | translate }}</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- EFAP Benefit Functionality End Here -->

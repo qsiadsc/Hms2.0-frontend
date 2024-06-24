@@ -1,0 +1,4939 @@
+/* Header */
+.reddd{
+    background-color: #148b2d !important;
+}
+.main-header {
+    display: inline-block;
+    width: 100%;
+    position: fixed;
+    /* Below dropdown overlap issue fixed by designer */
+    z-index: 99999;
+}
+
+.top-bar {
+    display: inline-block;
+    width: 100%;
+    padding: 6px 0 0;
+    background: #fff;
+}
+
+.logo {
+    float: left;
+    width: 132px;
+    height: 56px;
+}
+.custom-coll label{
+    font-size: 13px !important;
+}
+
+
+#uftDashboard_bar1 thead th[aria-controls="uftDashboard_bar1"]:first-child { 
+    /* display: none; */
+    /* visibility: hidden; */
+    background-image: none !important
+    ;
+    border-right: 0px solid #ddd;
+}
+#uftDashboard_bar1 .dataTable thead .sorting_asc {
+    background-image: none;
+}
+td.dt-body-center.amount_right_grid {
+    border-bottom: 0px !important;
+}
+/* #uftDashboard_bar1 tbody tr:before {
+    content: "";
+    background-color: grey;
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+#uftDashboard_bar1 tbody tr.red:before {
+    background-color: red;
+}
+#uftDashboard_bar1 tbody tr.black:before {
+    background-color: black;
+} */
+.top-bar-right {
+    float: right;
+    margin: 10px 0 0 0;
+}
+
+.top-bar-right a {
+    color: #101010;
+    margin: 0 10px 0;
+}
+
+.top-bar-right button {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+
+/* Header */
+
+
+/* Site Content */
+
+html,
+body {
+    height: 100%;
+}
+input[type="number"]{
+    text-align: right;
+}
+.site-content {
+    display: inline-block;
+    width: 100%;
+    padding: 120px 0 60px 0;
+}
+
+.grid-box {
+    display: inline-block;
+    width: 100%;
+    background: #ffffff;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
+    margin: 0 0 15px;
+}
+
+.grid-inner {
+    display: inline-block;
+    width: 100%;
+    padding: 10px 15px 0;
+}
+
+.section-heading {
+    display: inline-block;
+    width: 100%;
+    margin: 0 0 15px;
+}
+
+label {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    color: #505050;
+    font-weight: 500;
+    font-size: 0.9rem;
+    margin: 0 0 5px 0;
+}
+
+.form-row {
+    display: inline-block;
+    width: 100%;
+    margin: 0 0 0px 0;
+}
+
+.search-field {
+    display: inline-block;
+    width: 100%;
+    position: relative;
+}
+
+.search-field a.search--inner {
+    position: absolute;
+    top: 8px;
+    right: 11px;
+}
+
+.search-field input {
+    padding-right: 30px;
+}
+
+.search-field i {
+    font-size: 16px;
+    color: #505050;
+}
+
+.calender-field {
+    display: inline-block;
+    width: 100%;
+    position: relative;
+}
+my-date-picker.expired .mydp .selectiongroup .selection {
+    color:#555 !important;
+    font-weight: initial;
+}
+
+
+.calender-field a.calendar--inner {
+    position: absolute;
+    top: 8px;
+    right: 11px;
+}
+
+.calender-field i {
+    font-size: 16px;
+    color: #505050;
+}
+
+.search-field .gen-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+}
+
+
+/*.grid-heading .green-btn-add {position: absolute;right: 10px;top: 7px;}*/
+
+.green-btn-add i {
+    margin-right: 6px;
+}
+
+.add-comments div[class^="col-"] {
+    padding-right: 10px;
+}
+
+.field-lang {
+    color: #505050;
+}
+
+.grid-heading .field-lang {
+    position: absolute;
+    right: 10px;
+    top: 4px;
+}
+
+.status-label {
+    position: absolute;
+    right: 0;
+    font-weight: normal;
+    font-size: 12px;
+}
+
+.status-label.active {
+    color: #148b2d;
+    font-weight: 500;
+    clear: both;
+    display: inline-block;
+}
+
+.status-label.inactive {
+    color: #eb5757;
+    font-weight: 500;
+    clear: both;
+    display: inline-block;
+}
+
+/**Start*/
+.select-options-addContactCompany {
+    display: inline-block;
+    width: 100%;
+    margin: 30px 0 0 0;
+}
+
+.select-options-addContactCompany > span {
+    display: inline-block;
+    margin-right: 20px;
+    position: relative;
+    z-index: 9;
+}    
+/**End*/
+
+.select-options {
+    display: inline-block;
+    width: 100%;
+    margin: 2px 0 0 0;
+}
+
+.select-options > span {
+    display: inline-block;
+    margin-right: 20px;
+    position: relative;
+    z-index: 9;
+}
+
+.select-options .eftRadio {
+    margin-left: 7px;
+}
+
+.table-col {
+    padding-right: 15px !important;
+}
+
+.pin-txt {
+    max-width: 60px;
+}
+
+
+/* .modal-dialog .grid-box:last-child{margin-bottom: 0;} */
+
+.field-lang .dropdown-toggle {
+    background: transparent;
+    font-size: 13px;
+}
+
+.field-lang ul.dropdown-menu {
+    left: auto;
+    right: 0;
+    font-size: 13px;
+}
+
+.web-reg {
+    float: right;
+}
+
+.web-reg span {
+    margin-right: 10px;
+}
+
+.pd-rt-27 {
+    padding-right: 28px;
+}
+
+.link-list {
+    display: inline-block;
+}
+
+.link-list li {
+    margin: 0 0 10px 0;
+    position: relative;
+    padding: 0 0 0 16px;
+}
+
+.link-list li:before {
+    content: "\f054";
+    position: absolute;
+    left: 0;
+    top: 3px;
+    font-family: FontAwesome;
+    font-size: 11px;
+    color: #666;
+}
+
+.link-list li a {
+    color: #1a2942;
+    cursor: pointer;
+}
+
+label.dt-picker {
+    background: transparent;
+    border: none;
+    width: auto;
+    position: absolute;
+    top: 1px;
+    right: -18px;
+}
+
+.check-lb {
+    margin-top: 10px;
+}
+
+label>input[type="checkbox"] {
+    margin-right: 7px;
+    margin-top: 3px;
+}
+
+label>input[type="checkbox"] {
+    -webkit-margin-before: 3px;
+}
+
+label>input[type="radio"] {
+    -webkit-margin-end: 3px;
+}
+
+input[type="checkbox"]:focus {
+    outline: 2px solid #66afe9;
+}
+
+.history-ico i {
+    color: #fff !important;
+    font-size: 14px;
+}
+
+
+/* Site Content */
+
+
+/***company-tabs***/
+
+.company-tabs {
+    position: relative;
+    background: #f3f3f3;
+    padding: 0 15px;
+}
+
+.company-tabs li {
+    display: inline-block;
+    float: none;
+    margin-right: 10px;
+}
+
+.company-tabs .web-reg {
+    margin-top: 6px;
+}
+
+.grid-filter {
+    margin-bottom: 5px;
+    padding-right: 15px;
+}
+
+.add-comp {
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.tab-grid-btn {
+    position: relative;
+    top: -36px;
+    float: right;
+    right: 5px;
+}
+
+.table-responsive {
+    clear: both;
+}
+
+.tab-pane {
+    position: relative;
+}
+
+.grid-hdr-btn {
+    padding: 7px 15px;
+}
+
+.history-comments {
+    position: absolute;
+    right: 40px;
+    bottom: 20px;
+}
+
+.txt-top {
+    vertical-align: text-top;
+}
+
+.plan-benefits {
+    border: 1px solid #ddd;
+    display: flex;
+    margin: 0;
+    margin-bottom: 0px;
+    padding: 10px 0;
+    margin-bottom: 20px;
+    background: #fff;
+}
+
+.table-hdr {
+    width: 100%;
+    display: inline-block;
+}
+
+.subtab-grid .green-btn-add {
+    margin-bottom: 10px;
+}
+
+.subtab-grid label {
+    margin-top: 10px;
+}
+
+.tab-hdr-inner {
+    width: 100%;
+}
+
+.grid-cal {
+    margin-left: 15px;
+}
+
+.sub-subtab {
+    margin-bottom: 15px;
+}
+
+#plan-dash .web-reg {
+    margin-bottom: 10px;
+}
+
+
+.tab-hdr-inner {
+    width: 100%;
+}
+
+.tab-hdr-inner h3 {
+    margin: 7px 0;
+}
+
+.table-hdr h3 {
+    margin: 6px 0 5px 0;
+}
+
+
+/***company-tabs***/
+
+.modal .web-reg {
+    margin-top: 0px;
+}
+
+.form-control {
+    height: 37px;
+    border-color: #acacac;
+}
+
+tfoot .dt-picker {
+    padding: 4px 10px;
+}
+
+
+.tb-actions a {
+    margin: 0 0 0 4px;
+}
+
+.tb-actions a.save_row {
+    display: none
+}
+
+.pattren-bg {
+    background: url(/assets/images/pattren-bg.png);
+    background-size: cover;
+}
+
+.search-table table.dataTable thead .sorting,
+.search-table table.dataTable thead .sorting_asc,
+.search-table table.dataTable thead .sorting_desc,
+.search-table table.dataTable thead .sorting_asc_disabled,
+.search-table table.dataTable thead .sorting_desc_disabled {
+    background-position: right 57px !important;
+}
+
+
+/* Filter Table */
+
+table.dataTable>tfoot>th,
+table.dataTable>tfoot>td {
+    padding: 10px 18px 0px 16px !important;
+}
+
+.modal .filter-hdr {
+    background: #fff;
+}
+
+
+/* Filter Table */
+
+
+/*table Common */
+
+.table-bordered>tbody>tr>td,
+.table-bordered>tbody>tr>th,
+.table-bordered>tfoot>tr>td,
+.table-bordered>tfoot>tr>th,
+.table-bordered>thead>tr>td,
+.table-bordered>thead>tr>th,
+datatable-header-cell,
+datatable-body-cell {
+    border: none;
+    border-right: 1px solid #ddd;
+    vertical-align: middle;
+    border-bottom: 1px solid #ddd;
+    padding: 8px 8px 8px 8px !important;
+}
+
+.table-bordered>tbody>tr>td:first-child,
+.table-bordered>tfoot>tr>td:first-child,
+datatable-header-cell:first-child,
+datatable-body-cell:first-child {
+    border-left: 1px solid #ddd;
+}
+
+.table-bordered>tbody>tr:last-child>td {
+    border-bottom: 1px solid #ddd;
+}
+
+datatable-header-cell {
+    border-top: 1px solid #ddd;
+    background: #1a2942;
+    font-size: 0.8rem;
+    color: #fff;
+}
+
+table.dataTable>tfoot>th,
+table.dataTable>tfoot>td {
+    border-top: 1px solid #ddd !important;
+}
+
+
+/* table .mydp .selectorarrow{position: fixed;} */
+
+datatable-header {
+    height: auto !important;
+}
+
+.datatable-row-center,
+.datatable-header-inner {
+    width: 100% !important
+}
+
+#plan-table datatable-header-cell:first-child,
+#plan-table datatable-body-cell:first-child {
+    width: 15% !important;
+}
+
+#plan-table datatable-header-cell:nth-child(2),
+#plan-table datatable-body-cell:nth-child(2) {
+    width: 65% !important;
+}
+
+#plan-table datatable-header-cell:nth-child(3),
+#plan-table datatable-body-cell:nth-child(3) {
+    width: 10% !important;
+}
+
+#plan-table datatable-header-cell:nth-child(4),
+#plan-table datatable-body-cell:nth-child(4) {
+    width: 10% !important;
+}
+
+datatable-selection {
+    width: 100% !important;
+    display: table !important;
+}
+
+.ngx-datatable .datatable-body .datatable-scroll {
+    width: 100% !important;
+}
+
+
+/*table Common */
+
+
+/* Login */
+
+app-login-header+.site-content {
+    background: url(/assets/images/pattren-bg.png);
+    background-size: cover;
+}
+
+.btl .fg-pass {
+    float: none !important;
+    margin: 10px 0;
+    display: inline-block
+}
+
+
+/* calendar */
+
+.calender-field .selectiongroup input.selection {
+    height: 37px !important;
+    padding-right: 50px;
+}
+
+.calender-field .selectiongroup input.selection::placeholder {
+    color: #888 !important;
+    opacity: 1;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+}
+
+.calender-field .selectiongroup button {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    height: 35px;
+    border-radius: 20px;
+}
+
+.mydp .selbtngroup {
+    border: none !important;
+    right: 2px;
+    top: 2px;
+}
+
+
+/* Dev */
+
+.editableInput {
+    display: none;
+}
+
+.disabled,
+.tableViewMode a.edit-ico,
+.tableViewMode .del-ico {
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+.editableInput,
+input[type="checkbox"].editableInput {
+    display: none;
+}
+
+.form-row .col-md-12 {
+    min-height: 75px !important;
+}
+
+.btnpicker,
+.mydp .btnclear {
+    background: transparent !important;
+}
+
+
+/* COB TABLE */
+
+#cob-history-table>thead th:last-child {
+    width: 80px;
+}
+
+#cob-history-table>thead th:nth-child(9),
+#cob-history-table thead th:nth-child(8) {
+    width: 150px;
+}
+
+#cob-history-table>thead th:nth-child(2) {
+    width: 120px;
+}
+
+
+/* COB TABLE */
+
+
+/* Table Buttons */
+
+.tb-actions>div {
+    display: inline-block;
+}
+
+table>thead>tr>td:first-child {
+    border-left: 1px solid #ddd;
+    border-top: 1px solid #ddd;
+}
+
+table>thead>tr>td {
+    border-top: 1px solid #ddd !important;
+    padding: 8px 15px 6px !important;
+}
+
+#company-list thead>tr[role="row"]>th:first-child {
+    width: 130px !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    color: #333 !important;
+}
+
+
+/* Table Buttons */
+
+
+/* validation */
+
+.validation-errors li {
+    font-size: 11px;
+}
+
+
+/* validation */
+
+
+/* 10-may-2018 @harpreet */
+
+table#search-card-table tr {
+    cursor: pointer;
+}
+
+
+/* table#search-card-table tr:hover, table#search-card-table tr td:first-child:hover {
+    background: #CCC !important;
+} */
+
+
+/* span.programStatus{float: left; margin: 2px 15px;} */
+
+span.programStatus {
+    float: right;
+    margin-right: 0;
+    position: relative;
+    margin-top: 5px;
+}
+
+.dataTables_empty {
+    height: 80px;
+}
+
+.search-field .gen-btn {
+    right: 5px;
+}
+
+.search-field .gen-btn i {
+    color: #fff;
+}
+
+.modal {
+    overflow: auto !important;
+    margin-top: 6rem;
+}
+
+a .fa {
+    cursor: pointer;
+}
+
+
+/* Custom */
+
+.mydp .selectiondisabled {
+    background-color: #eee !important;
+    opacity: 1 !important;
+    cursor: default !important;
+}
+
+app-login-header+.site-content {
+    padding-top: 0;
+    min-height: 100vh;
+}
+
+.tb-actions a {
+    float: left;
+    margin-right: 5px
+}
+
+.modal .mydp .selbtngroup {
+    top: 0;
+}
+
+#terminationDateDisabled input {
+    background: #eee;
+}
+
+#familyhistory .grid-heading .web-reg {
+    display: none;
+}
+
+.add-comments {
+    margin-bottom: 15px;
+}
+
+.mydp .selector {
+    border: none !important;
+}
+
+.mydp .selector>table {
+    border: 1px solid #ccc;
+}
+
+
+/* Custom */
+
+
+/* Select View Mode */
+
+.editableSelectInput {
+    display: block !important;
+    border: none;
+    -webkit-appearance: none;
+    background: transparent;
+    box-shadow: none;
+    -moz-appearance: none;
+}
+
+.editableSelectInput:focus,
+.editableSelectInput:active,
+.editableSelectInput:active:focus {
+    box-shadow: none !important;
+}
+
+
+/* Select View Mode */
+
+
+/* Grid Heading */
+
+.grid-heading {
+    max-height: 40px;
+}
+
+.grid-heading .web-reg {
+    margin-top: -5px;
+    margin-right: 14px;
+
+}
+
+
+/* Grid Heading */
+
+
+/* Col- bottom */
+
+.form-row .col-bottom {
+    min-height: 10px !important;
+}
+
+
+/* Col- bottom */
+
+
+/* Buttons */
+
+.form-row .btn {
+    margin-bottom: 15px;
+}
+
+
+/* Buttons */
+
+
+/* Login */
+
+app-login-header+.site-content {
+    background: url(/assets/images/pattren-bg.png);
+    background-size: cover;
+}
+
+.btl .fg-pass {
+    float: none !important;
+    margin: 10px 0;
+    display: inline-block
+}
+
+.login-box-inner .form-row {
+    display: inline-block;
+    width: 100%;
+    min-height: 60px;
+}
+
+.dialog-main {
+    margin-right: auto !important;
+    margin-left: auto !important;
+    width: 40%;
+    padding: 0!important;
+    position: absolute !important;
+    cursor: move;
+    top: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    top: 0 !important;
+    margin: auto !important;
+    right: 0 !important;
+    height: 176px !important;
+}
+
+
+/***12/5/18***/
+
+.form-row div.min-ht-half {
+    min-height: 45px !important;
+}
+
+.tab-pane .form-row .searchreset {
+    padding: 3px 7px;
+    margin: -30px 0 0 0;
+}
+
+.datepicker+label.dt-picker {
+    right: -7px;
+}
+
+
+/* #Terminate .modal-dialog,#activateCardHolder .modal-dialog{width: 460px;} */
+
+textarea.form-control {
+    height: 52px;
+}
+
+
+/***Text overflow fix for placeholder**/
+
+input[placeholder] {
+    text-overflow: ellipsis;
+}
+
+::-moz-placeholder {
+    text-overflow: ellipsis;
+}
+
+
+/* firefox 19+ */
+
+input:-moz-placeholder {
+    text-overflow: ellipsis;
+}
+
+table.inlinePopupTable tr:first-child td:last-child a {
+    display: inline;
+    width: 30px;
+    height: 30px;
+}
+
+table.inlinePopupTable tr td:last-child a {
+    display: none;
+}
+
+
+/* Placeholder */
+
+::-webkit-input-placeholder,
+.form-control::-webkit-input-placeholder {
+    /* Chrome/Opera/Safari */
+    color: #888;
+    text-overflow: ellipsis;
+}
+
+ ::-moz-placeholder,
+.form-control::moz-placeholder {
+    /* Firefox 19+ */
+    color: #888;
+    text-overflow: ellipsis;
+}
+
+ :-ms-input-placeholder,
+.form-control::-ms-input-placeholder {
+    /* IE 10+ */
+    color: #888;
+    text-overflow: ellipsis;
+}
+
+ :-moz-placeholder,
+.form-control::-moz-placeholder {
+    /* Firefox 18- */
+    color: #888;
+    text-overflow: ellipsis;
+}
+
+
+/* Placeholder */
+
+
+/* filter input */
+
+.form-control.tFootInput {
+    height: 34px;
+}
+
+.table-bordered>thead>tr>td,
+.calender-field .selectiongroup input.selection {
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+}
+
+table.table-stripped tr td {
+    background: #fff;
+    position: relative
+}
+
+table.table-stripped tr:nth-child(2n) td {
+    background: #f1f1f1 !important;
+}
+
+table tbody tr:hover td {
+    background: #eee 
+}
+
+.selector table tr td,
+table .selector table tr td,
+.selector table tbody tr:hover td {
+    background: #fff !important;
+}
+
+.selector table tr:nth-child(2n) td {
+    background: #fff !important;
+}
+
+
+/* filter input */
+
+.add-comments .check-lb {
+    margin-top: 17px;
+}
+
+.add-comments .btn {
+    margin: 21px 6px 0px 0;
+}
+
+.mydp .invaliddate {
+    background-color: #fff !important;
+}
+
+my-date-picker .mydp {
+    min-width: 135px;
+}
+
+
+/* flag */
+
+.add-comments .check-lb>input[type="checkbox"] {
+    opacity: 0;
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    -ms-appearance: none;
+    width: 20px;
+    height: 20px;
+}
+
+.add-comments .check-lb>input[type="checkbox"]+span.check-flag {
+    margin: 0 5px 0 -22px;
+}
+
+.add-comments .check-lb>input[type="checkbox"]+span.check-flag i {
+    color: #ccc;
+    cursor: pointer;
+}
+
+.add-comments .check-lb>input[type="checkbox"]:checked+span.check-flag i {
+    color: #d0202f;
+}
+
+.add-comments .check-lb {
+    cursor: pointer;
+}
+
+#company-list tbody tr td,
+#plan-datatable tbody tr td,
+#company-broker tbody tr td,
+#company-list tbody tr td,
+#brokerListTable tbody tr td,
+#search-claim-table tbody tr td,
+#search-serviceProvider-table tbody tr td,
+#search-BAN-table tbody tr td,
+#review-claim-table tbody tr td,
+#searchReviewClaim tbody tr td,
+#rules-list tbody tr td,
+#showClaimItems tbody tr td,
+#search-claim-table tbody tr td,
+#search-serviceProvider-table tbody tr td,
+#search-BAN-table tbody tr td,
+#review-claim-table tbody tr td,
+#searchReviewClaim tbody tr td,
+#rules-list tbody tr td,
+#genrateBatchList tbody tr td,
+#batch-list tbody tr td,
+#provider-list tbody tr td,
+#search-Dental-FeeGuide tbody tr td,#unitFinancialTransactionList tbody tr td{
+    cursor: pointer;
+}
+
+#genrateBatchList tbody tr td,
+#batch-list tbody tr td,
+#provider-list tbody tr td,
+#dentalScheduleList tbody tr td {
+    cursor: pointer;
+}
+
+
+/* .modal .table-responsive{max-height: 220px; overflow-y: auto;} */
+
+.btn.focus,
+.btn:focus,
+.btn:hover,
+.btn:active:focus {
+    color: #fff;
+    box-shadow: none;
+    outline: 0;
+}
+
+.form-row input[type="text"]+.history-ico {
+    position: absolute;
+    top: 8px;
+    right: -4px;
+}
+
+input[type="radio"] {
+    -webkit-margin-before: 2px;
+}
+
+input.error_field,
+select.error_field,
+.error_field .mydp {
+    border: 1px solid rgb(208, 32, 47);
+    box-shadow: 0 0 3px rgb(208, 32, 47, 0.5);
+}
+
+input.wellnessBorder_errorField,
+select.wellnessBorder_errorField,
+.wellnessBorder_errorField .mydp{
+    border: 1px solid rgb(208, 32, 47) !important;
+    box-shadow: 0 0 3px rgb(208, 32, 47, 0.5) !important;
+}
+
+label>.required {
+    color: rgb(208, 32, 47) !important;
+}
+
+.form-row .searchreset {
+    padding: 3px 7px;
+    margin: 0 0 5px 0;
+}
+
+/* a.paginate_button.previous,
+a.paginate_button.next {
+    display: none !important;
+} */
+
+
+/***** Date Popup ****/
+
+.modal .date-pop {
+    width: 400px;
+}
+
+
+/***** Date Popup ****/
+
+.dbPopup {
+    background: rgba(0, 0, 0, 0.7);
+}
+
+table tr.hl-row td {
+    background: rgba(38, 193, 187, 0.5);
+    background-color: rgba(38, 193, 187, 0.5);
+}
+
+table tr.hl-row:nth-child(2n) td {
+    background: rgba(38, 193, 187, 0.5) !important;
+    background-color: rgba(38, 193, 187, 0.5) !important;
+}
+
+table tr.hl-row:hover td {
+    background: rgba(38, 193, 187, 0.7) !important;
+    background-color: rgba(38, 193, 187, 0.7) !important;
+}
+
+table tr.hactive-row td {
+    background: rgba(10, 243, 107, 0.2);
+    background-color: rgba(10, 243, 107, 0.2);
+}
+
+table tr.hactive-row:nth-child(2n) td,table tr:nth-child(2n) td.highlightedRow{
+    background: rgba(10, 243, 107, 0.2) !important;
+    background-color: rgba(10, 243, 107, 0.2) !important;
+}
+
+table tr.hactive-row:hover td,table tr:hover td.highlightedRow,table tr.hterminated-row:hover td.highlightedRow, table tr.inactivated-row:hover td.highlightedRow, table tr.reversal-row:hover td.highlightedRow  {
+    background: rgba(10, 243, 107, 0.3) !important;
+    background-color: rgba(10, 243, 107, 0.3) !important;
+}
+
+
+
+table tr.hsuspended-row td {
+    background: rgba(255, 237, 159, 0.945);
+    background-color: rgba(255, 237, 159, 0.945);
+}
+
+table tr.hsuspended-row:nth-child(2n) td {
+    background: rgba(255, 237, 159, 0.945) !important;
+    background-color: rgba(255, 237, 159, 0.945) !important;
+}
+
+table tr.hsuspended-row:hover td {
+    background: rgba(252, 229, 128, 0.945) !important;
+    background-color: rgba(252, 229, 128, 0.945) !important;
+}
+
+table tr.hterminated-row td, table tr.inactivated-row td, table tr.reversal-row td {
+    background: rgba(208, 32, 47, .4);
+    background-color: rgba(208, 32, 47, .4);
+}
+
+table tr.hterminated-row:nth-child(2n) td, table tr.inactivated-row:nth-child(2n) td,  table tr.reversal-row:nth-child(2n) td {
+    background: rgba(208, 32, 47, .4) !important;
+    background-color: rgba(208, 32, 47, .4) !important;
+}
+
+table tr.hterminated-row:hover td, table tr.inactivated-row:hover td, table tr.reversal-row:hover td {
+    background: rgba(208, 32, 47, .6) !important;
+    background-color: rgba(208, 32, 47, .6) !important;
+}
+
+table tr.hamaincontact-row td {
+    background: rgba(0, 133, 175, 0.1);
+    background-color: rgba(0, 133, 175, 0.1);
+}
+
+
+
+
+
+table tr.hamaincontact-row:nth-child(2n) td {
+    background: rgba(0, 133, 175, 0.1) !important;
+    background-color: rgba(0, 133, 175, 0.1) !important;
+}
+
+table tr.hamaincontact-row:hover td {
+    background: rgba(0, 133, 175, 0.2) !important;
+    background-color: rgba(0, 133, 175, 0.2) !important;
+}
+
+#terminationDateDisabled input+.selbtngroup .mydpicon,
+#terminationDateDisabled .btnpicker,
+#terminationDateDisabled .btnpicker {
+    display: none;
+    pointer-events: none;
+}
+
+#terminationDateDisabled input,
+#terminationCategory {
+    pointer-events: none;
+    background: #eee;
+}
+
+#terminationDateDisabled .btnclear {
+    pointer-events: none;
+}
+
+span.loader {
+    position: fixed;
+    width: 124px;
+    height: 124px;
+    background: url(/assets/images/loader.gif);
+    z-index: 99999;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    background-size: cover;
+}
+
+
+/***breadcrumbs***/
+
+.breadcrumb {
+    text-transform: uppercase;
+    font-size: 11px;
+    margin-bottom: 10px;
+    color: #404040;
+    padding: 0;
+    font-weight: 500;
+    background: transparent;
+}
+
+.breadcrumb a {
+    color: #404040;
+}
+
+.breadcrumb a.active {
+    color: #00bbb5;
+}
+
+.breadcrumb .breadcrumb-item {
+    cursor: pointer;
+}
+
+.breadcrumb .active {
+    color: #00bbb5;
+}
+
+
+/* commemt Flag hover */
+
+.comment-fm {
+    position: relative;
+}
+
+.comment-top {
+    background: #2a3950;
+    padding: 20px;
+    border-radius: 4px;
+    position: absolute;
+    z-index: 999999999;
+    display: none;
+    left: -5px;
+    top: 28px;
+    min-width: 150px;
+    max-width: 800px;
+    width: max-content;
+    right: 0;
+    margin: 0 auto;
+    width: -moz-max-content;
+}
+
+.comment-top p {
+    color: #fff;
+    font-size: 13px;
+    font-weight: 300;
+}
+#SearchedCards .comment-top p {
+    color: #fff;
+    font-size: 13px;
+    font-weight: 300;
+    max-width: 117px;
+    text-align: left;
+} 
+.comment-top:after {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 14px;
+    margin-left: -8px;
+    width: 0;
+    height: 0;
+    border-bottom: 8px solid #2a3950;
+    border-right: 8px solid transparent;
+    border-left: 8px solid transparent;
+}
+
+.comment-fm:hover .comment-top {
+    display: block;
+}
+
+table.dataTable tbody th.dt-body-center,
+table.dataTable tbody td.dt-body-center {
+    text-align: left !important;
+}
+
+.table-responsive .calender-field .selectiongroup input.selection {
+  height: 36px !important;
+  padding-right: 50px;
+  margin: 2px 0 0 0;
+}
+
+#comments_wrapper i.fa-flag {
+    color: #d0202f;
+}
+
+.alberta-gov i.fa-user {
+    color: #0085af
+}
+
+.quikCard i.fa-user {
+    color: #d0202f
+}
+
+.multi-col .table-bordered>thead>tr>th,
+.multi-col .table-bordered>tbody>tr>td {
+    padding: 4px !important;
+}
+
+.multi-col table {
+    table-layout: fixed;
+}
+
+.multi-col table input,
+.multi-col table select {
+    max-width: 100%;
+}
+
+.col-customcol {
+    width: 16.5%
+}
+
+.col-cardDatecol {
+    width: 12.5%
+}
+
+.plan-ct {
+    display: inline-block;
+    margin: -4px 0 0 10px;
+}
+
+.plan-ct .history-ico {
+    margin: 0 6px 0 0;
+    position: relative;
+    padding: 0;
+    background: transparent;
+}
+
+.plan-ct .comment-top {
+    padding: 5px 10px;
+    min-width: 10px;
+}
+
+.plan-ct .history-ico:hover .comment-top {
+    display: block;
+    width: -moz-max-content;
+}
+
+.plan-ct .history-ico>span {
+    display: inline-block;
+    width: 28px;
+    height: 28px;
+    background-color: red;
+    background-image: url(../images/discipiline-icon.png);
+    background-repeat: no-repeat;
+    border-radius: 50%;
+}
+
+.grid-heading h3 {
+    vertical-align: top;
+}
+
+.plan-ct .history-ico span.dental-ico {
+    background-color: #0085af;
+    background-position: 5px 4px;
+}
+
+.plan-ct .history-ico span.vision-ico {
+    background-color: #009989;
+    background-position: -20.6px 3px;
+}
+
+.plan-ct .history-ico span.health-ico {
+    background-color: #225692;
+    background-position: -55px 3px;
+}
+
+.plan-ct .history-ico span.drug-ico {
+    background-color: #616161;
+    background-position: -84px 4px;
+}
+
+.plan-ct .history-ico span.supplement-ico {
+    background-color: #00bbb5;
+    background-position: -118px 3px;
+}
+
+.plan-ct .history-ico span.wellness-ico {
+    background-color: #f47121;
+    background-position: -148px 3px;
+}
+
+.multi-col my-date-picker .mydp {
+    min-width: 10px;
+}
+
+.multi-col table .form-control {
+    height: 30px;
+    padding: 2px;
+}
+
+.multi-col table td span {
+    width: 100%;
+    overflow: hidden;
+    display: inline-block;
+    text-overflow: ellipsis;
+    /* word-wrap: break-word; */
+    white-space: nowrap;
+}
+
+.addUserForm  .form-row .min-ht-sf div[class^="col-"] {
+    min-height: 100px;
+}
+
+.form-row .min-ht-sf div[class^="col-"] {
+    min-height: 75px ;
+}
+
+
+.ngui-auto-complete .mouthIDform-row .min-ht-sf div[class^="col-"] {
+    min-height: auto ;
+    word-break: break-all;
+}
+
+.form-row .min-ht-st div[class^="col-"] {
+    min-height: 60px !important;
+}
+
+.form-row .min-ht-tt div[class^="col-"] {
+    min-height: 30px !important;
+}
+
+#dtClaimDate .selection {
+    height: 28px !important;
+}
+
+#dtClaimDate .selection+.selbtngroup {
+    height: 29px !important;
+}
+
+b {
+    font-weight: bold;
+}
+
+.aqua {
+    background-color: #cffdfc;
+}
+
+.pink {
+    background-color: #fdd6ec !important;
+}
+
+.grey {
+    background-color: #c5c5c5;
+}
+
+.white {
+    background-color: #fff;
+}
+
+.historyPink{
+    background-color: #f798ce !important;
+}
+
+table tr.historyPink td,
+table.table-stripped tr.historyPink td {
+    background: #f798ce !important;
+}
+
+table tr.historyPink:hover td {
+    background: #f798ce !important;
+}
+
+.serviceProveiderAdrs option:not(:checked) { 
+  background-color: white; 
+  color:#000;
+}
+.success-msg {
+    font-size: 20px;
+    color: #000;
+    margin: 40px 0;
+    line-height: 32px;
+}
+
+.success-msg span {
+    clear: both;
+    display: block;
+}
+
+table tr.total-row td input {
+    font-weight: 600;
+}
+
+.custom-col {
+    width: 13.5%;
+}
+.custom-coll {
+    width: 11.4%;
+}
+
+.custom-checkcol {
+    width: 18%;
+}
+.custom-checkcoll {
+    width: 15%;
+    margin-top: -1%
+}
+.progress-bar {
+    background: #00bbb5;
+}
+
+.custom-checkcol .select-options {
+    margin: -4px 0 0 0;
+}
+
+.row-btn-bottom .btn {
+    margin-bottom: 0;
+}
+
+
+/* rules search dropdown*/
+
+.dropdown-menu {
+    top: 39px;
+    left: 7px;
+}
+
+.input-group-text i {
+    position: absolute;
+    right: 15px;
+    z-index: 3;
+    top: 9px;
+    font-size: 15px;
+}
+
+
+/* inline Table */
+
+generic-table table thead tr th.sortColm {
+    cursor: text !important;
+    pointer-events: none !important;
+}
+
+generic-table table thead tr th.sortColm span {
+    cursor: pointer !important;
+    pointer-events: auto !important;
+}
+
+
+generic-table table thead tr th.sortColm {
+    cursor: text;
+    pointer-events: none !important;
+}
+
+generic-table table thead tr th.sortColm {
+    cursor: text;
+    pointer-events: none !important;
+}
+
+generic-table table thead tr th.file-reference-column.sortColm.sort-desc::after {
+    cursor: pointer !important;
+    pointer-events: auto !important;
+}
+
+generic-table table thead tr th.file-reference-column.sortColm.sort-asc::after {
+    cursor: pointer !important;
+    pointer-events: auto !important;
+}
+
+generic-table table thead tr th.received-date-column.sortColm.sort-desc::after {
+    cursor: pointer !important;
+    pointer-events: auto !important;
+}
+
+generic-table table thead tr th.received-date-column.sortColm.sort-asc::after {
+    cursor: pointer !important;
+    pointer-events: auto !important;
+}
+
+generic-table table thead tr th.d-icon-column.sortColm.sort-desc::after {
+    cursor: pointer !important;
+    pointer-events: auto !important;
+}
+
+generic-table table thead tr th.d-icon-column.sortColm.sort-asc::after {
+    cursor: pointer !important;
+    pointer-events: auto !important;
+}
+
+generic-table table thead tr th.status-column.sortColm.sort-desc::after {
+    cursor: pointer !important;
+    pointer-events: auto !important;
+}
+
+generic-table table thead tr th.status-column.sortColm.sort-asc::after {
+    cursor: pointer !important;
+    pointer-events: auto !important;
+}
+
+generic-table table thead tr th.claim-source-column.sortColm.sort-desc::after {
+    cursor: pointer !important;
+    pointer-events: auto !important;
+}
+
+generic-table table thead tr th.claim-source-column.sortColm.sort-asc::after {
+    cursor: pointer !important;
+    pointer-events: auto !important;
+}
+
+generic-table table thead tr th.sort-enable {
+    cursor: pointer;
+}
+
+generic-table table thead tr th.sort-enable:hover {
+    text-decoration: underline;
+}
+
+generic-table table thead tr th.sort-asc {
+    cursor: pointer;
+}
+
+generic-table table thead tr th.sort-asc:hover {
+    text-decoration: underline;
+}
+
+generic-table table thead tr th.sort-asc::after {
+    content: '';
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 5px solid #000;
+    border-radius: 2px;
+    margin-left: 4px;
+    vertical-align: middle;
+}
+
+generic-table table thead tr th.sort-desc {
+    cursor: pointer;
+}
+
+generic-table table thead tr th.sort-desc:hover {
+    text-decoration: underline;
+}
+
+generic-table table thead tr th.sort-desc::after {
+    content: '';
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid #000;
+    border-radius: 2px;
+    margin-left: 4px;
+    vertical-align: middle;
+}
+
+generic-table table thead tr th.checkbox-column {
+    min-width: 30px;
+}
+
+generic-table table span.gt-row-label,
+generic-table table th.gt-sort-label {
+    display: none;
+}
+
+generic-table table tr td.gt-button {
+    vertical-align: middle;
+    padding-top: 0;
+    padding-bottom: 0;
+    width: 1px;
+}
+
+generic-table table tr.row-expanded>td {
+    padding: 0;
+}
+
+generic-table table input.inline-edit {
+    border: none;
+    outline: none;
+    line-height: initial;
+    width: 100%;
+    background: none;
+    position: relative;
+    text-align: inherit;
+}
+
+generic-table table .gt-inline-edit {
+    position: relative;
+}
+
+generic-table table .gt-inline-edit::before {
+    opacity: 0;
+    position: absolute;
+    content: '';
+    margin-left: -0.75rem;
+    background: #007bff;
+    height: 1px;
+    width: 100%;
+    top: auto;
+    bottom: -1px;
+    transform: scaleX(0);
+    transition: all 0.2s ease-in-out;
+}
+
+generic-table table .gt-inline-edit.gt-edited::before {
+    transform: scaleX(1);
+    opacity: 1;
+}
+
+generic-table table .gt-inline-edit .gt-dropdown .dropdown-menu {
+    animation: fade-in 0.2s ease-in-out;
+}
+
+generic-table table .gt-inline-edit .gt-dropdown .dropdown-menu .dropdown-item {
+    cursor: pointer;
+}
+
+generic-table table .gt-inline-edit .gt-inline-edit-notice {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    display: inline-block;
+    width: 100%;
+    font-size: 11px;
+    text-transform: uppercase;
+    color: #007bff;
+    text-align: center;
+}
+
+generic-table table .gt-inline-edit.gt-edited .gt-inline-edit-notice {
+    opacity: 1;
+}
+
+generic-table table thead.gt-totals {
+    border-bottom: 2px solid #e9ecef;
+}
+
+generic-table table tfoot.gt-totals {
+    border-top: 2px solid #e9ecef;
+}
+
+generic-table table .gt-totals tr td {
+    font-weight: bold;
+    color: #495057;
+    background: #f8f9fa;
+    font-size: 0.875rem;
+}
+
+generic-table table.table-sm .gt-inline-edit::before {
+    margin-left: -0.3rem;
+}
+
+generic-table gt-checkbox label {
+    margin: 0;
+    vertical-align: middle;
+}
+
+.gt-dropdown-menu.show {
+    max-height: 320px;
+    overflow: auto;
+}
+
+.ngx-pagination {
+    border: 1px solid #ddd;
+    display: inline-block;
+    margin: 0 0 0 0;
+    border-radius: 3px;
+}
+
+.ngx-pagination .pagination-next a::after,
+.ngx-pagination .pagination-next.disabled::after,
+.ngx-pagination .pagination-previous a::before,
+.ngx-pagination .pagination-previous.disabled::before {
+    margin: 0 0 0 0 !important
+}
+
+.ngx-pagination a,
+.ngx-pagination .current span {
+    padding: 8px 16px !important;
+    display: inline-block !important;
+    margin: 0 0 0 -1px;
+}
+
+.ngx-pagination .current {
+    padding: 0 !important
+}
+
+.ngx-pagination a {
+    border-right: 1px solid #ddd;
+}
+
+.ngx-pagination li {
+    float: left;
+    margin-right: 0 !important
+}
+
+.ngx-pagination li:last-child a {
+    border-right: none !important
+}
+
+.ngx-pagination .disabled {
+    padding: 3px 14px !important;
+}
+
+.ngx-pagination .pagination-next.disabled::after,
+.ngx-pagination .pagination-previous.disabled::before {
+    margin: 4px 0 0 0 !important
+}
+
+@media (max-width: 768px) {
+    generic-table table.table-stacked thead tr {
+        display: table;
+        width: 100%;
+    }
+    generic-table table.table-stacked thead tr th {
+        text-align: right;
+    }
+    generic-table table.table-stacked thead tr th:first-child {
+        text-align: left;
+    }
+    generic-table table.table-stacked thead tr th.sort-disable {
+        display: none;
+    }
+    generic-table table.table-stacked thead tr th.gt-sort-label {
+        display: table-cell;
+    }
+    generic-table table.table-stacked tr+tr {
+        border-top: 1px solid #ddd;
+    }
+    generic-table table.table-stacked tr td {
+        display: block;
+        border: none;
+    }
+    generic-table table.table-stacked tr td>span {
+        display: table-cell;
+    }
+    generic-table table.table-stacked tr td>span.gt-row-label {
+        white-space: nowrap;
+        font-weight: bold;
+    }
+    generic-table table.table-stacked tr td>span.gt-row-content {
+        text-align: right;
+        width: 100%;
+    }
+    generic-table table.table-stacked tr td.hidden-stacked {
+        display: none;
+    }
+}
+
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+
+/* inline Table */
+
+
+/* Multiselect */
+
+ss-multiselect-dropdown .dropdown>.btn {
+    margin: 0;
+    text-align: left;
+    width: 100%;
+}
+
+.dropdown.dropdown-inline {
+    float: left;
+    width: 100%;
+    background: #fff;
+}
+
+
+/* Multiselect */
+
+button.table-action-btn {
+    border: 0;
+}
+
+.form-row .filter-column .btn {
+    margin-bottom: 0
+}
+
+
+/* Multiselect */
+
+
+/* Multiselect */
+
+ss-multiselect-dropdown .dropdown>.btn {
+    margin: 0;
+    text-align: left;
+    width: 100%;
+}
+
+.dropdown.dropdown-inline {
+    float: left;
+    width: 100%;
+    background: #fff;
+}
+
+
+/* Multiselect */
+
+
+/* Table */
+
+.selector table tr:hover td {
+    background: transparent !important;
+}
+
+.ngx-datatable .datatable-body .datatable-body-row {
+    display: table !important;
+    width: 100% !important;
+}
+
+
+/* Table */
+
+
+/* Tree Table */
+
+.tree-table table th {
+    padding: 10px !important;
+    text-align: left;
+    border-right: 1px solid #ddd !important;
+    border-bottom: 1px solid #ddd;
+}
+
+.tree-table table th {
+    padding: 10px !important;
+    text-align: left;
+    border-right: 1px solid #ddd !important;
+    border-bottom: 1px solid #ddd;
+}
+
+.ui-treetable-toggler.fa {
+    font-size: 20px;
+}
+
+.ui-treetable-toggler.fa+input {
+    -webkit-margin-before: 4px;
+}
+
+.ui-treetable-row>td {
+    border-right: 1px solid #ddd !important;
+    vertical-align: middle;
+    border-bottom: 1px solid #ddd !important;
+    padding: 8px !important;
+}
+
+.ui-treetable-row>td:first-child {
+    border-left: 1px solid #ddd !important;
+}
+
+.ui-treetable-row .ui-treetable-child-table-container .ui-treetable-row>td:first-child {
+    border-left: 0 !important;
+}
+
+.ui-treetable-row .ui-treetable-child-table-container .ui-treetable-row>td {
+    padding: 8px !important;
+}
+
+.ui-treetable-row .ui-treetable-child-table-container .ui-treetable-row>.ui-treetable-child-table-container {
+    padding: 0px !important;
+}
+
+.ui-treetable-row .ui-treetable-child-table-container .ui-treetable-row>.ui-treetable-child-table-container tbody:last-child .ui-treetable-row>td {
+    border-bottom: 0 !important;
+}
+
+.ui-treetable-row td.ui-treetable-child-table-container {
+    padding: 0 !important;
+}
+
+gt-table-info {
+    float: left;
+    margin-top: 10px
+}
+
+gt-pagination {
+    float: right
+}
+
+gt-pagination .pagination {
+    margin: 0 0 10px 0
+}
+
+#plan-table .datatable-row-center button {
+    padding: 4px 8px;
+    border: 0;
+    background: #616161;
+    border-radius: 6px;
+    display: inline-block;
+    margin: 0 0 0 5px;
+}
+
+#plan-table .datatable-row-center button i {
+    color: #fff;
+}
+
+#plan-table ul.pager li.disabled,
+#plan-table ul.pager li a.next {
+    display: none
+}
+
+#main-plan-ot table,
+.tree-table,
+.cardholder-table {
+    margin-bottom: 15px !important;
+}
+
+#main-plan-ot .ui-treetable-row table {
+    margin-bottom: 0 !important
+}
+
+.table-hdr .web-reg .btn {
+    margin-bottom: 0;
+    margin: 0px 0 3px 0;
+}
+
+.tab-hdr-inner .web-reg .btn {
+    margin-bottom: 0;
+    margin: 4px 0 0 0;
+}
+
+.pager li>a,
+.pager li>span {
+    padding: 5px 10px !important;
+    border-radius: 6px !important;
+    margin: 0 3px;
+}
+
+.coverageCategory table td {
+    height: 40px;
+}
+
+.coverageCategory .table-bordered>tbody>tr>td {
+    padding: 4px 10px 4px 10px !important
+}
+
+#main-plan-ot .sub-tabs {
+    margin: 0 0 15px;
+}
+
+.search-top .searchreset {
+    margin: 0px 0 0 0;
+    position: relative;
+    z-index: 9;
+}
+
+.search-top {    
+    margin: 10px 10px -30px 0px;
+    float: right;
+    width: auto;
+}
+
+#search-claim-table .form-control {
+    padding: 6px 2px;
+}
+
+.blank-message,
+.empty-row {
+    height: 100px;
+    text-align: center;
+    padding: 40px 0 50px 0;
+    font-size: 15px;
+    background: #eee;
+    margin: 0 0 15px 0;
+}
+
+.selected-list .c-btn {
+    box-shadow: none !important;
+    border-color: #acacac !important;
+    min-height: 37px;
+    padding: 6px 10px !important;
+}
+
+.selected-list .c-btn:focus {
+    border-color: #66afe9;
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);
+}
+
+.form-row table td .btn {
+    margin-bottom: 0;
+}
+
+table.dataTable.display tbody td,
+table.dataTable.row-border tbody td {
+    border-top: 0 !important;
+    cursor: pointer;
+}
+
+.modal-footer .btn {
+    margin-bottom: 0;
+}
+
+#PrintClaimForm table td,
+#PrintClaimForm table tr:hover td {
+    background: #fff !important;
+}
+
+generic-table table thead tr th.sort-asc::after {
+    border-bottom: 5px solid #fff !important;
+}
+
+generic-table table thead tr th.sort-desc::after {
+    border-top: 5px solid #fff !important;
+}
+
+table tr.pink td,
+table.table-stripped tr.pink td {
+    background: #ffe2f2 !important;
+}
+
+table tr.pink:hover td {
+    background: #fdd6ec !important;
+}
+
+.status-label a {
+    cursor: pointer
+}
+
+.c-btn span {
+    font-size: 13px;
+    line-height: 23px;
+}
+
+.lazyContainer label,
+.select-all label {
+    font-size: 0.8rem
+}
+
+.claim-status {
+    background: #00bbb5;
+    color: #fff;
+}
+
+.status-btn {
+    padding: 3px 5px !important;
+    font-size: 12px;
+    margin: 2px 0 0 0 !important;
+    cursor: auto;
+}
+
+.form-row .pull-right>.btn {
+    margin-bottom: 4px;
+}
+
+/* Height changed because it did not used to show scroll in fee guide section. (06-09-2023) Prabhat */
+ul.lazyContainer {
+    max-height: 175px !important;
+}
+
+.active-row td {
+    background: #00bbb5 !important;
+    border: 1px solid #ddd;
+}
+
+.coverageCategory table .checkbox-column .gt-row-content {
+    display: inline-block;
+    height: 0;
+}
+
+.coverageCategory table th:not(:first-child), .coverageCategory td:not(:first-child), #enteredClaim table th:not(:first-child), #enteredClaim table td:not(:first-child) {
+    text-align: right;
+}
+
+.ui-treetable table th:not(:first-child), .ui-treetable table tbody td:not(:first-child) {
+      text-align: right;
+}
+
+.coverageCategory table td,table#users-list td {
+    cursor: pointer;
+}
+
+.coverageCategory table .form-control {
+    height: 30px;
+}
+
+.dataTables_wrapper .dataTables_length {
+    float: left;    
+    margin: 10px 0px 5px 5px;
+}
+
+
+.btn:first-child {
+    margin-left: 0
+}
+
+.modal table {
+    margin-bottom: 10px !important;
+}
+
+.modal .mydp .selector>table {
+    margin-bottom: 0px !important;
+}
+
+.form-row .single-col {
+    min-height: 55px !important;
+}
+
+.tab-pane>.btn {
+    margin-bottom: 0;
+    margin-left: 8px;
+}
+
+.dataTables_wrapper .dataTables_info {
+    padding-top: 15px !important;
+}
+
+.dataTables_wrapper .dataTables_paginate {
+    padding-bottom: 10px;
+    padding-top: 10px !important;
+}
+
+.plan-tab textarea {
+    margin-bottom: 10px;
+}
+
+.sub-tabs {
+    padding-bottom: 5px;
+}
+
+#PrintCardDetails .modal-dialog {
+    width: 370px;
+}
+
+#PrintCard table td,
+#PrintCard table tr:hover td {
+    background: #fff !important;
+}
+
+#PrintCardDetails .modal table {
+    margin-bottom: 0 !important;
+}
+
+#PrintCardDetails .modal-content {
+    padding: 10px;
+}
+
+#PrintCardDetails .modal-body {
+    padding: 0;
+}
+
+@media(min-width:1200px) {
+    .table-responsive {
+        overflow: inherit;
+    }
+}
+
+#TotalHistory {
+    table-layout: fixed;
+}
+
+.multi-col {
+    overflow: auto;
+    margin: 0 0 10px 0;
+}
+
+.m-tabs {
+    margin: 15px 0 0;
+    display: inline-block;
+    width: 100%;
+}
+
+.m-tabs+.tab-content {
+    padding-bottom: 15px;
+}
+
+#new_effective_date .selector {
+    bottom: 50px;
+}
+
+.loader-outer {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 999999;
+}
+
+
+/* Loader Animation */
+
+.cube-folding {
+    width: 100px;
+    height: 100px;
+    display: inline-block;
+    -moz-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+    font-size: 0;
+}
+
+.cube-folding span {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    -moz-transform: scale(1.1);
+    -ms-transform: scale(1.1);
+    -webkit-transform: scale(1.1);
+    transform: scale(1.1);
+    display: inline-block;
+}
+
+.cube-folding span::before {
+    content: "";
+    background-color: #00bbb5;
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: block;
+    width: 50px;
+    height: 50px;
+    -moz-transform-origin: 100% 100%;
+    -ms-transform-origin: 100% 100%;
+    -webkit-transform-origin: 100% 100%;
+    transform-origin: 100% 100%;
+    -moz-animation: folding 2.5s infinite linear both;
+    -webkit-animation: folding 2.5s infinite linear both;
+    animation: folding 2.5s infinite linear both;
+}
+
+.cube-folding .leaf2 {
+    -moz-transform: rotateZ(90deg) scale(1.1);
+    -ms-transform: rotateZ(90deg) scale(1.1);
+    -webkit-transform: rotateZ(90deg) scale(1.1);
+    transform: rotateZ(90deg) scale(1.1);
+}
+
+.cube-folding .leaf2::before {
+    -moz-animation-delay: 0.3s;
+    -webkit-animation-delay: 0.3s;
+    animation-delay: 0.3s;
+    background-color: #00bbb5;
+}
+
+.cube-folding .leaf3 {
+    -moz-transform: rotateZ(270deg) scale(1.1);
+    -ms-transform: rotateZ(270deg) scale(1.1);
+    -webkit-transform: rotateZ(270deg) scale(1.1);
+    transform: rotateZ(270deg) scale(1.1);
+}
+
+.cube-folding .leaf3::before {
+    -moz-animation-delay: 0.9s;
+    -webkit-animation-delay: 0.9s;
+    animation-delay: 0.9s;
+    background-color: #00bbb5;
+}
+
+.cube-folding .leaf4 {
+    -moz-transform: rotateZ(180deg) scale(1.1);
+    -ms-transform: rotateZ(180deg) scale(1.1);
+    -webkit-transform: rotateZ(180deg) scale(1.1);
+    transform: rotateZ(180deg) scale(1.1);
+}
+
+.cube-folding .leaf4::before {
+    -moz-animation-delay: 0.6s;
+    -webkit-animation-delay: 0.6s;
+    animation-delay: 0.6s;
+    background-color: #00bbb5;
+}
+
+@-moz-keyframes folding {
+    0%,
+    10% {
+        -moz-transform: perspective(140px) rotateX(-180deg);
+        transform: perspective(140px) rotateX(-180deg);
+        opacity: 0;
+    }
+    25%,
+    75% {
+        -moz-transform: perspective(140px) rotateX(0deg);
+        transform: perspective(140px) rotateX(0deg);
+        opacity: 1;
+    }
+    90%,
+    100% {
+        -moz-transform: perspective(140px) rotateY(180deg);
+        transform: perspective(140px) rotateY(180deg);
+        opacity: 0;
+    }
+}
+
+@-webkit-keyframes folding {
+    0%,
+    10% {
+        -webkit-transform: perspective(140px) rotateX(-180deg);
+        transform: perspective(140px) rotateX(-180deg);
+        opacity: 0;
+    }
+    25%,
+    75% {
+        -webkit-transform: perspective(140px) rotateX(0deg);
+        transform: perspective(140px) rotateX(0deg);
+        opacity: 1;
+    }
+    90%,
+    100% {
+        -webkit-transform: perspective(140px) rotateY(180deg);
+        transform: perspective(140px) rotateY(180deg);
+        opacity: 0;
+    }
+}
+
+@keyframes folding {
+    0%,
+    10% {
+        -moz-transform: perspective(140px) rotateX(-180deg);
+        -ms-transform: perspective(140px) rotateX(-180deg);
+        -webkit-transform: perspective(140px) rotateX(-180deg);
+        transform: perspective(140px) rotateX(-180deg);
+        opacity: 0;
+    }
+    25%,
+    75% {
+        -moz-transform: perspective(140px) rotateX(0deg);
+        -ms-transform: perspective(140px) rotateX(0deg);
+        -webkit-transform: perspective(140px) rotateX(0deg);
+        transform: perspective(140px) rotateX(0deg);
+        opacity: 1;
+    }
+    90%,
+    100% {
+        -moz-transform: perspective(140px) rotateY(180deg);
+        -ms-transform: perspective(140px) rotateY(180deg);
+        -webkit-transform: perspective(140px) rotateY(180deg);
+        transform: perspective(140px) rotateY(180deg);
+        opacity: 0;
+    }
+}
+
+.cube-wrapper {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    margin-top: -50px;
+    margin-left: -50px;
+    width: 100px;
+    height: 100px;
+    text-align: center;
+}
+
+.cube-wrapper .loading {
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    display: block;
+    color: #fff;
+    position: relative;
+    top: 25px;
+    z-index: 2;
+    -moz-animation: text 0.5s ease infinite alternate;
+    -webkit-animation: text 0.5s ease infinite alternate;
+    animation: text 0.5s ease infinite alternate;
+}
+
+.badge-notify {
+    background: #1d527b !important;
+    color: #fff !important;
+    position: relative;
+    top: -10px;
+    left: -4px;
+    padding: 3px 5px !important;
+}
+
+@-moz-keyframes text {
+    100% {
+        top: 35px;
+    }
+}
+
+@-webkit-keyframes text {
+    100% {
+        top: 35px;
+    }
+}
+
+@keyframes text {
+    100% {
+        top: 35px;
+    }
+}
+
+.loading-ot {
+    overflow: hidden
+}
+
+.dataTables_wrapper .fa.fa-flag {
+    color: red;
+}
+
+table .green-btn-add {
+    padding: 6px 8px;
+}
+
+.wd-tt {
+    width: 26%;
+}
+
+.disableMultiselect {
+    pointer-events: none;
+}
+
+.add-info {
+    margin-bottom: 10px;
+}
+
+textarea {
+    margin-bottom: 10px;
+}
+
+
+/* Dashboard */
+
+.db-box {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    background: #fff;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    padding: 15px 10px 15px 20px;
+}
+
+.db-box:after {
+    content: "";
+    position: absolute;
+    width: 10px;
+    height: 100%;
+    background: #00bbb5;
+    left: 0;
+    top: 0;
+}
+
+.db-box h3 {
+    font-size: 15px;
+    margin-bottom: 5px;
+    color: #777;
+}
+
+.fig-facts {
+    display: inline-block;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.cl2:after {
+    background: #f47121;
+}
+
+.cl3:after {
+    background: #0085af;
+}
+
+.cl4:after {
+    background: #616161;
+}
+.cl5:after {
+    background: #225692;
+}
+
+.dashboard {
+    margin-bottom: 30px
+}
+
+/* To align file name column in ADSC dashboard -> claims to be entered */
+.file-reference-column{
+    text-align: left;
+}
+
+.dashboard .table-bordered>thead>tr>th {
+    padding: 14px 8px!important;
+    background: #0085af !important
+}
+
+.dashboard .table-bordered {
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+/* Dashboard */
+
+
+/* Loader Animation */
+
+.input-radio {
+    float: left;
+    width: 100%;
+    margin: 10px 0px;
+}
+
+.input-radio label {
+    width: 93%;
+}
+
+.input-radio input {
+    width: 5%;
+}
+
+.modal-title {
+    display: inline-block;
+}
+
+.fixed-modal .modal-body {
+    height: 640px;
+    overflow-y: auto;
+}
+
+.upperCase {
+    text-transform: uppercase
+}
+
+table.smallFont {
+    font-size: 12px
+}
+
+a.active.serviceProviderActive {
+    cursor: default;
+}
+
+a.serviceProviderParent {
+    text-decoration: underline
+}
+
+.progress {
+    background-color: #e7e7e7;
+}
+
+.ct-button {
+    margin-top: 10px;
+}
+
+#claim-item-dental .table-action-btn {
+    padding: 1px 4px;
+    margin-left: 0px;
+}
+
+.container {
+    width: 100%;
+}
+
+.table-action-btn.hideColumn {
+    display: none;
+}
+
+.custom-btnwidth {
+    min-width: 120px !important;
+}
+
+.image-modal .modal-body {
+    height: 450px !important;
+}
+
+
+/***/
+
+.completer-dropdown {
+    max-height: 200px;
+    min-height: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+    width: 100% !important;
+    min-width: 100%;
+    max-width: 100%;
+    top: 44px;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6)
+}
+
+.completer-dropdown * {
+    box-sizing: border-box;
+}
+
+.completer-holder {
+    position: relative
+}
+
+.completer-row {
+    width: 100% !important;
+}
+
+.predictiveSearchLower .completer-dropdown-holder .completer-dropdown {
+    width: 100%;
+    display: block !important
+}
+
+.predictiveSearchLowerCardHolder .completer-dropdown-holder .completer-dropdown {
+    width: 100%;
+}
+
+.error_field.hide_error_border {
+    box-shadow: none;
+    border: none;
+}
+
+.error_field.hide_error_border>div {
+    border: 1px solid rgb(208, 32, 47);
+    box-shadow: 0 0 3px rgb(208, 32, 47, 0.5);
+}
+
+.dataTables_wrapper .dataTables_processing {
+    background: rgb(0, 0, 0, 0.5) !important;
+    height: 80px!important;
+    top: 64% !important;
+    color: #fff !important;
+    line-height: 40px;
+}
+
+#claim-item-dental tbody tr.yellow,
+#claim-item-dental tbody tr.yellow td,
+#claim-item-dental tbody tr.yellow,
+#claim-item-dental tbody tr.yellow:hover td {
+    background-color: #FAFAD2 !important
+}
+
+
+/* Claim Dashboard CSS */
+
+.db-box h2 {
+    font-size: 18px;
+    color: #101010;
+    font-weight: bold;
+    padding: 15px 15px 15px 15px;
+    border-bottom: 2px solid #d5d5d5;
+}
+
+.db-box h2 span {
+    font-size: 16px;
+    font-weight: normal;
+    color: #404040;
+}
+
+.claim-dashboard .db-box {
+    padding: 0;
+    margin: 0 0 20px 0;
+}
+
+.claim-dashboard .db-box:after {
+    display: none
+}
+
+.claim-dashboard .db-box .table-bordered>thead>tr>th {
+    font-size: 13px !important;
+    padding: 8px 4px !important;
+    text-align: center;
+    border: 2px solid #fff !important;
+}
+
+.claim-dashboard .db-box .table-bordered {
+    box-shadow: none;
+}
+
+.claim-dashboard .db-box .table-bordered>tbody>tr>td {
+    text-align: center !important;
+    background: #fff !important;
+    border: none !important;
+    /* Below one is added by designer to fix the design issue as per discussed with Arun sir in Count by claim status tile (15-11-2022) */
+    /* padding: 15px 0px !important; */
+    padding: 15px !important;
+    border-right: 2px solid #d5d5d5 !important
+}
+
+.claim-dashboard .db-box .table-bordered>tbody>tr>td:last-child {
+    border-right: none !important;
+}
+
+.claim-dashboard .cl1 .fig-facts>a {
+    color: #00bbb5 !important;
+}
+
+.claim-dashboard .cl2 .fig-facts>a {
+    color: #f47121 !important;
+}
+
+.claim-dashboard .cl3 .fig-facts>a {
+    color: #0085af !important;
+}
+
+.claim-dashboard .cl4 .fig-facts>a {
+    color: #1a2942 !important;
+}
+
+.claim-dashboard .cl1 {
+    border-bottom: 2px solid #00bbb5;
+}
+
+.claim-dashboard .cl2 {
+    border-bottom: 2px solid #f47121;
+}
+
+.claim-dashboard .cl3 {
+    border-bottom: 2px solid #0085af;
+}
+
+.claim-dashboard .cl4 {
+    border-bottom: 2px solid #1a2942;
+}
+
+
+/* .claim-dashboard div[class^="col-"]{padding-left:8px; padding-right:8px;} */
+
+.claim-dashboard .fig-facts {
+    font-size: 22px;
+}
+
+.claim-dashboard .fig-facts span a {
+    display: block;
+    font-size: 15px;
+    color: #505050 !important;
+    font-weight: 600
+}
+
+.ds-table {
+    margin-top: 20px;
+}
+
+.ds-table table {
+    margin-bottom: 15px !important;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+
+/* Claim Dashboard CSS */
+
+.check-image {
+    margin-right: 7px;
+}
+
+.no-left-space {
+    margin-left: 0;
+    padding-left: 0;
+    padding-right: 0;
+    width: 80px;
+}
+
+.uppercaseForm input,
+.uppercaseForm select,
+.uppercaseForm textarea {
+    text-transform: uppercase;
+}
+
+.dropdown-list {
+    z-index: 99 !important
+}
+
+.letter-table table tr td,
+.letter-table table tr:hover td {
+    background: #fff !important
+}
+
+.history-ico {
+    position: relative;
+    z-index: 9;
+}
+
+.section-heading h2 {
+    text-transform: uppercase
+}
+
+.section-heading h2 span {
+    text-transform: capitalize
+}
+
+
+/* Suspend Plan Disable */
+
+.suspendPlanDisable {
+    pointer-events: none;
+}
+
+tr.terminateDivisionDisable td:not(:last-child){
+    pointer-events: none;
+}
+
+tr.terminatePlanDisable {
+    pointer-events: none;
+}
+
+select.form-control {
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
+#student-table .error_field {
+    border: #acacac
+}
+
+#student-table .error_field input {
+    border: none
+}
+
+#student-table .dateField {
+    box-shadow: none;
+}
+
+#divStudentHistory .form-control {
+    height: 36px;
+}
+
+#divStudentHistory tbody .tableRow>td:first-child {
+    vertical-align: top
+}
+
+.b-marquee {
+    display: inline-block;
+    width: 100%;
+    background: #dedede;
+    padding: 10px 15px;
+    margin: 0 0 15px 0
+}
+
+.b-marquee marquee {
+    font-size: 15px;
+}
+
+#loadOnScroll ul span {
+    float: left;
+    width: 100%;
+}
+
+.accordion-toggle:after {
+    font-family: 'FontAwesome';
+    content: "\f078";
+    float: right;
+}
+
+.accordion-toggle.collapsed:after {
+    font-family: 'FontAwesome';
+    content: "\f077";
+    float: right;
+}
+
+.accordion-opened .accordion-toggle:after {
+    content: "\f054";
+}
+
+.accordion-heading button {
+    float: left;
+    width: 100%;
+    border: none;
+    background: none;
+    text-align: left;
+}
+
+.accordion-group {
+    height: 40px;
+    ;
+}
+
+.b-marquee {
+    border: 1px solid #d0d0d0;
+    display: inline-block;
+    width: 100%;
+    background: #fff;
+    padding: 10px 15px 10px 125px;
+    margin: 0 0 15px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.b-marquee marquee {
+    font-size: 15px;
+    font-weight: 600
+}
+
+.m-heading {
+    background: #606060;
+    color: #fff;
+    font-size: 15px;
+    text-transform: uppercase;
+    position: absolute;
+    left: 0;
+    height: 100%;
+    top: 0;
+    line-height: 42px;
+    padding: 0 45px 0 20px;
+}
+
+.m-heading:after {
+    content: '';
+    width: 5px;
+    height: 80px;
+    background: #d0202f;
+    position: absolute;
+    transform: rotate(30deg);
+    top: -18px;
+    right: 17px;
+}
+
+.m-heading:before {
+    content: '';
+    width: 29px;
+    height: 80px;
+    background: #fff;
+    position: absolute;
+    transform: rotate(30deg);
+    top: -18px;
+    right: -14px;
+}
+
+.info-icon i {
+    color: #fff;
+    display: inline-block;
+    margin: 0;
+    padding: 0 2px;
+    font-size: 15px;
+}
+
+.info-icon {
+    text-align: center
+}
+
+.ds-table .comment-top {
+    padding: 10px 15px;
+    top: 38px;
+}
+
+.ds-table table thead th:last-child {
+    width: 25% !important
+}
+
+.ellipseText {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.disableMultiselect .c-btn {
+    background: #eee !important;
+}
+
+.db-box h2 span.dt-box {
+    font-size: 16px;
+    font-weight: normal;
+    color: #404040;
+    width: 145px;
+    margin-top: -7px;
+    margin-left: 8px;
+}
+
+.dt-box .mydp .selector {
+    margin-left: -118px;
+}
+
+span.dt-box .btnclear {
+    line-height: 18px;
+}
+
+table#dentalSpecialityList .mydp .selectorarrow {
+    position: absolute;
+}
+
+.cp-txt .form-group {
+    margin-bottom: 3px;
+}
+
+.claim-dashboard .db-box .cb-day .table-bordered>tbody>tr>td {
+    padding: 5px 0px !important;
+    border-bottom: 2px solid #d5d5d5 !important
+}
+
+.fig-date a {
+    color: #404040;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+table#dentalSpecialityList .mydp .selectorarrow {
+    position: absolute;
+}
+
+#PrintClaimForm>table {
+    width: 800px !important;
+}
+
+#PrintClaim .modal-dialog {
+    width: 830px;
+}
+
+.rd-middle {
+    margin-top: 10px;
+}
+
+.error-code {
+    font-size: 180px;
+    font-weight: bold;
+    color: #d0202f
+}
+
+.error-code span {
+    font-weight: normal;
+    font-size: 40px;
+    display: block;
+    margin: 0px 0 25px;
+    color: #1a2942;
+}
+
+.pnf-outer {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    background: #fff;
+    padding: 50px;
+    width: 600px;
+    margin: -60px auto 0 auto;
+    border-radius: 6px;
+}
+
+.color-list {
+    display: inline-block;
+    width: 100%;
+    margin: 10px 0;
+}
+
+.color-list li {
+    display: inline-block;
+    margin: 0 25px 0 0;
+}
+
+.color-des {
+    width: 20px;
+    height: 15px;
+    /* border-radius: 4px; */
+    /* float: left; */
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.color-list li h5 {
+    margin: 0 0 0 0;
+    font-size: 13px;
+    display: inline-block;
+    font-weight: 600;
+    vertical-align: middle;
+}
+
+.red-color {
+    background: rgba(208, 32, 47, .6);
+}
+
+.green-color {
+    background: rgba(10, 243, 107, .4)
+}
+
+.yellow-color {
+    background: rgba(255, 237, 159, 0.945);
+}
+
+.reactivate-ico {
+    background: #00bbb5;
+}
+
+#rules-list {
+    table-layout: fixed
+}
+
+.login-logo {
+    text-align: center;
+}
+
+.txtarea-height {
+    min-height: 100px !important
+}
+
+.search-top-action .searchreset {
+    top: 45px;
+}
+.red-color{background:rgba(208,32,47,.6);}
+.green-color{background:rgba(10, 243, 107, .4)}
+.green-color2{background:rgba(38, 193, 187, 0.5)}
+.yellow-color{background:rgba(255, 237, 159, 0.945);}
+.reactivate-ico{background: #00bbb5;}
+#rules-list{table-layout: fixed}
+.login-logo{text-align:center; }
+.txtarea-height{min-height:100px !important}
+.search-top-action .searchreset{top:45px;}
+/* tree structure loader and child table */
+/* tr.treeChildRow td{ text-align: center}  */
+.tableLoader{display: block; width: 100%; height: 200px; position: relative; z-index: 1000; background: rgba(0,0,0,0.5);text-align: center;}
+.tableLoader .loading {
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  text-align: center !important ;
+  font-size: 1.2em !important;
+  display: block;
+  color: #fff;
+  position: relative;
+  top: 30px;
+  z-index: 99;
+  -moz-animation: text 0.5s ease infinite alternate;
+  -webkit-animation: text 0.5s ease infinite alternate;
+  animation: text 0.5s ease infinite alternate;
+}
+.lg-table .table-bordered>tbody>tr:first-child>td{
+    cursor: pointer;
+}
+.lg-table{
+    max-height: 400px;
+    overflow-y: auto;
+}
+.treeChildRow .btn {
+    padding: 2px 6px;
+}
+.d-amount input {
+    padding-left: 20px;
+}
+.d-amount:before {
+    content: "$";
+    position: absolute;
+    top: 11px;
+    color: #404040;
+    left: 10px;
+}
+
+.do-amount:before {
+    content: "$";
+    position: absolute;
+    top: 11px;
+    color: #404040;
+    left: 17px;
+}
+
+.expandable-list-item a {
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+}
+.expandable-list .expandable-list-item{background: #505050 !important}
+.expandable-list .expandable-list-item .expandable-list-item-title .expandable-list-item__dropdown-chevron-line2,.expandable-list .expandable-list-item .expandable-list-item-title .expandable-list-item__dropdown-chevron-line1{stroke:#fff !important; fill: #fff;}
+.expandable-list .expandable-list-item .expandable-list-item-title .expandable-list-item__dropdown svg{width: 12px !important;}
+.expandable-list .expandable-list-item .expandable-list-item-content > [item]{color:#fff !important; font-weight: normal;}
+.expandable-list .expandable-list-item .expandable-list-item-content{background: #333; padding:0 !important}
+.expandable-list .expandable-list-item .expandable-list-item-title{height:45px !important; padding:0 !important; position: relative;}
+.expandable-list .expandable-list-item .expandable-list-item-content > [item]:hover,.expandable-list .expandable-list-item .expandable-list-item-content > .active{background: #00bbb5 !important;}
+.removeCross .btncleardisabled { display : none !important;}
+
+.removeCross .btnclearenabled { display : none !important;}
+.expandable-list .expandable-list-item .expandable-list-item-title .expandable-list-item--title > span{ display: block; width: 100%; line-height: 42px; position: relative; padding: 0 0 0 15px; z-index: 9;}
+.expandable-list .expandable-list-item .expandable-list-item-title .expandable-list-item-title__title{width: 100%;}
+.expandable-list .expandable-list-item .expandable-list-item-title .expandable-list-item__dropdown{position: absolute; right: 10px;}
+.expandable-list{max-width: 235px !important; float: left; width: 100% !important;}
+#dentalServiceList .green-btn-add i{margin-right: 0}
+
+.services .ui-treetable-tablewrapper{max-height: 250px; overflow-y: auto; overflow-x: hidden;}
+.services .ui-treetable-tablewrapper thead{position: relative;}
+.services .ui-treetable-tablewrapper thead th:first-child{ position: absolute; width: 33.39%;}
+.services .ui-treetable-tablewrapper thead th:nth-child(2){ position: absolute; left:33.3%; width: 33.39%;}
+.services .ui-treetable-tablewrapper thead th:nth-child(3){ position: absolute; right:0; width: 33.39%;}
+.services .ui-treetable-tablewrapper thead + tbody > .ui-treetable-row:first-child td{padding-top:45px !important}
+
+
+table tr td.highlightedRow {
+    background: rgba(10, 243, 107, 0.2)!important;
+    background-color: rgba(10, 243, 107, 0.2)!important;
+}
+.ts-grid input + input{
+    margin-top:5px;
+}
+
+.full-table table th,.full-table table.table-stripped tr td,.full-table table thead .form-control  {
+    font-size: 0.75rem !important;
+    padding:4px !important;
+}
+.full-table table{
+    table-layout: fixed;
+}
+#transactionSearchList my-date-picker .mydp{
+  min-width: 100%;
+}
+#paymentSearchList my-date-picker .mydp{
+    min-width: 100%;
+}
+#transactionSearchList .caltable table.dataTable thead th,#transactionSearchList .caltable table.dataTable thead td{
+  border-bottom:none !important;
+}
+#paymentSearchList .caltable table.dataTable thead th,#paymentSearchList .caltable table.dataTable thead td{
+    border-bottom: none !important
+}
+#transactionSearchList .btnclear{
+  display: none !important;
+}
+#paymentSearchList .btnclear{
+    display: none !important;
+}
+.table-responsive #transactionSearchList .calender-field .selectiongroup input.selection{
+  padding-right: 25px !important;
+}
+.table-responsive #paymentSearchList .calender-field .selectiongroup input.selection{
+    padding-right: 25px !important;
+}
+#transactionSearchList .selectiongroup input{
+  font-size: 11px !important;
+}
+#paymentSearchList .selectiongroup input{
+    font-size: 11px !important
+}
+#transactionFilterProcessDate .selector{
+  right:0;
+}
+.ts-main .form-row .table-hdr{
+    min-height:30px !important;
+}
+.cl-right .selector{
+    right:0;
+  }
+#transactionSearchList .completer-dropdown-holder{
+     position:absolute;
+    top:0;
+    min-width: 200px; 
+}
+#paymentSearchList .completer-dropdown-holder{
+    position: absolute;
+    top: 0;
+    min-width: 200px
+}
+.table thead td:last-child .completer-dropdown-holder{
+    right:0;
+}
+.double-modal{
+    left:-15px;
+}
+.collapse-heading h3[aria-expanded="false"]:after {
+    position: absolute;
+    content: "\f067";
+    right: 10px;
+    top: 12px;
+    font-family: FontAwesome;
+    cursor: pointer;
+}
+.collapse-heading h3[aria-expanded="true"]:after {
+    position: absolute;
+    content: "\f068";
+    right: 10px;
+    top: 12px;
+    font-family: FontAwesome;
+    cursor: pointer;
+}
+.collapse-heading{
+    cursor: pointer;
+}
+.Active {
+    color: #2d6042 !important;
+}
+.grid-box .Active {
+    background-color: #c6ecde !important;
+}
+
+.grid-box .Inactive, .Terminated {
+    background-color: #f1a7ad !important;
+}
+
+.Suspended {
+    color: #FFEEA4 !important;
+}
+.grid-box .Suspended {
+    background-color: #ffefc3 !important;
+}
+.tab-pane .col-lt-search .searchreset{
+    margin: 0;
+}
+.hMHistory input{
+    padding-right:40px;
+}
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+   -webkit-appearance: none;
+    -moz-appearance: none;
+    -o-appearance:none;
+    -ms-appearance:none;
+  margin: 0; 
+}
+input[type="number"]:-moz-placeholder {
+    text-align: left;
+}
+input[type="number"]:-ms-input-placeholder {
+    text-align: left;
+}
+input[type="number"]::-webkit-input-placeholder {
+    text-align: left;
+}
+my-date-picker[name="terminationDate"] input{
+    color: #eb5757 !important;
+    font-weight: bold;
+}
+table#eligibility-history-table tr.hterminated-row td,table#eligibility-history-table tr.hterminated-row:nth-child(2n) td{
+    font-style: italic;
+}
+.reviewer-tabs div[class^="col-"]{
+    width: 20%;
+   
+}
+.reviewer-tabs .db-box{
+    min-height: 105px;
+}
+
+#batchSearch_search{
+    margin-left: 0;
+}
+.inline-heading{
+    display: inline-block;
+}
+
+.form-control[disabled], fieldset[disabled] .form-control {
+    cursor: default;
+}
+
+.disable-paginate, .disable-totals, .disable-export-button {
+    display: none;
+}
+
+.custom-check input[type=checkbox]{
+    -webkit-appearance:none;
+    -moz-appearance:none;
+    -o-appearance:none;
+    -ms-appearance:none;
+}
+.custom-check{
+    position:relative;
+    padding-left:20px;
+    cursor:pointer;
+}
+.custom-check input[type=checkbox] + span{
+    position:absolute;
+    left:0;
+    width:16px;
+    height:16px;
+    top:0;
+    border:2px solid #bcbcbc;
+    transition: all ease 0.3s;
+}
+.custom-check input[type=checkbox]:checked + span{
+    background:#019792;
+    border-color:#019792;
+}
+.custom-check input[type=checkbox]:checked + span:after{
+        content: "\f00c";
+        font-family: 'FontAwesome';
+        position:absolute;
+        top:1px;
+        left:1px;
+        font-size:11px;
+        color:#fff;
+        transition: all ease 0.3s;
+}
+
+.ngx-pagination .current span{
+    background-color: grey;
+}
+.topRoleDrpDwn{
+    display: inline-block;
+}
+.topRoleDrpDwn > div{
+    display: inline-block;
+}
+.topRoleDrpDwn > div > a{
+    padding: 10px;
+    background: #e8e8e8;
+    border-radius: 4px;
+}
+.login-btn button{
+    font-size: 1.0rem;
+    font-weight: 600;
+    margin: 0 0 0 8px;
+    min-width: 150px;
+    padding: 20px 10px;
+} 
+#search-Dental-FeeGuide.table-bordered>tbody>tr>td{
+    padding:4px !important;
+}
+/* #view-Dental-FeeGuide.table-bordered>tbody>tr>td{
+    padding:4px !important;
+}
+#view-Dental-FeeGuide.table-bordered{
+    table-layout: fixed;
+}
+#view-Dental-FeeGuide.table-bordered tbody{
+    display: block;
+    width: 98.5%;
+}
+
+#view-Dental-FeeGuide.table-bordered thead{
+    width: 98.5%;
+  }
+  #view-Dental-FeeGuide.table-bordered thead tr,#view-Dental-FeeGuide.table-bordered tbody.view-dntal-tb tr{
+      display: flex;
+  }
+  #view-Dental-FeeGuide.table-bordered tbody.view-dntal-tb {
+    max-height: 230px;
+    overflow-y: scroll;
+    width: 100%;
+  }
+  #view-Dental-FeeGuide.table-bordered thead,#view-Dental-FeeGuide.table-bordered tbody.view-dntal-tb {
+    display: block;
+  }
+  #view-Dental-FeeGuide.table-bordered tbody.view-dntal-tb td,#view-Dental-FeeGuide.table-bordered>thead>td, #view-Dental-FeeGuide.table-bordered thead th {
+    float: left;
+    /* border-bottom-width: 0; 
+  } */
+.drop-rel .dropdown-list{
+    position: relative !important;
+}
+.no-select{
+    width: 100%;
+    padding:50px 20px;
+    background: #f2f3f6;
+    font-size:18px;
+    text-align: center;   
+}
+
+.selected-list .c-list {
+    margin: -4px !important;
+}
+
+.amount_right{
+    text-align: right;
+}
+/* added to keep data on left side by Prabhat */
+.keep_left{
+    text-align: left;
+}
+.topRoleDrpDwn > div > a.active,.topRoleDrpDwn > div > a:hover{
+    background: #00bbb5;
+    color:#fff;
+}
+.fixedSideBar .tab-content{
+    position: fixed;
+    top:120px;
+    width: 68%;
+}
+.tab-mtb{
+    margin:15px 0 0 0;
+}
+
+.suspendedCompany label > img{
+    display: inline-block;
+    vertical-align: middle;
+    max-width: 18px;
+}
+
+#card-continuity tbody tr>th{
+  vertical-align: middle !important;
+  background: #fff !important;
+  color: #000;
+  border-left:1px solid #ddd;
+}
+#card-continuity tbody tr.total-row td,#card-continuity tbody tr.total-row th{
+  border-top:2px solid #888;
+  font-weight: 600;
+  border-left:1px solid #ddd;
+}
+
+.amount_right_grid{
+    text-align: right !important;
+}
+table td.amount_right_grid > span{
+    float: left;
+}
+table td.amount_right_grid-padding > span{
+    float: left;
+}
+.report-ico{
+    display: block;
+}
+.report-ico i{
+    font-size: 50px;
+    color:#666;
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+}
+.fd-tabs .nav-pills > li.active .report-ico i{
+    color:#fff;
+}
+
+.ngui-auto-complete{max-height: 200px; overflow-y: auto; }
+ .mouthID{
+     color: white;
+     padding-top:10px;
+     padding-bottom:10px;
+     background-color: #1a2942;
+ }
+
+ .mouthIDform-row {
+    display: inline-block;
+    width: 100%;
+    margin: 0 0 0px 0;
+}
+
+.mouthIdform-row div[class^="col-"]{
+    margin-left: 0px;
+}
+.ngui-auto-complete-wrapper ul li .form-row div[class^="col-"]{
+    min-height: 10px !important;
+    padding: 10px -15px !important;
+    word-wrap: break-word;
+}
+
+.ngui-auto-complete > ul li .row{
+    margin:0;
+}
+.dp-menu-db .dropdown-menu{
+    top: 20px !important;
+    left: 0 !important;
+}
+
+.removeCAngleDown, .removeCRemove {
+    display: none;
+}
+#uftc .fn-tabs .panel-title a{
+    text-align: right;
+}
+#uftc .fn-tabs .panel-title a > span {float:left; margin: 5px 0 0 0;}
+
+#uftc .fn-tabs .panel-title a .btn{margin-right: 15px;}
+#fundingSummary_wrapper .dataTables_processing,#unpaidClaimsReport_wrapper .dataTables_processing,#uFTReport_wrapper .dataTables_processing,#getTaxPayableSummaryReport_wrapper .dataTables_processing,#brokerCompanySummaryReport_wrapper .dataTables_processing,#uFTReportList_wrapper .dataTables_processing,#companyClosingBalances_wrapper .dataTables_processing,#brokerPayableList_wrapper .dataTables_processing,#claimList_wrapper .dataTables_processing,#refundList_wrapper .dataTables_processing{
+    top: 0 !important;
+    bottom: 0;
+    right: 0 !important;
+    left: 0 !important;
+    margin: auto 0 !important;
+}
+
+#bank-reconcilation .fn-tabs .panel-title a{
+    text-align: right;
+}
+#bank-reconcilation .fn-tabs .panel-title a > span {float:left; margin: 5px 0 0 0;}
+
+#bank-reconcilation .fn-tabs .panel-title a .btn{margin-right: 15px;}
+#fundingSummary_wrapper .dataTables_processing,#unpaidClaimsReport_wrapper .dataTables_processing,#uFTReport_wrapper .dataTables_processing,#getTaxPayableSummaryReport_wrapper .dataTables_processing,#brokerCompanySummaryReport_wrapper .dataTables_processing,#uFTReportList_wrapper .dataTables_processing,#companyClosingBalances_wrapper .dataTables_processing,#brokerPayableList_wrapper .dataTables_processing,#claimList_wrapper .dataTables_processing,#refundList_wrapper .dataTables_processing{
+    top: 0 !important;
+    bottom: 0;
+    right: 0 !important;
+    left: 0 !important;
+    margin: auto 0 !important;
+}
+
+.hms-loading-table .dataTables_processing{
+    top: 0 !important;
+    bottom: 0;
+    right: 0 !important;
+    left: 0 !important;
+    margin: auto 0 !important;
+}
+#uft-pb .tab-pane .form-row .searchreset{
+    margin-top: 0;
+}
+
+.lg-table-report{
+    overflow-x: auto;
+}
+
+#uftc .fn-tabs .panel-title a > span.amount {
+    float: inherit;
+}
+#bank-reconcilation .fn-tabs .panel-title a > span.amount {
+    float: inherit;
+}
+#bank-reconcilation .fn-tabs .panel-title a:after {
+   
+    content: '';
+}
+.in-number{
+    text-align: right
+}
+
+.uFTReportList .top{
+    overflow-x: auto;
+}
+#view-Dental-FeeGuide .d-amount:before {
+    top: 0;
+}
+#view-Dental-FeeGuide .edit-amt-row.d-amount:before{
+    top:11px;
+}
+.alignDpRight .calender-field .selectiongroup input.selection {
+  text-align: right !important
+}
+img#companyImageUploadDoc {
+    width: auto;
+    max-width: 100%;
+}
+table.alignRightText thead tr th:not(:first-child) {
+    text-align: right !important
+}
+table.alignRightText tbody tr td:not(:first-child) {
+    text-align: right !important
+}
+
+.hideGPRunButton{
+    display : none;
+}
+
+.papComment{
+    width: auto;
+}
+
+.menu > ul > li > ul > li > ul.fee-menu li:nth-child(4){border-bottom:2px solid #fff;}
+.menu > ul > li > ul > li > ul.fee-menu li:nth-child(6){border-bottom:2px solid #fff;}
+.menu > ul > li > ul > li > ul.fee-menu li:nth-child(8){border-bottom:2px solid #fff;}
+.menu > ul > li > ul > li > ul.fee-menu li:nth-child(10){border-bottom:2px solid #fff;}
+.menu > ul > li > ul > li > ul.fee-menu li:nth-child(12){border-bottom:2px solid #fff;}
+.menu > ul > li > ul > li > ul.fee-menu li:nth-child(13){border-bottom:2px solid #fff;} /* log 652 */
+/* .menu > ul > li > ul > li > ul.fee-menu li:nth-child(14){border-bottom:2px solid #fff;} */
+
+
+.fixed-tb{
+    table-layout: fixed !important;
+}
+.fixed-tb thead th:nth-child(2){
+    width: 12% !important;
+}
+.fixed-tb thead th:nth-child(1){
+    width: 6.5% !important;
+}
+
+table#userRolesList td{cursor: pointer;}
+.assign-cat{
+    position: absolute;
+    top:-4px;
+    right:0px;
+}
+.assign-cat .green-btn{
+    padding:0px 5px;
+    margin:0;
+}
+.assign-cat .comment-top{
+    padding: 10px;
+    max-width: 300px;
+    right:0;
+    left:auto;
+}
+.assign-cat .comment-top:after{
+    right: 5px;
+    left: auto;
+}
+.assign-cat .comment-top p{
+    display: inline-block;
+}
+
+/* Classes for Plan Inline Grids */
+.grid_right {
+    text-align: right
+}
+.alignRightDpicker .calender-field .selectiongroup input.selection {
+    text-align: right
+}
+
+#unitFinancialTransactionList thead th:nth-child(7){
+    width: 80px !important;
+}
+.table-tree-str{
+  table-layout: fixed;
+}
+.table-tree-str td[colspan="5"]{
+  padding:0 !important;
+  background: #fff !important
+}
+.table-tree-str td table{
+  table-layout: fixed;
+}
+.table-tree-str .treeChildRow td{
+  padding-left:15px !important;
+}
+.table-tree-str td table td .treeChildRow td:first-child {
+  padding-left:25px !important;
+}
+.table-tree-str td table td table .treeChildRow td:first-child{
+  padding-left:30px !important;
+}
+.table-tree-str td table td table td table .treeChildRow td:first-child{
+  padding-left:35px !important;
+}
+.table-tree-str td table td table td table td table .treeChildRow td:first-child{
+  padding-left:40px !important;
+}
+.table-tree-str td table td table td table td table td table .treeChildRow td:first-child{
+  padding-left:45px !important;
+}
+.table-tree-str td table td table td table td table .treeChildLastRow td:first-child{
+  padding-left:60px !important;
+}
+.table-tree-str .table-bordered>tbody>tr>td .btn{
+  padding: 2px 6px !important;
+}
+.total-stats{
+    text-align: right;
+}
+.total-stats h4 {
+    background: #00bbb5;
+    font-size: 14px;
+    padding: 10px;
+    display: inline-block;
+    margin: 0 0 0 10px;
+    font-weight: 600;
+    color:#fff;
+}
+.total-stats h4 span{
+    font-size: 13px;
+    font-weight: normal;
+}
+
+.dentalCategory table th.effective-on-column, th.expired-on-column  {
+    width: 12% !important;
+}
+
+#rulesTable .datatable-header-cell:not(:first-child), .datatable-body-cell:not(:first-child) {
+    text-align: right !important;
+}
+
+.dataNotFound {
+    text-align: center;
+    padding: 10px;
+}
+
+#fundingSummaryWithAction tbody td .hideViewIco, #fundingSummaryWithAction tbody td .hideUploadIco {
+  display: none;
+}
+
+#transactionSearchList thead td:not(:first-child) .completer-dropdown-holder {
+    left: auto !important;
+    right: 0 !important; 
+}
+#paymentSearchList thead td:not(:first-child) .completer-dropdown-holder {
+    left: auto !important;
+    right: 0 !important;
+}
+table tr.reverse_status td,table tr.reverse_status:hover td,table tr.reverse_status:nth-child(2n+2) td,table tr.reverse_status:hover:nth-child(2n+2) td {
+    background: #c0d1d6 !important;
+    /* cursor: default !important; */
+}
+.tb-actions-right a {
+    float: right;
+}
+generic-table table tr{cursor: pointer;}
+
+#fundingSummary tr th:last-child {
+    width: 100px !important;
+}
+.table-overflow-sc{
+    overflow-x: auto;
+}
+.sr-btns .searchreset{
+    margin-top: -5px !important;
+}
+
+table.dataTable .amount_right_grid-padding{
+    padding-right:24px !important; 
+    text-align: right;
+}
+#unitFinancialTransactionList .completer-dropdown-holder .completer-dropdown{
+    min-width: 250px !important;
+}
+
+.claim-search-top {    
+    margin: 0px 10px -40px 0px;
+    float: right;
+    width: auto;
+    position: relative;
+    z-index: 9;
+}
+
+.card-search-top{
+    margin: 0px 10px -40px 0px;
+    float: right;
+    width: auto;
+    position: relative;
+    z-index: 9;
+}
+
+.login-box .disabled-btn{
+    cursor: not-allowed;
+    pointer-events: all !important;
+    background: #019792;
+    background-color: #019792;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    height: 42px;
+    line-height: 33px;
+    color: #fff;
+}
+
+.login-box .disabled-btn:hover{
+    background: #019792;
+    color: #fff;
+    position: relative;
+    z-index: 9;
+}
+
+.login-logo img{width: 260px;}
+
+.mainSideBarMenu ul.list-group li {text-transform: capitalize}
+
+.violet-color {
+    background: rgba(128,0,128,0.2)
+} 
+.hsa-row{
+    background: #ADD8E6;
+}
+.wellness-row{
+    background: rgb(67,179,174);
+}
+
+table tr.hPreAuthReview-row td {
+    background: rgba(128,0,128,0.2);
+    background-color: rgba(128,0,128,0.2);
+}
+
+table tr.hPreAuthReview-row:hover td {
+    background: rgba(128,0,128,0.2) !important;
+    background-color: rgba(128,0,128,0.2) !important;
+}
+
+table tr.hPreAuthReview-row:nth-child(2n) td{
+    background: rgba(128,0,128,0.2) !important;
+    background-color: rgba(128,0,128,0.2) !important;
+}
+
+table tr.dental-row td {
+    background: rgba( 143, 188, 143, 1 );
+    background-color: rgba( 143, 188, 143, 1 );
+}
+
+table tr.dental-row:hover td {
+    background:rgba( 143, 188, 143, 1 ) !important;
+    background-color: rgba( 143, 188, 143, 1 ) !important;
+}
+
+table tr.vision-row td {
+    background: rgba(128, 115, 0, 0.637);
+    background-color: rgba(128, 115, 0, 0.637);
+    /* background-color: rgb(128,128,0); */
+}
+
+table tr.vision-row:hover td {
+    background: rgba(128, 115, 0, 0.637) !important;
+    background-color: rgba(128, 115, 0, 0.637) !important;
+}
+
+table tr.health-row td {
+    background: rgb( 240, 128, 128, 1 );
+    background-color: rgb( 240, 128, 128, 1 );
+}
+
+table tr.health-row:hover td {
+    background: rgb( 240, 128, 128, 1 ) !important;
+    background-color: rgb( 240, 128, 128, 1 ) !important;
+}
+
+table tr.drug-row td {
+    background: rgb( 255, 222, 173, 1 );
+    background-color: rgb( 255, 222, 173, 1 );
+}
+
+table tr.drug-row:hover td {
+    background: rgb( 255, 222, 173, 1 ) !important;
+    background-color: rgb( 255, 222, 173, 1 ) !important;
+}
+
+table tr.supplement-row td {
+    background: rgb(255, 250, 240);
+    background-color: rgb( 255, 250, 240, 1 );
+}
+
+table tr.supplement-row:hover td {
+    background: rgb( 255, 250, 240, 1 ) !important;
+    background-color: rgb( 255, 250, 240, 1 ) !important;
+}
+
+table tr.wellness-row td {
+    background: rgb(67,179,174);
+    background-color: rgb(67,179,174);
+}
+
+table tr.wellness-row:hover td {
+    background: #90E4C1 !important;
+    background-color: #90E4C1 !important;
+}
+
+table tr.hsa-row td {
+    background: #ADD8E6;
+    background-color: #ADD8E6;
+}
+
+table tr.hsa-row:hover td {
+    background: #ADD8E6 !important;
+    background-color: #ADD8E6 !important;
+}
+
+my-date-picker[name="expiry_date"] input{
+    color: #eb5757 !important;
+    font-weight: bold;
+}
+
+my-date-picker[name="cca_expirydate"] input{
+    color: #eb5757 !important;
+    font-weight: bold;
+}
+my-date-picker[name="expired_date"] input{
+    color: #eb5757 !important;
+    font-weight: bold;
+}
+my-date-picker[name="expiredOnPopup"] input{
+    color: #eb5757 !important;
+    font-weight: bold;
+}
+my-date-picker[name="brokerExpiredOn"] input{
+    color: #eb5757 !important;
+    font-weight: bold;
+}
+
+/* my-date-picker[name="expdate"],[name="expiredOn"],[name="terminatedDate"],[class^="expiredOn"] input{
+    color: #eb5757 !important;
+    font-weight: bold;
+} */
+
+my-date-picker[name="expdate"],[name="terminatedDate"],[class^="expiredOn"] input{
+    color: #eb5757 !important;
+    font-weight: bold;
+}
+
+#broker_edit_broker_termination_date{
+    color: #eb5757 !important;
+    font-weight: bold;
+}
+
+#view-Dental-FeeGuide tr td:nth-child(5){
+    color: #eb5757 !important;
+    font-weight: bold;
+}
+
+#taxRateList tr td.expiryDate{
+    color: #eb5757 !important;
+    font-weight: bold;
+}
+
+#rolesAssignmentHistory1 tr td.expiryDate{
+    color: #eb5757 !important;
+    font-weight: bold;
+}
+
+#COBHistory tr td.expiryDate{
+    color: #eb5757 !important;
+    font-weight: bold;
+}
+#cardholder-eligibility-history-table tr td .expiryDate{
+    color: #eb5757 !important;
+    font-weight: bold;
+}
+#cardholder-eligibility-history-table tr td.expiryDate{
+    color: #eb5757 !important;
+    font-weight: bold;
+}
+
+input.terminatedOn{
+    color: #eb5757 !important;
+    font-weight: bold;
+}
+
+#eligibility-history0expiredOn input{
+    color: #eb5757!important;
+    font-weight: bold;
+}
+
+#eligibility-history tr td:nth-child(3) label{
+    color: #eb5757 !important;
+    font-weight: bold;
+}
+
+#cardEligibilityCardMax tr td.expiredOn{
+    color: #eb5757 !important;
+    font-weight: bold; 
+}
+
+#cardEligibilityTopUpMax tr td.expiredOn{
+    color: #eb5757 !important;
+    font-weight: bold; 
+}
+
+#cardEligibilityCoverageCatMax tr td.expiredOn{
+    color: #eb5757 !important;
+    font-weight: bold; 
+}
+
+#cardEligibilityBenefitCoverageCatMax tr td.expiredOn{
+    color: #eb5757 !important;
+    font-weight: bold; 
+}
+
+#bank-history tr td.expiredOn{
+    color: #eb5757 !important;
+    font-weight: bold; 
+}
+
+
+my-date-picker[name="expdate"] input{
+    color: #eb5757 !important;
+    font-weight: bold;
+}
+
+my-date-picker[name="expiredOn"] input{
+    color: #eb5757 !important;
+    font-weight: bold;
+}
+
+my-date-picker[name="expiredDate"] input{
+    color: #eb5757 !important;
+    font-weight: bold;
+}
+
+#PlanViewExpiryDate2{
+    color: #eb5757 !important;
+    font-weight: bold;
+}
+
+my-date-picker[name="expiry_date_proratingType"] input{
+    color: #eb5757 !important;
+    font-weight: bold; 
+}
+
+my-date-picker[id="deductibleTypeExpiryDate"] input{
+    color: #eb5757 !important;
+    font-weight: bold; 
+}
+
+
+#planBenefitTabCombineMaximum tr td.expiryDate{
+    color: #eb5757 !important;
+    font-weight: bold;
+}
+
+#NewCoverageMaximumExpiryDate tr td.expiryDate{
+    color: #eb5757 !important;
+    font-weight: bold;
+}
+
+my-date-picker[id="NewCoverageMaximumExpiryDate"] input{
+    color: #eb5757 !important;
+    font-weight: bold; 
+}
+
+.expired-on-column .calender-field{
+    color: #eb5757 !important;
+    font-weight: bold;
+}
+
+#planBenefitTabCoverageMaximum tr td.expiryDate{
+    color: #eb5757 !important;
+    font-weight: bold;
+}
+
+tr td.expiryDate{
+    color: #eb5757 !important;
+    font-weight: bold;
+}
+
+my-date-picker[id="NewCombineMaximumExpiryDate"] input{
+    color: #eb5757 !important;
+    font-weight: bold; 
+}
+
+#divisionMaxtable tr td.expiryDate{
+    color: #eb5757 !important;
+    font-weight: bold;
+}
+
+my-date-picker[id="NewDivisionMaxExpiryDate"] input{
+    color: #eb5757 !important;
+    font-weight: bold; 
+}
+
+
+my-date-picker[id="planRulesExpiredOn"] input{
+    color: #eb5757 !important;
+    font-weight: bold; 
+}
+
+my-date-picker[id="NewScheduleExpiryDate"] input{
+    color: #eb5757 !important;
+    font-weight: bold; 
+}
+my-date-picker[id="NewProvinceExpiryDate"] input{
+    color: #eb5757 !important;
+    font-weight: bold; 
+}
+
+#feeGuideTable tr td.expiryDate{
+    color: #eb5757 !important;
+    font-weight: bold;
+}
+
+#spbabba_serviceProviderBankAccount tr td.expiryDate{
+    color: #eb5757 !important;
+    font-weight: bold;
+}
+
+#spba_BillingAddrInfo tr td.expiryDate{
+    color: #eb5757 !important;
+    font-weight: bold;
+}
+
+my-date-picker[id="txtExpireOn0"] input{
+    color: #eb5757 !important;
+    font-weight: bold; 
+}
+
+#SPGridSpeciality tr td.expiryDate{
+    color: #eb5757 !important;
+    font-weight: bold;
+}
+
+my-date-picker[id="NewSupplementalCoverageMaximumExpiryDate"] input{
+    color: #eb5757 !important;
+    font-weight: bold; 
+}
+
+my-date-picker[id="dob"] .selectiongroup{max-width: 75px!important;}
+
+.card-contact-address{
+    position: relative;
+}
+.card-contact-address-historyicon{
+    position: absolute;
+    left: 176px;
+    top: 7px;
+    border-radius: 3px;
+    background: #00bbb5 !important;
+    margin: 3px 10px;
+    width: 26px !important;
+    -webkit-appearance: button;
+    cursor: pointer;
+}
+
+.card-contact-address{
+    position: relative;
+}
+.card-contact-address-historyicon{
+    position: absolute;
+    left: 176px;
+    top: 7px;
+    border-radius: 3px;
+    background: #00bbb5 !important;
+    margin: 3px 10px;
+    width: 26px !important;
+    -webkit-appearance: button;
+    cursor: pointer;
+}
+
+/* To fix first column alignment issue(12-Feb-2021) */
+#transaction-code-list thead th:nth-child(1) {
+    text-align: left !important
+}
+
+#transaction-code-list thead th:nth-child(2) {
+    text-align: left !important
+}
+
+#companyOpeningBalances thead th:nth-child(1) {
+    text-align: left !important
+}
+
+#companyClosingBalances thead th:nth-child(1) {
+    text-align: left !important
+}
+
+#fundingSummary thead th:nth-child(1) {
+    text-align: left !important
+}
+
+#unitFinancialTransactionList_PDS thead th:nth-child(1) {
+    text-align: left !important
+}
+
+#fundingSummaryWithAction thead th:nth-child(1) {
+    text-align: left !important
+}
+
+#unitFinancialTransactionListReportGrid thead th:nth-child(1) {
+    text-align: left !important
+}
+
+#unitFinancialTransactionList1 thead th:nth-child(1) {
+    text-align: left !important
+}
+
+#fundingSummaryWithRCAction thead th:nth-child(1) {
+    text-align: left !important
+}
+
+#uftDashboard_bar1 thead th:nth-child(2) {
+    text-align: left !important
+}
+
+#uftDashboard_notification thead th:nth-child(1) {
+    text-align: left !important
+}
+
+#uftDashboard_releaseClaims thead th:nth-child(1) {
+    text-align: left !important
+}
+
+#fgpc_search_ProcedureCode thead th:nth-child(1) {
+    text-align: left !important
+}
+
+#visionProcedureCode thead th:nth-child(1) {
+    text-align: left !important
+}
+
+#healthProcedureCode thead th:nth-child(1) {
+    text-align: left !important
+}
+
+#hsaProcedureCode thead th:nth-child(1) {
+    text-align: left !important
+}
+
+#uftDashboard_primaryCardholder thead th:nth-child(1) {
+    text-align: left !important
+}
+
+#uftDashboard_dependentCardholder thead th:nth-child(1) {
+    text-align: left !important
+}
+
+#uftDashboard_totalCompany thead th:nth-child(1) {
+    text-align: left !important
+}
+
+#uftDashboard_claimAboutToExpire thead th:nth-child(1) {
+    text-align: left !important
+}
+
+#overrideReport thead th:nth-child(1) {
+    text-align: left !important
+}
+
+#broker0371Commission thead th:nth-child(1) {
+    text-align: left !important
+}
+
+#cardholderReport thead th:nth-child(1) {
+    text-align: left !important
+}
+
+#divisionUtilizationReport thead th:nth-child(1) {
+    text-align: left !important
+}
+
+#brokerCommissionSummary thead th:nth-child(1) {
+    text-align: left !important
+}
+
+#companyBalance thead th:nth-child(1) {
+    text-align: left !important
+}
+
+#refundPaymentSummaryReport thead th:nth-child(1) {
+    text-align: left !important
+}
+
+#getTaxPayableSummaryReport thead th:nth-child(1) {
+    text-align: left !important
+}
+
+#uFTReportList thead th:nth-child(1) {
+    text-align: left !important
+}
+
+#uFTReport thead th:nth-child(1) {
+    text-align: left !important
+}
+
+#unpaidClaimsReport thead th:nth-child(1) {
+    text-align: left !important
+}
+
+#mail_search_report thead th:nth-child(1) {
+    text-align: left !important
+}
+
+#providerWithoutEFT thead th:nth-child(1) {
+    text-align: left !important
+}
+
+#qBCIEligibilityAge65 thead th:nth-child(1) {
+    text-align: left !important
+}
+
+#qBCIEligibilityRBC thead th:nth-child(1) {
+    text-align: left !important
+}
+
+#qBCITravelEligibility thead th:nth-child(1) {
+    text-align: left !important
+}
+
+#summaryOfProviderDebits thead th:nth-child(1) {
+    text-align: left !important
+}
+
+#bankReportSummary thead th:nth-child(1) {
+    text-align: left !important
+}
+
+#ClientAgeGroupByPostcodeAndService thead th:nth-child(1) {
+    text-align: left !important
+}
+
+#ClaimAndClainantCount thead th:nth-child(1) {
+    text-align: left !important
+}
+
+#COBSavings thead th:nth-child(1) {
+    text-align: left !important
+}
+
+/* Gaurav 6th-Jan-2019 -[665 Issue,Procedure Code Search] */
+table.dataTable thead .sorting, table.dataTable thead .sorting_desc, table.dataTable thead .sorting_asc {
+    text-align: right !important;
+    background-position: 100% 8px !important;
+    padding-right: 20px !important;
+}
+/* End */
+/* ------------------26th feb 2020----------- 801 issue 8 may 2020 */
+#spba_BillingAddrInfo .amount_right:last-child {
+    width: 105px !important; 
+}
+.custom-check-excluded{
+    margin-top: 12px;
+}
+my-date-picker.changefont .mydp .selectiongroup .selection {
+    color:#555 !important;
+    font-weight: initial;
+}
+.selected-list .c-list {
+    width: calc(100% - 0px) !important;
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    z-index: 40;
+    flex-wrap: wrap;
+
+}
+
+.reviewformmargin{
+    margin: 0 0 45px 0px !important;
+}
+.batchCustom{
+    font-weight: bold;
+}
+
+.modal-backdrop.fade
+   {
+     opacity: 0.5 !important;
+   }
+   .modal-open .modal
+   {
+     opacity: 1 !important;
+   }
+
+   div.modal-dialog > div.modal-content{
+   
+    position: relative;
+    background-color: #fff;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    border: unset !important;
+    border: unset !important;
+    border-radius: 6px;
+    outline: 0;
+    -webkit-box-shadow: 0 3px 9px rgba(0,0,0,.5);
+    box-shadow: 0 3px 9px rgba(0,0,0,.5);
+   
+   
+  }
+
+  /* Design issue resolved for #925 (22-Dec-2020) */
+.uft-search-list .table-responsive .calender-field .selectiongroup input.selection {
+    padding-right: 25px;
+}
+.date-range .mydrp .selectorarrowleft:after, .mydrp .selectorarrowleft:before {
+    right: 0;
+    left: inherit !important;
+}
+.date-range .mydrp .selector {
+    right: 0;
+}
+.date-range .mydrp {
+    width: 165px !important;
+}
+.uft-dropdown .dropdown-list {
+    min-width: 200px;
+}
+.uft-dropdown .c-token .c-label{
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    width: 100px;
+}
+
+/* Log #1085 */
+.search-top .cs_data {
+    margin: 0px 0 0 0;
+    position: relative;
+    z-index: 9;
+}
+
+/* Log #1085 */
+.tab-pane .form-row .cs_data {
+    padding: 3px 7px;
+    margin: -10px 0 0 0;
+}
+
+/* Log #1027: Design issue */
+table#terminateCompanyList tr td:last-child {
+    white-space: nowrap;
+}
+
+.expiredCss {
+    color: #eb5757 !important;
+    font-weight: bold;
+}
+
+my-date-picker.addExpiredCss .mydp .selectiongroup .selection {
+    color:#eb5757 !important;
+    font-weight: bold;
+}
+
+/* Rules Datatable: Structure distortion issue fixed (21-Jul-2021) */
+#rules-list tr th {
+    width: 0px !important;
+}
+
+/* To fix column alignment issue(04-Aug-2021) */
+#claimpaymentbycardholder thead th:nth-child(1) {
+    text-align: left !important
+}
+
+#terminateCompanyList thead th:nth-child(1) {
+    text-align: left !important
+}
+#plan-category thead th:nth-child(1) {
+    text-align: left !important
+}
+#plan-rule thead th:nth-child(1) {
+    text-align: left !important
+}
+
+/* To fix column alignment issue(22-Sep-2021) */
+#cardsbycompany thead th:nth-child(1) {
+    text-align: left !important
+}
+
+#brokerQsi thead th:nth-child(1) {
+    text-align: left !important
+}
+
+/* Log #1171: Color code added for Grace period(06-Dec-2021) */
+.gracePeriod-color {
+    background: #D36726
+}
+
+table tr.hgraceperiod-row td {
+    background: #D36726;
+    background-color: #D36726;
+}
+
+table tr.hgraceperiod-row:nth-child(2n) td {
+    background: #D36726 !important;
+    background-color: #D36726 !important;
+}
+
+table tr.hgraceperiod-row:hover td {
+    background: rgba(211, 103, 38, 0.945) !important;
+    background-color: rgba(211, 103, 38, 0.945) !important;
+}
+
+.GracePeriod {
+    color: #D36726 !important;
+}
+
+.grid-box .GracePeriod {
+    background-color: #D36726 !important;
+}
+
+#terminateCompanyList my-date-picker[name="terminationDate"] input{
+    color:#555 !important;
+    font-weight: initial;
+}
+
+#pendingElectronicAdjustmentList my-date-picker[name="terminationDate"] input{
+    color:#555 !important;
+    font-weight: initial;
+}
+
+#pendingElectronicAdjustmentList thead th:nth-child(1) {
+    text-align: left !important
+}
+
+#negativeTransactionList thead th:nth-child(1) {
+    text-align: left !important
+}
+
+#receiptsList thead th:nth-child(1) {
+    text-align: left !important
+}
+
+/* Expiry Date check for account-history-table (28-Mar-2022) */
+#account-history-table my-date-picker[id="txtExpireOn0"] input{
+    color:#555 !important;
+    font-weight: initial; 
+}
+
+#account-history-table my-date-picker[name="expiredOn"] input{
+    color:#555 !important;
+    font-weight: initial;
+}
+
+table#search-claim-table tr td:last-child {
+    white-space: nowrap;
+}
+
+#adjustmentReqTable thead th:nth-child(1) {
+    text-align: left !important
+}
+
+/* Below code written to decrease data column width. (02-11-2022) Prabhat */
+#search-eligibilityFiles-table thead tr th:nth-child(4) {
+    width: 173px !important
+}
+
+/* Reissue Payment button functionality(27-Jun-2022) */
+table#claimsAttachedToPaymentList tr td:last-child {
+    white-space: nowrap;
+}
+
+table#pendingElectronicAdjustmentList tr td:last-child {
+    white-space: nowrap;
+}
+/* #1266 Below one added to show ref. Id on left Adjudicated or approved claims but not released. (07-11-2022) by Prabhat */
+/* #adjudicatedOrApprovedList thead th:nth-child(1){
+    text-align: left !important
+} */
+/* #1266 Below one added to correct size of Adjudicated or approved claims on dashboards of quikcard and ADSC. (14-11-2022) Prabhat" */
+#countByClaimStatusTileColumns tbody tr td:nth-child(1),
+#countByClaimStatusTileColumns tbody tr td:nth-child(2),
+#countByClaimStatusTileColumns tbody tr td:nth-child(3),
+#countByClaimStatusTileColumns tbody tr td:nth-child(4),
+#countByClaimStatusTileColumns tbody tr td:nth-child(5),
+#countByClaimStatusTileColumns tbody tr td:nth-child(6) {
+    width: 16.6% !important;
+}
+
+table#paymentSearchList tr td:last-child {
+    white-space: nowrap;
+}
+/*#1199 Css for All Comments History table (07-12-2022) by Prabhat */
+.allCommentsHistoryIcon{
+    position: absolute;
+    left: 176px;
+    top: 7px;
+    border-radius: 3px;
+    background: #00bbb5 !important;
+    margin: 3px 10px;
+    width: 26px !important;
+    -webkit-appearance: button;
+    cursor: pointer;
+}
+
+/*#1199 Css added to turn flag of comments green on hover. (08-12-2022) by Prabhat  */
+.comment-fm:hover .colorChange {
+    color:#148b2d !important;
+    cursor: default;    
+}
+
+/*#1199 Below css added to show grey flag when not important in card comments. (14-12-2022) by Prabhat */
+.grey-flag{
+    color: grey !important;
+}
+
+/*#1199 Below css added to show green flag when important in card comments. (14-12-2022) by Prabhat */
+.green-flag{
+    color:#148b2d !important;
+}
+
+#fundingSummary tbody td .hideViewIco, #fundingSummary tbody td .hideUploadIco {
+    display: none;
+  }
+/* Below one is to align Select File button in BAN comments correctly. (03-01-2023) by Prabhat */
+.BANfileUpload{
+    margin-top: 20px !important;
+}
+
+/* Below one is to align Select File fields in comments correctly. (04-01-2023) by Prabhat */
+.fileFieldAlign{
+    margin-left: -1.3% !important;
+}
+
+table#dI_AddrInfo tr td:last-child {
+    white-space: nowrap;
+}
+
+/* design issues fixed in dropdown of user search */
+.cuppa-dropdown .dropdown-list{
+    position: absolute !important;
+}
+
+#claimItemsTableD thead th:nth-child(1) {
+    text-align: left !important
+}
+
+#spImpCommentsList thead th:nth-child(2),
+#spImpCommentsList thead th:nth-child(3),
+#spImpCommentsList thead th:nth-child(4),
+#spImpCommentsList thead th:nth-child(5){
+    text-align: right !important
+}
+
+#spImpCommentsList tbody tr td:nth-child(2),
+#spImpCommentsList tbody tr td:nth-child(3),
+#spImpCommentsList tbody tr td:nth-child(4){
+    text-align: right !important
+}
+
+/* set calender dropdown in consultant review by mukul(11/05/2023)*/
+.set-dropdown .mydp .selector>table {
+    position: relative;
+    left: -99px;
+}
+
+/* By designer to resolve extra space problem and dropdown issue in uf reports of dashboard section. (17-05-2023) Designer */
+.uFTReportList .top.new{
+    overflow-x: unset;
+}
+
+.assign-cat .comment-top.commentTolltip {
+    padding: 10px;
+    max-width: 300px;
+    right: 0;
+    left: auto;
+    max-height: 200px;
+    overflow: auto;
+    top: 22px;
+}
+/* Task 491 Background on all accordion in add company is getting grey if not filled, resolved. (22-05-2023) Prabhat */
+.forBlankWhiteSpace{
+    height: auto !important;
+}
+
+.claim-dropdown-height .selected-list .c-btn{
+    height: 100%;
+    max-height: 300px;
+    padding: 6px 30px 6px 10px !important;
+  }
+  .comment-textarea{
+    margin-bottom: 0;
+  }
+
+.c_expiryDateColorRedError{
+    color: #eb5757 !important;
+    font-weight: bold;
+}
+
+/* Below one is to correct distorted calender in QSI loader report -> paid date field. (13-06-2023) Prabhat */
+.addLeftMarginToCalendar{
+    margin-left: -30% !important;
+}
+
+/* Task 271 custom class added in div of QUIKCARD logo to prevent destortion in logo when login after logging out from ab govt claim view section. (21-06-2023) Prabhat */
+.quikcardLogoSizing{
+    float: left;
+    width: 132px !important;
+    height: 56px;
+}
+
+/* Task 640 resolved by designer where if we open select year dropdown in totals of card view and hover on megamenu, it goes behind select year dropdown. (05-07-2023) */
+.selecthack select{
+    position: relative;
+}
+ .selecthack select:focus{
+    display:none;
+}
+
+/* Log #1426: design issue fixed(28-Jul-2023) */
+.comment-code {
+    color: white !important
+}
+#enteredClaim table td:last-child {
+    white-space: nowrap;
+}
+
+#CardHolderClaimHistory thead th:nth-child(1) {
+    text-align: left !important
+}
+/* Add by MUKUL to resolved calendar isuue(21/08/2023) */
+#NewProvinceExpiryDate .mydp .bottom-calender, #new_province_effective_date .mydp .bottom-calender, #card-expdate .mydp .bottom-calender, #card-effdate .mydp .bottom-calender, #ce_entryFromDate .mydp .bottom-calender,
+#ce_entryToDate .mydp .bottom-calender, #ce_serviceFromDate .mydp .bottom-calender, #ce_serviceToDate .mydp .bottom-calender, #ce_releaseFromDate .mydp .bottom-calender, #ce_releaseToDate .mydp .bottom-calender,
+#NewDivisionMaxEffectiveOn .mydp .bottom-calender, #NewDivisionMaxExpiryDate .mydp .bottom-calender, #sch_employmentDate .mydp .bottom-calender, #effectiveOnAmendment .mydp .bottom-calender,
+#fromDateEligibility .mydp .bottom-calender, #toDateEligibility .mydp .bottom-calender, #cca_effectivedate .mydp .bottom-calender, #cca_expirydate .mydp .bottom-calender {
+    position: absolute;
+    bottom: 35px !important;
+}
+
+ #NewProvinceExpiryDate .mydp .bottom-calender .header, #new_province_effective_date .mydp .bottom-calender .header, #ce_entryFromDate .mydp .bottom-calender .header,
+ #ce_entryToDate .mydp .bottom-calender .header, #ce_serviceFromDate .mydp .bottom-calender .header, #ce_serviceToDate .mydp .bottom-calender .header, 
+ #ce_releaseFromDate .mydp .bottom-calender .header, #ce_releaseToDate .mydp .bottom-calender .header, #NewDivisionMaxEffectiveOn .mydp .bottom-calender .header,
+ #NewDivisionMaxExpiryDate .mydp .bottom-calender .header, #sch_employmentDate .mydp .bottom-calender .header, #effectiveOnAmendment .mydp .bottom-calender .header,
+ #fromDateEligibility .mydp .bottom-calender .header, #toDateEligibility .mydp .bottom-calender .header, #cca_effectivedate .mydp .bottom-calender .header, #cca_expirydate .mydp .bottom-calender .header{
+   margin-bottom: 0 !important;
+
+}
+
+/* To fix select overlap HMS issue 683(21-Aug-2023) */
+.drop-downpwrap .c-btn{
+    width: 81px !important;
+}
+/* add by mukul to fix calendar hover Issue(HMS point- 617) */
+.calender-icon{
+    margin-bottom: 0 !important;
+    top: 4px !important;
+    color: #686666;
+}
+
+/* Task resolved where termination date field in company view mode used to be destorted. (30-08-2023) Prabhat */
+.terminationDateFieldWidth{
+    width: 100%;
+}
+
+/* Dental fee guide scroll issue resolved by designer. (06-09-2023) */
+#DentalFeeGuide .modal-dialog{
+    overflow: hidden;
+}
+
+/* Task 612 Card view page history buttons used to open accordion also, resolved. (08-09-2023) Prabhat */
+.cardViewHistoryButtons{
+    position: absolute; margin-top: -40px;
+}
+
+/* Fee guide->Update Procedure Amount->Procedure Code dropdown extra space issue has been resolved. (12-02-2023) Prabhat */
+#procId .cuppa-dropdown .dropdown-list .list-area ul span, #updateprocedureCodeScroll .cuppa-dropdown .dropdown-list .list-area ul span{
+    position: relative;
+}

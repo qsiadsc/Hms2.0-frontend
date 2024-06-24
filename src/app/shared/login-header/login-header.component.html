@@ -1,0 +1,8 @@
+<div class="col-md-2" style="display:none">
+<select   class="form-control auto-focus" name='currentLanguage' [(ngModel)]="currentLanguage" 
+ (change)="ChangeLanguage()">
+<option *ngFor="let language of arrLanguage" [value]="language.shortName">
+        {{language.languageName}}
+</option>
+</select>
+</div>

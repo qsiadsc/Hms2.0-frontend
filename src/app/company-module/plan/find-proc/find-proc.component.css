@@ -1,0 +1,9 @@
+#servicesCoveredSection{overflow: scroll;height: 200px;}
+#coverageProceduresSection{overflow: scroll;height: 200px;}
+#coverageRulesSection{overflow: scroll;height: 200px;}
+
+#servicesCoveredSection table th{position: sticky; top: 0;z-index: 1;}
+#coverageProceduresSection table th{position: sticky; top: 0;z-index: 1;}
+#coverageRulesSection table th{position: sticky; top: 0;z-index: 1;}
+.procBtn{padding-top: 19px;}
+.error{color: red;}

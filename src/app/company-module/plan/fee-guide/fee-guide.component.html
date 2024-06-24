@@ -1,0 +1,657 @@
+<div class="table-hdr">
+    <h3>{{ 'company.plan.fee-guide.feeGuideDetails' | translate }}</h3>
+</div>
+<div class="grid-box">
+    <div class="grid-heading">
+        <h3>{{ 'company.plan.fee-guide.generalDetails' | translate }}</h3>
+    </div>
+    <!-- Grid Heading Ends -->
+    <div class="grid-inner">
+        <div class="row">
+            <form [formGroup]="FormGroup">
+                <div class="col-md-3 col-xs-12">
+                    <label>{{ 'company.plan.fee-guide.schedule' | translate }}</label>	
+                    <ng2-completer
+                        formControlName="scheduleKey"
+                        [datasource]="scheduleData"
+                        [minSearchLength]="0"
+                        [openOnFocus]="true"
+                        (opened)="onOpened($event)"
+                        [fillHighlighted]="false"
+                        [placeholder]="'Search Schedule'"
+                        [textSearching]="'Please wait...'"
+                        [inputClass]="'form-control'"
+                        (selected)="onGernalScheduleSelected($event)"
+                        [clearUnselected]="true">
+                    </ng2-completer>
+                    <show-errors [control]="FormGroup.controls.scheduleKey"></show-errors>
+                </div>
+                <div class="col-md-3 col-xs-12">
+                    <label>{{ 'company.plan.fee-guide.province' | translate }}</label>	
+                    <ng2-completer
+                        formControlName="provinceName"
+                        [datasource]="provinceData"
+                        [minSearchLength]="0"
+                        [openOnFocus]="true"
+                        (opened)="onOpened($event)"
+                        [fillHighlighted]="false"
+                        [placeholder]="'Search Province'"
+                        [textSearching]="'Please wait...'"
+                        [inputClass]="'form-control'"
+                        (selected)="onGernalProvinceSelected($event)"
+                        [clearUnselected]="true">
+                    </ng2-completer>
+                    <show-errors [control]="FormGroup.controls.provinceName"></show-errors>
+                </div>
+                <div class="col-md-3 col-xs-12">
+                    <label>{{ 'company.plan.fee-guide.feeGuideDate' | translate }}</label>	
+                    <div class="calender-field">
+                        <my-date-picker
+                        id="feeGuideDate"
+                        name="free_guide_date" 
+                        [options]="myDatePickerOptions"
+                        [placeholder]="myDatePickerPlaceholder"
+                        formControlName="feeGuideDt" 
+                        (inputFocusBlur)="changeDateFormat($event, 'feeGuideDt', 'FormGroup','currentDate')">
+                        </my-date-picker>
+                    </div>
+                    <show-errors [control]="FormGroup.controls.feeGuideDt"></show-errors>
+                    <!-- Calendar Field Ends -->
+                </div>
+                <div class="col-md-3 col-xs-12">
+                    <label>&nbsp;</label>
+                    <div class="select-options">
+                        <span><label><span class="custom-check"><input type="checkbox" formControlName="PayOnProviderAddress"> {{ 'company.plan.fee-guide.payProvidersAddress' | translate }} <span></span></span></label></span>
+                        <show-errors [control]="FormGroup.controls.PayOnProviderAddress"></show-errors>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Grid Box Ends -->
+<div class="table-hdr">
+    <h3>{{ 'company.plan.fee-guide.schedule' | translate }}</h3>
+    <span *ngIf="isScheduleHistoryExist == true && editMode == true">
+        <app-history-icons
+            [attr.data-toggle]="dataToggle"
+            [attr.data-target]="scheduleDataTarget"
+            [id]="scheduleId"
+            [class]="scheduleClass"
+            [title]="scheduleTitle"
+            (click)="getScheduleHistory()">
+        </app-history-icons>
+    </span>
+    <span *ngIf="isScheduleHistoryExist == false && editMode == true"></span>
+    <div class="web-reg">
+        <button id="feeGuideAddNew"class="green-btn-add btn" (click)="enableAddSchedule()"><i class="fa fa-plus"></i> {{ 'button.addnew' | translate }} </button>
+    </div>
+</div>
+<div class="form-row">
+    <div class="row">
+        <div class="col-md-12 col-xs-12 table-col">
+            <div class="table-responsive">
+                <!-- Schedule Validation Errors Messages for new row -->
+                <div style="color: red" class="alert alert-danger" 
+                    *ngIf="(new_dental_fee_schedule.invalid && (new_dental_fee_schedule.dirty || new_dental_fee_schedule.touched)) 
+                    || (new_schedule_effective_date.invalid && (new_schedule_effective_date.dirty || new_schedule_effective_date.touched)) 
+                    || (new_schedule_expiry_date.invalid && (new_schedule_expiry_date.dirty || new_schedule_expiry_date.touched))
+                    || NewScheduleEffectiveDateNotValid
+                    || NewScheduleExpiryDateNotValid">
+                    <!-- Validatoin for new record unit id -->
+                    <div *ngIf="new_dental_fee_schedule.invalid && (new_dental_fee_schedule.dirty || new_dental_fee_schedule.touched)">
+                        <div *ngIf="new_dental_fee_schedule.errors.required">
+                            {{ 'company.plan.fee-guide.feeScheduleReq' | translate }} 
+                        </div>
+                    </div>
+                    
+                    <!-- Validatoin for new record description -->
+                    <div *ngIf="new_schedule_effective_date.invalid && (new_schedule_effective_date.dirty || new_schedule_effective_date.touched)">
+                        <div *ngIf="new_schedule_effective_date.errors.required">
+                            {{ 'company.plan.fee-guide.effectiveDateReq' | translate }}
+                        </div>
+
+                        <div *ngIf="!new_schedule_effective_date.errors.required && new_schedule_effective_date.errors.dateNotValid">
+                            {{ 'company.plan.fee-guide.enterValidDate' | translate }}  
+                        </div>
+                    </div>
+
+                    <div *ngIf="!new_schedule_effective_date.invalid && NewScheduleEffectiveDateNotValid">
+                        {{ 'company.plan.fee-guide.effectiveDateCantbeLess' | translate }}  
+                    </div>
+                    
+                    <!-- Validatoin for new record effective date -->
+                    <div *ngIf="new_schedule_expiry_date.invalid && (new_schedule_expiry_date.dirty || new_schedule_expiry_date.touched)">
+                        
+                        <div *ngIf="new_schedule_expiry_date.errors.dateNotValid">
+                            {{ 'company.plan.fee-guide.enterValidDate' | translate }}  
+                        </div>
+
+                    </div>
+                    
+                    <div *ngIf="!new_schedule_expiry_date.invalid && NewScheduleExpiryDateNotValid">
+                        {{ 'company.plan.fee-guide.expiryDateShouldBeGreater' | translate }} 
+                    </div>
+                </div>
+
+                <!-- Validation Errors Messages for Update row -->
+
+                <div style="color: red" class="alert alert-danger" 
+                    *ngIf="(old_dental_fee_schedule.invalid && (old_dental_fee_schedule.dirty || old_dental_fee_schedule.touched)) || (old_schedule_effective_date.invalid && (old_schedule_effective_date.dirty || old_schedule_effective_date.touched)) 
+                    || (old_schedule_expiry_date.invalid && (old_schedule_expiry_date.dirty || old_schedule_expiry_date.touched)) || OldScheduleEffectiveDateNotValid
+                    || OldScheduleExpiryDateNotValid">
+
+                    <!-- Validatoin for old record unit id -->
+                    <div *ngIf="old_dental_fee_schedule.invalid && (old_dental_fee_schedule.dirty || old_dental_fee_schedule.touched)">
+                        <div *ngIf="old_dental_fee_schedule.errors.required">
+                            {{ 'company.plan.fee-guide.feeScheduleReq' | translate }} 
+                        </div>
+                    </div>
+
+                    <!-- Validatoin for old record description -->
+                    <div *ngIf="old_schedule_effective_date.invalid && (old_schedule_effective_date.dirty || old_schedule_effective_date.touched)">
+                        <div *ngIf="old_schedule_effective_date.errors.required">
+                            {{ 'company.plan.fee-guide.effectiveDateReq' | translate }}  
+                        </div>
+
+                        <div *ngIf="!old_schedule_effective_date.errors.required && old_schedule_effective_date.errors.dateNotValid">
+                            {{ 'company.plan.fee-guide.enterValidDate' | translate }} 
+                        </div>
+                    </div>
+                    <div *ngIf="!old_schedule_effective_date.invalid && OldScheduleEffectiveDateNotValid">
+                        {{ 'company.plan.fee-guide.effectiveDateCantbeLess' | translate }} 
+                    </div>
+                    <!-- Validatoin for old record effective date -->
+                    <div *ngIf="old_schedule_expiry_date.invalid && (old_schedule_expiry_date.dirty || old_schedule_expiry_date.touched)">
+                        <div *ngIf="old_schedule_expiry_date.errors.dateNotValid">
+                            {{ 'company.plan.fee-guide.enterValidDate' | translate }}  
+                        </div>
+                    </div>
+                    <div *ngIf="!old_schedule_expiry_date.invalid && OldScheduleExpiryDateNotValid">
+                        {{ 'company.plan.fee-guide.expiryDateShouldBeGreater' | translate }}  
+                    </div>
+                </div>
+                <!-- Schedule Validation Errors Messages -->
+
+                <table id="feeGuideTable" class="table table-bordered table-stripped">
+                    <thead>
+                        <tr>
+                            <th width="25%"> {{ 'company.plan.fee-guide.dentalFeeSchedule' | translate }} </th>
+                            <th class="amount_right" width="25%">{{ 'company.plan.effective-date' | translate }}</th>
+                            <th class="amount_right" width="25%">{{ 'company.plan.expiry-date' | translate }}</th>
+                            <th class="amount_right" width="25%">{{ 'company.plan.action' | translate }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Adding New Row Data Here-->
+                        <tr *ngIf="ScheduleAddMode">
+                            <td>
+                                <ng2-completer
+                                    [formControl]="new_dental_fee_schedule"
+                                    [datasource]="scheduleData"
+                                    [minSearchLength]="0"
+                                    [openOnFocus]="true"
+                                    (opened)="onOpened($event)"
+                                    [fillHighlighted]="false"
+                                    [placeholder]="'Search Schedule'"
+                                    [textSearching]="'Please wait...'"
+                                    [inputClass]="'form-control'"
+                                    (selected)="onScheduleSelected($event)"
+                                    [clearUnselected]="true">
+                                </ng2-completer>
+                            </td>
+                            <td class="alignDpRight amount_right">
+                                <div class="calender-field">
+                                    <my-date-picker 
+                                        id="NewScheduleEffectiveOn" 
+                                        [formControl]="new_schedule_effective_date"
+                                        [options]="myDatePickerOptions" 
+                                        [placeholder]="myDatePickerPlaceholder" 
+                                        [selDate]="dateNameArray['NewScheduleEffectiveDate']"
+                                        (inputFocusBlur)="changeFilterDateFormat($event, 'new_schedule_effective_date', 'NewScheduleEffectiveDate', true)">
+                                    </my-date-picker>
+                                </div>
+                            </td>
+                            <td class="alignDpRight amount_right">
+                                <!-- expiryDate -->
+                               
+                                <div class="calender-field">
+                                    
+                                    <my-date-picker 
+                                        id="NewScheduleExpiryDate" 
+                                        [formControl]="new_schedule_expiry_date"
+                                        [options]="myDatePickerOptions" 
+                                        [placeholder]="myDatePickerPlaceholder" 
+                                        [selDate]="dateNameArray['NewScheduleExpiryDate']"
+                                        [ngClass]="expired  ? 'expired' : 'notExpired'"
+                                        (inputFocusBlur)="changeFilterDateFormat($event, 'new_schedule_expiry_date', 'NewScheduleExpiryDate')">
+                                    </my-date-picker>
+                                </div>
+                            </td>
+                            <td class="text-center amount_right">
+                                <button id="feeGuideSave" type="button" title="Save" (click)="addNewSchedule()" class="table-action-btn save-ico"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+                                <button id="feeGuideCancel" type="button" title="Cancel"  (click)="resetNewScheduleRow()" class="table-action-btn cancel-ico"><i class="fa fa-times" aria-hidden="true"></i></button>
+                            </td>
+                        </tr>
+                        <!-- Updating Row Data-->
+                        <div *ngIf="ScheduleDataList.length > 0 || ScheduleAddMode; then ScheduleRecordFound else ScheduleRecordNotFound "></div>
+                        <ng-template #ScheduleRecordNotFound>
+                        <tr>
+                            <td colspan="4" class="text-center">No data available in table.</td>
+                        </tr>
+                        </ng-template>
+
+                        <ng-template #ScheduleRecordFound>
+                            <tr *ngFor="let row of ScheduleDataList; let rowIndex = index">
+                                <td>
+                                    <div *ngIf="rowIndex != selectedSchedule.rowIndex">
+                                        <div *ngFor="let schedule of ScheduleList">
+                                            <span *ngIf = "schedule.scheduleKey == row.dentFeeGuideSchedKey">
+                                                {{schedule.scheduleName}}
+                                            </span>
+                                        </div>
+                                    </div>
+                                   
+                                    <ng2-completer
+                                        *ngIf="ScheduleEditMode && rowIndex == selectedSchedule.rowIndex"
+                                        [formControl]="old_dental_fee_schedule"
+                                        [datasource]="scheduleData"
+                                        [minSearchLength]="0"
+                                        [openOnFocus]="true"
+                                        (opened)="onOpened($event)"
+                                        [fillHighlighted]="false"
+                                        [placeholder]="'Search Schedule'"
+                                        [textSearching]="'Please wait...'"
+                                        [inputClass]="'form-control'"
+                                        (selected)="onScheduleSelected($event)"
+                                        [clearUnselected]="true">
+                                    </ng2-completer>
+                                </td>
+                                <td class="alignDpRight amount_right">
+                                    <span *ngIf="rowIndex != selectedSchedule.rowIndex">{{row.effectiveOn | dateFormate}}</span>
+                                    <div *ngIf="ScheduleEditMode && rowIndex == selectedSchedule.rowIndex" class="calender-field">
+                                        <my-date-picker 
+                                            id="old_schedule_effective_date"
+                                            [formControl]="old_schedule_effective_date" 
+                                            [(ngModel)]="selectedSchedule.effectiveOn"  
+                                            [options]="myDatePickerOptions"
+                                            [placeholder]="myDatePickerPlaceholder" 
+                                            [selDate]="dateNameArray['OldScheduleEffectiveDate']"
+                                            (inputFocusBlur)="changeFilterDateFormat($event, 'old_schedule_effective_date', 'OldScheduleEffectiveDate', true)">
+                                        </my-date-picker>
+                                    </div>
+                                </td>
+                                <td class="alignDpRight amount_right">
+                                    <!-- expiryDate -->
+                                    <span *ngIf="rowIndex != selectedSchedule.rowIndex && row.checkDate" style="color: rgb(235, 87, 87);font-weight: bold;">{{row.expiredOn | dateFormate}}</span>
+                                    <span *ngIf="rowIndex != selectedSchedule.rowIndex && !row.checkDate">{{row.expiredOn | dateFormate}}</span>
+                                    <div *ngIf="ScheduleEditMode && rowIndex == selectedSchedule.rowIndex" class="calender-field">
+                                        <my-date-picker 
+                                            id="old_schedule_expiry_date"
+                                            [formControl]="old_schedule_expiry_date"
+                                            [(ngModel)]="selectedSchedule.expiredOn"
+                                            [options]="myDatePickerOptions" 
+                                            [placeholder]="myDatePickerPlaceholder" 
+                                            [selDate]="dateNameArray['OldScheduleExpiryDate']"
+                                            [ngClass]="expired ? 'notExpired' : 'addExpiredCss'"
+                                            (inputFocusBlur)="changeFilterDateFormat($event, 'old_schedule_expiry_date', 'OldScheduleExpiryDate')">
+                                        </my-date-picker>
+                                    </div>
+                                </td>
+                                <td class="text-center amount_right">
+                                    <!-- Display button in View Mode -->
+                                    <button id="feeGuideEdit" title="Edit" *ngIf="rowIndex != selectedSchedule.rowIndex" type="button" class="table-action-btn edit-ico" (click)="enableEditSchedule(row, rowIndex)"><i class="fa fa-pencil"></i></button>
+                                    <button id="feeGuideDelete" title="Delete" *ngIf="rowIndex != selectedSchedule.rowIndex" type="button" class="table-action-btn del-ico" (click)="deleteSchedule(rowIndex)"><i class="fa fa-trash"></i></button>
+                                    
+                                    <!-- Display button in Edit Mode -->
+                                    <button id="feeGuideUpdate" title="Save" *ngIf="ScheduleEditMode && rowIndex == selectedSchedule.rowIndex" type="button" class="table-action-btn save-ico" (click)="updateSchedule(rowIndex)"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+                                    <button id="feeGuideCancel1" title="Cancel" *ngIf="ScheduleEditMode && rowIndex == selectedSchedule.rowIndex" type="button" class="table-action-btn cancel-ico" (click)="resetScheduleInfo()"><i class="fa fa-times" aria-hidden="true"></i></button>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </tbody>
+                </table>
+            </div>
+            <!-- Table Ends -->
+        </div>
+    </div>
+<!-- Form Row ENds -->
+<div class="table-hdr">
+    <h3>{{ 'company.plan.fee-guide.province' | translate }}</h3>
+    <span *ngIf="isProvinceHistoryExist == true && editMode == true">
+        <app-history-icons
+            [attr.data-toggle]="dataToggle"
+            [attr.data-target]="provinceDataTarget"
+            [id]="provinceId"
+            [class]="provinceClass"
+            [title]="provinceTitle"
+            (click)="getProvinceHistory()">
+        </app-history-icons>
+    </span>
+    <span *ngIf="isProvinceHistoryExist == false && editMode == true"></span>
+    <div class="web-reg">
+        <button id="feeGuideAddNew1" class="green-btn-add btn" (click)="enableAddProvince()"><i class="fa fa-plus"></i> Add New</button>
+    </div>
+</div>
+<div class="form-row">
+    <div class="row">
+        <div class="col-md-12 col-xs-12 table-col">
+            <div class="table-responsive">
+                <!-- Province Validation Errors Messages for new row -->
+                <div style="color: red" class="alert alert-danger" 
+                    *ngIf="(new_province.invalid && (new_province.dirty || new_province.touched)) 
+                    || (new_province_effective_date.invalid && (new_province_effective_date.dirty || new_province_effective_date.touched)) 
+                    || (new_province_expiry_date.invalid && (new_province_expiry_date.dirty || new_province_expiry_date.touched))
+                    || NewProvinceEffectiveDateNotValid
+                    || NewProvinceExpiryDateNotValid">
+
+                    <!-- Validatoin for new record unit id -->
+                    <div *ngIf="new_province.invalid && (new_province.dirty || new_province.touched)">
+                        <div *ngIf="new_province.errors.required">
+                            {{ 'company.plan.fee-guide.provinceIsReq' | translate }}
+                        </div>
+
+                        <div *ngIf="new_province.errors.alreadyExist">
+                            {{ 'company.plan.fee-guide.provinceExist' | translate }} 
+                        </div>
+                    </div>
+
+                    <!-- Validatoin for new record description -->
+                    <div *ngIf="new_province_effective_date.invalid && (new_province_effective_date.dirty || new_province_effective_date.touched)">
+                        <div *ngIf="new_province_effective_date.errors.required">
+                            {{ 'company.plan.fee-guide.effectiveDateReq' | translate }} 
+                        </div>
+
+                        <div *ngIf="!new_province_effective_date.errors.required && new_province_effective_date.errors.dateNotValid">
+                            {{ 'company.plan.fee-guide.enterValidDate' | translate }}  
+                        </div>
+
+                    </div>
+
+                    <div *ngIf="!new_province_effective_date.invalid && NewProvinceEffectiveDateNotValid">
+                        {{ 'company.plan.fee-guide.effectiveDateCantbeLess' | translate }}  
+                    </div>
+
+                    <!-- Validatoin for new record effective date -->
+                    <div *ngIf="new_province_expiry_date.invalid && (new_province_expiry_date.dirty || new_province_expiry_date.touched)">
+
+                        <div *ngIf="new_province_expiry_date.errors.dateNotValid">
+                            {{ 'company.plan.fee-guide.enterValidDate' | translate }}  
+                        </div>
+                    </div>
+
+                    <div *ngIf="!new_province_expiry_date.invalid && NewProvinceExpiryDateNotValid">
+                        {{ 'company.plan.fee-guide.expiryDateShouldBeGreater' | translate }}
+                    </div>
+
+                </div>
+
+                <!-- Validation Errors Messages for Update row -->
+                <div style="color: red" class="alert alert-danger" 
+                    *ngIf="(old_province.invalid && (old_province.dirty || old_province.touched)) 
+                    || (old_province_effective_date.invalid && (old_province_effective_date.dirty || old_province_effective_date.touched)) 
+                    || (old_province_expiry_date.invalid && (old_province_expiry_date.dirty || old_province_expiry_date.touched))
+                    || oldProvinceEffectiveDateNotValid
+                    || oldProvinceExpiryDateNotValid">
+
+                    <!-- Validatoin for old record unit id -->
+                    <div *ngIf="old_province.invalid && (old_province.dirty || old_province.touched)">
+                        <div *ngIf="old_province.errors.required">
+                            {{ 'company.plan.fee-guide.provinceIsReq' | translate }}
+                        </div>
+
+                        <div *ngIf="old_province.errors.alreadyExist">
+                            {{ 'company.plan.fee-guide.provinceExist' | translate }} 
+                        </div>
+                    </div>
+
+                    <!-- Validatoin for old record description -->
+                    <div *ngIf="old_province_effective_date.invalid && (old_province_effective_date.dirty || old_province_effective_date.touched)">
+                        <div *ngIf="old_province_effective_date.errors.required">
+                            {{ 'company.plan.fee-guide.effectiveDateReq' | translate }} 
+                        </div>
+
+                        <div *ngIf="!old_province_effective_date.errors.required && old_province_effective_date.errors.dateNotValid">
+                            {{ 'company.plan.fee-guide.enterValidDate' | translate }}  
+                        </div>
+                    </div>
+
+                    <div *ngIf="!old_province_effective_date.invalid && oldProvinceEffectiveDateNotValid">
+                        {{ 'company.plan.fee-guide.effectiveDateCantbeLess' | translate }} 
+                    </div>
+
+                    <!-- Validatoin for old record effective date -->
+                    <div *ngIf="old_province_expiry_date.invalid && (old_province_expiry_date.dirty || old_province_expiry_date.touched)">
+                        <div *ngIf="old_province_expiry_date.errors.dateNotValid">
+                            {{ 'company.plan.fee-guide.enterValidDate' | translate }} 
+                        </div>
+                    </div>
+
+                    <div *ngIf="!old_province_expiry_date.invalid && oldProvinceExpiryDateNotValid">
+                        {{ 'company.plan.fee-guide.expiryDateShouldBeGreater' | translate }}
+                    </div>
+
+                </div>
+                
+                <!-- Schedule Validation Errors Messages -->
+                <table id="feeGuideTable1" class="table table-bordered table-stripped">
+                    <thead>
+                        <tr>
+                            <th width="25%">{{ 'company.plan.fee-guide.province' | translate }} </th>
+                            <th class="amount_right" width="25%">{{ 'company.plan.effective-date' | translate }}</th>
+                            <th class="amount_right" width="25%">{{ 'company.plan.expiry-date' | translate }}</th>
+                            <th class="amount_right" width="25%">{{ 'company.plan.action' | translate }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Adding New Row Data Here-->
+                        <tr *ngIf="ProvinceAddMode">
+                            <td>
+                                <ng2-completer
+                                    [formControl]="new_province"
+                                    [datasource]="provinceData"
+                                    [minSearchLength]="0"
+                                    [openOnFocus]="true"
+                                    (opened)="onOpened($event)"
+                                    [fillHighlighted]="false"
+                                    [placeholder]="'Search Province'"
+                                    [textSearching]="'Please wait...'"
+                                    [inputClass]="'form-control'"
+                                    (selected)="onProvinceSelected($event)"
+                                    [clearUnselected]="true">
+                                </ng2-completer>
+                            </td>
+                            <td class="alignDpRight amount_right">
+                            <div class="calender-field">
+                                <my-date-picker 
+                                    id="new_province_effective_date" 
+                                    [formControl]="new_province_effective_date"
+                                    [options]="myDatePickerOptions" 
+                                    [placeholder]="myDatePickerPlaceholder" 
+                                    [selDate]="dateNameArray['NewProvinceEffectiveDate']"
+                                    (inputFocusBlur)="changeFilterDateFormat($event, 'new_province_effective_date', 'NewProvinceEffectiveDate', true)">
+                                </my-date-picker>
+                            </div>
+                            </td>
+                            <td class="alignDpRight amount_right">
+                            <div class="calender-field">
+                                
+                                <my-date-picker 
+                                    id="NewProvinceExpiryDate" 
+                                    [formControl]="new_province_expiry_date"
+                                    [options]="myDatePickerOptions" 
+                                    [placeholder]="myDatePickerPlaceholder" 
+                                    [selDate]="dateNameArray['NewProvinceExpiryDate']"
+                                    [ngClass]="expired  ? 'expired' : 'notExpired'"
+                                    (inputFocusBlur)="changeFilterDateFormat($event, 'new_province_expiry_date', 'NewProvinceExpiryDate')">
+                                </my-date-picker>
+                            </div>
+                            </td> 
+                            <td class="text-center amount_right">
+                                <button id="feeGuideSave1" type="button" title="Save" (click)="addNewProvince()" class="table-action-btn save-ico" title="Save"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+                                <button id="feeGuideCancel3" type="button" title="Cancel" (click)="resetNewProvinceRow()" class="table-action-btn cancel-ico" title="Cancel"><i class="fa fa-times" aria-hidden="true"></i></button>
+                            </td>
+                        </tr>
+                        <!-- Updating Row Data-->
+                        <div *ngIf="ProvinceDataList.length > 0 || ProvinceAddMode; then recordFound else recordNotFound "></div>
+                        <ng-template #recordNotFound>
+                        <tr>
+                            <td colspan="4" class="text-center">No data available in table.</td>
+                        </tr>
+                        </ng-template>
+
+                        <ng-template #recordFound>
+                            <tr *ngFor="let row of ProvinceDataList; let rowIndex = index">
+                                <td>
+                                    <div *ngIf="rowIndex != selectedProvince.rowIndex">
+                                        <div *ngFor="let province of ProvinceList">
+                                            <span *ngIf = "province.provinceKey == row.provinceKey">
+                                                {{province.provinceName}}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <ng2-completer
+                                        *ngIf="ProvinceEditMode && rowIndex == selectedProvince.rowIndex"
+                                        [formControl]="old_province"
+                                        [datasource]="provinceData"
+                                        [minSearchLength]="0"
+                                        [openOnFocus]="true"
+                                        (opened)="onOpened($event)"
+                                        [fillHighlighted]="false"
+                                        [placeholder]="'Search Province'"
+                                        [textSearching]="'Please wait...'"
+                                        [inputClass]="'form-control'"
+                                        (selected)="onProvinceSelected($event)"
+                                        [clearUnselected]="true">
+                                    </ng2-completer>
+                                </td>
+                                <td class="alignDpRight amount_right">
+                                    <span *ngIf="rowIndex != selectedProvince.rowIndex">{{row.effectiveOn | dateFormate}}</span>
+                                    <div *ngIf="ProvinceEditMode && rowIndex == selectedProvince.rowIndex" class="calender-field">
+                                        <my-date-picker
+                                            id="feeGuideDate1"
+                                            [options]="myDatePickerOptions"
+                                            [formControl]="old_province_effective_date"
+                                            [placeholder]="myDatePickerPlaceholder"
+                                            [(ngModel)]="selectedProvince.effectiveOn"  
+                                            [selDate]="dateNameArray['OldProvinceEffectiveDate']"
+                                            (inputFocusBlur)="changeFilterDateFormat($event, 'old_province_effective_date', 'OldProvinceEffectiveDate', true)">
+                                        </my-date-picker>
+                                    </div>
+                                </td>
+                                <td class="alignDpRight amount_right">
+                                    <span *ngIf="rowIndex != selectedProvince.rowIndex && row.checkDate" style="color: rgb(235, 87, 87);font-weight: bold;">{{row.expiredOn | dateFormate}}</span>                                
+                                    <span *ngIf="rowIndex != selectedProvince.rowIndex && !row.checkDate">{{row.expiredOn | dateFormate}}</span>
+                                    
+                                    <div *ngIf="ProvinceEditMode && rowIndex == selectedProvince.rowIndex" class="calender-field">
+                                        <my-date-picker
+                                            id="feeGuideExpiryDate" 
+                                            [options]="myDatePickerOptions" 
+                                            [formControl]="old_province_expiry_date"
+                                            [(ngModel)]="selectedProvince.expiredOn"
+                                            [placeholder]="myDatePickerPlaceholder"
+                                            [selDate]="dateNameArray['OldProvinceExpiryDate']"
+                                            [ngClass]="expired ? 'notExpired' : 'addExpiredCss'"
+                                            (inputFocusBlur)="changeFilterDateFormat($event, 'old_province_expiry_date', 'OldProvinceExpiryDate')">
+                                        </my-date-picker>
+                                    </div>
+                                </td>
+                                <td class="text-center amount_right">
+                                    <!-- Display button in View Mode -->
+                                    <button id="feeGuideEdit1" title="Edit"*ngIf="rowIndex != selectedProvince.rowIndex"  type="button" class="table-action-btn edit-ico" (click)="enableEditProvince(row, rowIndex)"><i class="fa fa-pencil"></i></button>
+                                    <button id="feeGuideDelete1" title="Delete" *ngIf="rowIndex != selectedProvince.rowIndex"  type="button" class="table-action-btn del-ico" (click)="deleteProvince(rowIndex)"><i class="fa fa-trash"></i></button>
+                                    
+                                    <!-- Display button in Edit Mode -->
+                                    <button id="feeGuideUpdate1"  title="Update" *ngIf="ProvinceEditMode && rowIndex == selectedProvince.rowIndex" type="button" class="table-action-btn save-ico" title="Save" (click)="updateProvince(rowIndex)"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+                                    <button id="feeGuideCancel2" title="Cancel" *ngIf="ProvinceEditMode && rowIndex == selectedProvince.rowIndex" type="button" class="table-action-btn cancel-ico" title="Cancel" (click)="resetProvinceInfo()"><i class="fa fa-times" aria-hidden="true"></i></button>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </tbody>
+                </table>
+            </div>
+            <!-- Table Ends -->
+        </div>
+    </div>
+</div>
+<!-- Form Row ENds -->
+
+
+<!-- Province History  Modal -->
+<div id="provinceHistory" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button id="provinceHistoryClose" type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">{{ 'company.plan.fee-guide.provinceHistory' | translate }}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="grid-box">
+                    <div class="grid-inner">
+                        <div class="form-row">
+                            <div class="row">
+                                <div class="col-md-12 col-xs-12 table-col">
+                                    <div class="table-responsive">
+                                        <table id="province" class="table table-bordered table-stripped">
+                                        </table>
+                                    </div>
+                                    <!-- Table Ends -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Form Row ENds -->
+                    </div>
+                    <!-- Grid Inner Ends -->
+                </div>
+                <!-- Grid Box Ends -->
+            </div>
+            <!-- Modal Body End-->
+            <div class="modal-footer">
+                <button id="provinceHistoryClose1" type="button" class="btn grey-btn" data-dismiss="modal">{{ 'button.close' | translate }}</button>
+            </div>
+            <!-- Modal Footer Ends-->
+        </div>
+    </div>
+</div>
+<!-- Province History Modal End -->
+
+<!-- Schedule History  Modal -->
+<div id="scheduleHistory" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button id="scheduleHistoryClose" type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">{{ 'company.plan.fee-guide.scheduleHistory' | translate }}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="grid-box">
+                    <div class="grid-inner">
+                        <div class="form-row">
+                            <div class="row">
+                                <div class="col-md-12 col-xs-12 table-col">
+                                    <div class="table-responsive">
+                                        <table id="schedule" class="table table-bordered table-stripped">
+                                        </table>
+                                    </div>
+                                    <!-- Table Ends -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Form Row ENds -->
+                    </div>
+                    <!-- Grid Inner Ends -->
+                </div>
+                <!-- Grid Box Ends -->
+            </div>
+            <!-- Modal Body End-->
+            <div class="modal-footer">
+                <button id="scheduleHistoryClose1" type="button" class="btn grey-btn" data-dismiss="modal">{{ 'button.close' | translate }}</button>
+            </div>
+            <!-- Modal Footer Ends-->
+        </div>
+    </div>
+</div>
+<!-- Schedule History Modal End -->

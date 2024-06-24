@@ -1,0 +1,10 @@
+table#broker-bank-table tr:first-child td:last-child a {
+    display: block;
+    width: 30px;
+    height: 30px;
+}
+
+
+table#broker-bank-table tr td:last-child a {
+    display: none;
+}

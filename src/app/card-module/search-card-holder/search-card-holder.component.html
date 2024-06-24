@@ -1,0 +1,313 @@
+<div class="section-heading" *ngIf="isQuikcard || showBothBussinesType">
+  <h2>{{'common.cardholder' | translate }} -
+    <span> {{'common.search' | translate }}</span>
+  </h2>
+</div>
+<div class="section-heading" *ngIf="Alberta">
+  <h2>{{'card.client' | translate}} -
+    <span> {{'common.search' | translate}}</span>
+  </h2>
+</div>
+<!-- Section Heading Ends -->
+<div class="grid-box">
+  <div class="grid-heading">
+    <h3 *ngIf="isQuikcard || showBothBussinesType">{{'common.searchcardholder' | translate}}</h3>
+    <h3 *ngIf="Alberta">{{'common.searchclient' | translate}}</h3>
+    <div class="web-reg">
+      <a *ngIf="userAuthCheck[0].addCard == 'T'" [routerLink]="['/card']" class="green-btn-add btn">
+        <i class="fa fa-plus"></i>{{'common.add-card' | translate}}</a>
+    </div>
+  </div>
+  <!-- Grid Heading Ends -->
+  <div class="grid-inner" id="searchCardHolderForm">
+    <form [formGroup]="searchCardHolderForm" (ngSubmit)="submitSearchCardHolder(searchCardHolderForm)">
+      <div class="form-row">
+        <div class="row min-ht-sf">
+          <div *ngIf="haveBothAcess" class="col-md-12 col-xs-12 single-col">
+            <label>{{ 'common.business-type' | translate }}</label>
+            <div class="select-options">
+              <span>
+                <label>
+                  <input formControlName="businessType" value="Q" name="businessType" id="businessType" type="radio" />
+                  {{ 'common.quikcard' | translate }}</label>
+              </span>
+              <!-- <span> THIS COMMENT NOT TO BE REMOVED AS IT IS NEEDED TO UNCOMMENT AFTER TESTING BY ARUN SIR(Loveleen)
+                <label>
+                  <input formControlName="businessType" value="S" name="businessType" id="businessType" type="radio" /> {{ 'search-cardholder.alberta' | translate }}</label>
+              </span> -->
+            </div>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{ 'common.card-id' | translate }}</label>
+            <input type="text" class="fm-txt form-control" placeholder="{{ 'common.card-id' | translate }}"
+              formControlName="cardId" name="cardId" id="sch_cardId_header" pattern="^[0-9\s]+$" ng-pattern-restrict />
+            <show-errors [control]="searchCardHolderForm.controls.cardId"></show-errors>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{ 'common.last-name' | translate }}</label>
+            <input type="text" class="fm-txt form-control" placeholder="{{ 'common.last-name' | translate }}"
+              formControlName="lastName" name="lastName" id="lastName" pattern="^[a-zA-Z\s]+$" ng-pattern-restrict />
+            <show-errors [control]="searchCardHolderForm.controls.lastName"></show-errors>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{ 'common.first-name' | translate }}</label>
+            <input type="text" class="fm-txt form-control" myAutofocus
+              placeholder="{{ 'common.first-name' | translate }}" formControlName="firstName" name="firstName"
+              id="txtFirstName" pattern="^[a-zA-Z\s]+$" ng-pattern-restrict />
+            <show-errors [control]="searchCardHolderForm.controls.firstName"></show-errors>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{ 'common.company-name' | translate }}</label>
+            <app-search-company (getCompanyNameVal)="companyFieldVal($event)" (keydownEvent)="onKeyPressEvent($event)">
+            </app-search-company>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{ 'card.card-holder.data-tables.date-of-birth' | translate }}</label>
+            <div class="calender-field">
+              <my-date-picker id="sch_employmentDate" placeholder="{{ 'common.date-placeholder' | translate }}"
+                [options]="myDatePickerOptions" name="dob" formControlName="dob"
+                (inputFocusBlur)="changeDateFormat($event, 'dob','searchCardHolderForm')">
+              </my-date-picker>
+            </div>
+            <show-errors [control]="searchCardHolderForm.controls.dob"></show-errors>
+            <!-- Calendar Field Ends -->
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{ 'common.phone' | translate }}</label>
+            <input type="text" [textMask]="{mask: phoneMask}" placeholder="{{ 'common.phone' | translate }}"
+              class="fm-txt form-control" formControlName="phone" name="phone" id="phone" />
+          </div>
+          <div class="col-md-3 col-xs-12"><!--log 904-->
+            <label>{{'common.role' | translate}}</label>
+            <ng2-completer formControlName="role" name="role" [datasource]="arrRoleTypeData" [minSearchLength]="0"
+              [openOnFocus]="true" (keydown)="roleAutoSearch($event);" [fillHighlighted]="false"
+              [placeholder]="'Search Role'" [textSearching]="'Please wait...'" [inputClass]="'form-control inputSearch'"
+              data-type="predective" [inputId]="'role'" [clearUnselected]="true" [autoHighlight]="true"
+              [selectOnFocus]="true">
+            </ng2-completer>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{ 'common.status' | translate }}</label>
+            <div class="select-options">
+              <span>
+                <label>
+                  <input type="radio" title="Active" value="active" formControlName="status" name="status"
+                    id="status" /> {{ 'common.active' | translate }}</label>
+              </span>
+              <span>
+                <label>
+                  <input type="radio" value="inactive" title="Inactive" formControlName="status" name="status"
+                    id="status" /> {{ 'common.inactive' | translate }}</label>
+              </span>
+              <span>
+                <label>
+                  <input type="radio" value="" formControlName="status" title="All" name="status" id="status" /> {{
+                  'common.all' | translate }}</label>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Form Row ENds -->
+      <div class="form-row">
+        <button *ngIf="userAuthCheck[0].searchCardholders == 'T'" id="btnSearchCardHolder" class="btn green-btn"
+          title="Search" type="submit" (click)="submitSearchCardHolder(searchCardHolderForm)">{{ 'button.search' |
+          translate }}</button>
+        <button id="btnClearCardHolder" class="btn grey-btn" type="button" title="Clear"
+          (click)="resetSearchCardHolder(searchCardHolderForm)">{{ 'button.clear' | translate }}</button>
+      </div>
+      <!-- Form Row ENds -->
+    </form>
+  </div>
+  <!-- Grid Inner Ends -->
+</div>
+<!-- Grid Box Ends -->
+<div [hidden]="!showSearchTable">
+  <div class="grid-box">
+    <div class="grid-heading">
+      <h3 *ngIf="isQuikcard || showBothBussinesType">{{ 'common.listof-cardholder' | translate }}</h3>
+      <h3 *ngIf="Alberta">{{ 'common.listof-clients' | translate }}</h3>
+    </div>
+    <div class="grid-inner">
+      <form>
+        <div class="form-row card-search-top text-right">
+          <button id="btnCardListByGridFilteration" type="submit" class="btn green-btn searchreset"
+            (click)="getCardListByGridFilteration('search-card-table')">
+            <span class="glyphicon glyphicon-search"></span>
+          </button>
+          <button id="btnTableSearch" class="btn grey-btn searchreset"
+            (click)="submitSearchCardHolder(searchCardHolderForm)">
+            <span class="glyphicon glyphicon-repeat"></span>
+          </button>
+        </div>
+        <!-- Form Row Ends -->
+        <div class="form-row">
+          <div class="row">
+            <div class="col-md-12 col-xs-12 table-col">
+              <div class="table-responsive">
+                <table id="search-card-table" class="display table table-bordered table-stripped table-responsive">
+                  <thead>
+                  </thead>
+                  <tfoot>
+                    <tr>
+                      <td width="5%">
+                        <input id="sch_cardId" type="text" placeholder="{{ 'common.card-id' | translate }}"
+                          class="fm-txt form-control inputSearch" name="cardId" [(ngModel)]="cardId" />
+                      </td>
+                      <td width="7%">
+                        <input id="sch_lastName" type="text" placeholder="{{ 'common.last-name' | translate }}"
+                          class="fm-txt form-control inputSearch amount_right_grid" name="lastName"
+                          [(ngModel)]="lastName" />
+                      </td>
+                      <td width="7%">
+                        <input id="sch_firstName" type="text" placeholder="{{ 'common.first-name' | translate }}"
+                          class="fm-txt form-control inputSearch amount_right_grid" name="firstName"
+                          [(ngModel)]="firstName" />
+                      </td>
+                      <td width="6%">
+                        <select [(ngModel)]='genderL' dir="rtl" id="sch_gender"
+                          (keydown)="filterSearchOnEnter($event,'search-card-table')"
+                          class="fm-txt amount_right_grid form-control inputSearch" name="gender">
+                          <option value="" hidden>{{'common.select' | translate}}</option>
+                          <option value="">All</option>
+                          <option value="M">{{'common.male' | translate}}</option>
+                          <option value="F">{{'common.female' | translate}}</option>
+                          <option value="O">{{'common.other' | translate}}</option>
+                        </select>
+                      </td>
+                      <td width="4%" class="alignDpRight">
+                        <div class="calender-field dateBirth">
+                          <my-date-picker id="dob" placeholder="{{ 'common.date-placeholder' | translate }}"
+                            class="inputSearch" name="dob" data-type="date" [options]="myDatePickerOptions"
+                            [selDate]="dateNameArray['dob']"
+                            (inputFocusBlur)="changeDateFormat1($event, 'dob','searchCardHolderForm')">
+                          </my-date-picker>
+                        </div>
+                      </td>
+                      <td width="10%">
+                        <input id="sch_emailAddress" type="text" placeholder="{{ 'common.email-address' | translate }}"
+                          class="fm-txt form-control inputSearch amount_right_grid" name="email" [(ngModel)]="email" />
+                      </td>
+                      <td width="6%">
+                        <input id="sch_phone" type="text" placeholder="{{ 'common.phone' | translate }}"
+                          data-type="phone" class="fm-txt form-control inputSearch amount_right_grid" name="phone"
+                          [(ngModel)]="phoneNumber" />
+                      </td>
+                      <td width="5%">
+                        <select [(ngModel)]='roleL' dir="rtl" id="sch_role"
+                          (keydown)="filterSearchOnEnter($event,'search-card-table')"
+                          class="fm-txt amount_right_grid form-control inputSearch" name="cardHolderRole">
+                          <option value="" hidden>{{'common.select' | translate}}</option>
+                          <option value="">All</option>
+                          <option value="Primary">Primary</option>
+                          <option value="Spouse">Spouse</option>
+                          <option value="Dependent">Dependent</option>
+                        </select>
+                      </td>
+                      <td width="21%">
+                        <input id="sch_companyName" type="text" placeholder="{{ 'common.company-name' | translate }}"
+                          class="fm-txt form-control inputSearch amount_right_grid" name="companyName"
+                          [(ngModel)]="SearchCompanyName" />
+                      </td>
+
+                      <td width="2%" class="alignDpRight">
+                        <div class="calender-field">
+                          <my-date-picker id="effectivedate" placeholder="{{ 'common.date-placeholder' | translate }}"
+                            class="inputSearch" name="effectiveOn" data-type="date" [options]="myDatePickerOptions"
+                            [selDate]="dateNameArray['effectivedate']"
+                            (inputFocusBlur)="changeDateFormat1($event, 'effectivedate','searchCardHolderForm')">
+                          </my-date-picker>
+                        </div>
+                      </td>
+
+                      <td width="2%" class="alignDpRight">
+                        <div class="calender-field">
+                          <my-date-picker placeholder="{{ 'common.date-placeholder' | translate }}" id="expiredOn"
+                            name="expiredOn" data-type="date" class="inputSearch" [options]="myDatePickerOptions"
+                            [selDate]="dateNameArray['expirydate']" [ngClass]="expired  ? 'expired' : 'notExpired'"
+                            (inputFocusBlur)="changeDateFormat1($event, 'expirydate','searchCardHolderForm')">
+                          </my-date-picker>
+                        </div>
+                      </td>
+
+                      <td width="21%">
+                        <input id="sch_planName" type="text" placeholder="{{ 'company.plan.plan-name&no' | translate }}"
+                          class="fm-txt form-control inputSearch amount_right_grid" name="planName"
+                          [(ngModel)]="SearchPlanName" />
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+              <ul class="color-list">
+                <li>
+                  <span class="color-des green-color"></span>
+                  <h5>Active</h5>
+                </li>
+                <li>
+                  <span class="color-des red-color"></span>
+                  <h5>Inactive</h5>
+                </li>
+                <li><!-- issue 775 legends start -->
+                  <span class="cust_box">M</span>
+                  <h5>Male</h5>
+                </li>
+                <li>
+                  <span class="cust_box">F</span>
+                  <h5>Female</h5>
+                </li>
+                <li>
+                  <span class="cust_box">O</span>
+                  <h5>Other</h5>
+                </li>
+                <li>
+                  <span class="cust_box">P</span>
+                  <h5>Primary</h5>
+                </li>
+                <li>
+                  <span class="cust_box">S</span>
+                  <h5>Spouse</h5>
+                </li>
+                <li>
+                  <span class="cust_box">D</span>
+                  <h5>Dependent</h5>
+                </li><!-- issue 775 legends  Ends-->
+              </ul>
+              <!-- Table Ends -->
+            </div>
+          </div>
+        </div>
+        <!-- Form Row ENds -->
+      </form>
+      <div class="form-row text-center">
+        <div class="row">
+          <div class="col-md-12 col-xs-12">
+            <div class="dropdown pull-right">
+              <button class="btn green-btn dropdown-toggle" type="button" data-toggle="dropdown">Export
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu">
+                <li>
+                  <a href="javascript:void(0)" (click)="exportSearchCardHolderList()">Excel</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Grid Inner Ends -->
+  </div>
+</div>
+<!-- Grid Box Ends -->
+<div *ngIf="showLoader" class="loader-outer">
+  <div class="cube-wrapper">
+    <div class="cube-folding">
+      <span class="leaf1"></span>
+      <span class="leaf2"></span>
+      <span class="leaf3"></span>
+      <span class="leaf4"></span>
+    </div>
+    <span class="loading" data-name="Loading">{{'company.plan.benefits.pleaseWait'|translate}}</span>
+  </div>
+</div>

@@ -1,0 +1,55 @@
+<div class="modal-dialog">
+  <div class="modal-content ">
+    <div class="modal-header">
+      <h4 class="modal-title">Track Claim</h4>
+      <div class="web-reg">
+        <span  class="claim-status btn status-btn">Reference Id : {{refNumber}}</span>
+      </div>
+    </div>
+    <div class="modal-body" *ngIf="recordLength != 0">
+      <!-- Grid Heading Ends  -->
+      <div class="grid-inner">
+        <div class="form-row">
+          <div class="row">
+            <div class="col-md-12 col-xs-12 table-col">
+              <div class="table-responsive" id="showClaimItemSection">
+
+                <table id='show-claim-table' class="table table-bordered table-stripped inlinePopupTable">
+                  <thead>
+                    <tr>
+                      <th>{{'claims.claims-add.claims-general-information.reference_no' | translate}}</th>
+                      <th>{{'claims.claims-view.claim-items.date' | translate}}</th>
+                      <th>Refer To</th>
+                      <th>Processor</th>
+                      
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let tcData of trackStatusList; let in = index" (click)="redirectToClaim(trackStatusList[in])">
+
+                      <td>{{refNumber}}</td>
+                      <td>{{tcData.date}}</td>
+                      <td>{{tcData.referTo}}</td>
+                      <td>{{tcData.processor}}</td>
+                 
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Form Row ENds -->
+      </div>
+      <!-- Grid Inner Ends -->
+    </div>
+    <div class="modal-body" *ngIf="recordLength == 0">
+      <div class="text-center">
+        <h3 class="success-msg" [innerHTML]="message"> </h3>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button id="modalFooterCloseS" type="button" class="btn grey-btn" data-dismiss="modal" >{{'button.close' | translate }}</button>
+    </div>
+  </div>
+</div>

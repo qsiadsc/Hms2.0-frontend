@@ -1,0 +1,369 @@
+<div class="grid-box">
+  <div class="grid-heading {{this.cardStatus}}">
+    <h3 *ngIf="grnlInfoAddMode">{{'common.generalinfo' | translate}}</h3>
+    <h3 *ngIf="!grnlInfoAddMode">{{'common.generalinfo' | translate}} ({{this.cardStatus}})</h3>
+    <div class="plan-ct" *ngIf="disciplineIcons.length > 0">
+      <span *ngFor="let discipline of disciplineIcons" class="history-ico">
+        <span class="dental-ico" *ngIf="discipline.disciplineDesc == 'Dental'"></span>
+        <div *ngIf="discipline.disciplineDesc == 'Dental'" class="comment-top">
+          <p>{{'card.card-holder.cob.dental' | translate}}</p>
+        </div>
+
+        <span class="vision-ico" *ngIf="discipline.disciplineDesc == 'Vision'"></span>
+        <div *ngIf="discipline.disciplineDesc == 'Vision'" class="comment-top">
+          <p>{{'card.card-holder.cob.vision' | translate}}</p>
+        </div>
+
+        <span class="health-ico" *ngIf="discipline.disciplineDesc == 'Health'"></span>
+        <div *ngIf="discipline.disciplineDesc == 'Health'" class="comment-top">
+          <p>{{'card.card-holder.cob.health' | translate}}</p>
+        </div>
+
+        <span class="drug-ico" *ngIf="discipline.disciplineDesc == 'Drug' && editprogram !== 'AB Gov.'"></span>
+        <div *ngIf="discipline.disciplineDesc == 'Drug'" class="comment-top">
+          <p>{{'card.card-holder.cob.drug' | translate}}</p>
+        </div>
+
+        <span class="supplement-ico" *ngIf="discipline.disciplineDesc == 'Supplemental'"></span>
+        <div *ngIf="discipline.disciplineDesc == 'Supplemental'" class="comment-top">
+          <p>{{'card.card-holder.cob.supplemental' | translate }}</p>
+        </div>
+
+        <span class="wellness-ico" *ngIf="discipline.disciplineDesc == 'Wellness'"></span>
+        <div *ngIf="discipline.disciplineDesc == 'Wellness'" class="comment-top">
+          <p>{{'card.card-holder.cob.wellness' | translate}}</p>
+        </div>
+
+      </span>
+    </div>
+
+    <div class="web-reg">
+      <span *ngIf="grnlInfoEditMode">{{'card.general-information.registered-id' | translate}} - 12345</span>
+      <!-- added for log870 -->
+      <a class="green-btn-add btn" *ngIf="backToCompanyFlag" routerLink="/company/view/{{companyCoKey}}"
+        [ngClass]="(planStatus == 'Terminated') ? 'disabled':''">{{'card.general-information.backToCompany' |
+        translate}}</a>
+      <button *ngIf="userAuthCheck[0].generatePassword == 'T' && grnlInfoEditMode" id="btnGeneratePasswordGeneralInfo"
+        class="btn red-btn btn-sm" (click)="showToasterMessage()">{{'card.general-information.generate-password' |
+        translate}}</button>
+      <a *ngIf="(grnlInfoEditMode || grnlInfoViewMode) && showBackBtn" class="green-btn-add btn"
+        (click)="backToSearch()">
+        <i class="fa fa-share" aria-hidden="true"></i>{{'common.backToSearch' | translate}}</a>
+      <span *ngIf="(grnlInfoEditMode || grnlInfoViewMode) && cardCreatedOnValue != null" class="btn green-btn-add"
+        style="float:right">{{'card.general-information.cardCreatedOn' | translate}} {{cardCreatedOnValue}}</span>
+
+    </div>
+  </div>
+  <!-- Grid Heading Ends -->
+
+  <div class="grid-inner">
+    <form [formGroup]="CardGeneralInformationFormGroup">
+      <div class="form-row col-bottom">
+        <div class="row minht-new">
+          <div class="col-md-3 col-xs-12">
+            <label>{{'common.company-name' | translate}}
+              <span class="required">*</span>
+              <span *ngIf="hasCompanyFieldValue"
+                [ngClass]="(status == 'Active') ? 'status-label active' :'status-label inactive'">{{status}}</span>
+              <span *ngIf="viewStatus"
+                [ngClass]="(editStatus == 'Active') ? 'status-label active' :'status-label inactive'">{{editStatus}}</span>
+            </label>
+            <app-search-company (getCompanyName)="getCompanySearchName($event)"
+              (checkCompanyField)="setValueProgram($event)" (coIdEvent)="receiveCoId($event)"></app-search-company>
+            <!-- IMPORT SEARCH CRAD COMPANY FROM COMMON MODULE -->
+            <span *ngIf="hasCompanyFieldValue && ! viewStatus
+            " class="status-label active programStatus">{{program}} </span>
+            <span *ngIf="viewStatus  && ! hasCompanyFieldValue"
+              class="status-label active programStatus">{{editprogram}} </span>
+            <span *ngIf="viewStatus  &&  hasCompanyFieldValue" class="status-label active programStatus">{{editprogram}}
+            </span>
+            <show-errors [control]="CardGeneralInformationFormGroup.controls.company_name"></show-errors>
+          </div>
+
+          <div *ngIf="grnlInfoAddMode" class="col-md-2 col-xs-12">
+            <label>{{'common.card-id' | translate}}
+              <span class="required">*</span>
+            </label>
+            <div class="search-field">
+              <input type="text" placeholder="{{'common.card-id' | translate}}"
+                [attr.disabled]="hasCompanyFieldValue != true ? true : null" class="fm-txt form-control" id="gI_cardId"
+                name="card_id" (blur)="cardIdExist($event)" formControlName="card_id"
+                oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" /><!--For 684 issue no-->
+              <a href="javascript:;" *ngIf="hasCompanyFieldValue" class="gen-btn btn"
+                (click)="getEmployeeCardID($event)">{{'card.general-information.auto-generate' | translate}}</a>
+              <a *ngIf="!hasCompanyFieldValue" class="gen-btn btn disabled">{{'card.general-information.auto-generate' |
+                translate}}</a>
+            </div><!-- Search Field Ends -->
+            <show-errors [control]="CardGeneralInformationFormGroup.controls.card_id"></show-errors>
+            <ul *ngIf="error.isError==true" class="validation-errors">
+              <li style="color: red">{{error.errorMessage}}</li>
+            </ul>
+          </div>
+          <!-- Below div added for auto generated employee id field in add mode. -->
+          <div *ngIf="grnlInfoAddMode" class="col-md-2 col-xs-12" style="width: 235px; margin-right: 10px;">
+            <label>Employee/PIN #</label>
+            <div class="employeeIdInputField">
+              <input [attr.disabled]="hasCompanyFieldValue != true ? true : null" formControlName="employeeIdFormControl" type="text" placeholder="Employee/PIN #"
+                class="fm-txt form-control" id="employeeId" name="employeeId"/>
+              <a href="javascript:;" style="margin-top: -40px; margin-left: 125px;" *ngIf="hasCompanyFieldValue" class="gen-btn btn"
+                (click)="getEmployeeID()">{{'card.general-information.auto-generate' | translate}}</a>
+              <a *ngIf="!hasCompanyFieldValue" style="margin-top: -40px; margin-left: 125px;" class="gen-btn btn disabled">{{'card.general-information.auto-generate' |
+                translate}}</a>
+            </div>
+            <show-errors [control]="CardGeneralInformationFormGroup.controls.employeeIdFormControl"></show-errors>
+            <ul *ngIf="error.isError==true" class="validation-errors">
+              <li style="color: red; margin-top: -14px;">{{error.errorMessage}}</li>
+            </ul>
+          </div>
+          <div *ngIf="!grnlInfoAddMode" class="col-md-2 col-xs-12">
+            <label>{{'common.card-id' | translate}}
+              <span class="required">*</span>
+            </label>
+            <div class="search-field"><!--enable field in edit mode and add validations-->
+              <input [disabled]="grnlInfoViewMode" placeholder="{{'common.card-id' | translate}}"
+                value={{savedCardNumber}} type="text" class="fm-txt form-control" id="gI_edit_cardId"
+                (blur)="cardIdExist($event)" formControlName="card_id"
+                oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" />
+            </div>
+            <show-errors [control]="CardGeneralInformationFormGroup.controls.card_id"></show-errors>
+          </div>
+          <!-- Below div added to show employee id in view mode of cardholder section. -->
+          <div *ngIf="!grnlInfoAddMode" class="col-md-2 col-xs-12">
+            <label>Employee/PIN #</label>
+            <div class="search-field">
+              <input [disabled]="grnlInfoViewMode" placeholder="Employee/PIN #" value={{employeeNumber}} 
+                type="text" class="fm-txt form-control" id="employeeId" formControlName="employeeIdFormControl" />
+            </div>
+          </div>
+
+          <div *ngIf="bussinessType != 2" class="col-md-2 col-xs-12">
+            <label>{{'card.general-information.employment-date' | translate}} </label>
+            <div class="calender-field">
+              <my-date-picker [ngClass]="(grnlInfoViewMode == true) ? 'removeCross':''"
+                placeholder="{{'common.date-placeholder' | translate}}" id="gI_employmentDate"
+                [options]="myDatePickerOptions" name="employment_date" formControlName="employment_date"
+                (inputFocusBlur)="changeDateFormat($event, 'employment_date' ,'CardGeneralInformationFormGroup')">
+              </my-date-picker>
+            </div>
+            <!-- Calendar Field Ends -->
+            <show-errors [control]="CardGeneralInformationFormGroup.controls.employment_date"></show-errors>
+          </div>
+
+          <div class="col-md-2 col-xs-12">
+            <label>{{'card.general-information.communication-language' | translate}}</label>
+            <select id="gI_CommunicationLang" class="fm-txt form-control" placeholder="Preferred Language"
+              name="prefered_language" formControlName="prefered_language">
+              <option *ngFor="let language of languages" [ngValue]="language.languageKey">
+                {{ language.languageDesc }}
+              </option>
+            </select>
+            <show-errors [control]="CardGeneralInformationFormGroup.controls.prefered_language"></show-errors>
+          </div>
+
+          <div *ngIf="grnlInfoEditMode ||grnlInfoViewMode" class="col-md-2 col-xs-12">
+            <label>{{'card.general-information.card-type' | translate}}</label>
+            <p>{{editCardType}}
+              <button href="javascript:;" title="Card Type History" (click)='getCardTypeHistoryDetails()'
+                class="history-ico" alt="History" data-toggle="modal" data-target="#familyhistory">
+                <i class="fa fa-history" aria-hidden="true"></i>
+              </button>
+            </p>
+          </div>
+
+          <div class="col-md-3 col-xs-12">
+            <label>{{'card.general-information.payTo' | translate}}</label>
+            <input id="cca_PayTo" type="text" placeholder="Pay To" formControlName="payTo"
+              class="fm-txt form-control" />
+            <show-errors [control]="CardGeneralInformationFormGroup.controls.payTo"></show-errors>
+          </div>
+        </div>
+      </div>
+      <!-- Form Row ENds -->
+    </form>
+  </div>
+  <!-- Grid Inner Ends -->
+</div>
+<!-- Grid Box Ends -->
+
+<!--Family History  Modal -->
+<div id="familyhistory" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="btnCloseFamilyHistory" type="button" class="close" data-dismiss="modal"
+          (click)="cancelInfo('', '')">&times;</button>
+        <h4 class="modal-title">{{'card.general-information.card-type' | translate}}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{'common.generalinfo' | translate}}</h3>
+          </div>
+          <!-- Grid Heading Ends -->
+          <div class="grid-inner">
+            <div class="form-row">
+              <div class="row min-ht-sf">
+
+                <div class="col-md-3 col-xs-12">
+                  <label>{{'common.card-id' | translate}} </label>
+                  <input id="gI_familyHisCardId" type="text" disabled placeholder="{{'common.card-id' | translate}}"
+                    value={{savedCardNumber}} class="fm-txt form-control" />
+                </div>
+
+              </div>
+            </div>
+            <!-- Form Row ENds -->
+          </div>
+        </div>
+        <!-- Grid box Ends -->
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{'card.general-information.card-type-history' | translate}}</h3>
+            <!-- Web Reg Ends -->
+          </div>
+          <div class="grid-inner">
+            <div class="form-row">
+              <div class="row">
+                <div class="col-md-12 col-xs-12 table-col">
+                  <div class="table-responsive">
+                    <div class="web-reg"> <!--Log #1290-->
+                      <button id="addNewCardType" class="green-btn-add btn" (click)="addNewCardType()"><i
+                          class="fa fa-plus"></i>
+                        {{'button.add-new'|translate}}</button>
+                    </div>
+                    <table id='account-history-table' datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
+                      class="table table-bordered table-stripped">
+                      <thead>
+                        <tr>
+                          <th width="16%">{{'card.general-information.card-type' | translate}}</th>
+                          <th width="10%" class="amount_right_grid">{{'common.effectivedate' | translate}}</th>
+                          <th width="10%" class="amount_right_grid">{{'common.expireddate' | translate}}</th>
+                          <th width="10%" class="amount_right_grid">{{'common.action' | translate}}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngIf="accountHistorytableData.length == 0" class="odd">
+                          <td valign="top" colspan="4" class="dataTables_empty">{{'card.card-holder.data-tables.datamsg'
+                            | translate}}</td>
+                        </tr>
+                        <tr *ngFor="let dataRow of accountHistorytableData;let i = index">
+                          <td class="keep_left"><!--Log #1290-->
+                            <div *ngIf="dataRow.cardTypeAssignKey != selectedRowKey">
+                              <span>{{dataRow.cardTypeDesc}}</span>
+                            </div>
+                            <select name="updatedCardTypeDesc{{i}}" value="{{dataRow.cardTypeDesc}}"
+                              [(ngModel)]="dataRow.cardTypeDesc" class="fm-txt form-control" id="cardTypeDesc"
+                              *ngIf="dataRow.cardTypeAssignKey == selectedRowKey">
+                              <option value="">
+                                {{ 'card.card-eligibility.over-rides.card-maximums.card-maximums.select' | translate }}
+                              </option>
+                              <option value="Single">
+                                Single
+                              </option>
+                              <option value="Family">
+                                Family
+                              </option>
+                            </select>
+                          </td>
+                          <td class="amount_right">
+                            <span *ngIf="dataRow.cardTypeAssignKey != selectedRowKey">{{dataRow.effectiveOn |
+                              dateFormate}}</span>
+                            <my-date-picker id="txtEffectiveOn{{i}}" [options]="myDatePickerOptions"
+                              placeholder="{{'common.date-placeholder' | translate}}" name="EffectiveOn{{i}}"
+                              (inputFocusBlur)="ChangeInputDateFormat($event,i, 'effectiveOn')"
+                              [ngClass]="{ 'error_field': newRecordValidate && dataRow.effectiveOn == '' }"
+                              [(ngModel)]="updateEffectiveRow[i]" *ngIf="dataRow.cardTypeAssignKey == selectedRowKey">
+                            </my-date-picker>
+                          </td>
+                          <td class="amount_right">
+                            <span *ngIf="dataRow.cardTypeAssignKey != selectedRowKey">{{dataRow.expiredOn |
+                              dateFormate}}</span>
+                            <my-date-picker id="txtExpireOn{{i}}" [options]="myDatePickerOptions"
+                              placeholder="{{'common.date-placeholder' | translate}}" name="expiredOn{{i}}"
+                              (inputFocusBlur)="ChangeInputDateFormat($event,i, 'expiredOn')"
+                              [(ngModel)]="updateExpiredRow[i]" *ngIf="dataRow.cardTypeAssignKey == selectedRowKey">
+                            </my-date-picker>
+                          </td>
+                          <td class="amount_right">
+                            <a (click)="editInfo(dataRow, i)" title="{{'common.edit' | translate }}"
+                              [ngClass]="{ 'edit_row': true,'table-action-btn': true,'edit-ico': true, 'disabled': !cardTypeViewMode}"
+                              *ngIf="(cardTypeViewMode) || dataRow.cardTypeAssignKey != selectedRowKey">
+                              <i class='fa fa-pencil'></i>
+                            </a>
+                            <a title="{{'common.update' | translate }}" (click)="updateInfo(dataRow, i)"
+                              class="save_row table-action-btn edit-ico"
+                              *ngIf="dataRow.cardTypeAssignKey == selectedRowKey">
+                              <i class="fa fa-save"></i>
+                            </a>
+                            <a href="javascript:void(0)" title="{{'common.cancel' | translate }}"
+                              class="delete_row table-action-btn del-ico" (click)="cancelInfo(dataRow, i)"
+                              *ngIf="dataRow.cardTypeAssignKey == selectedRowKey">
+                              <i class="fa fa-times"></i>
+                            </a>
+                          </td>
+                        </tr>
+                        <tr class="tableRow" *ngIf="addMode"><!--Log #1290 -->
+                          <td class="keep_left">
+                            <select [(ngModel)]="addNewCardTypeArray.cardTypeDesc" class="fm-txt form-control"
+                              id="cardTypeDescAddMode">
+                              <option value="">
+                                {{ 'card.card-eligibility.over-rides.card-maximums.card-maximums.select' | translate }}
+                              </option>
+                              <option value="Single">
+                                Single
+                              </option>
+                              <option value="Family">
+                                Family
+                              </option>
+                            </select>
+                          </td>
+
+                          <td class="amount_right">
+                            <my-date-picker id="effectiveOnAddMode" [options]="myDatePickerOptions"
+                              placeholder="{{'common.date-placeholder' | translate}}" name="effectiveOn"
+                              (inputFocusBlur)="ChangeInputDateFormat($event,i, 'effectiveOn')"
+                              [(ngModel)]="addNewCardTypeArray.effectiveOn"
+                              [ngClass]="{ 'error_field': newRecordValidate && dataRow.effectiveOn == '' }">
+                            </my-date-picker>
+                          </td>
+
+                          <td class="amount_right">
+                            <my-date-picker id="txtExpireOnAddMode" [options]="myDatePickerOptions"
+                              placeholder="{{'common.date-placeholder' | translate}}" name="expiredOn"
+                              (inputFocusBlur)="ChangeInputDateFormat($event,i, 'expiredOn')"
+                              [(ngModel)]="addNewCardTypeArray.expiredOn">
+                            </my-date-picker>
+                          </td>
+
+                          <td class="amount_right">
+                            <a title="{{'common.update' | translate }}" (click)="saveInfo()"
+                              class="save_row table-action-btn edit-ico">
+                              <i class="fa fa-save"></i>
+                            </a>
+                            <a href="javascript:void(0)" title="{{'common.cancel' | translate }}"
+                              class="delete_row table-action-btn del-ico" (click)="cancelInfo(dataRow, i)">
+                              <i class="fa fa-times"></i>
+                            </a>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Modal Body Ends -->
+      <div class="modal-footer">
+        <button id="closeFamilyHistory" title="Close" class="btn grey-btn" data-dismiss="modal"
+          (click)="cardTypeCloseModal()">{{'button.close' | translate}}</button>
+      </div>
+    </div>
+  </div>
+  <!-- modal Content Ends -->
+
+</div>
+<!--Family History  Modal -->

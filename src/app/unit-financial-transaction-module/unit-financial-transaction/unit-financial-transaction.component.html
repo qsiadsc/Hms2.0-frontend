@@ -1,0 +1,713 @@
+<div class="section-heading">
+  <h2>{{'uft.uftSearch.unitFinancialTransaction' | translate}}
+    <span>{{'uft.uftSearch.search' | translate}}</span>
+  </h2>
+</div>
+<!-- Section Heading Ends -->
+<div class="grid-box">
+  <div class="grid-heading">
+    <h3>{{'uft.uftSearch.searchUft' | translate}}</h3>
+  </div>
+  <!-- Grid Heading Ends -->
+  <div class="grid-inner">
+    <form [formGroup]="unitFinancialTransactionForm">
+      <div class="form-row">
+        <div class="row min-ht-sf">
+          <div class="col-md-3 col-xs-12">
+            <label>{{'uft.uftSearch.companyNameNo' | translate}}</label>
+            <ng2-completer formControlName="companyNameOrNo" [datasource]="companyListData" [minSearchLength]="1" [openOnFocus]="false"
+              (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Search Company Name'" [textSearching]="'Please wait...'"
+              [inputClass]="'form-control'" (selected)="onCompanyNameSelectedSearch($event)" [clearUnselected]="true" [autoHighlight]="true">
+            </ng2-completer>
+          </div>
+          <div class="col-md-3">
+            <div class="calender-field">
+              <label>{{'uft.uftSearch.accTransDateFrom' | translate}}</label>
+              <my-date-picker id="uftAccTransDateFromFirst" [options]="myDatePickerOptions" name="accTransDateFirst" formControlName="accTransDateFirst"
+                (inputFocusBlur)="changeDateFormat($event, 'accTransDateFirst','transactionDetailsForm', false)" placeholder="{{'common.date-placeholder' | translate}}">
+              </my-date-picker>
+              <show-errors [control]="unitFinancialTransactionForm.controls.effectiveOn"></show-errors>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="calender-field">
+              <label>{{'uft.uftSearch.accTransDateTo' | translate}} </label>
+              <my-date-picker id="uftAccTransDateFromSecond" [options]="myDatePickerOptions" name="accTransDateFromSecond" formControlName="accTransDateFromSecond"
+                (inputFocusBlur)="changeDateFormat($event, 'accTransDateFromSecond','transactionDetailsForm', false)" placeholder="{{'common.date-placeholder' | translate}}">
+              </my-date-picker>
+              <show-errors [control]="unitFinancialTransactionForm.controls.effectiveOn"></show-errors>
+            </div>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{'uft.uftSearch.transactionType' | translate}}</label>
+            <ng2-completer #uftTransactionType formControlName="transactionType" [datasource]="transactionTypeData" [minSearchLength]="1"
+              [openOnFocus]="false" (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Search Transaction Type'"
+              [textSearching]="'Please wait...'" [inputClass]="'form-control'" [clearUnselected]="true">
+            </ng2-completer>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{'uft.uftSearch.transRefDescription' | translate}}</label>
+            <input id="uftTransactionRefDesc" type="text" class="form-control" name="transactionRefDesc" formControlName="transactionRefDesc"
+              placeholder="{{'uft.uftSearch.transRefDescription' | translate}}" />
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{'uft.uftSearch.province' | translate}}</label>
+            <ng2-completer #uftProvince formControlName="provinceName" [datasource]="provinceDataRemote" [minSearchLength]="0" [openOnFocus]="true"
+              (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Search Province'" [textSearching]="'Please wait...'"
+              [inputClass]="'form-control inputSearch'" data-type="predective" [clearUnselected]="true">
+            </ng2-completer>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{'uft.uftSearch.entryDate' | translate}}</label>
+            <div class="calender-field">
+              <my-date-picker id="uftEntryDate" [options]="myDatePickerOptions" name="entryDate" formControlName="entryDate" (inputFocusBlur)="changeDateFormat($event, 'entryDate','transactionDetailsForm', false)"
+                placeholder="{{'common.date-placeholder' | translate}}">
+              </my-date-picker>
+              <show-errors [control]="unitFinancialTransactionForm.controls.entryDate"></show-errors>
+            </div>
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{'uft.uftSearch.planNo' | translate}}</label>
+            <input id="uftTransactionPlanNo" type="text" class="form-control" name="planNo" formControlName="planNo" placeholder="{{'uft.uftSearch.planNo' | translate}}"
+            />
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{'uft.uftSearch.divisionNo' | translate}}</label>
+            <input id="uftTransactionDivisionNo" type="text" class="form-control" name="divisionNo" formControlName="divisionNo" placeholder="{{'uft.uftSearch.divisionNo' | translate}}"
+            />
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <label>{{'uft.uftSearch.unitNo' | translate}}</label>
+            <input id="uftTransactionUnitNo" type="text" class="form-control" name="unitNo" formControlName="unitNo" placeholder="{{'uft.uftSearch.unitNo' | translate}}"
+            />
+          </div>
+          <div class="col-md-2 col-xs-12">
+            <div class="rd-middle">
+              <label>&nbsp;</label>
+              <div class="select-options">
+                <span>
+                  <label>
+                    <span class="custom-check">
+                      <input id="active" name="comActive" formControlName="comActive" type="checkbox">{{'uft.uftSearch.active' | translate}}
+                      <span></span>
+                    </span>
+                  </label>
+                </span>
+                <span>
+                  <label>
+                    <span class="custom-check">
+                      <input id="inactive" name="comInactive" formControlName="comInactive" type="checkbox">{{'uft.uftSearch.inActive' | translate}}
+                      <span></span>
+                    </span>
+                  </label>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 col-xs-12">
+            <label>&nbsp;</label>
+            <button *ngIf="uftArray[0].searchUft == 'T'" id="uftSearchBtn" class="btn green-btn" (click)="getUnitFinancialTransactionList()">{{'button.search' | translate}}</button>
+            <button id="uftClearBtn" class="grey-btn btn" data-toggle="modal" data-target="" (click)="resetUnitFinTransForm()">{{'button.reset' | translate}}</button>
+            <button *ngIf="uftArray[0].cretaePap == 'T'" id="uftCreatePapBtn" class="btn green-btn" [routerLink]="['/unitFinancialTransaction/upcoming-transaction']">{{'button.createPap' | translate}}</button>
+            <button *ngIf="uftArray[0].payments == 'T'" id="uftCashPaymentsBtn" data-toggle="modal" (click)="cashPay()" data-target="#utf_oneTimePayment"
+              class="btn green-btn">{{'button.payments' | translate}}</button>
+          </div>
+        </div>
+      </div>
+      <!-- Form Row ENds -->
+    </form>
+  </div>
+  <!-- Grid Inner Ends -->
+</div>
+<!-- Grid Box Ends -->
+<div [hidden]="!showUnitFinTransList">
+  <div class="grid-box">
+    <div class="grid-heading">
+      <h3>{{'uft.uftSearch.uftList' | translate}}</h3>
+    </div>
+    <!-- Grid Heading Ends -->
+    <div class="grid-inner">
+      <form>
+        <div class="form-row text-right search-top">
+          <button id="finSearch" type="submit" title="{{'common.search' | translate}}" class="btn green-btn searchreset" (click)="unitFinTransactionListFilter('unitFinancialTransactionList')">
+            <span class="glyphicon glyphicon-search"></span>
+          </button>
+          <!-- Task 679 Method changed on click of below button to reset UFT native search fields. -->
+          <button id="finReset" title="{{'common.reset' | translate}}" class="btn grey-btn searchreset" (click)="resetUftNativeSearch()">
+            <span class="glyphicon glyphicon-repeat"></span>
+          </button>
+        </div>
+        <div class="form-row">
+          <div class="row">
+            <div class="col-md-12 col-xs-12 table-col uft-search-list">
+              <div class="table-responsive">
+                <table id="unitFinancialTransactionList" class="table table-bordered table-stripped">
+                  <tfoot>
+                    <tr>
+                      <td width="8%">
+                        <ng2-completer [inputName]="'companyname'" [(ngModel)]="companyname" name="companyname" class="predictiveSearchLower" [datasource]="companyListData"
+                          [minSearchLength]="1" [openOnFocus]="false" (opened)="onOpened($event)" [fillHighlighted]="false"
+                          [placeholder]="'Search Company Name & No.'" [textSearching]="'Please wait...'" [inputClass]="'form-control inputSearch'"
+                          (selected)="onCompanyNameSelectedSearch($event)" data-type="predective" [clearUnselected]="true"
+                          [autoHighlight]="true">
+                        </ng2-completer>
+                      </td>
+                      <td width="8%" class="alignDpRight">
+                        <div class="calender-field date-range">
+                          <!-- Task 679 Below ngModel added to reset UFT native search fields -->
+                          <my-date-range-picker [(ngModel)]="nativeTransactionDate" id="uftTransactionDate" name="transactionDate" class="inputSearch" [options]="myDateRangePickerOptions"
+                            data-type="date" placeholder="{{'common.date-placeholder' | translate}} - {{'common.date-placeholder' | translate}}"
+                            [selDateRange]="dateNameArray['transactionDate']" (dateRangeChanged)="onDateRangeChanged($event, 'transactionDateFrom', 'transactionDateTo')"
+                            required></my-date-range-picker>
+                        </div>
+                      </td>
+                      <td width="8%" class="uft-dropdown">
+                        <select style="display: none;" class="fm-txt form-control tFootInput inputSearch" name="transctionType" [(ngModel)]="transactionTypeList">
+                          <option value="" selected></option>
+                        </select>
+                        <div id="rulesSelect">
+                          <angular2-multiselect tabindex="0" class="form-control" [data]="transactionTypeDataList" [ngModelOptions]="{standalone: true}" [(ngModel)]="transelectedItems"
+                            #setFocus (onSelect)="onSelectTransactionTye($event)" (onDeSelect)="onDeSelectTransactionType($event)" [settings]="dropdownSettings"
+                            ng-click="showDropDown(true)">
+                          </angular2-multiselect>
+                        </div>
+                      </td>
+                      <td width="8%" class="uft-dropdown drop-downpwrap">
+                        <!-- for Log #925 due to pending from backend -->
+                        <select style="display: none;" class="fm-txt form-control tFootInput inputSearch" name="provinceName" [(ngModel)]="provinceList">
+                          <option value="" selected></option>
+                        </select>
+                        <div id="rulesSelect">
+                          <angular2-multiselect tabindex="0" class="form-control" [data]="provinceData" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedItems"
+                            #setFocus (onSelect)="onSelectDropDown($event)" (onDeSelect)="onDeSelectDropDown($event)" [settings]="dropdownSettings"
+                            ng-click="showDropDown(true)">
+                          </angular2-multiselect>
+                        </div>
+                      </td>
+                      <td width="8%">
+                        <!-- Below ngModel added to reset UFT native search fields. -->
+                        <input class="fm-txt form-control tFootInput inputSearch grid_right" [(ngModel)]="transactionRefernece" type="text" name="transactionRefernece" placeholder="{{'uft.uftSearch.transRef' | translate}}">
+                      </td>
+                      <td width="8%">
+                        <!-- Below ngModel added to reset UFT native search fields. -->
+                        <input class="fm-txt form-control tFootInput inputSearch grid_right" [(ngModel)]="transactionAmt" type="text" name="transactionAmt" placeholder="{{'uft.uftSearch.transAmount' | translate}}">
+                      </td>
+                      <td width="8%">
+                        <!-- Below ngModel added to reset UFT native search fields. -->
+                        <input class="fm-txt form-control tFootInput inputSearch grid_right" [(ngModel)]="balance" type="text" name="balance" placeholder="{{'uft.uftSearch.balance' | translate}}">
+                      </td>
+                      <td width="8%">
+                        <input class="fm-txt form-control tFootInput inputSearch grid_right" [(ngModel)]="transactionDescription" type="text" name="transactionDescription"
+                          placeholder="{{'uft.uftSearch.transDescription' | translate}}">
+                      </td>
+                      <td width="8%">
+                        <!-- Below ngModel added to reset UFT native search fields. -->
+                        <input class="fm-txt form-control tFootInput inputSearch grid_right" [(ngModel)]="coRefundChqRefNum" type="text" name="coRefundChqRefNum" placeholder="{{'uft.uftSearch.refundChequeNo' | translate}}">
+                      </td>
+                      <td width="7%">
+                        <input class="fm-txt form-control tFootInput inputSearch grid_right" [(ngModel)]="planId" type="text" name="planId" placeholder="{{'uft.uftSearch.planNo' | translate}}">
+                      </td>
+                      <td width="7%">
+                        <input class="fm-txt form-control tFootInput inputSearch grid_right" [(ngModel)]="divisionId" type="text" name="divisionId"
+                          placeholder="{{'uft.uftSearch.divisionNo' | translate}}">
+                      </td>
+                      <td width="7%">
+                        <input class="fm-txt form-control tFootInput inputSearch grid_right" [(ngModel)]="unitId" type="text" name="unitId" placeholder="{{'uft.uftSearch.unitNo' | translate}}">
+                      </td>
+                      <td width="7%" class="alignDpRight">
+                        <div class="calender-field date-range">
+                          <!-- Below ngModel added to reset UFT native search fields. -->
+                          <my-date-range-picker id="uftEntryDateSearch" [(ngModel)]="uftEntryDateSearch" name="entrydate" class="inputSearch" [options]="myDateRangePickerOptions"
+                            data-type="date" placeholder="{{'common.date-placeholder' | translate}} - {{'common.date-placeholder' | translate}}"
+                            (dateRangeChanged)="onDateRangeChanged($event, 'entrydateStart', 'entrydateEnd')"
+                            required></my-date-range-picker>
+                        </div>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+              <!-- Table Ends -->
+            </div>
+          </div>
+        </div>
+      </form>
+      <!-- Form Row ENds -->
+      <div class="form-row text-center">
+        <div class="row">
+          <div class="col-md-12 col-xs-12">
+            <button *ngIf="uftArray[0].refund == 'T'" id="uftSearchBtn" [attr.disabled]="isDisable == false ? '' : null" id="uftrcGenerateRefundBtn"
+              class="btn green-btn" data-toggle="modal" data-target="#AddGenerateRefund" (click)="refundFinancialTransaction('refundPopup')">{{'button.refund' | translate}}</button>
+            <button *ngIf="uftArray[0].adjustPap == 'T'" id="uftSearchBtn" [disabled]="!isDisable" id="uftAdjustPAPBtn" data-toggle="modal"
+              (click)="adjustPAP()" class="btn green-btn">{{'button.adjustPap' | translate}}
+            </button>
+            <input type="hidden" id="ufthidden" data-toggle="modal" data-target="#utf_oneTimePayment" data-toggle="modal" class="btn green-btn"
+            />
+            <button *ngIf="uftArray[0].reversePap == 'T'" id="uftSearchBtn" [attr.disabled]="isDisableReversePap == false ? '' : null"
+              id="uftReversePapBtnEnable" class="btn green-btn" (click)="reversePap()">{{'button.reversePap' | translate}}</button>
+          </div>
+        </div>
+      </div>
+      <!-- Form Row ENds -->
+      <div class="form-row text-center">
+        <div class="row">
+          <div class="col-md-12 col-xs-12">
+            <div class="dropdown pull-right">
+              <button id="uftSearchExcelBtn" class="btn green-btn dropdown-toggle hideGPRunButton" type="button" data-toggle="dropdown">{{'common.export' | translate}}
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu">
+                <li>
+                  <a href="javascript:void(0)" (click)="exportUftSearchList()">{{'common.excel' | translate}}</a>
+                </li>
+                <li>
+                  <a href="javascript:void(0)" (click)="exportUftSearchListPDF()">{{'common.pdf' | translate}}</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Grid Inner Ends -->
+  </div>
+  <!-- Grid Box Ends -->
+</div>
+<div id="utf_oneTimePayment" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-header">
+      <button title="Close" id="closeOTP" (click)="resetOTP()" type="button" class="close" data-dismiss="modal">&times;</button>
+      <h4 class="modal-title">{{'uft.uftSearch.payments' | translate}}</h4>
+    </div>
+    <div class="modal-body">
+      <div class="grid-box">
+        <div class="grid-heading">
+          <h3>Search Payment</h3>
+        </div>
+        <div class="grid-inner">
+            <div class="form-row">
+              <div class="row min-ht-sf">
+                <form [formGroup]="addOTPform">
+                  <div *ngIf="!showAdjustPAP" class="col-md-18 col-xs-12 single-col" style="padding-bottom: 12px;">
+                    <label>{{'uft.uftSearch.selectPaymentType' | translate}}</label>
+                    <div class="select-options">
+                      <span>
+                        <label>
+                          <input id="uft_selectPaymentType" type="radio" (change)=radioSelected($event.target.value) name="payment_type" formControlName="payment_type"
+                            value="cash_payment">{{'uft.uftSearch.cashPayment' | translate}}
+                        </label>
+                      </span>
+                      <span>
+                        <label>
+                          <input id="uft_selectPaymentType" type="radio" (change)=radioSelected($event.target.value) name="payment_type" formControlName="payment_type"
+                            value="misc_charges">{{'uft.uftSearch.miscCharges' | translate}}
+                        </label>
+                      </span>
+                      <span>
+                        <label>
+                          <input id="uft_selectPaymentType" type="radio" (change)=radioSelected($event.target.value) name="payment_type" formControlName="payment_type"
+                            value="write_off">{{'uft.uftSearch.writeOff' | translate}}
+                        </label>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'uft.uftSearch.companyNameNo' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <ng2-completer (keyup)="ngOnBlur()" [disableInput]="showAdjustPAP" formControlName="otp_companyName" [datasource]="companyListData"
+                      [minSearchLength]="1" [openOnFocus]="false" (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Search Company Name & No.'"
+                      [textSearching]="'Please wait...'" [inputClass]="'form-control'" (selected)="onCompanyNameSelected($event)"
+                      [clearUnselected]="true">
+                    </ng2-completer>
+                    <show-errors [control]="addOTPform.controls.otp_companyName"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'uft.uftSearch.transactionDate' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <div class="calender-field">
+                      <my-date-picker [ngClass]="(showAdjustPAP == true) ? 'removeCross':''" [disabled]="showAdjustPAP" id="utf_otp_accTrans" placeholder="{{'common.date-placeholder' | translate}}"
+                        [options]="myDatePickerOptions" name="otp_accTrans" (inputFocusBlur)="changeDateFormat($event, 'otp_accTrans' ,'addOTPform')"
+                        formControlName="otp_accTrans">
+                      </my-date-picker>
+                      <show-errors [control]="addOTPform.controls.otp_accTrans"></show-errors>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'uft.uftSearch.transAmount' | translate }}
+                      <span class="required">*</span>
+                    </label>
+                    <div class="calender-field d-amount">
+                      <input id="utf_otp_TransAmt" type="text" formControlName="otp_transactionAmt" class="form-control in-number" (blur)="isAmountDebit($event,'otp_transactionAmt')"
+                        placeholder="{{'uft.uftSearch.transAmount' | translate }}" />
+                      <show-errors [control]="addOTPform.controls.otp_transactionAmt"></show-errors>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'uft.uftSearch.transactionType' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <ng2-completer [disableInput]="true" #utf_otp_transactionType formControlName="otp_transactionType" [datasource]="transactionTypeData"
+                      [minSearchLength]="1" [openOnFocus]="false" (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Search Transaction Type'"
+                      [textSearching]="'Please wait...'" [inputClass]="'form-control'" [clearUnselected]="true" (selected)="onTransactionTypeSelected($event)">
+                    </ng2-completer>
+                    <show-errors [control]="addOTPform.controls.otp_transactionType"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'uft.uftSearch.transDescription' | translate}}
+                      <span class="required" *ngIf="showAdjustPAP">*</span>
+                    </label>
+                    <textarea id="utf_otp_TransDesc" class="form-control" formControlName="otp_transactionDesc" placeholder="{{'uft.uftSearch.transDescription' | translate}}"></textarea>
+                    <show-errors [control]="addOTPform.controls.otp_transactionDesc"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12" [hidden]="!showAdjustPAP">
+                    <label>{{'uft.uftSearch.transReference' | translate}}
+                      <span class="required" *ngIf="showAdjustPAP">*</span>
+                    </label>
+                    <input id="utf_otp_transactionReference" type="text" formControlName="otp_transactionReference" class="form-control" placeholder="{{'uft.uftSearch.transReference' | translate}}"
+                    />
+                    <show-errors [control]="addOTPform.controls.otp_transactionReference"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label *ngIf="showAdjustPAP">{{'uft.uftSearch.openBalance' | translate}}</label>
+                    <label *ngIf="!showAdjustPAP">{{'uft.uftSearch.currentBalance' | translate}}</label>
+                    <div class="calender-field d-amount">
+                      <input id="utf_otp_currentbalance" type="text" disabled formControlName="otp_currentbalance" class="form-control in-number"
+                        placeholder="{{'uft.uftSearch.currentBalance' | translate}}" />
+                      <show-errors [control]="addOTPform.controls.otp_currentbalance"></show-errors>
+                    </div>
+                  </div>
+                  <div *ngIf="showAdjustPAP||showMisc||showWriteOff" class="col-md-3 col-xs-12">
+                    <label>{{'uft.uftSearch.entryDate' | translate}}</label>
+                    <div class="calender-field">
+                      <my-date-picker [ngClass]="(showAdjustPAP||showMisc||showWriteOff == true) ? 'removeCross':''" [disabled]="showAdjustPAP"
+                        id="otp_entryDate" [options]="myDatePickerOptions" name="entryDate" formControlName="otp_entryDate" (inputFocusBlur)="changeDateFormat($event, 'otp_entryDate','addOTPform',true)"
+                        placeholder="{{'common.date-placeholder' | translate}}">
+                      </my-date-picker>
+                      <show-errors [control]="addOTPform.controls.otp_entryDate"></show-errors>
+                    </div>
+                  </div>
+                </form>
+                <div class="col-md-3 col-xs-12">
+                  <label></label>
+                  <button id="utf_saveOTP" class="btn green-btn" (keyup.arrowLeft)="focusNextEle($event,'uft_closeOTP')" (keyup.arrowRight)="focusNextEle($event,'uft_closeOTP')"
+                    (click)="submitOTP()">{{'button.save' | translate}}</button>
+                  <button id="uft_closeOTP" type="button" class="btn grey-btn" data-dismiss="modal" (keyup.arrowLeft)="focusNextEle($event,'utf_saveOTP')"
+                    (keyup.arrowRight)="focusNextEle($event,'utf_saveOTP')" (click)="resetOTP()">{{'button.close' | translate}}</button>
+                </div>
+              </div>
+            </div>
+            <!-- Form Row ENds -->
+        <!-- Grid Inner Ends -->
+      </div>
+      </div>
+        <!--  Start Report Grid of Payment Type List Here  -->
+        <div class="modal-content" [hidden]="showAdjustPAP">
+          <div class="modal-body">
+            <div class="grid-box">
+              <div class="grid-heading">
+                <h3>{{'uft.uftSearch.reportGrid' | translate}}</h3>
+              </div>
+              <div class="grid-inner">
+                <div class="form-row">
+                  <div class="row">
+                    <div class="col-md-12 col-xs-12 table-col">
+                      <table class="table table-bordered" id="paymentTypeList"></table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--  End Report Grid of Payment Type List Here  -->
+        <!--modal-footer Ends-->
+    </div>
+  </div>
+</div>
+<div id="AddGenerateRefund" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="resetGenerateRefundForm" type="button" class="close" data-dismiss="modal" (click)="resetGenerateRefundForm()">&times;</button>
+        <h4 *ngIf="isRefundForm" class="modal-title">{{'uft.uftSearch.refund' | translate}}</h4>
+        <h4 *ngIf="isWriteOffForm" class="modal-title">{{'uft.uftSearch.writeOff' | translate}}</h4>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="generateRefundForm">
+          <div class="grid-box">
+            <div class="grid-heading">
+              <h3 *ngIf="isRefundForm">{{'uft.uftSearch.generateRefund' | translate}}</h3>
+              <h3 *ngIf="isWriteOffForm">{{'uft.uftSearch.generateWriteOff' | translate}}</h3>
+            </div>
+            <div class="grid-inner">
+              <div class="form-row">
+                <div class="row min-ht-sf">
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'uft.uftSearch.companyNameNo' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <ng2-completer (keyup)="ngOnBlur()" formControlName="companyNameNo" [datasource]="companyListData" [minSearchLength]="1"
+                      [openOnFocus]="false" (opened)="onOpened($event)" [fillHighlighted]="false" [placeholder]="'Search Company Name & No.'"
+                      [textSearching]="'Please wait...'" [inputClass]="'form-control'" [clearUnselected]="true" (selected)="onCompanyNameSelected($event)">
+                    </ng2-completer>
+                    <show-errors [control]="generateRefundForm.controls.companyNameNo"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'uft.uftSearch.transactionDate' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <div class="calender-field">
+                      <my-date-picker id="uftrcAccTransDate" [options]="myDatePickerOptions" name="accTransDate" formControlName="accTransDate"
+                        (inputFocusBlur)="changeDateFormat($event, 'accTransDate','generateRefundForm',true)" placeholder="{{'common.date-placeholder' | translate}}">
+                      </my-date-picker>
+                      <show-errors [control]="generateRefundForm.controls.accTransDate"></show-errors>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'uft.uftSearch.transAmount' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <div class="calender-field d-amount">
+                      <input id="uftrcTransAmount" type="text" class="form-control in-number" name="transactionAmount" formControlName="transactionAmount"
+                        placeholder="{{'uft.uftSearch.transAmount' | translate}}" (blur)="isAmountDebit($event,'transactionAmount')"
+                      />
+                      <show-errors [control]="generateRefundForm.controls.transactionAmount"></show-errors>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'uft.uftSearch.transactionType' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <div style="margin-top: 3px;" class="col-md-8 col-xs-12">
+                      <span>
+                        <label>
+                          <input id="transactionType" type="radio" formControlName="transactionType" name="transactionType" value="80" (change)=refundRadioSelected(80)
+                          />{{'uft.uftSearch.refundCheques' | translate}}
+                          <br>
+                          <span *ngIf="showPayeeLink">
+                            <label>
+                              <span class="custom-check">
+                                <u>
+                                  <a id="payeeInfo" (click)="onClickPayee()">{{showPayeeInfo?'Remove Payee':'Add Payee'}}</a>
+                                </u>
+                                <span></span>
+                              </span>
+                            </label>
+                          </span>
+                        </label>
+                      </span>
+                    </div>
+                    <div *ngIf="refundPDS" class="col-md-4 col-xs-12">
+                      <span>
+                        <label>
+                          <input id="trnsactionType" type="radio" formControlName="transactionType" (change)=refundRadioSelected(81) name="transactionType"
+                            value="81">{{'uft.uftSearch.refundPds' | translate}}
+                        </label>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'uft.uftSearch.transDescription' | translate}}</label>
+                    <textarea id="uftrcTransDesc" class="form-control" name="transactionDesc" formControlName="transactionDesc" placeholder="{{'uft.uftSearch.transDescription' | translate}}"></textarea>
+                    <show-errors [control]="generateRefundForm.controls.transactionDesc"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'uft.uftSearch.currentBalance' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <div class="calender-field d-amount">
+                      <input id="uftrcCurrentBalance" type="text" class="form-control in-number" name="currentBalance" formControlName="currentBalance"
+                        placeholder="{{'uft.uftSearch.currentBalance' | translate}}" />
+                      <show-errors [control]="generateRefundForm.controls.currentBalance"></show-errors>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'uft.uftSearch.entryDate' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <div class="calender-field">
+                      <my-date-picker id="uftrcEntrysDate" [options]="myDatePickerOptions" name="entryDate" formControlName="entryDate" (inputFocusBlur)="changeDateFormat($event, 'entryDate','generateRefundForm',true)"
+                        placeholder="{{'common.date-placeholder' | translate}}">
+                      </my-date-picker>
+                      <show-errors [control]="generateRefundForm.controls.entryDate"></show-errors>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Payee Section Start Here  -->
+          <div *ngIf="showPayeeInfo" class="grid-box">
+            <div class="grid-heading">
+              <h3>{{'uft.uftSearch.payee' | translate}}</h3>
+            </div>
+            <div class="grid-inner">
+              <div class="form-row">
+                <div class="row min-ht-sf">
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'uft.uftSearch.name' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <input id="uftName" type="text" class="form-control" name="name" formControlName="name" placeholder="{{'uft.uftSearch.name' | translate}}"
+                    />
+                    <show-errors [control]="generateRefundForm.controls.name"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'uft.uftSearch.address1' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <input id="uftAddress" type="text" class="form-control" name="address" formControlName="address" placeholder="{{'uft.uftSearch.address1' | translate}}"
+                    />
+                    <show-errors [control]="generateRefundForm.controls.address"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'uft.uftSearch.address2' | translate}}
+                    </label>
+                    <input id="uftAddress" type="text" class="form-control" name="address2" formControlName="address2" placeholder="{{'uft.uftSearch.address2' | translate}}"
+                    />
+                    <show-errors [control]="generateRefundForm.controls.address2"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'uft.uftSearch.postalCode' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <input id="uftPostalCode" type="text" class="upperCase form-control" name="postalCode" formControlName="postalCode" placeholder="{{'uft.uftSearch.postalCode' | translate}}"
+                      (blur)="postalCodeValid($event)" />
+                    <show-errors [control]="generateRefundForm.controls.postalCode"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'uft.uftSearch.city' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <input id="uftCity" type="text" class="form-control" name="city" formControlName="city" placeholder="{{'uft.uftSearch.city' | translate}}"
+                      (blur)="isPostalCodeVerifyValid($event, 'city')" />
+                    <show-errors [control]="generateRefundForm.controls.city"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'uft.uftSearch.province' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <input id="uftProvince" type="text" class="form-control" name="province" formControlName="province" placeholder="{{'uft.uftSearch.province' | translate}}"
+                      (blur)="isPostalCodeVerifyValid($event, 'province')" />
+                    <show-errors [control]="generateRefundForm.controls.province"></show-errors>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'uft.uftSearch.country' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <input id="uftCountry" type="text" class="form-control" name="country" formControlName="country" placeholder="{{'uft.uftSearch.country' | translate}}"
+                      (blur)="isPostalCodeVerifyValid($event, 'country')" />
+                    <show-errors [control]="generateRefundForm.controls.country"></show-errors>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Payee Section End Here  -->
+
+          <div *ngIf="isRefundForm" class="grid-box">
+            <div class="grid-heading">
+              <h3>{{'uft.uftSearch.companyRefundInfo' | translate}}</h3>
+            </div>
+            <div class="grid-inner">
+              <div class="form-row">
+                <div class="row min-ht-sf">
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'uft.uftSearch.companyEffOn' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <div class="calender-field">
+                      <my-date-picker id="uftrcCompanyEffectiveOn" [options]="myDatePickerOptions" name="companyEffectiveOn" formControlName="companyEffectiveOn"
+                        (inputFocusBlur)="changeDateFormat($event, 'companyEffectiveOn','generateRefundForm',false)" placeholder="{{'common.date-placeholder' | translate}}">
+                      </my-date-picker>
+                      <show-errors [control]="generateRefundForm.controls.companyEffectiveOn"></show-errors>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'uft.uftSearch.yearEndDate' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <div class="calender-field">
+                      <my-date-picker id="uftrcYearEndDate" [options]="myDatePickerOptions" name="yearEndDate" formControlName="yearEndDate" (inputFocusBlur)="changeDateFormat($event, 'yearEndDate','generateRefundForm',false)"
+                        placeholder="{{'common.date-placeholder' | translate}}">
+                      </my-date-picker>
+                      <show-errors [control]="generateRefundForm.controls.yearEndDate"></show-errors>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'uft.uftSearch.yearEndBalance' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <div class="calender-field d-amount">
+                      <input id="uftrcYearEndBalance" type="text" class="form-control in-number" name="yearEndBalance" formControlName="yearEndBalance"
+                        placeholder="{{'uft.uftSearch.yearEndBalance' | translate}}" (blur)="zeroPatchWithAmt($event,'yearEndBalance')"
+                      />
+                      <show-errors [control]="generateRefundForm.controls.yearEndBalance"></show-errors>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'uft.uftSearch.standardPapAmount' | translate}}
+                      <span class="required">*</span>
+                    </label>
+                    <div class="calender-field d-amount">
+                      <input id="uftrcStandardPapAmount" type="text" class="form-control in-number" name="standardPapAmount" formControlName="standardPapAmount"
+                        placeholder="{{'uft.uftSearch.standardPapAmount' | translate}}" (blur)="zeroPatchWithAmt($event,'standardPapAmount')"
+                      />
+                      <show-errors [control]="generateRefundForm.controls.standardPapAmount"></show-errors>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{'uft.uftSearch.refundAmount' | translate}}</label>
+                    <div class="calender-field d-amount">
+                      <input id="uftrcRefundAmount" type="text" class="form-control in-number" name="refundAmount" formControlName="refundAmount"
+                        placeholder="{{'uft.uftSearch.refundAmount' | translate}}" (blur)="zeroPatchWithAmt($event,'refundAmount')"
+                      />
+                      <show-errors [control]="generateRefundForm.controls.refundAmount"></show-errors>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button id="saveRefundWriteOffBtn" class="green-btn btn" (click)="submitRefundForm(generateRefundForm)">{{buttonText}}</button>
+        <button id="closeRefundForm" type="button" class="btn grey-btn" data-dismiss="modal" (click)="resetGenerateRefundForm()">{{'button.close' | translate}}</button>
+      </div>
+      <div class="modal-content">
+        <div class="modal-body">
+          <div class="grid-box">
+            <div class="grid-heading">
+              <h3>{{'uft.uftSearch.reportGrid' | translate}}</h3>
+            </div>
+            <div class="grid-inner">
+              <div class="form-row">
+                <div class="row">
+                  <div class="col-md-12 col-xs-12 table-col">
+                    <table class="table table-bordered" id="refundTypeList"></table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Generate Refund Popup Ends Here  -->
+<div [hidden]="!showLoader" class="loader-outer">
+  <div class="cube-wrapper">
+    <div class="cube-folding">
+      <span class="leaf1"></span>
+      <span class="leaf2"></span>
+      <span class="leaf3"></span>
+      <span class="leaf4"></span>
+    </div>
+    <span class="loading" data-name="Loading">{{'company.plan.benefits.pleaseWait'|translate}}</span>
+  </div>
+</div>

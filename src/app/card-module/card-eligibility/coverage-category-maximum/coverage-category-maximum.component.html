@@ -1,0 +1,143 @@
+<button id="btnRefreshCoverageMax" (click)="BindGridData()" style="display:none">{{'button.refresh' | translate}}</button>
+ <div class="table-responsive" *ngIf="disciplineKey">
+    <div class="web-reg">
+      <button id="addNewCoverageCatMax" class="green-btn-add btn" (click)="AddNew()"><i class="fa fa-plus"></i>{{'button.add-new'|translate}}</button>
+    </div>
+
+   <table id="cardEligibilityCoverageCatMax" class="table table-bordered table-stripped dataTable">
+      <thead>
+        <tr>
+          <th width="15%">{{ 'card.card-eligibility.over-rides.card-maximums.coverage-category.max-period' | translate }}</th>
+          <th class="amount_right" width="15%">{{ 'card.card-eligibility.over-rides.card-maximums.coverage-category.coverage' | translate }}</th>
+          <th class="amount_right" width="10%">{{ 'card.card-eligibility.over-rides.card-maximums.coverage-category.amount' | translate }}</th>
+          <th class="amount_right" width="10%">{{ 'card.card-eligibility.over-rides.card-maximums.coverage-category.effective-date' | translate }}</th>
+          <th class="amount_right" width="10%">{{ 'card.card-eligibility.over-rides.card-maximums.coverage-category.expiry-date' | translate }}</th>
+          <th class="amount_right" width="10%">{{ 'card.card-eligibility.over-rides.card-maximums.coverage-category.action' | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="arrMaximumArray.length == 0 && !addMode" class="odd">
+          <td valign="top" colspan="6" class="dataTables_empty">{{'card.card-holder.data-tables.datamsg' | translate}}</td>
+        </tr>
+        <tr *ngFor="let dataRow of arrMaximumArray;let i = index">
+          <td>
+            <span *ngIf="dataRow.cccMaxKey != selectedRowId">{{dataRow.maxPeriodTypeDesc}}</span>
+            <select [(ngModel)]="dataRow.maxPeriodTypeKey" class="form-control" id="coverageCatMaxPeriodType"
+            [ngClass]="{ 'error_field': dataRow.maxPeriodTypeKey == ''}"  *ngIf="dataRow.cccMaxKey == selectedRowId"> 
+            <option hidden value="">{{ 'card.card-eligibility.over-rides.card-maximums.coverage-category.select' | translate }}</option>
+            <option value="{{periodType.maxPeriodTypeKey}}" *ngFor="let periodType of arrMaxPeriodType">
+              {{periodType.maxPeriodTypeCd}}
+            </option>
+            </select>
+          </td>
+          <td class="amount_right">
+            <span *ngIf="dataRow.cccMaxKey != selectedRowId">{{dataRow.covCatDesc}}</span>
+            <select [(ngModel)]="dataRow.covCatKey" class="form-control" id="coverageCatMaxBenifit"
+            [ngClass]="{ 'error_field': dataRow.covCatKey == ''}"  *ngIf="dataRow.cccMaxKey == selectedRowId"> 
+            <option hidden value="">{{ 'card.card-eligibility.over-rides.card-maximums.coverage-category.select' | translate }}</option>
+            <option value="{{benifit.covCatKey}}" *ngFor="let benifit of arrCovCat">
+              {{benifit.covCatDesc}}
+            </option>
+          </select>
+          </td>
+          <td class="amount_right">
+            <div *ngIf="dataRow.cccMaxKey != selectedRowId">
+              <span style="float:left !important">$</span>{{dataRow.cccMaxAmt}}
+            </div>
+            <input type="text" name="cccMaxAmt{{i}}" value="{{dataRow.cccMaxAmt}}" id="coverageCatMaxKey"
+            OnlyNumber="true" [(ngModel)]="dataRow.cccMaxAmt"  class="fm-txt form-control"
+            (blur)="ConvertAmountToDecimal($event,dataRow)"
+            *ngIf="dataRow.cccMaxKey == selectedRowId">
+          </td>
+          <td class="amount_right">
+            <span *ngIf="dataRow.cccMaxKey != selectedRowId">{{dataRow.effectiveOn | dateFormate}}</span>
+            <input type="text" name="EffectiveOn{{i}}" value="{{dataRow.effectiveOn}}"  [(ngModel)]="dataRow.effectiveOn"
+            id="txtEffectiveOn{{i}}" [ngClass]="{ 'error_field': dataRow.effectiveOn == '', 'fm-txt': true, 'form-control':true }" 
+            (blur)="ChangeInputDateFormat($event,i,'effectiveOn');"              
+            *ngIf="dataRow.cccMaxKey == selectedRowId">
+          </td>
+          <td class="amount_right">
+            <span *ngIf="dataRow.cccMaxKey != selectedRowId && dataRow.checkDate" style="color: rgb(235, 87, 87);font-weight: bold;">{{dataRow.expiredOn | dateFormate}}</span>
+            <span *ngIf="dataRow.cccMaxKey != selectedRowId && !dataRow.checkDate">{{dataRow.expiredOn | dateFormate}}</span>
+            <input type="text" name="expiredOn{{i}}" value="{{dataRow.expiredOn}}"  [(ngModel)]="dataRow.expiredOn"
+            id="txtExpireOn{{i}}" [ngClass]="{ 'error_field': dataRow.expiredOn == '', 'fm-txt': true, 'form-control':true, 'expiredCss' : dataRow.checkDate }" 
+            (blur)="ChangeInputDateFormat($event,i,'expiredOn');"              
+            *ngIf="dataRow.cccMaxKey == selectedRowId">
+          </td>
+          <td *ngIf="!ClaimViewMode">
+            <a  (click)="EditInfo(dataRow)"
+            class='edit_row table-action-btn edit-ico' *ngIf="dataRow.cccMaxKey != selectedRowId">
+            <i class='fa fa-pencil'></i>
+          </a>
+          <a   (click)="UpdateInfo(dataRow)" class="save_row table-action-btn edit-ico" *ngIf="dataRow.cccMaxKey == selectedRowId">
+            <i class="fa fa-save"></i>
+          </a>
+          <a href="javascript:void(0)" title="Delete" class="delete_row table-action-btn del-ico" 
+          (click)="CancelInfo()"
+          *ngIf="dataRow.cccMaxKey == selectedRowId">
+          <i class="fa fa-times"></i></a>
+          <a  class="delete_row table-action-btn del-ico" (click)="DeleteInfo(dataRow)"  *ngIf="dataRow.cccMaxKey != selectedRowId">
+            <i class="fa fa-trash"></i>
+          </a>
+          </td>
+      </tr>
+      <tr class="tableRow" *ngIf="addMode">
+        <td>
+          <select [(ngModel)]="arrNewMaximumArray.maxPeriodTypeKey" class="form-control" id="coverageCatMaxPeriodTypeAddMode"
+          [ngClass]="{ 'error_field': newRecordValidate && arrNewMaximumArray.maxPeriodTypeKey == ''}"  > 
+            <option hidden value="">{{ 'card.card-eligibility.over-rides.card-maximums.coverage-category.select' | translate }}</option>
+            <option value="{{periodType.maxPeriodTypeKey}}" *ngFor="let periodType of arrMaxPeriodType">
+              {{periodType.maxPeriodTypeCd}}
+            </option>
+          </select>
+        </td>
+        <td>
+          <select [(ngModel)]="arrNewMaximumArray.covCatKey" class="form-control" id="coverageCatMaxBenefit"
+          [ngClass]="{ 'error_field': newRecordValidate && arrNewMaximumArray.covCatKey == ''}"> 
+          <option hidden value="">{{ 'card.card-eligibility.over-rides.card-maximums.coverage-category.select' | translate }}</option>
+          <option value="{{benifit.covCatKey}}" *ngFor="let benifit of arrCovCat">
+            {{benifit.covCatDesc}}
+          </option>
+        </select>
+        </td>
+        <td>
+          <input type="number" class="fm-txt form-control"  value="" OnlyNumber="true" class="fm-txt form-control"   name="cccMaxAmt" 
+          id="coverageCardMaxAmt" [ngClass]="{ 'error_field': newRecordValidate && arrNewMaximumArray.cccMaxAmt == ''}" 
+          [(ngModel)]="arrNewMaximumArray.cccMaxAmt" (blur)="ConvertAmountToDecimal($event)" required>
+        </td>
+        <td>
+          <input type="text" value=""  class="fm-txt form-control"  name="effectiveOn" 
+          [ngClass]="{ 'error_field': newRecordValidate && arrNewMaximumArray.effectiveOn == '' }"
+          id="txtEffectiveOn" [(ngModel)]="arrNewMaximumArray.effectiveOn" (blur)="ChangeInputDateFormat($event,0,'effectiveOn');">
+        </td>
+        <td>
+          <input type="text" value=""  class="fm-txt form-control"  name="expiredOn" 
+          [ngClass]="{ 'error_field': newRecordValidate && arrNewMaximumArray.expiredOn == '', 'expiredCss' : arrNewMaximumArray.checkDate }"
+          id="txtExpiredOn" [(ngModel)]="arrNewMaximumArray.expiredOn" (blur)="ChangeInputDateFormat($event,0,'expiredOn');">
+        </td>
+        <td>
+          <a href="javascript:void(0)" class="save_row table-action-btn edit-ico" 
+          (click)="SaveInfo()">
+          <i class="fa fa-save"></i>
+        </a>
+        <a href="javascript:void(0)" class="delete_row table-action-btn del-ico" 
+        (click)="DeleteInfo()">
+        <i class="fa fa-times"></i>
+        </a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div [hidden]="!showLoader" class="loader-outer">
+  <div class="cube-wrapper">
+    <div class="cube-folding">
+        <span class="leaf1"></span>
+        <span class="leaf2"></span>
+        <span class="leaf3"></span>
+        <span class="leaf4"></span>
+    </div>
+    <span class="loading" data-name="Loading">{{'company.plan.benefits.pleaseWait'|translate}}</span>
+  </div>
+</div>

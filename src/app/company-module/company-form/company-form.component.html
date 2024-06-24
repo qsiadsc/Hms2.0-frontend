@@ -1,0 +1,360 @@
+<div class="grid-inner">
+  <form [formGroup]="companySetupForm" (blur)="onBlur()">
+    <div class="form-row">
+      <div class="row min-ht-sf">
+        <div class="col-md-3 col-xs-12">
+          <label>{{ 'company.company-form.company-no.' | translate }}<span class="required">*</span></label>
+
+          <div  class="search-field" *ngIf="!companyFormEditMode && !viewMode">
+            <input #input  class="fm-txt form-control" type="text" name="company"
+              id="company-form_company" formControlName="company" (blur)="isCompanyValid($event)"
+              placeholder="{{ 'company.company-form.company-no.' | translate }}" maxlength="5"  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+              <a class="gen-btn btn" (click)="autoGenerateCompanyNumber()">{{'card.general-information.auto-generate' | translate}}</a>
+          </div>
+          <div  class="search-field" *ngIf="viewMode">
+            <input #input  class="fm-txt form-control" type="text" name="company"
+              id="company-form_company" formControlName="company" (blur)="isCompanyValid($event)"
+              placeholder="{{ 'company.company-form.company-no.' | translate }}" maxlength="5"  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" disabled>
+             
+          </div>
+          <div *ngIf="companyFormEditMode">
+            <input  class="fm-txt form-control" type="text" name="company"
+            id="company_form_company" formControlName="company" (blur)="isCompanyValid($event)" disabled
+            placeholder="{{ 'company.company-form.company-no.' | translate }}" disabled>
+          </div>
+          <show-errors [control]="companySetupForm.controls.company"></show-errors>
+        </div>
+        <div class="col-md-3 col-xs-12">
+          <label>{{ 'company.company-form.company-name' | translate }}<span class="required">*</span></label>
+          <input class="fm-txt form-control" type="text" name="companyName" autofocus id="companyName"
+            formControlName="companyName" (blur)="getToolTipOnCompName()"
+            placeholder="{{ 'company.company-form.company-name' | translate }}">
+          <show-errors [control]="companySetupForm.controls.companyName"></show-errors>
+        </div>
+        <div class="col-md-3 col-xs-12">
+          <label>{{ 'company.company-form.website-address' | translate }}</label>
+          <input class="fm-txt form-control" type="text" name="websiteAddress" id="company-form_website_address"
+            formControlName="websiteAddress" (blur)="isWebsiteAddressValid($event)"
+            placeholder="{{ 'company.company-form.website-address' | translate }}">
+          <show-errors [control]="companySetupForm.controls.websiteAddress"></show-errors>
+        </div>
+        <div class="col-md-3 col-xs-12">
+          <label>{{ 'company.company-form.effective-on' | translate }}<span class="required">*</span></label>
+          <div class="calender-field">
+            <my-date-picker [ngClass]="(companyFormEditMode == false) ? 'removeCross':''" id="company-form_effective_on"
+              [options]="myDatePickerOptions" name="effectiveOn" formControlName="effectiveOn"
+              (inputFocusBlur)="changeDateFormat($event, 'effectiveOn', 'companySetupForm', true)"
+              placeholder="{{ 'company.company-form.dd/mm/yyyy' | translate }}">
+            </my-date-picker>
+            <show-errors [control]="companySetupForm.controls.effectiveOn"></show-errors>
+          </div>
+        </div>
+        <div class="col-md-3 col-xs-12">
+          <label>{{ 'company.company-form.grace-period' | translate }}<span class="required">*</span></label>
+          <input class="fm-txt form-control" type="text" name="gracePeriod" id="company-form_grace_period"
+            formControlName="gracePeriod" placeholder="{{ 'company.company-form.grace-period' | translate }}">
+          <show-errors [control]="companySetupForm.controls.gracePeriod"></show-errors>
+        </div>
+        <div class="col-md-3 col-xs-12">
+          <label>{{ 'company.company-form.address-line-1' | translate }}<span class="required">*</span></label>
+          <input class="fm-txt form-control" type="text" id="company-form_address_1" formControlName="address1"
+            placeholder="{{ 'company.company-form.address-line-1' | translate }}">
+          <show-errors [control]="companySetupForm.controls.address1"></show-errors>
+        </div>
+        <div class="col-md-3 col-xs-12">
+          <label>{{ 'company.company-form.address-line-2' | translate }}</label>
+          <input class="fm-txt form-control" type="text" id="company-form_address_2" formControlName="address2"
+            placeholder="{{ 'company.company-form.address-line-2' | translate }}">
+          <show-errors [control]="companySetupForm.controls.address2"></show-errors>
+        </div>
+        <div class="col-md-3 col-xs-12">
+          <label>{{ 'company.company-form.postal-code' | translate }}<span class="required">*</span></label>
+          <input class="fm-txt form-control upperCase" type="text" id="company-form_postal_code" formControlName="postalCode"
+            (blur)="isCompanyPostalcodeValid($event)" placeholder="{{ 'company.company-form.postal-code' | translate }}"
+            autocomplete="off">
+          <show-errors [control]="companySetupForm.controls.postalCode"></show-errors>
+        </div>
+        <div class="col-md-3 col-xs-12">
+          <label>{{ 'company.company-form.city' | translate }}<span class="required">*</span></label>
+          <input class="fm-txt form-control" type="text" id="company-form_city" formControlName="city"
+            (blur)="isCompanyPostalVerifyValid($event,'city')"
+            placeholder="{{ 'company.company-form.city' | translate }}">
+          <show-errors [control]="companySetupForm.controls.city"></show-errors>
+        </div>
+        <div class="col-md-3 col-xs-12">
+          <label>{{ 'company.company-form.province' | translate }}<span class="required">*</span></label>
+          <input class="fm-txt form-control" type="text" name="province" id="company-form_province"
+            formControlName="province" (blur)="isCompanyPostalVerifyValid($event,'province')"
+            placeholder="{{ 'company.company-form.province' | translate }}">
+          <show-errors [control]="companySetupForm.controls.province"></show-errors>
+        </div>
+        <div class="col-md-3 col-xs-12">
+          <label>{{ 'company.company-form.country' | translate }}<span class="required">*</span></label>
+          <input class="fm-txt form-control" type="text" name="country" id="company-form_country"
+            formControlName="country" (blur)="isCompanyPostalVerifyValid($event,'country')"
+            placeholder="{{ 'company.company-form.country' | translate }}">
+          <show-errors [control]="companySetupForm.controls.country"></show-errors>
+        </div>
+        <div class="col-md-3 col-xs-12">
+          <div class="row min-ht-sf">
+            <div class="col-md-5 col-xs-12">
+              <label>{{ 'common.extension' | translate }}</label>
+              <input class="fm-txt form-control" type="text" id="company-form_extension" formControlName="extension"
+                placeholder="{{ 'common.extension' | translate }}">
+              <show-errors [control]="companySetupForm.controls.extension"></show-errors>
+            </div>
+            <div class="col-md-7 col-xs-12">
+              <label>{{ 'company.company-form.phone-no' | translate }}</label>
+              <input [textMask]="{mask: phoneMask}" class="fm-txt form-control" type="text" id="company-form_phone"
+                formControlName="phone" placeholder="{{ 'company.company-form.phone-no' | translate }}">
+              <show-errors [control]="companySetupForm.controls.phone"></show-errors>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 col-xs-12">
+          <label>{{ 'company.company-form.fax-no' | translate }}</label>
+          <input [textMask]="{mask: phoneMask}" class="fm-txt form-control" type="text" name="fax" id="company-form_fax"
+            formControlName="fax" placeholder="{{ 'company.company-form.fax-no' | translate }}">
+          <show-errors [control]="companySetupForm.controls.fax"></show-errors>
+        </div>
+        <div *ngIf="showHideBusinessTypeDropDown; then showDropDown else hideDropDown" class="col-md-3 col-xs-12"></div>
+        <ng-template #showDropDown>
+          <div class="col-md-3 col-xs-12">
+            <label>{{ 'company.company-form.business-type' | translate }}<span class="required">*</span></label>
+            <ng2-completer *ngIf="!companyFormEditMode" [ngClass]="{'disableInput':disableBsnsType}"
+              formControlName="businessTypeKey" [datasource]="businessTypeData" [minSearchLength]="0"
+              [openOnFocus]="true" [autoHighlight]="true" [selectOnFocus]="true" (opened)="onOpened($event)"
+              [fillHighlighted]="false" [placeholder]="'Search Business Type'" [textSearching]="'Please wait...'"
+              [inputClass]="'form-control'" (selected)="onBusinessTypeSelected($event)">
+            </ng2-completer>
+            <ng2-completer *ngIf="companyFormEditMode" [disableInput]="true" formControlName="businessTypeKey"
+              [datasource]="businessTypeData" [minSearchLength]="0" [openOnFocus]="true" (opened)="onOpened($event)"
+              [fillHighlighted]="false" [placeholder]="'Search Business Type'" [textSearching]="'Please wait...'"
+              [inputClass]="'form-control'" [clearUnselected]="true">
+            </ng2-completer>
+            <show-errors [control]="companySetupForm.controls.businessTypeKey"></show-errors>
+          </div>
+        </ng-template>
+        <ng-template #hideDropDown>
+          <input type="hidden" name="businessTypeKey" formControlName="businessTypeKey">
+        </ng-template>
+        <div *ngIf="isTerminated == 'Active' || isTerminated == 'Inactive' || (isTerminated == 'GracePeriod' && isTerminationDate)" class="col-md-3 col-xs-12">
+          <label>{{ 'company.company-form.termination-date' | translate }}</label>
+          <div class="calender-field" id="terminationDateDisabled">
+            <!-- Class added for termination date field in company view mode used to be destorted -->
+            <my-date-picker id="company-form_termination_date" class="myDatePicker" [options]="myDatePickerOptions" name="terminationDate"
+              formControlName="terminationDate" (blur)="onBlur()"
+              (inputFocusBlur)="changeDateFormat($event, 'terminationDate', 'companySetupForm', false)" disabled
+              placeholder="{{ 'company.company-form.dd/mm/yyyy' | translate }}">
+            </my-date-picker>
+            <show-errors [control]="companySetupForm.controls.terminationDate"></show-errors>
+          </div>
+        </div>
+        <div *ngIf="isTerminated == 'Inactive' || (isTerminated == 'GracePeriod' && isTerminationDate)" class="col-md-3 col-xs-12">
+          <label>{{ 'company.company-form.termination-category' | translate }}</label>
+          <select class="fm-txt form-control" name="terminationCategory" formControlName="terminationCategory" disabled
+            id="terminationCategory">
+            <option *ngFor="let terminationCategory of terminationCategoryList"
+              value="{{terminationCategory.termCatKey}}">{{terminationCategory.termCatDesc}}</option>
+          </select>
+        </div>
+        <!-- Log #1285 : Print Cards flag added start -->
+         <div class="col-md-3 col-xs-12 min-ht-half">
+          <label>&nbsp;</label>
+          <div class="select-options" style="width: 112px;">
+            <span><label><span class="custom-check"><input type="checkbox" id="compPrintCard"
+                    formControlName="coPrintCardInd">{{ 'company.company-form.printCards' | translate }}<span></span></span></label></span>
+            <show-errors [control]="companySetupForm.controls.coPrintCardInd"></show-errors>
+          </div>
+          <!-- Termin checkbox added in company view page only -->
+          <div *ngIf="viewMode && !companyFormEditMode" class="select-options suspendedCompany" style="width: 85px;">
+            <span >
+              <label>
+                <img *ngIf="companyTerminRfInd" [src]="checked" />
+                <img *ngIf="!companyTerminRfInd" [src]="unChecked" />
+                Termin
+              </label>
+            </span>
+          </div>
+        </div>
+        <!-- Log #1285 : Print Cards flag added ends -->
+        <div *ngIf="!financialFormAddMode && mainCompanyArray[0].suspendCompany == 'T'"
+          class="col-md-2 col-xs-12 min-ht-half">
+          <label>&nbsp;</label>
+          <div class="select-options suspendedCompany">
+            <span *ngIf="companyFormEditMode">
+              <label name="check" data-toggle="modal" data-target="#SuspHistory" (click)="resetCompanySuspendedForm()">
+                <img *ngIf="isCompanySuspended == false" [src]="unChecked" alt="" />
+                <img *ngIf="isCompanySuspended == true" [src]="checked" alt="" />
+                {{ 'company.company-form.suspended' | translate }}
+              </label>
+            </span>
+            <span *ngIf="!companyFormEditMode">
+              <label name="check">
+                <img *ngIf="isCompanySuspended == false" [src]="unChecked" alt="" />
+                <img *ngIf="isCompanySuspended == true" [src]="checked" alt="" />
+                {{ 'company.company-form.suspended' | translate }}
+              </label>
+            </span>
+            <a *ngIf="hideSuspendedButton=='T'" href="javascript:;" id="suspend_history" class="history-ico"
+              title="Suspend History" data-toggle="modal" data-target="#SuspendHistory" (click)="getSuspendHistory()"><i
+                class="fa fa-history" aria-hidden="true"></i></a>
+          </div>
+        </div>
+        <div style="display:none" class="col-md-12 col-xs-12" *ngIf="companyFormEditMode">
+          <button id="company-form_company_card" class="btn green-btn">{{ 'button.company-card' | translate }}</button>
+          <button id="company-form_cardholders" class="btn green-btn">{{ 'button.cardholders' | translate }}</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<!-- Grid Inner Ends -->
+<!-- SuspHistory Modal -->
+<div id="SuspHistory" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="company-form_susp" type="button" class="close" data-dismiss="modal"
+          (click)="reset()">&times;</button>
+        <h4 class="modal-title">{{ 'company.company-form.suspended-company' | translate }}</h4>
+      </div>
+      <!--modal-header Ends-->
+      <div class="modal-body">
+        <!-- Company General Information Start -->
+        <app-company-general-information [generalInformationFormData]="setGeneralInfo">
+        </app-company-general-information>
+        <!-- Company General Information End -->
+        <div class="grid-box">
+          <div class="grid-inner">
+            <form [formGroup]="companySuspendedForm">
+              <div class="form-row">
+                <div class="row">
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{ 'company.company-form.suspension-date' | translate }}<span
+                        class="required">*</span></label>
+                    <div class="calender-field">
+                      <my-date-picker id="suspendOn" [options]="myDatePickerOptions"
+                        placeholder="{{ 'company.company-form.dd/mm/yyyy' | translate }}" name="suspendOn"
+                        formControlName="suspendOn"
+                        (inputFocusBlur)="changeDateFormat($event, 'suspendOn', 'companySuspendedForm', false)">
+                      </my-date-picker>
+                      <show-errors [control]="companySuspendedForm.controls.suspendOn"></show-errors>
+                    </div>
+                    <!-- Calendar Field Ends -->
+                  </div>
+                  <div class="col-md-3 col-xs-12">
+                    <label>{{ 'company.company-form.resume-date' | translate }}</label>
+                    <div class="calender-field">
+                      <my-date-picker id="resumeOn" [options]="myDatePickerOptions" name="resumeOn"
+                        formControlName="resumeOn" placeholder="{{ 'company.company-form.dd/mm/yyyy' | translate }}"
+                        (inputFocusBlur)="changeDateFormat($event, 'resumeOn','companySuspendedForm', false)">
+                      </my-date-picker>
+                      <show-errors [control]="companySuspendedForm.controls.resumeOn"></show-errors>
+                    </div>
+                    <!-- Calendar Field Ends -->
+                  </div>
+                  <input type="hidden" name="coKey" id="company-form_coKey" formControlName="coKey" />
+                  <div class="col-md-3 col-xs-12">
+                    <label>&nbsp;</label>
+                    <button id="company-form_suspended_save"
+                      *ngIf="!resumeTrue && mainCompanyArray[0].saveSuspendCompany == 'T'" type="button"
+                      class="btn green-btn" (click)="submitSuspended()">{{ 'button.save' | translate }}</button>
+                    <button id="company-form_resume"
+                      *ngIf="resumeTrue  && mainCompanyArray[0].editSuspendCompany == 'T'" type="button"
+                      class="btn green-btn" (click)="updateResume(companySuspendedForm)">{{
+                      'button.resume' | translate }}</button>
+                  </div>
+                </div>
+                <!-- row Ends-->
+              </div>
+              <!-- Form Row Ends -->
+            </form>
+          </div>
+          <!--grid-iner Ends-->
+        </div>
+        <!--grid-box Ends-->
+        <div class="grid-box">
+          <div class="grid-heading">
+            <h3>{{ 'company.company-form.suspend-history' | translate }}</h3>
+          </div>
+          <!-- Grid Heading Ends-->
+          <div class="grid-inner">
+            <div class="form-row">
+              <div class="row">
+                <div class="col-md-12 col-xs-12 table-col">
+                  <div class="table-responsive">
+                    <table id="suspend_company" class="table table-bordered inlinePopupTable table-stripped">
+                    </table>
+                  </div>
+                  <!-- Table Ends -->
+                </div>
+                <!--col Ends-->
+              </div>
+              <!-- row Ends-->
+            </div>
+            <!-- Form Row ENds -->
+          </div>
+          <!-- Grid Inner Ends -->
+        </div>
+        <!-- Grid Box Ends -->
+      </div>
+      <!--modal-body Ends-->
+      <div class="modal-footer">
+        <button id="closeSuspendedhistory" type="button" class="btn grey-btn" data-dismiss="modal">{{ 'button.close' |
+          translate }}</button>
+      </div>
+      <!--modal-footer Ends-->
+    </div>
+    <!-- Modal Content Ends -->
+  </div>
+  <!--modal-dialog Ends-->
+</div>
+<!-- SuspHistory Modal End -->
+<!-- SuspendHistory Modal -->
+<div id="SuspendHistory" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="company-form_suspended_history" type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">{{ 'company.company-form.suspend-history' | translate }}</h4>
+      </div>
+      <!--modal-header Ends-->
+      <div class="modal-body">
+        <!-- Company General Information Start -->
+        <app-company-general-information></app-company-general-information>
+        <!-- Company General Information End -->
+        <!-- Suspend History Start -->
+        <div class="grid-box">
+          <div class="grid-inner">
+            <div class="form-row">
+              <div class="row">
+                <div class="col-md-12 col-xs-12 table-col">
+                  <div class="table-responsive">
+                    <table id="suspended_company" class="table table-bordered table-stripped">
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Form Row ENds -->
+          </div>
+          <!-- Grid Inner Ends -->
+        </div>
+        <!-- Grid Box Ends -->
+        <!-- Suspend History End -->
+      </div>
+      <!--modal-body Ends-->
+      <div class="modal-footer">
+        <button id="company-form_closebtn" type="button" class="btn grey-btn" data-dismiss="modal">{{ 'button.close' |
+          translate }}</button>
+      </div>
+      <!--modal-footer Ends-->
+    </div>
+    <!-- Modal Content Ends -->
+  </div>
+  <!--modal-dialog Ends-->
+</div>
+<!-- SuspendHistory Modal End -->

@@ -1,0 +1,101 @@
+<div class="container">
+    <!-- Section Heading Start -->
+    <div class="section-heading">
+        <h2>{{'feeGuide.dentalSchedule.dentalSchedule' | translate}} -
+            <span>{{'feeGuide.dentalSchedule.list' | translate}}</span>
+        </h2>
+    </div>
+
+    <!-- Section Heading Ends -->
+    <div class="grid-box">
+        <div class="grid-heading">
+            <h3>{{'feeGuide.dentalSchedule.dentalScheduleList' | translate}}</h3>
+            <div class="web-reg">
+                <button id="addNewScheduleBtn" *ngIf="dentalSchdList[0].addNewSchedule == 'T'" class="green-btn-add btn"
+                    [routerLink]="['/feeGuide/dentalSchedule/add']">
+                    <i class="fa fa-plus"></i>{{'button.addNewSchedule' | translate }}</button>
+            </div>
+        </div>
+        <!-- Grid Heading Ends -->
+        <div class="grid-inner">
+            <form>
+                <div class="form-row text-right search-top">
+                    <button id="searchDentalSchedule" title="{{'common.search' | translate}}" type="submit"
+                        class="btn green-btn searchreset" (click)="dentalScheduleListFilter('dentalScheduleList')">
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                    <button id="resetDentalSchedule" title="{{'common.reset' | translate}}"
+                        class="btn grey-btn searchreset" (click)="resetDentalScheduleListFilter()">
+                        <span class="glyphicon glyphicon-repeat"></span>
+                    </button>
+                </div>
+
+                <div class="form-row">
+                    <div class="row">
+                        <div class="col-md-12 col-xs-12 table-col">
+                            <div class="table-responsive">
+                                <table id="dentalScheduleList"
+                                    class="table table-bordered table-stripped alignRightText">
+                                    <tfoot>
+                                        <tr>
+                                            <td width="25%">
+                                                <input id="dentalScheduleDesc"
+                                                    class="fm-txt form-control tFootInput inputSearch" type="text"
+                                                    name="dentFeeGuideSchedDesc"
+                                                    placeholder="{{'feeGuide.dentalSchedule.scheduleDescription' | translate}}">
+                                            </td>
+                                            <td width="25%">
+                                                <select id="dentalScheduleApplyAdult" dir="rtl"
+                                                    name="dentFeeGuideAdultInd"
+                                                    class="fm-txt form-control tFootInput inputSearch"
+                                                    placeholder="Apply Adult"
+                                                    (keydown)="filterSearchOnEnter($event,'dentalScheduleList')">
+                                                    <option value="" disabled hidden>{{'common.select' | translate}}
+                                                    </option>
+                                                    <option value="T">{{'feeGuide.dentalSchedule.yes' | translate}}
+                                                    </option>
+                                                    <option value="F">{{'feeGuide.dentalSchedule.no' | translate}}
+                                                    </option>
+                                                </select>
+                                            </td>
+                                            <td width="25%">
+                                                <select id="dentalScheduleApplyChild" dir="rtl"
+                                                    name="dentFeeGuideChildInd"
+                                                    class="fm-txt form-control tFootInput inputSearch"
+                                                    placeholder="Apply Child"
+                                                    (keydown)="filterSearchOnEnter($event,'dentalScheduleList')">
+                                                    <option value="" disabled hidden>{{'common.select' | translate}}
+                                                    </option>
+                                                    <option value="T">{{'feeGuide.dentalSchedule.yes' | translate}}
+                                                    </option>
+                                                    <option value="F">{{'feeGuide.dentalSchedule.no' | translate}}
+                                                    </option>
+                                                </select>
+                                            </td>
+                                            <td width="25%" class="alignDpRight">
+                                                <div class="calender-field">
+                                                    <my-date-picker id="dentalScheduleEffectiveOn" class="inputSearch"
+                                                        name="effectiveOn" data-type="date"
+                                                        [options]="myDatePickerOptions"
+                                                        [selDate]="dateNameArray['effectiveOn']"
+                                                        (inputFocusBlur)="changeDateFormat1($event, 'effectiveOn')"
+                                                        placeholder="{{'common.date-placeholder' | translate}}">
+                                                    </my-date-picker>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <!-- Table Ends -->
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <!-- Form Row ENds -->
+        </div>
+        <!-- Grid Inner Ends -->
+    </div>
+    <!-- Grid Box Ends -->
+</div>
+<!-- Container Ends -->

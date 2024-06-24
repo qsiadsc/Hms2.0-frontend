@@ -1,0 +1,225 @@
+<div class="grid-box">
+    <div class="grid-heading">
+        <h3>{{'dataEntry.headings.claim-information-heading'|translate}}</h3>
+        <div class="web-reg">
+            <a *ngIf="vision && !addMode" target="_blank" id="decClaimInfo_duplicate"
+                class="btn green-btn-add btn" href='/dataEntry/claims/copy/{{claimKey}}'>{{'claims.duplicate'|translate}}</a>
+            <a *ngIf="!addMode && dataEntryService.batchSearchData " style="cursor: pointer; margin-right:10px !important; margin-top:0px !important"
+                class="green-btn-add btn" (click)="backToBatchSearch()"><i
+                    class="fa fa-share" aria-hidden="true"></i>{{'common.backToSearch'|translate}}</a>
+        </div>
+    </div>
+    <!-- Grid Heading Ends -->
+    <div class="grid-inner">
+        <div class="form-row">
+            <form [formGroup]="ClaimInformationFormGroup">
+                <div class="row">
+                    <div class="col-md-2 col-xs-12">
+                        <label>{{'dataEntry.claims.claim-information.batchNumber'|translate}}
+                            <span class="required">*</span>
+                        </label>
+                        <input id="decClaimInfo_BatchNumber" disabled
+                            placeholder="{{'dataEntry.claims.claim-information.batchNumber'|translate}}" type="text"
+                            class="fm-txt form-control" formControlName="batchNumber">
+                        <show-errors [control]="ClaimInformationFormGroup.controls.batchNumber"></show-errors>
+                    </div>
+
+                    <div *ngIf="addMode" class="col-md-2 col-xs-12">
+                        <label>{{'dataEntry.claims.claim-information.claimNumber'|translate}} <span
+                                class="required">*</span></label>
+                        <div class="search-field">
+                            <input type="text" disabled
+                                placeholder="{{'dataEntry.claims.claim-information.claimNumber'|translate}}"
+                                class="fm-txt form-control" id="decClaimInfo_ClaimNumber"
+                                formControlName="claimNumber" />
+                        </div>
+                        <show-errors [control]="ClaimInformationFormGroup.controls.claimNumber"></show-errors>
+                        <ul *ngIf="error.isError==true" class="validation-errors">
+                            <li style="color: red">{{error.errorMessage}}</li>
+                        </ul>
+                    </div>
+                    <div *ngIf="!addMode" class="col-md-2 col-xs-12">
+                        <label>{{'dataEntry.claims.claim-information.claimNumber'|translate}} <span
+                                class="required">*</span></label>
+                        <div class="search-field">
+                            <input disabled placeholder="{{'dataEntry.claims.claim-information.claimNumber'|translate}}"
+                                value={{savedClaimNumber}} type="text" class="fm-txt form-control"
+                                id="decClaimInfo_ClaimNumber" />
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                        <label>{{'dataEntry.claims.claim-information.empDate'|translate}}
+                            <span class="required">*</span>
+                        </label>
+                        <div class="calender-field">
+                            <my-date-picker [ngClass]="'removeCross'" [disabled]=true id="decClaimInfo_EmploymentDate"
+                                [options]="myDatePickerOptions" placeholder="{{'common.date-placeholder'|translate}}"
+                                name="empDate" formControlName="empDate"
+                                (inputFocusBlur)="changeDateFormat($event, 'empDate' ,'ClaimInformationFormGroup', true)">
+                            </my-date-picker>
+                        </div>
+                        <show-errors [control]="ClaimInformationFormGroup.controls.empDate"></show-errors>
+                        <!-- Calendar Field Ends -->
+                    </div>
+                    <div class="col-md-2 col-xs-12">
+                        <label>{{'dataEntry.claims.claim-information.author'|translate}}
+                            <span class="required">*</span>
+                        </label>
+                        <input id="decClaimInfo_Author" disabled
+                            placeholder="{{'dataEntry.claims.claim-information.author'|translate}}" type="text"
+                            class="fm-txt form-control" formControlName="author">
+                        <show-errors [control]="ClaimInformationFormGroup.controls.author"></show-errors>
+                    </div>
+                    <div class="col-md-2 col-xs-12">
+                        <label>{{'dataEntry.claims.claim-information.status'|translate}}
+                            <span class="required" >*</span>
+                        </label>
+                        <select id="decClaimInfo_Status" disabled name="status" class="fm-txt form-control"
+                            formControlName="status" [(ngModel)]="StatusCheck">
+                            <option *ngFor="let type of arrStatus" [value]="type.id"> {{type.name}}</option>
+                        </select>
+                        <show-errors [control]="ClaimInformationFormGroup.controls.status"></show-errors>
+                    </div>
+                     <!-- add payTo for #1264 -->
+                     <div class="col-md-2 col-xs-12">
+                        <label>{{'dataEntry.claims.mandatory.payTo'|translate}}
+                          <span class="required">*</span>
+                        </label>
+                        <select id="decClaimInfo_PayTo" (change)="paytoChange($event)" autocomplete="off" class="fm-txt form-control pay-to-input-box"  formControlName="payTo">
+                          <option [ngValue]="null">{{'common.select' | translate}}</option>
+                          <option *ngFor="let payToValue of payToDetails" [value]="payToValue.payToDetailsKey">
+                            {{ payToValue.payToDetailsDesc}}
+                          </option>
+                        </select>
+                        <show-errors [control]="ClaimInformationFormGroup.controls.payTo"></show-errors>
+                      </div>
+                    <div class="col-md-2 col-xs-12">
+                        <label>{{'dataEntry.claims.claim-information.provider'|translate}}</label>
+                        <p style="margin-top: 6px; font-size: 14px !important" class="ellipseText">{{providerName}}</p>
+                    </div>
+                    <div class="col-md-2 col-xs-12">
+                        <label>
+                            <span *ngIf="flag" class="comment-fm">
+                                <i class="fa fa-flag" style="color:red;" aria-hidden="true"></i>
+                                <div class="comment-top"><p>{{providerFlagText}}</p></div>
+                            </span>
+                            <span *ngIf="!flag">
+                                <i class="fa fa-flag" style="color:grey;" aria-hidden="true"></i> 
+                            </span>
+                            {{'dataEntry.claims.claim-information.dentistULI'|translate}}
+                            <span class="required">*</span>
+                        </label> 
+                        <!-- [autoMatch] are used to solved the postalCode not found error -->
+                        <ng2-completer [inputId]="'decClaimInfo_dentistULI'" formControlName="dentist"
+                            [datasource]="dentistULIRemote" [minSearchLength]="3" [clearUnselected]="false"
+                            [placeholder]="'Dentist ULI'" [textSearching]="'Please wait...'"
+                            [inputClass]="'form-control'" [autoMatch]="true" [fillHighlighted]="false" [autoHighlight]="true"
+                            [selectOnFocus]="true" (selected)="onDentistULISelect($event)" (blur)="emitEditStatus()">
+                        </ng2-completer>
+                        
+                        <show-errors [control]="ClaimInformationFormGroup.controls.dentist"></show-errors>
+                    </div>
+
+                    <div class="col-md-2 col-xs-12 setCursor" id="setFocus">
+                        <label>{{'dataEntry.claims.claim-information.dentistPostalCode'|translate}}
+                            <span class="required">*</span>
+                        </label>
+                        <div id="openSelect"  [ngClass]="{'disableMultiselect': viewMode}">
+                           <input id="openSelects" ng2-auto-complete formControlName="dentistPCode" [source]="dropdownList"
+                               [list-formatter]="autocompleListFormatter" value-property-name="id"
+                               display-property-name="itemName" placeholder="Search Postal Code"
+                               class="upperCase form-control postalCd" (valueChanged)="valueChanged($event)" (focus)="dentistPostalCodeFocus()">
+                        </div>
+                        <show-errors [control]="ClaimInformationFormGroup.controls.dentistPCode"></show-errors>
+                    </div>
+
+                    <div class="col-md-2 col-xs-12" *ngIf="addMode || editMode">
+                        <label>{{'dataEntry.claims.claim-information.ban'|translate}}
+                        </label>
+                        <input id="decClaimInfo_BAN" maxlength="7"
+                            placeholder="{{'dataEntry.claims.claim-information.ban'|translate}}" type="text"
+                            class="fm-txt form-control" formControlName="ban" (blur)="emitEditStatus()">
+                        <show-errors [control]="ClaimInformationFormGroup.controls.ban"></show-errors>
+                    </div>
+                    <div class="col-md-2 col-xs-12">
+                        <label>{{'dataEntry.claims.claim-information.facility'|translate}}
+                            <span class="required">*</span>
+                        </label>
+                        <input id="decClaimInfo_Facility"
+                            placeholder="{{'dataEntry.claims.claim-information.facility'|translate}}" type="text"
+                            class="fm-txt form-control" formControlName="facility" (blur)="emitEditStatus()">
+                        <show-errors [control]="ClaimInformationFormGroup.controls.facility"></show-errors>
+                    </div>
+                    <div class="col-md-2 col-xs-12">
+                      <label>{{'dataEntry.claims.claim-information.patientHCNumber'|translate}}
+                        </label>
+                        <input id="decClaimInfo_PatientHC"
+                            placeholder="{{'dataEntry.claims.claim-information.patientHCNumber'|translate}}" type="text"
+                            class="fm-txt form-control" OnlyNumber="true" formControlName="patientHC"  
+                            (blur)="validatePatientHC($event , 'blur')" (keydown)="validatePatientHC($event,'key')">
+                        <show-errors [control]="ClaimInformationFormGroup.controls.patientHC"></show-errors>
+                    </div>
+                     <div class="col-md-2 col-xs-12" *ngIf="!addMode">
+                        <label>{{'common.action'|translate}}
+                          <span class="required">*</span>
+                        </label>
+                        <select id="decClaimInfo_Action" autocomplete="off" class="fm-txt form-control" formControlName="action" [disabled]="disableReasses" (change)="checkAction('action')">
+                          <option [ngValue]="null" disabled hidden selected >{{'common.select' | translate}}</option>
+                          <option *ngFor="let actionValue of arrAction" [value]="actionValue.actionKey">
+                            {{ actionValue.actionDesc }}
+                          </option>
+                        </select>
+                        <show-errors [control]="ClaimInformationFormGroup.controls.action"></show-errors>
+                      </div>
+                      <div class="col-md-1 col-xs-12" *ngIf="!addMode">
+                        <label>&nbsp;</label>
+                        <button *ngIf="!batchStatusSubmitted" id="btnReAccess" [disabled]="disableReasses"
+                          title="{{'dataEntry.claims.mandatory.reaccess' | translate}}" class="btn green-btn btn-lg no-left-space"
+                          type="button" (click)="reaccessClaim()">{{'dataEntry.claims.mandatory.reaccess' | translate}}</button>
+                          <button *ngIf="batchStatusSubmitted" id="btnReAccess"
+                          title="{{'dataEntry.claims.mandatory.reaccess' | translate}}" class="btn green-btn btn-lg no-left-space"
+                          type="button" (click)="reaccessClaim()">{{'dataEntry.claims.mandatory.reaccess' | translate}}</button>
+                      </div>
+              
+                    <div *ngIf="(addMode || (viewMode && batchStatus == 'S') || (editMode && batchStatus == 'S'))">
+                        <div class="col-md-2 col-xs-12">
+                            <label>Comments</label>
+                            <textarea id="claimInfo_comments" class="form-control" formControlName="comment" placeholder="Comments"></textarea>
+                            <show-errors [control]="ClaimInformationFormGroup.controls.comment"></show-errors>
+                        </div>
+                        <div class="col-md-3 col-xs-12">
+                            <label>{{'uft.dashboard.financeReports.documentName' | translate}}</label>
+                            <input style="display: none" type="file" (click)="claimFileInput.value = null" (change)="onFileChanged($event)" #claimFileInput>
+                            <input formControlName="documentName" class="fm-txt form-control datepicker" type="text" disabled=true>
+                            <ul *ngIf="claimInfoError.isError==true" class="validation-errors">
+                            <li style="color: red">{{claimInfoError.errorMessage}}</li>
+                            </ul>
+                            <ul *ngIf="error1.isError==true" class="validation-errors">
+                            <li style="color: red">{{error1.errorMessage}}</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-2 col-xs-12">
+                            <label>&nbsp;</label>
+                            <button class="btn green-btn" (click)="claimFileInput.click()">{{'button.selectFile' | translate}}</button>
+                            <button *ngIf="showRemoveBtn" (click)="removeExtension()" class="btn red-btn ">{{'button.remove' | translate}}</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- Form Row ENds -->
+    </div>
+    <!-- Grid Inner Ends -->
+</div>
+<!-- Grid Box Ends -->
+<div *ngIf="showLoader" class="loader-outer">
+    <div class="cube-wrapper">
+        <div class="cube-folding">
+            <span class="leaf1"></span>
+            <span class="leaf2"></span>
+            <span class="leaf3"></span>
+            <span class="leaf4"></span>
+        </div>
+        <span class="loading" data-name="Loading">{{loaderPlaceHolder}}</span>
+    </div>
+</div>

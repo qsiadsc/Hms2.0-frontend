@@ -1,0 +1,85 @@
+<!-- Company List -->
+<div class="grid-box">
+  <div class="grid-heading">
+    <h3>{{ 'company.company-search.list-of-companies' | translate }}</h3>
+  </div>
+  <div class="grid-inner">
+    <div class="form-row text-right search-top">
+      <button type= "submit" id="mgiCompanySearchFilterSearch" class="btn green-btn searchreset" (click)="missingGroupInfoSearch()" title="Search">
+        <span class="glyphicon glyphicon-search"></span>
+      </button>
+      <button id="mgiCompanySearchFilterReset" class="btn grey-btn searchreset" (click)="resetMissingGroupInfo()">
+        <span class="glyphicon glyphicon-repeat" title="Clear"></span>
+      </button>
+    </div>
+    <div class="form-row">
+      <div class="row">
+        <div class="col-md-12 col-xs-12">
+          <div class="table-responsive ">
+            <table id="missingGroupInformationList" class="display table table-bordered table-stripped">
+              <thead>
+              </thead>
+              <tfoot>
+                <tr>
+                  <td width="50px">
+                    <input id="mgiCompanyNo" class="fm-txt form-control tFootInput inputSearch" type="text"
+                      placeholder="{{ 'company.company-search.company-no.' | translate }}" name="coId"
+                      [(ngModel)]="companyNumber" />
+                  </td>
+                  <td width="143px">
+                    <input id="mgiCompanyName" class="fm-txt form-control tFootInput inputSearch in-number"
+                      type="text" placeholder="{{ 'company.company-search.name' | translate }}" name="coName"
+                      [(ngModel)]="companyName" />
+                  </td>
+                  <td width="109px">
+                    <ng2-completer [inputName]="'cityName'" name="cityName" class="predictiveSearchLower"
+                      [datasource]="mgiCityDataRemote" [minSearchLength]="2" [fillHighlighted]="false"
+                      [placeholder]="'Search City'" [textSearching]="'Please wait...'"
+                      [inputClass]="'form-control inputSearch in-number'" data-type="predective"
+                      id="mgiCompanyCity1Search" [clearUnselected]="true" [(ngModel)]="companyCity">
+                    </ng2-completer>
+                  </td>
+                  <td width="154px">
+                    <ng2-completer [inputName]="'provinceName'" name="provinceName" class="predictiveSearchLower"
+                      [datasource]="mgiProvinceDataRemote" [minSearchLength]="2" [fillHighlighted]="false"
+                      [placeholder]="'Search Province'" [textSearching]="'Please wait...'"
+                      [inputClass]="'form-control inputSearch in-number'" data-type="predective"
+                      id="mgiCompanyProvince1Search" [clearUnselected]="true" [(ngModel)]="companyProvince">
+                    </ng2-completer>
+                  </td>
+                  <td width="127px" class="alignDpRight">
+                    <div class="calender-field">
+                      <my-date-picker id="mgiEffectiveOn" class="inputSearch" name="effectiveOn" data-type="date"
+                        [options]="myDatePickerOptions" [selDate]="dateNameArray['effectiveOn']"
+                        (inputFocusBlur)="changeMissingFilterDateFormat($event, 'effectiveOn')"
+                        placeholder="{{ 'company.company-search.dd/mm/yyyy' | translate }}">
+                      </my-date-picker>
+                    </div>
+                  </td>
+                  <td width="151px" class="alignDpRight">
+                    <div class="calender-field">
+                      <my-date-picker id="mgiTerminatedOn" class="inputSearch" name="coTerminatedOn"
+                        data-type="date" [options]="myDatePickerOptions" [selDate]="dateNameArray['terminatedOn']"
+                        (inputFocusBlur)="changeMissingFilterDateFormat($event, 'terminatedOn')"
+                        placeholder="{{ 'company.company-search.dd/mm/yyyy' | translate }}">
+                      </my-date-picker>
+                    </div>
+                  </td>
+                  <td width="161px">
+                    <ng2-completer [(ngModel)]="businessTypeLower" [inputName]="'businessTypeDesc'"
+                      name="businessTypeDesc" class="predictiveSearchLower" [datasource]="businessTypeData"
+                      [minSearchLength]="0" [openOnFocus]="true" (opened)="onOpened($event)" [fillHighlighted]="false"
+                      [placeholder]="'Search Business Type'" [textSearching]="'Please wait...'"
+                      [inputClass]="'form-control inputSearch in-number'" data-type="predective"
+                      id="mgiCompanySearchFilterBusinessType" [clearUnselected]="true">
+                    </ng2-completer>
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
