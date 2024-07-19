@@ -1870,8 +1870,8 @@ export class TerminationRefundsComponent implements OnInit {
     }
     this.hmsDataService.postApi(UftApi.paTerminLetterUrl, request).subscribe(data => {
       if (data.code == 200 && data.status == "OK") {
-        if (data.result.paLetterFilePath != undefined && data.result.paLetterFilePath != "") {
-          window.open(data.result.paLetterFilePath, '_blank');
+        if (data.result != undefined && data.result != "") {
+          window.open(data.result, '_blank');
         }
       } else if (data.code == 400 && data.hmsMessage.messageShort == 'COMPANY_NO_IS_MISSING') {
           this.toastrService.error('Company No. Is Missing!!')

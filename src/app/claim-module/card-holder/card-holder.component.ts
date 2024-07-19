@@ -127,6 +127,7 @@ export class CardHolderComponent implements OnInit, OnChanges {
   unitKey: any;
   claimDataSub: Subscription
   expired: boolean = false;
+  activeCardholders: boolean = false;
   constructor(
     private changeDateFormatService: ChangeDateFormatService,
     private router: Router,
@@ -493,6 +494,8 @@ export class CardHolderComponent implements OnInit, OnChanges {
   }
 
   getCardHolderListByCardIdOrDOB() {
+    // To set false everytime tab will be pressed in card id field.
+    this.activeCardholders = false
     if(this.ClaimCardHolderFormGroup.value.cardId == ''){
       $('#cardId').removeClass('expired');
     }
@@ -673,7 +676,15 @@ export class CardHolderComponent implements OnInit, OnChanges {
           })
         }
       }
-      if (data.hmsMessage.messageShort == "CARD_NOT_ACTIVE") {
+      
+      // To get if there is any active cardholder or not in Array of cardholder list.
+      for(let i=0; i<this.cardHolder.length; i++){
+        if (this.cardHolder[i].status == 'ACTIVE') {
+          this.activeCardholders = true
+        }
+      }
+      // Condition added if there will be aby cardholder active, below toaster will not be shown.
+      if (data.hmsMessage.messageShort == "CARD_NOT_ACTIVE" && !this.activeCardholders) {
         this.toastrService.warning(this.translate.instant('claims.claims-toaster.card-is-not-active'), '', {
            timeOut: 8000
         })

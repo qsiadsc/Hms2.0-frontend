@@ -16,7 +16,6 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 import { CurrentUserService } from '../../../common-module/shared-services/hms-data-api/current-user.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { analyzeAndValidateNgModules } from '@angular/compiler';
-import { debug } from 'console';
 import { DuplicateClaimItemDetailComponent } from '../../duplicate-claim-item-detail/duplicate-claim-item-detail.component';
 import { Subscription } from 'rxjs';
 
@@ -200,7 +199,7 @@ export class ClaimItemDentalComponent implements OnInit, OnChanges {
       }
     })
     this.isDentClaimItem = claimService.mobilClaimItem.subscribe(data => {
-      this.cardHolderRecieveDate = data['serviceDate'];
+      this.cardHolderRecieveDate = data['receivedDate'];
       this.isMobileCopy = true
     })
     claimService.getclaimTypeCd.subscribe(value => {
@@ -327,13 +326,15 @@ export class ClaimItemDentalComponent implements OnInit, OnChanges {
       this.arrNewClaimItem.date = this.changeDateFormatService.changeDateByMonthName(data['serviceDate'])
     }
     if (data['claimAmount']) {
-      this.arrNewClaimItem.feeClaim = this.changeDateFormatService.changeDateByMonthName(data['claimAmount'])
+      this.arrNewClaimItem.feeClaim = CustomValidators.ConvertAmountToDecimal(data['claimAmount'])
     }
     if (data['cobAmount']) {
-      this.arrNewClaimItem.cob = CustomValidators.ConvertAmountToDecimal(this.changeDateFormatService.changeDateByMonthName(data['cobAmount']))
+      this.arrNewClaimItem.cob = CustomValidators.ConvertAmountToDecimal(data['cobAmount'])
     }
-    if (data['procId']) {
-      this.arrNewClaimItem.pro = this.changeDateFormatService.changeDateByMonthName(data['procId']);
+    if (data['procId'] && data['procId'] != null && data['procId'] != undefined && data['procId'] != 'null' && data['procId'] != 'undefined') {
+      this.arrNewClaimItem.pro = data['procId'];
+    } else {
+      this.arrNewClaimItem.pro = ''
     }
   }
   /** Add Empty Row For New Claim Item */
@@ -2030,7 +2031,7 @@ export class ClaimItemDentalComponent implements OnInit, OnChanges {
 
   /**Change Input Date Format and Validate It should not be greater than Claim Recieved date and Future date*/
   ChangeInputDateFormat(idx, event) {
-
+    
     let inputDate = event.target;
     if (inputDate.value != '') {
       var obj = this.changeDateFormatService.changeDateFormatLessThanCurrentMonth(inputDate);

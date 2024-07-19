@@ -177,7 +177,7 @@ export class ClaimItemVisionComponent implements OnInit, OnChanges {
       this.lockClaimItemVisStr = val
     })
     this.isVisClaimItem = claimService.mobilClaimItem.subscribe(data => {
-      this.cardHolderRecieveDate = data['serviceDate'];
+      this.cardHolderRecieveDate = data['receivedDate'];
       this.isMobileCopy = true
     })
   }
@@ -241,9 +241,13 @@ export class ClaimItemVisionComponent implements OnInit, OnChanges {
       this.arrNewClaimItem.orverideText = selectedOverride.overrideTypeDesc;
     }
     this.arrNewClaimItem.date = this.changeDateFormatService.changeDateByMonthName(data['serviceDate'])
-    this.arrNewClaimItem.feeClaim = this.changeDateFormatService.changeDateByMonthName(data['claimAmount'])
-    this.arrNewClaimItem.carrier = CustomValidators.ConvertAmountToDecimal(this.changeDateFormatService.changeDateByMonthName(data['cobAmount']))
-    this.arrNewClaimItem.pro = this.changeDateFormatService.changeDateByMonthName(data['procId']);
+    this.arrNewClaimItem.feeClaim = CustomValidators.ConvertAmountToDecimal(data['claimAmount'])
+    this.arrNewClaimItem.carrier = CustomValidators.ConvertAmountToDecimal(data['cobAmount'])
+    if (data['procId'] && data['procId'] != null && data['procId'] != undefined && data['procId'] != 'null' && data['procId'] != 'undefined') {
+      this.arrNewClaimItem.pro = data['procId'];
+    } else {
+      this.arrNewClaimItem.pro = ''
+    }
   }
   /** Add Empty Row For New Claim Item */
   AddNew() {

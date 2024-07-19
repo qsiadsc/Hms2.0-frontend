@@ -111,6 +111,7 @@ export class ClaimMessageComponent implements OnInit, OnChanges {
   allowedExtensions = ["application/pdf"]
   allowedValue: boolean = false
   claimMessagesSub: Subscription
+  enteredClaimCommentSub: Subscription
   constructor(
     private dataTableService: DatatableService,
     private hmsDataService: HmsDataServiceService,
@@ -200,6 +201,12 @@ export class ClaimMessageComponent implements OnInit, OnChanges {
     // Below 2 lines are to set errors false by default in File Select field of Comments.
     this.error4 = { isError: false, errorMessage: '' };
     this.error3 = { isError: false, errorMessage: '' };
+    this.enteredClaimCommentSub = claimService.enteredClaimComment.subscribe(data => {
+      if (data) {
+        this.claimCommentForm.patchValue({"claimCoTxt": data});
+        this.getClentComments()
+      }
+    })
   }
 
   showComment: boolean = true;
@@ -1164,6 +1171,9 @@ export class ClaimMessageComponent implements OnInit, OnChanges {
   ngOnDestroy() {
     if (this.claimMessagesSub) {
       this.claimMessagesSub.unsubscribe()
+    }
+    if (this.enteredClaimCommentSub) {
+      this.enteredClaimCommentSub.unsubscribe()
     }
   }
 

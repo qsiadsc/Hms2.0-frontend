@@ -66,6 +66,9 @@
 <app-company-travel-insurance [hidden]='alberta' [mainCompanyArray]="mainCompanyArray" [travelInsuranceForm]="FormGroup.controls.travelInsuranceForm"
  [travelFormEditMode]="editMode" (compareEffectiveOnDate)="compareDatesWithCompanyEffectiveDate($event)"></app-company-travel-insurance>
 
+<app-company-akira-benefit [hidden]="editMode || addMode"></app-company-akira-benefit>
+<app-company-efap-benefit [hidden]="editMode || addMode" ></app-company-efap-benefit>
+
 <!-- Sales Data Start -->
 <app-sales-data [salesDataForm]="FormGroup.controls.salesDataForm" [salesDataFormEditMode]="editMode" (selectedReferralTypeKey)="getSelectedReferralKey($event)"
  (selectedReferralTypeCd)="getSelectedReferralTypeCd" (selectedReferralOtherName)="getSelectedOtherKey($event)" (compareEffectiveOnDate)="compareDatesWithCompanyEffectiveDate($event)"></app-sales-data>

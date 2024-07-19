@@ -247,23 +247,23 @@
                   <!-- Calendar Field Ends -->
                   <div class="col-md-3 col-xs-12">
                     <label>&nbsp;</label>
-                    <button type="submit" *ngIf="reportID != 82 && reportID != 78 && reportID != 85 " id="{{reportID}}-financeReport"
+                    <button type="submit" *ngIf="reportID != 82 && reportID != 78 && reportID != 101 " id="{{reportID}}-financeReport"
                       style="display: none" class="btn green-btn">{{'button.search' | translate}}</button>
-                   <button type="button" *ngIf="reportID != 82 && reportID != 78 && reportID != 85"
+                   <button type="button" *ngIf="reportID != 82 && reportID != 78 && reportID != 101"
                       id="{{reportID}}-financeReport-search" (click)="callSubmitButton()"
                       class="btn green-btn">{{'button.search' | translate}}</button>
                     <button *ngIf="reportID == 82" id="financeReportText" class="btn green-btn"
                       (click)="downloadTextFile()">{{'button.downloadReport' | translate}}</button>
                     <button *ngIf="reportID == 78" id="financeReportText" class="btn green-btn"
                       (click)="downloadTextFile()">{{'button.downloadReport' |translate}}</button>
-                      <button *ngIf="reportID == 85" id="companyAnnualReport" class="btn green-btn"
+                      <button *ngIf="reportID == 101" id="companyAnnualReport" class="btn green-btn"
                       (click)="companyAnnualReport()">{{'button.downloadReport' | translate}}</button>
                   </div>
                 </div>
               </div>
             </form>
           </div>
-          <div *ngIf="reportID == 85" class="modal-footer">
+          <div *ngIf="reportID == 101" class="modal-footer">
             <button id="closeModel" type="button" class="btn grey-btn" (click)="resetReportForm()">{{ 'button.close' | translate }}</button>
           </div>
           <!-- Modal Footer Ends-->
@@ -273,7 +273,7 @@
             <h3>{{'common.noDataFound' | translate}}</h3>
           </div>
         </div>
-        <div [hidden]="!showReportList" *ngIf="reportID != 82 && reportID != 78 && reportID != 85">
+        <div [hidden]="!showReportList" *ngIf="reportID != 82 && reportID != 78 && reportID != 101">
           <div class="grid-box">
             <div class="grid-heading">
               <h3>{{'uft.dashboard.financeReports.reportGrid' | translate}}</h3>

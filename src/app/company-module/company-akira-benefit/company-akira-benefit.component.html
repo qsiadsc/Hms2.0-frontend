@@ -1,0 +1,47 @@
+<!-- starting point new accordion are created for akira benefit -->
+<div class="grid-box">
+  <div class="grid-heading collapse-heading" aria-expanded="false" data-toggle="collapse" data-target="#akiraBenfitForm">
+      <h3 aria-expanded="false" data-toggle="collapse" data-target="#akiraBenfitForm">{{ 'company.plan.benefits.akira-benefit' | translate}}</h3>
+  </div>
+
+  <div class="collapse" id="akiraBenfitForm">
+    <div class="form-row">
+    <div class="grid-inner">
+         <form [formGroup]="addAkiraBenefitForm">
+          <div class="col-md-3 col-xs-12">
+            <label>{{ 'company.company-financial-data.admin-rate' | translate }}</label>
+            <div class="calender-field d-amount">
+              <input type="text" class="fm-txt form-control in-number" name="adminRate" placeholder="{{ 'company.company-financial-data.admin-rate' | translate }}"
+               formControlName="adminRate" disabled/>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-xs-12">
+            <label>{{ 'common.effectivedate' | translate }}</label>
+            <div class="calender-field">
+              <input id="benefitEffectiveOn" placeholder="{{ 'company.company-credit-limit.dd/mm/yyyy' | translate }}"
+              class="fm-txt form-control" formControlName="effectiveDate" disabled>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-xs-12">
+            <label>{{ 'common.expirydate' | translate }}</label>
+            <div class="calender-field">
+              <input id="benefitExpiredOn" placeholder="{{ 'company.company-credit-limit.dd/mm/yyyy' | translate }}"
+              class="fm-txt form-control" formControlName="expiryDate" disabled>
+            </div>
+          </div>
+      </form> 
+
+      <div class="grid-heading">
+        <h3>{{ 'company.plan.benefits.akiraBenefitsList' | translate }}</h3>
+      </div>
+      <table id='akiraLists' class="table table-bordered table-stripped inlinePopupTable">
+      </table>
+
+      
+    </div>
+   </div>
+  </div>
+</div>
+<!-- end point new accordion are created for akira benefit -->

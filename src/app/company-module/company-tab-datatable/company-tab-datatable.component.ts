@@ -2360,6 +2360,8 @@ export class CompanyTabDatatableComponent implements OnInit {
       }
       // Task 545 Cross button in view mode of broker section in company has been removed
       this.observableObj = Observable.interval().subscribe(x => {
+        // Class added to correct calendar field position in broker view of company.
+        $("#brokerEffectiveDate div div div button:nth-child(2)").addClass("effectiveDateCalendar")
         $('.mydpicon').removeClass('icon-mydpremove')
         this.observableObj.unsubscribe();
       })

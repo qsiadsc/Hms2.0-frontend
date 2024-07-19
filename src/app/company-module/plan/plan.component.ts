@@ -309,16 +309,24 @@ export class PlanComponent extends FormCanDeactivate implements OnInit {
             'company_name': data.result.coName,
           });
         } else {
+          if(data.result.coId.length == 4){
+            var planNo = '0' + data.result.coId;
+          } else if (data.result.coId.length == 3) {
+             planNo = '00' + data.result.coId;
+          } else {
+             planNo = data.result.coId;
+          }
           this.FormGroup.controls.PlanInfoFormGroup.patchValue({
             'company_number': data.result.coId,
             'company_name': data.result.coName,
-            'plan_num': data.result.coId
+            'plan_num': planNo
           });
         }
 
         this.companyNumber = data.result.coId
         this.companyName = data.result.coName
-        this.planNumber = data.result.coId
+        // this.planNumber = data.result.coId
+        this.planNumber = planNo
         this.businessTypeCd = data.result.businessTypeCd //AB Gov./Quikcard
       }
     });
@@ -500,6 +508,12 @@ export class PlanComponent extends FormCanDeactivate implements OnInit {
    * @param FormGroup 
    */
   savePlan(FormGroup) {
+  if(this.addMode){
+    this.FormGroup.controls.PlanInfoFormGroup.get('plan_num').setErrors({
+        "planAlreadyExist": false
+      });
+      this.FormGroup.controls.PlanInfoFormGroup.get('plan_num').updateValueAndValidity();
+    }
     // add required validation on dependent_age_1 and dependent_age_2 fields(#1189)
     if (this.businessTypeCd != "S") {
     this.FormGroup.controls.PlanInfoFormGroup.get('dependent_age_1').setValidators([Validators.required]);
@@ -1001,6 +1015,7 @@ export class PlanComponent extends FormCanDeactivate implements OnInit {
     
     this.FormGroup.controls.PlanInfoFormGroup.get('dependent_age_1').setValidators([Validators.required]);
     this.FormGroup.controls.PlanInfoFormGroup.get('dependent_age_2').updateValueAndValidity();
+    this.planNumber = this.FormGroup.controls.PlanInfoFormGroup.value.plan_num
     this.forPlanUpdate = true;
     } else {
       this.FormGroup.controls.PlanInfoFormGroup.get('plan_num').setValidators([Validators.required, Validators.maxLength(10), CustomValidators.alphaNumericWithoutSpace, CustomValidators.notEmpty]);
@@ -1839,8 +1854,12 @@ export class PlanComponent extends FormCanDeactivate implements OnInit {
     return this.mainPlanArray
   }
 
-// add close button in edit section.
+// add close button for add and edit section.
   close(FormGroup){
-    this.router.navigate(['/company/plan/view/'], { queryParams: { 'companyId': this.coKeyUrlId, 'planId': this.plansKey, 'divisonId': this.divisionKeyId } });  
+    if (this.addMode == true) {
+      this.location.back()
+    }else {
+       this.router.navigate(['/company/plan/view/'], { queryParams: { 'companyId': this.coKeyUrlId, 'planId': this.plansKey, 'divisonId': this.divisionKeyId } });
+    }  
   }
 }

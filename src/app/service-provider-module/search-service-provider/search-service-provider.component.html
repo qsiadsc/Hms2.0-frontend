@@ -73,7 +73,8 @@
             <button title="Search" id="sps_search" *ngIf="serviceProviderChecks[0].searchSP == 'T' && showSearchButton"
               (click)="getServiceProviderList()"
               class="btn green-btn">{{'serviceProvider.serviceProvider-search.search' | translate }}</button>
-            <button title="Clear" id="sps_reset" (click)="resetFormSearch()"
+            <!-- Check to show clear button when menu and search button appears. -->
+            <button *ngIf="showSearchButton" title="Clear" id="sps_reset" (click)="resetFormSearch()"
               class="btn grey-btn">{{'button.clear' | translate }}</button>
           </div>
         </div>

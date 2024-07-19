@@ -148,6 +148,8 @@ export class GeneralInformationComponent implements OnInit, OnChanges {
   loaderPlaceHolder
   disciplineTypeList = [{'disciplineKey': 0, 'disciplineName':"ALL"},{'disciplineKey': 1, 'disciplineName':"Dental"}, {'disciplineKey': 2, 'disciplineName':"Vision"}, {'disciplineKey': 3, 'disciplineName':"Health"},{'disciplineKey': 4, 'disciplineName':"Drug"},{'disciplineKey': 5, 'disciplineName':"Supplemental"},{'disciplineKey': 6, 'disciplineName':"Wellness"}]
   isDash:boolean = false
+  isFileObj: boolean
+  @Input() isClaimFileObj: boolean;
   constructor(private fb: FormBuilder,
     private changeDateFormatService: ChangeDateFormatService,
     private hmsDataService: HmsDataServiceService,
@@ -390,7 +392,11 @@ export class GeneralInformationComponent implements OnInit, OnChanges {
         }
         //end
         this.fileName = this.route.snapshot.queryParams.fileReference;
-        this.getTypeMobileClaimData();
+        if (this.route.snapshot.queryParams.claimCat == 'Scanned') {
+          this.getServiceDateFromDashboard()
+        } else {
+          this.getTypeMobileClaimData();
+        }
       }
      
       } else {
@@ -414,6 +420,11 @@ export class GeneralInformationComponent implements OnInit, OnChanges {
       if (data.code == 200 && data.status == "OK") {       
         let responseData = data.result
         this.claimDashboardDiscKey = responseData.disciplineKey
+        if (this.route.snapshot.queryParams.isServiceDate == '') { 
+          responseData.receivedDate = this.changeDateFormatService.convertDateObjectToString(this.changeDateFormatService.getToday())
+        } else {
+          responseData.receivedDate = this.route.snapshot.queryParams.isServiceDate
+        }
         setTimeout(() => {
         this.ClaimGeneralInformationFormGroup.patchValue({ "claimType": +responseData.disciplineKey });
         this.ClaimGeneralInformationFormGroup.patchValue({ "operator": responseData.updatedBy });
@@ -422,10 +433,10 @@ export class GeneralInformationComponent implements OnInit, OnChanges {
         }, 400);
       }
       else {
-        console.log('Data not found!')
+        this.getServiceDateFromDashboard()
       }
     }, (error) => {
-      console.log('Data not found!')
+      this.getServiceDateFromDashboard()
     })
   }
 
@@ -1042,7 +1053,15 @@ export class GeneralInformationComponent implements OnInit, OnChanges {
     }
     this.hmsDataService.postApi(ClaimApi.getFileRefUrl, submitData).subscribe(data => {
       if (data.code == 200 && data.status == "OK") {
-        this.filePath = data.result.filePath;
+        if (data.result.claimObj != '' && data.result.claimObj != undefined && data.result.claimObj != null) {
+          this.isFileObj = true
+          this.filePath = data.result.claimObj
+        } else { 
+          // (data.result.filePath != '' && data.result.filePath != undefined && data.result.filePath != null)
+          this.isFileObj = false
+          this.filePath = data.result.filePath;
+        }
+        // this.filePath = data.result.filePath;
         this.fileDisciplineType = data.result.claimType.toUpperCase()
         this.fileDisciplineType == 'HSA' ? this.fileDisciplineType = 'SUPPLEMENTAL' : this.fileDisciplineType = this.fileDisciplineType
         this.ClaimGeneralInformationFormGroup.patchValue({ 'fileRefVal': data.result.fileReference })
@@ -1058,8 +1077,14 @@ export class GeneralInformationComponent implements OnInit, OnChanges {
   openNewWindow() {
     var windowObjectReference;
     var params = 'scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,width=0,height=0,left=-1000,top=-1000'
-    windowObjectReference = window.open(this.filePath, "CNN_WindowName", params);
-    windowObjectReference.focus();
+    if (this.isFileObj || this.isClaimFileObj) {
+      var blob = this.hmsDataService.b64toBlob(this.filePath, "application/pdf");
+      const url = window.URL.createObjectURL(blob);
+      window.open(url, "CNN_WindowName");
+    } else {
+      windowObjectReference = window.open(this.filePath, "CNN_WindowName", params);
+      windowObjectReference.focus();
+    }
   }
 
   getClaimFileForView() {
@@ -1318,4 +1343,20 @@ export class GeneralInformationComponent implements OnInit, OnChanges {
       this.selectedclaimKey = this.claimKey
       this.fetchFileName();
     }
+
+  getServiceDateFromDashboard() {
+    // serviceDate param used from getAllFiles(Claim Dashbooard) and set as Received Date of cardholder section as discussed(20-Jun-2024)
+    let receivedData = {}
+    if (this.route.snapshot.queryParams.isServiceDate == '') {
+      receivedData['receivedDate'] = this.changeDateFormatService.convertDateObjectToString(this.changeDateFormatService.getToday())
+    } else {
+      receivedData['receivedDate'] = this.route.snapshot.queryParams.isServiceDate
+    }
+    receivedData['disciplineKey'] = +this.route.snapshot.queryParams.isDiscKey
+    setTimeout(() => {
+      this.claimService.mobilClaimData.emit(receivedData)
+      this.claimService.getDisciplineKey.next(+this.route.snapshot.queryParams.isDiscKey)
+    }, 400);
+  }
+
 }

@@ -2327,7 +2327,7 @@ export class FinanceReportsComponent implements OnInit {
           ];
           break;
 
-          case 85: //Company Annual Report
+          case 101: //Company Annual Report  
           this.reportPopUpTitle = 'Company Annual Report';
           this.showHideFilter = true;
           this.showReportList = false;
@@ -11204,19 +11204,20 @@ export class FinanceReportsComponent implements OnInit {
 
             // downloaded pdf through URL
             const pdfUrl = data.result;
-            this.hmsDataService.downloadPdf(pdfUrl).subscribe((data: Blob) => {
-              const blob = new Blob([data], { type: 'application/zip' });
-              const url = window.URL.createObjectURL(blob);
-              const a = document.createElement('a');
-              a.href = url;
-              let todayDate = this.changeDateFormatService.convertDateObjectToString(this.changeDateFormatService.getToday())
-              a.download = this.reportPopUpTitle + todayDate;
-              document.body.appendChild(a);
-              a.click();
-              document.body.removeChild(a);
-              window.URL.revokeObjectURL(url);
-            });
+            // this.hmsDataService.downloadPdf(pdfUrl).subscribe((data: Blob) => {
+            //   const blob = new Blob([data], { type: 'application/zip' });
+            //   const url = window.URL.createObjectURL(blob);
+            //   const a = document.createElement('a');
+            //   a.href = url;
+            //   let todayDate = this.changeDateFormatService.convertDateObjectToString(this.changeDateFormatService.getToday())
+            //   a.download = this.reportPopUpTitle + todayDate;
+            //   document.body.appendChild(a);
+            //   a.click();
+            //   document.body.removeChild(a);
+            //   window.URL.revokeObjectURL(url);
+            // });
 
+            window.open(pdfUrl, '_self');
           } else if(data.code == 400) {
             this.toastrService.error(this.translate.instant('uft.toaster.companyTerminatedCannotPerformOperation'));
             this.showPageLoader = false;

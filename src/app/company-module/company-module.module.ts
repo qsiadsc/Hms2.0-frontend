@@ -61,6 +61,8 @@ import { RuleListComponent } from './plan/rule-list/rule-list.component';
 import { VisionPlanCoverageComponent } from './plan/vision-plan-coverage/vision-plan-coverage.component'
 import { HealthPlanCoverageComponent } from './plan/health-plan-coverage/health-plan-coverage.component';
 import { AmendmentWizardComponent } from './plan/amendment-wizard/amendment-wizard.component';
+import { CompanyAkiraBenefitComponent } from './company-akira-benefit/company-akira-benefit.component';
+import { CompanyEfapBenefitComponent } from './company-efap-benefit/company-efap-benefit.component';
 
 @NgModule({
   imports: [
@@ -82,7 +84,7 @@ import { AmendmentWizardComponent } from './plan/amendment-wizard/amendment-wiza
     NgxPaginationModule, // importing the sorting package here
     PdfViewerModule
   ],
-  declarations: [SearchCompanyDatatableComponent, CompanyFinancialDataComponent, TreeTableComponent, CompanyTabDatatableComponent, CompanyFormComponent, CompanyListComponent, CompanySearchFilterComponent, CompanyModuleComponent, CompanyBankAccountComponent, BrokerAddComponent, BrokerCompanyComponent, BrokerEditComponent, BrokerListComponent, BrokerSearchComponent, CompanyGeneralInformationComponent, CompanyTravelInsuranceComponent, PlanComponent, PlanInfoComponent, BenefitsComponent, EffectiveDateComponent, ExpiredDateComponent, DivisionMaxComponent, RulesComponent, FeeGuideComponent, PreviewComponent, PlanViewComponent, PlanFrequenciesComponent, HistoryIconsComponent, SalesDataComponent, CompanyUploadDocumentComponent,FindProcComponent,RuleListComponent,VisionPlanCoverageComponent,HealthPlanCoverageComponent,AmendmentWizardComponent
+  declarations: [SearchCompanyDatatableComponent, CompanyFinancialDataComponent, TreeTableComponent, CompanyTabDatatableComponent, CompanyFormComponent, CompanyListComponent, CompanySearchFilterComponent, CompanyModuleComponent, CompanyBankAccountComponent, BrokerAddComponent, BrokerCompanyComponent, BrokerEditComponent, BrokerListComponent, BrokerSearchComponent, CompanyGeneralInformationComponent, CompanyTravelInsuranceComponent, PlanComponent, PlanInfoComponent, BenefitsComponent, EffectiveDateComponent, ExpiredDateComponent, DivisionMaxComponent, RulesComponent, FeeGuideComponent, PreviewComponent, PlanViewComponent, PlanFrequenciesComponent, HistoryIconsComponent, SalesDataComponent, CompanyUploadDocumentComponent,FindProcComponent,RuleListComponent,VisionPlanCoverageComponent,HealthPlanCoverageComponent,AmendmentWizardComponent, CompanyAkiraBenefitComponent, CompanyEfapBenefitComponent
   ],
   providers: [CardServiceService, CompanyService, CanDeactivateGuard]
 })

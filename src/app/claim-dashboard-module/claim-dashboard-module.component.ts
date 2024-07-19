@@ -627,6 +627,7 @@ export class ActionModuleComponent extends GtCustomComponent<RowData> implements
       "userId": this.userId,
       "claimType": this.claimType
     }
+    let serviceDate = (this.row.serviceDate != undefined && this.row.serviceDate != null && this.row.serviceDate != '') ? this.row.serviceDate : ''
     let discKey = (this.row.disciplineKey != undefined) ? this.row.disciplineKey : 1
     if (this.row.claimKey != undefined) {
       if (this.row.status == 'O' || this.row.status == 'N') {
@@ -641,7 +642,7 @@ export class ActionModuleComponent extends GtCustomComponent<RowData> implements
           if (data.result.claimScannedFileKey) {
             cSfK = data.result.claimScannedFileKey
           }
-          this.router.navigate(['/claim/'], { queryParams: { 'fileReference': this.pdfFileName.replace('.pdf', ''), "claimScannedFileKey": cSfK, "claimcategory": this.isMobileRow, "claimCat": this.claimSrc, "isAdDash": this.currentUserService.isAdscDashboard, "isDiscKey": discKey } });        
+          this.router.navigate(['/claim/'], { queryParams: { 'fileReference': this.pdfFileName.replace('.pdf', ''), "claimScannedFileKey": cSfK, "claimcategory": this.isMobileRow, "claimCat": this.claimSrc, "isAdDash": this.currentUserService.isAdscDashboard, "isDiscKey": discKey, "isServiceDate": serviceDate } });        
         } else {
           this.toastr.error('File is opened by another user');
         }
@@ -1340,7 +1341,7 @@ export class ClaimDashboardModuleComponent implements OnInit, OnDestroy {
         {
           objectKey: 'receivedDate', // Received Date added as per Ticket #1213 Point 11.
           columnOrder: 2,
-          sort: 'desc'
+          sort: 'asc'
         },
         {
           objectKey: 'dIcon',
@@ -1462,7 +1463,7 @@ export class ClaimDashboardModuleComponent implements OnInit, OnDestroy {
         {
           objectKey: 'receivedDate', // Received Date added as per Ticket #1213 Point 11.
           columnOrder: 2,
-          sort: 'desc'
+          sort: 'asc'
         },
         {
           objectKey: 'dIcon',
@@ -1990,16 +1991,21 @@ export class ClaimDashboardModuleComponent implements OnInit, OnDestroy {
       }
       $(this).data("hasMsgClicked",false)
     })
+    // Delete functionality of dashboard > Quikcard dashboard > Adjustment requests.
     $(document).on('click', '#adjustmentReqTable .del-ico', function (e) {
-      self.exDialog.openConfirm("Do you want to delete the claim?").subscribe((value) => {        
+      self.exDialog.openConfirm("Do you want to delete the adjustment request?").subscribe((value) => {        
         if (value) {
-          let claimNumber = self.dataTableService.claimNumber 
-          let url = '' 
+          let claimNumber = {'claimNumber' : self.dataTableService.claimNumber} 
+          let url = Constants.baseUrl + 'financial-payable-service/delAdjClaimRequest' 
           self.hmsDataServiceService.postApi(url, claimNumber).subscribe(data => {
             if (data.code == 200 && data.status == 'OK') {
-              if (data.hmsMessage.messageShort == '') {
-                self.toastr.success("Claim deleted successfully.");
+              if (data.hmsMessage.messageShort == 'RECORD_DELETED_SUCCESSFULLY') {
+                self.toastr.success("Adjustment request deleted successfully.");
+                self.getAdjustmentRequestData()
               }
+            }
+            if (data.code == 400) {
+             self.toastr.warning("Record update failed!")
             }
           });
         }
@@ -2305,6 +2311,7 @@ export class ClaimDashboardModuleComponent implements OnInit, OnDestroy {
 
   /* Adjustment Request Tab */
   getAdjustmentRequestData() {
+    debugger
     this.getPayeeList();
     let adjReqColumns = [
       { title: this.translate.instant('dashboard.claimNo'), data: 'claimNumber' },
@@ -2326,15 +2333,18 @@ export class ClaimDashboardModuleComponent implements OnInit, OnDestroy {
       { 'key': 'payeeType', 'value': "" },
       { 'key': 'totalPaid', 'value': "" }
     ]
+    // Delete button added in action column of adjustment request.
     var tableActions = [
       { 'name': 'commentMsg', 'class': 'table-action-btn commentMsg', 'icon_class': 'fa fa-comment', 'title': 'Comment', 'showAction': '' },
       { 'name': 'adjustmentRequestDeleteAction', 'class': 'table-action-btn del-ico', 'icon_class': 'fa fa-trash', 'title': 'Delete', 'showAction': '' },
       { 'name': 'attachment', 'class': 'table-action-btn download-ico', 'icon_class': 'fa fa-download', 'title': 'Attachment', 'showAction': '' },
     ]
     if (!$.fn.dataTable.isDataTable('#adjustmentReqTable')) {
+      debugger
       this.dataTableService.jqueryDataTable("adjustmentReqTable", UftApi.getAdjustmentRequestUrl, 'full_numbers', adjReqColumns,
         5, true, true, 'lt', 'irp', undefined, [0, 'asc'], '', reqParam, tableActions, [4], [], 'T', [3], [1,2,3])
     } else {
+      debugger
       this.dataTableService.jqueryDataTableReload("adjustmentReqTable", UftApi.getAdjustmentRequestUrl, reqParam)
     }
   }
@@ -2551,7 +2561,7 @@ export class ClaimDashboardModuleComponent implements OnInit, OnDestroy {
     this.getAllFiles('traceyTab').then(row => {
       if (this.dataArray3 != undefined) {
         let adscData = this.dataArray3.sort(function (a,b) {
-          return a.fileReference - b.fileReference
+          return a.receivedDate - b.receivedDate  // changed from fileReference to receivedDate as discussed(09-Jul-2024)
         })
        
         //  if(!this.onDashboardClick){        // Adsc dashboard unnecessary api stop functionality
@@ -2601,7 +2611,7 @@ export class ClaimDashboardModuleComponent implements OnInit, OnDestroy {
     this.getAllFiles('melissaTab').then(row => {
       // For sorting API data
       let arrData = this.dataArray.sort( function (a, b) {
-        return a.fileReference - b.fileReference
+        return a.receivedDate - b.receivedDate  // changed from fileReference to receivedDate as discussed(09-Jul-2024)
       }); 
 
         // if(!this.onDashboardClick){         // quickard dashboard unnecessary api stop functionality

@@ -82,7 +82,7 @@ export class ClaimService {
   public isViewEnable: boolean = false
   public binaryFileNameData = new EventEmitter();
   public emitDisciplineKey = new EventEmitter();
-  
+  public enteredClaimComment = new EventEmitter();
   claimKeyData:any = []
   getSubmitParam(disciplineType) {
     if (disciplineType) {

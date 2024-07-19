@@ -336,7 +336,8 @@ export class UftFinancepaybleComponent implements OnInit {
 
   tempTransTypes = [
     { 'id': 'CP', 'itemName': "Claim Payment" }, 
-    { 'id': 'BP', 'itemName': "Broker Payment" }
+    { 'id': 'BP', 'itemName': "Broker Payment" },
+    { 'id': 'CR', 'itemName': "Company Refund" }
   ];
 
   payOptions = [
@@ -1549,7 +1550,7 @@ export class UftFinancepaybleComponent implements OnInit {
     }
   }
   onDeSelectDropDown3(item) {
-    const index = this.transTypeArray.indexOf(item.id);
+    const index = this.transTypeArray.indexOf(item.itemName);
     if (index > -1) {
       this.transTypeArray.splice(index, 1);
     }
@@ -1562,7 +1563,7 @@ export class UftFinancepaybleComponent implements OnInit {
     this.payeeMethodArray.push(item.id);
   }
   onSelectDropDown3(item: any) {
-    this.transTypeArray.push(item.id);
+    this.transTypeArray.push(item.itemName);
   }
   onChangePlanType(e) {
     this.selectedPlanType = e;

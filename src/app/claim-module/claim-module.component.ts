@@ -333,7 +333,8 @@ export class ClaimModuleComponent extends FormCanDeactivate implements OnInit {
   authorizedEb;
   claimItemValue : Subscription
   cSfK = 0
-  isAdDash    
+  isAdDash
+  isClaimFileObj: boolean  
   constructor(private fb: FormBuilder,
     private changeDateFormatService: ChangeDateFormatService,
     private hmsDataServiceService: HmsDataServiceService,
@@ -469,7 +470,7 @@ export class ClaimModuleComponent extends FormCanDeactivate implements OnInit {
     this.claimService.mobilClaimData.subscribe(data => {
       let mobileData = {
         ClaimCardHolderFormGroup: {
-          receive_date: this.changeDateFormatService.convertStringDateToObject(data.serviceDate),
+          receive_date: this.changeDateFormatService.convertStringDateToObject(data.receivedDate),
           cardId: data.cardNum,
           cardHolder: data.cardholderKey,
         },
@@ -3632,9 +3633,18 @@ export class ClaimModuleComponent extends FormCanDeactivate implements OnInit {
     }
     this.hmsDataServiceService.postApi(ClaimApi.getEnteredClaimFileUrl, request).subscribe(data => {
       if (data.code == 200 && data.status == "OK") {
-        this.filePath = data.result.filePath;
+        if (data.result.claimObj != '' && data.result.claimObj != undefined && data.result.claimObj != null) {
+          this.isClaimFileObj = true
+          this.filePath = data.result.claimObj
+        } else {
+          this.isClaimFileObj = false
+          this.filePath = data.result.filePath;
+        }
+        this.claimService.enteredClaimComment.emit(data.result.claimComment)
       } else {
         this.filePath = ""
+        this.isClaimFileObj = false
+        this.claimService.enteredClaimComment.emit(data.result.claimComment)
       }
     })
    }

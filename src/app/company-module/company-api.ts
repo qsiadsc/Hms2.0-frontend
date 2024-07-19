@@ -145,4 +145,8 @@ export class CompanyApi {
     static getDivTravelEligibilityUrl = Constants.baseUrl + 'plan-service/getDivTravelEligibility'
     static deleteDivTravelEligibilityUrl = Constants.baseUrl + 'plan-service/deleteDivTravelEligibility'
 
+    // Letter generation for company and broker(19-Jun-2024)
+    static paCoTerminLetterUrl = Constants.baseUrl + 'company-service/paCoTerminLetter'
+    static coBkTerminLetterUrl = Constants.baseUrl + 'company-service/coBkTerminLetter'
+
 }

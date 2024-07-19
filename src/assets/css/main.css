@@ -4937,3 +4937,9 @@ table#dI_AddrInfo tr td:last-child {
 #procId .cuppa-dropdown .dropdown-list .list-area ul span, #updateprocedureCodeScroll .cuppa-dropdown .dropdown-list .list-area ul span{
     position: relative;
 }
+
+/* Class added to correct calendar field position in broker view of company. */
+.effectiveDateCalendar{
+    position: absolute;
+    margin-left: -25px !important;
+}

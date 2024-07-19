@@ -134,6 +134,8 @@ export class DatatableService {
   totalRecords_expireClaimList
   companyList: any;
   planExists = new EventEmitter();
+  akiraList
+  efapList
   constructor(private currentUserService: CurrentUserService,
     private http: Http,
     private httpClient: HttpClient,
@@ -5718,7 +5720,7 @@ export class DatatableService {
         'targets': actionColumn,
         'searchable': false,
         'orderable': (tableId == "ListTable" || tableId == 'negativeTransactionList' || tableId == 'receiptsList') ? true : false,
-        'className': (tableId == "fundingSummaryWithAction" || tableId == "fundingSummary" || tableId == 'gov-elig-file-upload-doc' || tableId == "fundingSummaryWithRCAction" || tableId == "company-broker" || tableId == "company-contact" || tableId == "credit-limit" || tableId == "userRolesList" || tableId == "payableReportList" || tableId == "serviceProviderList" || tableId == "cardPrintRequestList" || tableId == "phyCardPrintRequestList" || tableId == "filesList" || tableId == "fileListHistory" || tableId == "bankFilesList" || tableId == "bankFileHistoryList" || tableId == "terminateCompanyList" || tableId == "payableReportList_finance" || tableId == 'company-bank-account-history' || tableId == 'akiraBenefitList' || tableId == 'pendingElectronicAdjustmentList' || tableId == 'suspend_company' || tableId == 'productionReportList') ? 'amount_right_grid' : 'dt-body-center',
+        'className': (tableId == "fundingSummaryWithAction" || tableId == "fundingSummary" || tableId == 'gov-elig-file-upload-doc' || tableId == "fundingSummaryWithRCAction" || tableId == "company-broker" || tableId == "company-contact" || tableId == "credit-limit" || tableId == "userRolesList" || tableId == "payableReportList" || tableId == "serviceProviderList" || tableId == "cardPrintRequestList" || tableId == "phyCardPrintRequestList" || tableId == "filesList" || tableId == "fileListHistory" || tableId == "bankFilesList" || tableId == "bankFileHistoryList" || tableId == "terminateCompanyList" || tableId == "payableReportList_finance" || tableId == 'company-bank-account-history' || tableId == 'akiraBenefitList' || tableId == 'akiraLists' || tableId == 'efapLists' || tableId == 'pendingElectronicAdjustmentList' || tableId == 'suspend_company' || tableId == 'productionReportList') ? 'amount_right_grid' : 'dt-body-center',
         'render': function (data, type, full, meta) {
           var str = '';
           let cardid = '';
@@ -5912,7 +5914,7 @@ export class DatatableService {
         'targets': amountRight,
         'searchable': false,
         'orderable': true,
-        'className': (tableId == 'akiraBenefitList') ? 'dt-body-center' : 'amount_right_grid amount-custom-style',
+        'className': (tableId == 'akiraBenefitList' || tableId == 'akiraLists' || tableId == 'efapLists') ? 'dt-body-center' : 'amount_right_grid amount-custom-style',
         'render': function (data, type, full, meta) {
           if (tableId == 'refundPaymentSummary'
             || tableId == 'claimPaymentsByCardholder'
@@ -5994,6 +5996,8 @@ export class DatatableService {
             || tableId == 'writeoffReportgrid'
             || tableId == 'unitFinancialTransactionListReportGrid'
             || tableId == 'akiraBenefitList'
+            || tableId == 'akiraLists'
+            || tableId == 'efapLists'
             || tableId == 'standard-pap-amount'
             || tableId == 'adjusted-pap-amount'
             || tableId == 'amountPaidByCompanyPlanAndCoverageCategoryList'
@@ -6176,6 +6180,8 @@ export class DatatableService {
             || tableId == 'writeoffReportgrid'
             || tableId == 'file_type_datatable_claim_secure'
             || tableId == 'akiraBenefitList'
+            || tableId == 'akiraLists'
+            || tableId == 'efapLists'
             || tableId == 'bank-history'
             || tableId == 'modifiedDASPPreauthClaimsList'
             || tableId == 'company-search'
@@ -6583,6 +6589,13 @@ export class DatatableService {
                 self.fileTypeRequestLoaded.emit(self.fileTypeDataRow);
               }
             }
+            if (tableId== 'akiraLists') {
+              self.akiraList = json.result.data[0]
+            }
+
+            if (tableId== 'efapLists') {
+              self.efapList = json.result.data[0]
+            }
 
             if (tableId == "uftDashboard_releaseClaimsAction" || tableId == "uftDashboard_notificationAction" || tableId == 'uftDashboard_releaseClaimsAction_Expire') {
               for (let i in json.result.data) {
@@ -6932,7 +6945,6 @@ export class DatatableService {
             }
             return json.result.data;
             } else if (json.code == 404 || json.code == 400) {
-
             if (tableId == 'uftDashboard_notification') {
               $('#uftDashboard_notification_exportsPdfButton').addClass('disable-export-button');
               self.totalRecords_notification = 0

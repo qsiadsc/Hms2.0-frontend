@@ -290,6 +290,7 @@ export class ReceivableAdjustmentsComponent implements OnInit {
 
   /* Negative Transcations Search functionality by */
   searchNegativeTransactionList(tableId = null) {
+    $('.selectNegativeAll').prop("checked", false)
     this.isNegativeTransactionSearch = true
     let negativeTransactionsListUrl = UftApi.negativeTransactionsUrl;
     let negativeTransactionParam = this.dataTableService.getFooterParams("negativeTransactionList")
@@ -303,6 +304,7 @@ export class ReceivableAdjustmentsComponent implements OnInit {
     this.searchNegativeTransactionList();
     this.isNegativeTransactionSearch = false
     this.negativeListSelected = []
+    $('.selectNegativeAll').prop("checked", false)
   }
 
   getReceiptsList(planType) {
@@ -345,6 +347,7 @@ export class ReceivableAdjustmentsComponent implements OnInit {
 
   /* Receipts Search functionality by */
   searchReceiptsList(tableId = null) {
+    $('.selectReceiptAll').prop("checked", false)
     this.isReceiptsSearch = true
     let receiptsListUrl = UftApi.getAdjReceiptUrl;
     let receiptsListParam = this.dataTableService.getFooterParams("receiptsList")
@@ -358,6 +361,7 @@ export class ReceivableAdjustmentsComponent implements OnInit {
     this.searchReceiptsList();
     this.isReceiptsSearch = false
     this.receiptListSelected = []
+    $('.selectReceiptAll').prop("checked", false)
   }
 
   submitClearance() {
@@ -398,6 +402,10 @@ export class ReceivableAdjustmentsComponent implements OnInit {
       this.getNegativeTransactionList(this.planType)
       // this.uftFinancepaybleComponent.getBrokersList()
     })
+    // clear button to reset checkbox and input fields.
+    $('.selectNegativeAll').prop("checked", false)
+    $('.selectReceiptAll').prop("checked", false)
+     this.dataTableService.resetTableSearch();
   }
 
   dataTableInitializeCashAdjList() {

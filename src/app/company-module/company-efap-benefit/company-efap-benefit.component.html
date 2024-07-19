@@ -1,0 +1,47 @@
+<!-- starting point new accordion are created for EFAP benefit -->
+<div class="grid-box">
+  <div class="grid-heading collapse-heading" aria-expanded="false" data-toggle="collapse" data-target="#efapBenfitForm">
+      <h3 aria-expanded="false" data-toggle="collapse" data-target="#efapBenfitForm">{{ 'company.plan.benefits.efap-benefit' | translate}}</h3>
+  </div>
+    
+  <div class="collapse" id="efapBenfitForm">
+    <div class="form-row">
+    <div class="grid-inner">
+         <form [formGroup]="addEFAPBenefitForm">
+          <div class="col-md-3 col-xs-12">
+            <label>{{ 'company.company-financial-data.efap-rate' | translate }}</label>
+            <div class="calender-field d-amount">
+              <input #benefitAdminRate type="text" class="fm-txt form-control in-number" name="efapRate" placeholder="{{ 'company.company-financial-data.efap-rate' | translate }}"
+               formControlName="efapRate" disabled/>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-xs-12">
+            <label>{{ 'common.effectivedate' | translate }}</label>
+            <div class="calender-field">
+              <input id="efapBenefitEffectiveOn" placeholder="{{ 'company.company-credit-limit.dd/mm/yyyy' | translate }}"
+              class="fm-txt form-control" formControlName="efapEffectiveDate" disabled>             
+            </div>
+          </div>
+
+          <div class="col-md-3 col-xs-12">
+            <label>{{ 'common.expirydate' | translate }}</label>            
+            <div class="calender-field">
+              <input id="efapBenefitExpiredOn" placeholder="{{ 'company.company-credit-limit.dd/mm/yyyy' | translate }}"
+              class="fm-txt form-control" formControlName="efapExpiryDate" disabled>
+            </div>
+        </div>
+      </form> 
+      
+      <div class="grid-heading">
+        <h3>{{ 'company.plan.benefits.efapBenefitsList' | translate }}</h3>
+      </div>
+      <table id='efapLists' class="table table-bordered table-stripped inlinePopupTable">
+      </table>
+
+   
+    </div>
+   </div>
+  </div>
+</div>
+<!-- End point new accordion are created for EFAP benefit -->

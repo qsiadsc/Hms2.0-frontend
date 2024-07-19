@@ -53,7 +53,8 @@
               <span>DAC: {{dac}}</span>
             </a>
           </li>
-          <li>
+          <!-- Style added to correct refresh button position in data management dashboard tile. -->
+          <li style="max-width: 216px;">
              <!--  Log ticket #1222  fixed -->
             <button (click)="getClaimSecureCount()" class="rfrsh-btn" title=""><i class="fa fa-refresh" aria-hidden="true"></i></button>
             <a style="position: absolute;" data-toggle="pill" href="#CSC" (click)="changeTab('CS')">Claim Secure

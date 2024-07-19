@@ -36,6 +36,7 @@ import { debug } from 'util';
 import { RequestOptions, Headers, Http } from '@angular/http';
 import jsPDF from 'jspdf';
 import { BrokerApi } from './broker-api';
+import { UftApi } from '../unit-financial-transaction-module/uft-api';
 declare var jsPDF: any;
 
 @Component({
@@ -1362,7 +1363,7 @@ export class CompanyModuleComponent extends FormCanDeactivate implements OnInit 
                   this.COMPANY_PROVINCE = data.result.provinceName
                   this.COMPANY_POSTAL_CODE = data.result.postalCd
                   this.letterToBroker(data.result.coKey, data.result.terminatedOn)
-                  this.letterToPlanAdmin(data.result.coKey, data.result.terminatedOn)
+                  this.letterToPlanAdmin(data.result.coKey, data.result.terminatedOn, data.result)
                   /* For Upload Document functionality as per Log #1148) */
                   if (this.selectedFile) {
                     this.uploadDoc(data.result.coKey).then(res => {
@@ -2270,7 +2271,7 @@ export class CompanyModuleComponent extends FormCanDeactivate implements OnInit 
             if (index == -1) {
               this.toastr.error(this.translate.instant('uft.toaster.thereIsNoPrimaryBrokerAttachedWithThisCompany'))
             } else {
-              this.findBrokerByKey(data.result.data[index].brokerKey).then(res => {
+              this.findBrokerByKey(data.result.data[index].brokerKey, selectedCoKey, selectedTerminatedDate).then(res => {
               })
             }
           } else {
@@ -2279,7 +2280,7 @@ export class CompanyModuleComponent extends FormCanDeactivate implements OnInit 
         })
     }
 
-    findBrokerByKey(key) {
+    findBrokerByKey(key, coKey, terminatedDate) {
       let promise = new Promise((resolve, reject) => {
         this.hmsDataServiceService.get(CompanyApi.getBrokerByKeyUrl + "/" + key).subscribe(data => {
           if (data.code == 302 && data.hmsShortMessage == 'RECORD_GET_SUCCESSFULLY') {
@@ -2290,9 +2291,10 @@ export class CompanyModuleComponent extends FormCanDeactivate implements OnInit 
             this.BROKER_POSTAL_CODE = data.result.brokerPostalCode
             this.getPrimaryBrokerContact(key).then(res => {
               if (this.isPrimaryBrokerContact) {
-                setTimeout(() => {
-                  this.downloadLetter('letterToBrokerContent', 'letterToBrokerContent')
-                }, 1000);
+                // setTimeout(() => {
+                //   this.downloadLetter('letterToBrokerContent', 'letterToBrokerContent')
+                // }, 1000);
+                this.getBrokerLetter(key, coKey, terminatedDate)
               } else {
                 this.toastr.error(this.translate.instant('uft.toaster.thereIsNoBrokerPrimaryContact'))
               }
@@ -2333,13 +2335,14 @@ export class CompanyModuleComponent extends FormCanDeactivate implements OnInit 
     }
 
   /* Log #1151: Letter To Plan Admin */ 
-  letterToPlanAdmin(selectedCoKey, selectedTerminatedDate) {
+  letterToPlanAdmin(selectedCoKey, selectedTerminatedDate, dataRow) {
     this.TERMINATION_DATE = this.changeDateFormatService.changeDateByMonthName(selectedTerminatedDate)
     this.getPrimaryContactList(selectedCoKey).then(res => {
       if (this.isCompanyPrimaryContact) { 
-          setTimeout(() => {
-            this.downloadLetter('planAdminLetterContent', 'planAdminLetterContent') // Log #1151: Letter to Plan Admin(2nd letter)
-          }, 2000);
+          // setTimeout(() => {
+          //   this.downloadLetter('planAdminLetterContent', 'planAdminLetterContent') // Log #1151: Letter to Plan Admin(2nd letter)
+          // }, 2000);
+          this.getPlanAdminLetter(selectedCoKey, selectedTerminatedDate, dataRow);
       } else {
         this.toastr.error(this.translate.instant('uft.toaster.thereIsNoCompanyPrimaryContact'))
       }
@@ -2499,6 +2502,55 @@ export class CompanyModuleComponent extends FormCanDeactivate implements OnInit 
       }
       this.addEFAPBenefitForm.patchValue(benefit);
       this.buttonEFAPBenefit = this.translate.instant('button.update');
+    }
+
+    getPlanAdminLetter(coKey, termDate, selectedRowData) {
+      let request = {
+        "coKey" : selectedRowData.coKey,
+        'gracePeriod': selectedRowData.coTerminClearDt,//GRACE_PERIOD
+        'terminatedOn': termDate,
+        'coContactFirstName': this.COMPANY_PRIMARY_CONTACT_FIRST_NAME, 
+        'coContactLastName': this.COMPANY_PRIMARY_CONTACT_LAST_NAME 
+      }
+      this.hmsDataServiceService.postApi(CompanyApi.paCoTerminLetterUrl, request).subscribe(data => {
+        if (data.code == 200 && data.status == "OK") {
+          if (data.result != undefined && data.result != "") {
+            window.open(data.result, '_blank');
+          }
+        } else if (data.code == 400 && data.hmsMessage.messageShort == 'COMPANY_NO_IS_MISSING') {
+            this.toastr.error('Company No. Is Missing!!')
+        } else {
+          this.toastr.error(this.translate.instant('uft.toaster.letterNotGenerated'))
+        }
+      },(error) => {
+        this.toastr.error(this.translate.instant('uft.toaster.letterNotGenerated'))
+      })
+    }
+
+    getBrokerLetter(brokerKey, coKey, termDate) {
+      let request = {
+        'brokerKey': brokerKey,
+        'coKey' : coKey,
+        'terminatedOn': termDate,
+        'brokerContactFirstLastName': this.BROKER_PRIMARY_CONTACT_FIRST_NAME, 
+        'brokerContactLastName': this.BROKER_PRIMARY_CONTACT_LAST_NAME,
+        'brokerContactFirstName': this.BROKER_PRIMARY_CONTACT_FIRST_NAME
+      }
+      this.hmsDataServiceService.postApi(CompanyApi.coBkTerminLetterUrl, request).subscribe(data => {
+        if (data.code == 200 && data.status == "OK") {
+          if (data.result != undefined && data.result != "") {
+            window.open(data.result, '_blank');
+          }
+        } else if (data.code == 400 && data.hmsMessage.messageShort == 'COMPANY_NO_IS_MISSING') {
+            this.toastr.error('Company No. Is Missing!!')
+        } else if (data.code == 400 && data.hmsMessage.messageShort == 'BROKER_NO_IS_MISSING') {
+          this.toastr.error('Broker No. Is Missing!!')
+        } else {
+          this.toastr.error(this.translate.instant('uft.toaster.letterNotGenerated'))
+        }
+      },(error) => {
+        this.toastr.error(this.translate.instant('uft.toaster.letterNotGenerated'))
+      })
     }
   
 }
