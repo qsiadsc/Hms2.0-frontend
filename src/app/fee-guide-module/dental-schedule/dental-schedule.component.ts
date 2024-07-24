@@ -15,7 +15,7 @@ import { HmsDataServiceService } from '../../common-module/shared-services/hms-d
 import { ToastrService } from 'ngx-toastr';
 import { ExDialog } from "../../common-module/shared-component/ngx-dialog/dialog.module";
 import { CurrentUserService } from '../../common-module/shared-services/hms-data-api/current-user.service';
-import { SrvRecord } from 'dns';
+//import { SrvRecord } from 'dns';
 import { CustomValidators } from '../../common-module/shared-services/validators/custom-validator.directive';
 import { CompleterData } from 'ng2-completer';
 import { CompleterCmp, CompleterService, CompleterItem, RemoteData } from 'ng2-completer';

@@ -3,8 +3,13 @@ import { EventEmitter } from '@angular/core';
 
 export class Constants {
    
-     static loginbaseUrl = 'http://192.168.31.107:8071/'; //(UAT)
-     static baseUrl = 'http://192.168.31.107:8071/api/';//(UAT)
+    //  static loginbaseUrl = 'http://192.168.31.107:8071/'; //(UAT)
+    //  static baseUrl = 'http://192.168.31.107:8071/api/';//(UAT)
+
+     static loginbaseUrl = 'http://testhms.quikcard.com:8071/'; //(UAT)
+     static baseUrl = 'http://testhms.quikcard.com1/api/';//(UAT)
+
+
   
     static titleName = [
     { "id": 2, "title": "Mrs" }, 

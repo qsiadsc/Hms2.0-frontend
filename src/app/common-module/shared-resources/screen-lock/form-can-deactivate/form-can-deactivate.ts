@@ -12,6 +12,6 @@ export abstract class FormCanDeactivate extends ComponentCanDeactivate{
   // For Reactive forms
 
    // For Template driven 
-  return this.FormGroup.submitted && !this.FormGroup.dirty
+  return /*this.FormGroup.submitted &&*/ !this.FormGroup.dirty
   }
 }
