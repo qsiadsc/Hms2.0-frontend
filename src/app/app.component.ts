@@ -33,6 +33,7 @@ import {
 
 export class AppComponent {
   // Sets initial value to true to show loading spinner on first load
+  test: boolean= true;
   showLoader: boolean = false;
   title = 'My First Angular App!';
   id: any;

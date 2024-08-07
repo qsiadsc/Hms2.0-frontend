@@ -1,0 +1,43 @@
+<div class="grid-box">
+  <div class="accordion" id="accordionCardWellness">
+    <div class="accordion-group">
+      <div class="grid-heading collapse-heading" aria-expanded="false" data-toggle="collapse"
+        data-target="#cardwellnessAccording">
+        <h3 aria-expanded="false" id="cardWellness" data-toggle="collapse" data-target="#cardwellnessAccording">
+          Card Wellness
+        </h3>
+      </div>
+    </div>
+
+    <div class="collapse" id="cardwellnessAccording">
+      <div style="min-height: 150px;padding: 15px 20px;">
+        <div style=" justify-content: center ; display: flex;">
+          <div class="slider-container" style="width: 60%;" >
+            <!-- <div class="labels">
+              <span class="label-left">Wellness <br> <pre>  </pre></span>
+              <span class="label-right">HSA <br> <pre> {{ 100 - sliderValue }}% </pre></span>
+            </div> -->
+            <div class="row" style="display: flex; justify-content: center; font-size: 1.5em;">
+              <div style="margin-right: 20px; color: rgb(201, 18, 201);">
+                {{  sliderValue }}%
+                <div style="width: 60px; border-top:1px solid lightgrey"></div>
+                  <span>HSA</span>
+              </div>
+              <div style="color: rgb(66, 190, 174);">
+                {{ 100 - sliderValue }}%
+                <div style="width: 60px; border-top:1px solid lightgrey"></div>
+                 <span>WSA</span> 
+              </div>
+            </div>
+            <input #mySlider id="mySlider" type="range" class="slider" min="0" max="100" step="1" [(ngModel)]="sliderValue" (input)="onSliderInput()" disabled>
+          </div>
+        </div>
+        <div class="text-center">
+          <button class="green-btn-add btn" *ngIf="isFlexibleAccount && !editMode" (click)="enableSlider()"><i class="fa fa-pencil"></i>Edit</button>
+          <button class="red-btn-add btn" *ngIf="isFlexibleAccount && editMode" (click)="cancelEdit()">Cancel</button>
+          <button class="green-btn-add btn" *ngIf="isFlexibleAccount && editMode" (click)="disableSlider()">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

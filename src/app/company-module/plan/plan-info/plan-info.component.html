@@ -188,9 +188,9 @@
                         </span>
                         <span *ngIf="isDivCommHistoryExist == false && editMode == true"></span>
                     </div>
-                    <div class="col-md-2 col-xs-12">
+                    <div class="col-md-1 col-xs-12">
                         <label>&nbsp;</label>
-                        <div class="select-options">
+                        <div class="select-options" style="width: 200px;">
                             <span>
                                 <label><span class="custom-check">
                                         <input type="checkbox" value="T" formControlName="extra_benefits">
@@ -200,7 +200,59 @@
                         </div>
                     </div>
 
+                    <div class="col-md-1 col-xs-12">
+                        <label>&nbsp;</label>
+                        <div class="select-options" style="width: 200px;">
+                            <span>
+                                <label><span class="custom-check">
+                                        <input type="checkbox" value="T" formControlName="flex_account" (change)="onFlexAccountCheckboxChange()">
+                                        Flex Account<span></span></span>
+                                </label>
+                            </span>
+                        </div>
+                    </div>
+
                 </div>
+                <!--Flex account Form-->
+                <div class="row min-ht-sf" *ngIf="FormGroup.get('flex_account').value">
+                    <div class="col-md-2 col-xs-12">
+                        <label> 
+                            WSA Default Percentage
+                            <span *ngIf="businessType==1" class="required">*</span> 
+                        </label>
+
+                        <input id="default_wsa" class="form-control" type="text" style="text-align: left;" maxlength="3"
+                            formControlName="default_wsa"
+                            >
+                        <show-errors [control]="FormGroup.controls.default_wsa"></show-errors>
+                    </div>
+
+                    <div class="col-md-2 col-xs-12">
+                        <label> 
+                            WSA Lower Limit
+                            <span *ngIf="businessType==1" class="required">*</span> 
+                        </label>
+
+                        <input id="lower_wsa" class="form-control" type="text" style="text-align: left;" maxlength="3"
+                            formControlName="lower_wsa"
+                            >
+                        <show-errors [control]="FormGroup.controls.lower_wsa"></show-errors>
+                    </div>
+
+                    <div class="col-md-2 col-xs-12">
+                        <label> 
+                            WSA Upper Limit
+                            <span *ngIf="businessType==1" class="required">*</span> 
+                        </label>
+
+                        <input id="upper_wsa" class="form-control" type="text" style="text-align: left;" maxlength="3"
+                            formControlName="upper_wsa"
+                            >
+                        <show-errors [control]="FormGroup.controls.upper_wsa"></show-errors>
+                    </div>
+
+                </div>
+
             </div>
         </div>
     </div>

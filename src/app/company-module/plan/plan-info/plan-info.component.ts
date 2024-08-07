@@ -313,6 +313,10 @@ export class PlanInfoComponent extends FormCanDeactivate implements OnInit {
     'family_debit_amount': new FormControl('', CustomValidators.deductibleAmountWithTwoDecimals),
     'no_claim': new FormControl(''),
     'extra_benefits': new FormControl(''),
+    'flex_account': new FormControl(''),
+    'default_wsa': new FormControl('',),
+    'upper_wsa': new FormControl(''),
+    'lower_wsa': new FormControl(''),
     'suspended_plan': new FormControl(''),
     'effective_date_proratingType': new FormControl(null),
     'expiry_date_proratingType': new FormControl(null),
@@ -2168,5 +2172,35 @@ export class PlanInfoComponent extends FormCanDeactivate implements OnInit {
       }
     });
   }
+
+  onFlexAccountCheckboxChange(): void {
+    if (this.FormGroup.get('flex_account').value) {
+      // Apply validators
+      this.FormGroup.controls['default_wsa'].setValidators([Validators.required,CustomValidators.onlyNumbers,CustomValidators.percValue]);
+      this.FormGroup.controls['upper_wsa'].setValidators([Validators.required,CustomValidators.onlyNumbers,CustomValidators.percValue]);
+      this.FormGroup.controls['lower_wsa'].setValidators([Validators.required,CustomValidators.onlyNumbers,CustomValidators.percValue]);
+  
+      // Ensure validators are applied and values are updated
+      this.FormGroup.controls['default_wsa'].updateValueAndValidity();
+      this.FormGroup.controls['upper_wsa'].updateValueAndValidity();
+      this.FormGroup.controls['lower_wsa'].updateValueAndValidity();
+  
+    } else {
+      // Clear validators and reset controls
+      this.FormGroup.controls['default_wsa'].clearValidators();
+      this.FormGroup.controls['default_wsa'].updateValueAndValidity();
+      this.FormGroup.controls['default_wsa'].reset()
+
+      console.log(this.FormGroup.controls['default_wsa'].valid);
+  
+      this.FormGroup.controls['upper_wsa'].clearValidators();
+      this.FormGroup.controls['upper_wsa'].updateValueAndValidity();
+      this.FormGroup.controls['upper_wsa'].reset()
+  
+      this.FormGroup.controls['lower_wsa'].clearValidators();
+      this.FormGroup.controls['lower_wsa'].updateValueAndValidity();
+      this.FormGroup.controls['lower_wsa'].reset()
+  }
+}
 
 }

@@ -508,6 +508,7 @@ export class PlanComponent extends FormCanDeactivate implements OnInit {
    * @param FormGroup 
    */
   savePlan(FormGroup) {
+  
   if(this.addMode){
     this.FormGroup.controls.PlanInfoFormGroup.get('plan_num').setErrors({
         "planAlreadyExist": false
@@ -820,7 +821,11 @@ export class PlanComponent extends FormCanDeactivate implements OnInit {
           "noClaimsecureInTotalInd": (FormGroup.value.PlanInfoFormGroup.no_claim == true) ? "T" : "F",
           "plansExtraBenefitInd": (FormGroup.value.PlanInfoFormGroup.extra_benefits == true) ? "T" : "F",
           "unit": this.planJson.unitData,
-          "isDivision": isCopy
+          "isDivision": isCopy,
+          "isFlexAccount": (FormGroup.value.PlanInfoFormGroup.flex_account== true)? "T" : "F",
+          "default_wsa": FormGroup.value.PlanInfoFormGroup.default_wsa,
+          "lower_wsa": FormGroup.value.PlanInfoFormGroup.lower_wsa,
+          "upper_wsa": FormGroup.value.PlanInfoFormGroup.upper_wsa
         },
         "benefitsJson": Object.keys(this.benefitsJson).length > 0 ? this.benefitsJson : null,
         "divisionMaxJson": (this.divisionMaxJson != undefined && this.divisionMaxJson.length > 0) ? this.divisionMaxJson : null,
@@ -1005,6 +1010,7 @@ export class PlanComponent extends FormCanDeactivate implements OnInit {
   *  function to update all plan tabs data
   */
   updatePlan(FormGroup) {
+
     this.showLoaderOnUpdate = true;
     this.divisionEmitVal = true;
     this.planService.selectedDivisionUpdateType.emit(this.divisionEmitVal);
@@ -1340,16 +1346,21 @@ export class PlanComponent extends FormCanDeactivate implements OnInit {
           "proratingExpiredOn": this.planJson.proratingExpiredOn,
           "deductibleEffectiveOn": this.planJson.deductibleEffectiveOn,
           "deductibleExpiredOn": this.planJson.deductibleExpiredOn,
-          "isDivision": 'T' // Set T for isDivision param as per 
+          "isDivision": 'T', // Set T for isDivision param as per 
+          "isFlexAccount": (FormGroup.value.PlanInfoFormGroup.flex_account== true)? "T" : "F",
+          "default_wsa": FormGroup.value.PlanInfoFormGroup.default_wsa,
+          "lower_wsa": FormGroup.value.PlanInfoFormGroup.lower_wsa,
+          "upper_wsa": FormGroup.value.PlanInfoFormGroup.upper_wsa
         },
         "benefitsJson": Object.keys(this.benefitsJson).length > 0 ? this.benefitsJson : null,
         "divisionMaxJson": (this.divisionMaxJson != undefined && this.divisionMaxJson.length > 0) ? this.divisionMaxJson : null,
         "rulesJson": Object.keys(this.rulesJson).length > 0 ? this.rulesJson : null,
         "feeGuideJson": Object.keys(this.feeGuideJson).length > 0 ? this.feeGuideJson : null,
       }
+
       try {
         var URL = PlanApi.updateCompanyPlansUrl;
-        this.benefitsFormData.savebenefitsServices();
+        this.benefitsFormData.savebenefitsServ.ices();
 
         this.hmsDataServiceService.putApi(URL, planUpdateDataJson).subscribe(data => {
           if (data.hmsShortMessage == 'PLAN_UPDATED_SUCCESSFULLY') {

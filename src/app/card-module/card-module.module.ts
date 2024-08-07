@@ -32,6 +32,7 @@ import { EligibilityHistoryPopupComponent } from './card-holder/eligibility-hist
 import { CanDeactivateGuard } from './../common-module/shared-resources/screen-lock/can-deactivate/can-deactivate.guard';
 import { Ng2CompleterModule } from "ng2-completer";
 import { ClaimsDialogueComponent } from './card-holder/claims-dialogue/claims-dialogue.component';
+import { CardWellnessComponent } from './card-wellness/card-wellness.component';
 @NgModule({
   imports: [
     CommonModuleModule,
@@ -49,7 +50,8 @@ import { ClaimsDialogueComponent } from './card-holder/claims-dialogue/claims-di
     CardHolderPopupComponent, CardHolderPopupGeneralInformationComponent, CardHolderHistoryPopupComponent, CardHolderExpenseHistoryPopupComponent, CardHolderVoucherHistoryPopupComponent, TrusteeInformationComponent, BenfiitCoverageCategoryMaximumComponent, CardMaximumsComponent, TopUpMaximumsComponent,
     CoverageCategoryMaximumComponent,
     EligibilityHistoryPopupComponent,
-    ClaimsDialogueComponent],
+    ClaimsDialogueComponent,
+    CardWellnessComponent],
   providers: [CardServiceService, CanDeactivateGuard, CompanyService]
 
 })
